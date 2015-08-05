@@ -1,0 +1,25 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>px-data-table Demo</title>
+  <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+  <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+  <link rel="import" href="px-data-table.html" />
+  <link rel="import" href="../iron-ajax/iron-ajax.html" />
+  <link rel="import" href="../paper-toolbar/paper-toolbar.html">
+
+</head>
+
+<body unresolved>
+  <template is="dom-bind">
+    <iron-ajax url="../iron-list/demo/data/contacts.json" last-response="{{data}}" auto></iron-ajax>
+    <px-data-table table-data="[[data]]"></px-data-table>
+  </template>
+</body>
+
+</html>
