@@ -75,30 +75,31 @@ Element providing solution to no problem in particular. As a simple, increments 
     </iron-list>
   </template> -->
   <template>
+        <iron-list id="list" items="{{data}}" as="item" >
+          <template>
+            <div>
+              <div class="item">
+                <template is="dom-repeat" items="{{item}}" as="row">
+                <!-- <template is="dom-repeat" items="{{["1","2","3"]}" as="row"> -->
+                  <span>[[row]]</span>
+                </template>
 
-    <iron-list id="list" items="[[tableData]]" as="item">
-      <template>
-        <div>
-          <div class="item">
-            <div class="pad">
 
-              <div class="primary">
-                <span>[[index]]</span>
-                <span>[[item.name]]</span>
+                <!-- <div class="pad">
+
+                  <div class="primary">
+                    <span>[[index]]</span>
+                    <span>[[item.name]]</span>
+                  </div>
+                  <div class="secondary">[[item.shortText]]</div>
+                  <div class="secondary dim">[[item.longText]]</div>
+                </div> -->
               </div>
-              <div class="secondary">[[item.shortText]]</div>
-              <div class="secondary dim">[[item.longText]]</div>
+              <div class="border"></div>
             </div>
-          </div>
-          <div class="border"></div>
-        </div>
-      </template>
-    </iron-list>
-
+          </template>
+        </iron-list>
   </template>
-
-
-
 </dom-module>
 
 <script>
@@ -116,8 +117,23 @@ Element providing solution to no problem in particular. As a simple, increments 
         type: Array,
         value: function(){
           return[];
+        },
+        observer: 'tableDataChanged'
+      },
+      data: {
+        type: Array,
+        value: function(){
+          return[];
         }
       }
+    },
+
+    tableDataChanged: function(changeRecord){
+      this.data = this.tableData.map( function(rowObject){
+        return Object.keys(rowObject).map(function (key) {
+          return rowObject[key];
+        });
+      });
     }
   });
 </script>
