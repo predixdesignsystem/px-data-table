@@ -31,17 +31,23 @@ Predix branding rules go in px-data-table-predix.scss, not in this file.
 @import "px-viewport-design/_base.viewport.scss";
 @import "px-typography-design/_base.typography.scss";
 
-
-
+$inuit-enable-table--fixed      : true;
 @import "px-tables-design/_base.tables.scss";
 
 @import "px-layout-design/_objects.layout.scss";
 
 :host {
-  @extend .layout__item;
-  height: 100vh;
+
 }
 
+#dataTable::shadow table {
+  @extend %table;
+}
+
+#dataTable::shadow td .viewing {
+  max-height: 2em;
+  overflow: hidden;
+}
 
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";

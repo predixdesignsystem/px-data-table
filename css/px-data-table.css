@@ -753,14 +753,23 @@ sup {
 sub {
   bottom: -0.25em; }
 
-.table {
+.table,
+#dataTable::shadow table {
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0; }
   .table th,
-  .table td {
+  .table td,
+  #dataTable::shadow table th,
+  #dataTable::shadow table td {
     border: 1px solid #d1d0d8;
     padding: 0.6666666667rem; }
+
+/**
+   * Force tables into having equal-width columns.
+   */
+.table--fixed {
+  table-layout: fixed; }
 
 /**
  * The Predix Experience layout system uses `box-sizing: border-box;` and
@@ -792,8 +801,7 @@ sub {
        * 2. Full-width unless told to behave otherwise.
        * 3. Required to combine fluid widths and fixed gutters.
        */ }
-    .layout > .layout__item,
-    .layout > :host {
+    .layout > .layout__item {
       padding-left: 1rem;
       /* [1] */
       -webkit-flex: 1;
@@ -804,52 +812,36 @@ sub {
           -ms-flex-preferred-size: 20rem;
               flex-basis: 20rem; }
       .layout > .layout__item:nth-last-child(-n+4):first-child,
-      .layout > :nth-last-child(-n+4):first-child:host,
-      .layout > .layout__item:nth-last-child(-n+4):first-child ~ .layout__item,
-      .layout > :nth-last-child(-n+4):first-child:host ~ .layout__item,
-      .layout > .layout__item:nth-last-child(-n+4):first-child ~ :host,
-      .layout > :nth-last-child(-n+4):first-child:host ~ :host {
+      .layout > .layout__item:nth-last-child(-n+4):first-child ~ .layout__item {
         -webkit-flex-basis: 30rem;
             -ms-flex-preferred-size: 30rem;
                 flex-basis: 30rem; }
         @media screen and (min-width: 80rem) {
           .layout > .layout__item:nth-last-child(-n+4):first-child,
-          .layout > :nth-last-child(-n+4):first-child:host,
-          .layout > .layout__item:nth-last-child(-n+4):first-child ~ .layout__item,
-          .layout > :nth-last-child(-n+4):first-child:host ~ .layout__item,
-          .layout > .layout__item:nth-last-child(-n+4):first-child ~ :host,
-          .layout > :nth-last-child(-n+4):first-child:host ~ :host {
+          .layout > .layout__item:nth-last-child(-n+4):first-child ~ .layout__item {
             -webkit-flex-basis: 0;
                 -ms-flex-preferred-size: 0;
                     flex-basis: 0; } }
       .layout > .layout__item:nth-last-child(-n+3):first-child,
-      .layout > :nth-last-child(-n+3):first-child:host,
-      .layout > .layout__item:nth-last-child(-n+3):first-child ~ .layout__item,
-      .layout > :nth-last-child(-n+3):first-child:host ~ .layout__item,
-      .layout > .layout__item:nth-last-child(-n+3):first-child ~ :host,
-      .layout > :nth-last-child(-n+3):first-child:host ~ :host {
+      .layout > .layout__item:nth-last-child(-n+3):first-child ~ .layout__item {
         -webkit-flex-basis: 40rem;
             -ms-flex-preferred-size: 40rem;
                 flex-basis: 40rem; }
         @media screen and (min-width: 80rem) {
           .layout > .layout__item:nth-last-child(-n+3):first-child,
-          .layout > :nth-last-child(-n+3):first-child:host,
-          .layout > .layout__item:nth-last-child(-n+3):first-child ~ .layout__item,
-          .layout > :nth-last-child(-n+3):first-child:host ~ .layout__item,
-          .layout > .layout__item:nth-last-child(-n+3):first-child ~ :host,
-          .layout > :nth-last-child(-n+3):first-child:host ~ :host {
+          .layout > .layout__item:nth-last-child(-n+3):first-child ~ .layout__item {
             -webkit-flex-basis: 0;
                 -ms-flex-preferred-size: 0;
                     flex-basis: 0; } }
       @media screen and (min-width: 80rem) {
-        .layout > .layout__item,
-        .layout > :host {
+        .layout > .layout__item {
           -webkit-flex-basis: 0;
               -ms-flex-preferred-size: 0;
                   flex-basis: 0; } }
 
-:host {
-  height: 100vh; }
+#dataTable::shadow td .viewing {
+  max-height: 2em;
+  overflow: hidden; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/

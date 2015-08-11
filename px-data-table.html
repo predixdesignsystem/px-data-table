@@ -5,8 +5,7 @@
     See https://github.sw.ge.com/jreichenberg/grunt-dep-serve#why-do-we-need-this
 -->
 <link rel="import" href="../polymer/polymer.html" />
-<link rel="import" href="../iron-list/iron-list.html" />
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../aha-table/src/aha-table.html">
 
 <!--
 Element providing solution to no problem in particular. As a simple, increments a counter when clicked.
@@ -21,84 +20,9 @@ Element providing solution to no problem in particular. As a simple, increments 
 @demo demo.html
 -->
 <dom-module id="px-data-table">
-  <style>
-
-    :host {
-      @apply(--layout-fit);
-      @apply(--layout-vertical);
-
-      display: block;
-      font-family: sans-serif;
-    }
-
-    #list {
-      @apply(--layout-flex);
-    }
-
-    .item {
-      padding: 16px;
-      @apply(--layout-horizontal);
-    }
-
-    .pad {
-      padding: 0 16px;
-      @apply(--layout-flex);
-      @apply(--layout-vertical);
-    }
-
-    .primary {
-      font-size: 16px;
-    }
-
-    .secondary {
-      font-size: 14px;
-    }
-
-    .dim {
-      color: gray;
-    }
-
-    .border {
-      margin-left: 72px;
-      border-bottom: 1px solid #DDD;
-    }
-
-  </style>
-
-
   <link rel="import" type="css" href="css/px-data-table.css" />
-  <!-- <template>
-    <iron-list id="list" items="[[tableData]]" as="item">
-      <template>
-        <div>[[item.name]]</div>
-      </template>
-    </iron-list>
-  </template> -->
   <template>
-        <iron-list id="list" items="{{data}}" as="item" >
-          <template>
-            <div>
-              <div class="item">
-                <template is="dom-repeat" items="{{item}}" as="row">
-                <!-- <template is="dom-repeat" items="{{["1","2","3"]}" as="row"> -->
-                  <span>[[row]]</span>
-                </template>
-
-
-                <!-- <div class="pad">
-
-                  <div class="primary">
-                    <span>[[index]]</span>
-                    <span>[[item.name]]</span>
-                  </div>
-                  <div class="secondary">[[item.shortText]]</div>
-                  <div class="secondary dim">[[item.longText]]</div>
-                </div> -->
-              </div>
-              <div class="border"></div>
-            </div>
-          </template>
-        </iron-list>
+    <aha-table page-size-text="20" id="dataTable"></aha-table>
   </template>
 </dom-module>
 
@@ -116,24 +40,15 @@ Element providing solution to no problem in particular. As a simple, increments 
       tableData: {
         type: Array,
         value: function(){
-          return[];
+          return [];
         },
-        observer: 'tableDataChanged'
-      },
-      data: {
-        type: Array,
-        value: function(){
-          return[];
-        }
+        observer: 'tableDataChanged',
+        reflect: true
       }
     },
 
     tableDataChanged: function(changeRecord){
-      this.data = this.tableData.map( function(rowObject){
-        return Object.keys(rowObject).map(function (key) {
-          return rowObject[key];
-        });
-      });
+      this.$.dataTable.data = this.tableData;
     }
   });
 </script>
