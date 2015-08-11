@@ -40,6 +40,10 @@ $inuit-enable-table--fixed      : true;
 
 }
 
+#dataTable {
+  overflow-x: scroll;
+}
+
 #dataTable::shadow table {
   @extend %table;
 }

@@ -839,6 +839,9 @@ sub {
               -ms-flex-preferred-size: 0;
                   flex-basis: 0; } }
 
+#dataTable {
+  overflow-x: scroll; }
+
 #dataTable::shadow td .viewing {
   max-height: 2em;
   overflow: hidden; }

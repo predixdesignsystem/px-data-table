@@ -11,12 +11,20 @@
     <!-- <link rel="import" href="px-data-table.html" /> -->
     <link rel="import" href="px-data-table.html" />
     <link rel="import" href="../iron-ajax/iron-ajax.html" />
+    <link rel="import" href="../px-card/px-card.html" />
+    <style>
+      body{
+        background-color: gray;
+      }
+    </style>
   </head>
 
   <body unresolved>
     <template is="dom-bind">
       <iron-ajax url="../iron-list/demo/data/contacts.json" last-response="{{data}}" auto></iron-ajax>
-      <px-data-table table-data="{{data}}"></px-data-table>
+      <px-card header-text="Data Table">
+        <px-data-table table-data="{{data}}"></px-data-table>
+      </px-card>
     </template>
   </body>
 
