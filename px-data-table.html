@@ -42,12 +42,12 @@ Element providing solution to no problem in particular. As a simple, increments 
         value: function(){
           return [];
         },
-        observer: 'tableDataChanged',
+        observer: '_tableDataChanged',
         reflect: true
       }
     },
 
-    tableDataChanged: function(changeRecord){
+    _tableDataChanged: function(changeRecord){
       this.$.dataTable.data = this.tableData;
     }
   });
