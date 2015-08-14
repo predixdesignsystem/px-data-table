@@ -886,6 +886,9 @@ td .viewing {
   max-height: 2em;
   overflow: hidden; }
 
+th {
+  border: 0 !important; }
+
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
 /**
