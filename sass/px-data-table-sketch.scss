@@ -38,16 +38,8 @@ $inuit-enable-table--fixed      : true;
 @import "px-buttons-design/_objects.buttons.scss";
 
 :host {
-
-}
-
-#dataTable {
   overflow-x: scroll;
 }
-
-// #dataTable::shadow table {
-//   @extend %table;
-// }
 
 td .viewing {
   max-height: 2em;

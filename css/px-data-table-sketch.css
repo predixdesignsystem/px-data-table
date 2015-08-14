@@ -866,7 +866,7 @@ button.btn {
 .btn + .btn {
   margin-left: 0.6666666667rem; }
 
-#dataTable {
+:host {
   overflow-x: scroll; }
 
 td .viewing {
