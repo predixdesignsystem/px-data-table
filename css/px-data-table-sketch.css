@@ -365,7 +365,8 @@ html {
 .invisible {
   visibility: hidden !important; }
 
-.flex {
+.flex,
+#dataTable::shadow tfoot .pagination {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex; }
@@ -415,7 +416,8 @@ html {
       -ms-flex-pack: center;
           justify-content: center; }
 
-.flex--right {
+.flex--right,
+#dataTable::shadow tfoot .pagination {
   -webkit-justify-content: flex-end;
       -ms-flex-pack: end;
           justify-content: flex-end; }
@@ -485,7 +487,8 @@ html {
       -ms-flex-line-pack: distribute;
           align-content: space-around; }
 
-.flex__item {
+.flex__item,
+#dataTable::shadow tfoot .paging {
   -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1; }
@@ -825,6 +828,59 @@ sub {
           -webkit-flex-basis: 0;
               -ms-flex-preferred-size: 0;
                   flex-basis: 0; } }
+
+.btn,
+#dataTable::shadow tfoot button {
+  display: inline-block;
+  overflow: visible;
+  margin: 0;
+  border: 1px solid #b1b1bc;
+  border-radius: 3px;
+  padding: 0 1em;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  font: inherit;
+  line-height: calc(2em - 2px);
+  -webkit-font-smoothing: antialiased;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+  white-space: nowrap;
+  background-color: #e4e4ea; }
+  .btn,
+  .btn:link,
+  .btn:visited,
+  .btn:hover,
+  .btn:focus,
+  .btn:active,
+  #dataTable::shadow tfoot button,
+  #dataTable::shadow tfoot button:link,
+  #dataTable::shadow tfoot button:visited,
+  #dataTable::shadow tfoot button:hover,
+  #dataTable::shadow tfoot button:focus,
+  #dataTable::shadow tfoot button:active {
+    color: #3b3b3f; }
+  .btn:hover,
+  .btn:focus,
+  #dataTable::shadow tfoot button:hover,
+  #dataTable::shadow tfoot button:focus {
+    border-color: #9999a3;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+    background-color: #b1b1bc; }
+  .btn:active,
+  #dataTable::shadow tfoot button:active {
+    border-color: #7c7c84;
+    box-shadow: none;
+    background-color: #9999a3; }
+
+button.btn {
+  -webkit-appearance: button; }
+
+/**
+* Establish default space between adjacent buttons
+*/
+.btn + .btn {
+  margin-left: 0.6666666667rem; }
 
 #dataTable {
   overflow-x: scroll; }
