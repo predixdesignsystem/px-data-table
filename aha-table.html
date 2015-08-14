@@ -59,6 +59,7 @@
 <link rel="import" href="../polymer/polymer.html">
 
 <dom-module id="aha-table">
+	<link rel="import" type="css" href="css/px-data-table.css" />
 	<style>
 		/* styles for the custom element itself - lowest specificity */
 		:host {
@@ -129,15 +130,15 @@
 		.pagination .disabled {
 			color: #ccc;
 		}
-		.pagination button+button {
+		/*.pagination button+button {
 			margin-left: -10px;
-		}
-		.pagination button {
+		}*/
+		/*.pagination button {
 			background-color: #fff;
 			border: 1px solid #eee;
 			cursor: pointer;
 			user-select: none;
-		}
+		}*/
 		.pagination input {
 			background-color: #fff;
 			border: 1px solid #eee;
@@ -156,7 +157,7 @@
 		}
 	</style>
 	<template>
-		<table id="aha_table_main" unresolved="">
+		<table class="table" id="aha_table_main" unresolved="">
 			<thead>
 				<tr>
 					<th>

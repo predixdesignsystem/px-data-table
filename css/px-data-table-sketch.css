@@ -365,8 +365,7 @@ html {
 .invisible {
   visibility: hidden !important; }
 
-.flex,
-#dataTable::shadow tfoot .pagination {
+.flex {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex; }
@@ -416,8 +415,7 @@ html {
       -ms-flex-pack: center;
           justify-content: center; }
 
-.flex--right,
-#dataTable::shadow tfoot .pagination {
+.flex--right {
   -webkit-justify-content: flex-end;
       -ms-flex-pack: end;
           justify-content: flex-end; }
@@ -487,8 +485,7 @@ html {
       -ms-flex-line-pack: distribute;
           align-content: space-around; }
 
-.flex__item,
-#dataTable::shadow tfoot .paging {
+.flex__item {
   -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1; }
@@ -743,15 +740,12 @@ sup {
 sub {
   bottom: -0.25em; }
 
-.table,
-#dataTable::shadow table {
+.table {
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0; }
   .table th,
-  .table td,
-  #dataTable::shadow table th,
-  #dataTable::shadow table td {
+  .table td {
     border: 1px solid #d1d0d8;
     padding: 0.6666666667rem; }
 
@@ -829,8 +823,7 @@ sub {
               -ms-flex-preferred-size: 0;
                   flex-basis: 0; } }
 
-.btn,
-#dataTable::shadow tfoot button {
+.btn {
   display: inline-block;
   overflow: visible;
   margin: 0;
@@ -852,23 +845,14 @@ sub {
   .btn:visited,
   .btn:hover,
   .btn:focus,
-  .btn:active,
-  #dataTable::shadow tfoot button,
-  #dataTable::shadow tfoot button:link,
-  #dataTable::shadow tfoot button:visited,
-  #dataTable::shadow tfoot button:hover,
-  #dataTable::shadow tfoot button:focus,
-  #dataTable::shadow tfoot button:active {
+  .btn:active {
     color: #3b3b3f; }
   .btn:hover,
-  .btn:focus,
-  #dataTable::shadow tfoot button:hover,
-  #dataTable::shadow tfoot button:focus {
+  .btn:focus {
     border-color: #9999a3;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
     background-color: #b1b1bc; }
-  .btn:active,
-  #dataTable::shadow tfoot button:active {
+  .btn:active {
     border-color: #7c7c84;
     box-shadow: none;
     background-color: #9999a3; }
@@ -885,7 +869,7 @@ button.btn {
 #dataTable {
   overflow-x: scroll; }
 
-#dataTable::shadow td .viewing {
+td .viewing {
   max-height: 2em;
   overflow: hidden; }
 
