@@ -759,7 +759,7 @@ sub {
   border-spacing: 0; }
   .table th,
   .table td {
-    border: 1px solid #d1d0d8;
+    border: 1px solid #b1b1bc;
     padding: 0.6666666667rem; }
 
 /**
@@ -767,6 +767,13 @@ sub {
    */
 .table--fixed {
   table-layout: fixed; }
+
+/**
+   * Tightly packed cells.
+   */
+.table--small th,
+.table--small td {
+  padding: 0.3333333333rem; }
 
 /**
  * The Predix Experience layout system uses `box-sizing: border-box;` and
@@ -883,11 +890,12 @@ button.btn {
   overflow-x: scroll; }
 
 td .viewing {
-  max-height: 2em;
+  max-height: 15px;
   overflow: hidden; }
 
 th {
-  border: 0 !important; }
+  border: 0 !important;
+  text-align: left; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
@@ -1400,3 +1408,6 @@ th {
     -webkit-flex: none !important;
         -ms-flex: none !important;
             flex: none !important; } }
+
+tbody tr:nth-child(odd) {
+  background-color: #efeff4; }

@@ -32,6 +32,8 @@ Predix branding rules go in px-data-table-predix.scss, not in this file.
 @import "px-typography-design/_base.typography.scss";
 
 $inuit-enable-table--fixed      : true;
+$inuit-enable-table--small      : true;
+$inuit-table-border-color       : $gray5;
 @import "px-tables-design/_base.tables.scss";
 
 @import "px-layout-design/_objects.layout.scss";
@@ -41,13 +43,16 @@ $inuit-enable-table--fixed      : true;
   overflow-x: scroll;
 }
 
-td .viewing {
-  max-height: 2em;
-  overflow: hidden;
+td {
+  & .viewing {
+    max-height: 15px;
+    overflow: hidden;
+  }
 }
 
 th {
   border: 0 !important;
+  text-align: left;
 }
 
 //
