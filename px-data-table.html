@@ -21,7 +21,7 @@ Element providing solution to no problem in particular. As a simple, increments 
 -->
 <dom-module id="px-data-table">
   <template>
-    <aha-table id="dataTable"></aha-table>
+    <aha-table striped={{striped}} id="dataTable"></aha-table>
   </template>
 </dom-module>
 
@@ -43,7 +43,12 @@ Element providing solution to no problem in particular. As a simple, increments 
         },
         observer: '_tableDataChanged',
         reflect: true
-      }
+      },
+      //striped: if table row is striped
+			striped: {
+				type: Boolean,
+				value: false
+			}
     },
 
     _tableDataChanged: function(changeRecord){

@@ -424,6 +424,11 @@
 				type: Boolean,
 				value: false
 			},
+			//striped: if table row is striped
+			striped: {
+				type: Boolean,
+				value: false
+			},
 			//copyable: if table row is copyable
 			copyable: {
 				type: Boolean,
@@ -637,6 +642,7 @@
 		},
 		getRowClass: function(row) {
 			return ['rows',
+					this.striped  ? 'striped'  : '',
 					row._modified ? 'modified' : '',
 					row._editing  ? 'editing'  : '',
 					row._selected ? 'selected'  : ''

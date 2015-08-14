@@ -1409,5 +1409,5 @@ th {
         -ms-flex: none !important;
             flex: none !important; } }
 
-tbody tr:nth-child(odd) {
+.striped:nth-child(odd) {
   background-color: #efeff4; }
