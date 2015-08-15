@@ -27,6 +27,7 @@
     "px-layout-design": "https://github.build.ge.com/pxd/px-layout-design.git#~0.3.7",
     "px-card": "https://github.build.ge.com/pxc/px-card.git#~0.0.8",
     "px-spacing-design": "https://github.build.ge.com/pxd/px-spacing-design.git#~0.3.3",
-    "px-buttons-design": "https://github.build.ge.com/pxd/px-buttons-design.git#~0.4.9"
+    "px-buttons-design": "https://github.build.ge.com/pxd/px-buttons-design.git#~0.4.9",
+    "px-forms-design": "https://github.build.ge.com/pxd/px-forms-design.git#~0.3.8"
   }
 }

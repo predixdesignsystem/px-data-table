@@ -62,14 +62,14 @@
 	<link rel="import" type="css" href="css/px-data-table.css" />
 	<style>
 		/* styles for the custom element itself - lowest specificity */
-		:host {
-			display: block;
+		/*:host {
+
 			box-sizing: border-box;
-		}
-		.rows:hover,
+		}*/
+		/*.rows:hover,
 		.selected {
 			background-color: #f3f3f3;
-		}
+		}*/
 		.column-head {
 			white-space: nowrap;
 		}
@@ -130,20 +130,11 @@
 		.pagination .disabled {
 			color: #ccc;
 		}
-		/*.pagination button+button {
-			margin-left: -10px;
-		}*/
-		/*.pagination button {
-			background-color: #fff;
-			border: 1px solid #eee;
-			cursor: pointer;
-			user-select: none;
-		}*/
-		.pagination input {
+		/*.pagination input {
 			background-color: #fff;
 			border: 1px solid #eee;
 			width: 20px;
-		}
+		}*/
 		.hide {
 			display: none !important;
 		}
@@ -176,8 +167,6 @@
 							title$="{{columntitle}}"
 							class$="{{getHeaderClass(column.name, column.sortable)}}">
 							<span
-								class$="{{getSortingClass(column, sortedColumn, descending)}}"></span>
-							<span
 								class="column-head"
 								title$="{{sorttitle}}"
 								on-click="sort">{{column.label}}</span>
@@ -185,6 +174,11 @@
 								hidden$="{{!column.hint}}"
 								class="hint"
 								title$="{{column.hint}}"></span>
+							<!-- <span
+								class$="{{getSortingClass(column, sortedColumn, descending)}}"></span> -->
+							<i class$="{{getSortingClass(column, sortedColumn, descending)}}"></i>
+
+
 						</th>
 					</template>
 				</tr>
@@ -332,25 +326,25 @@
 							<span class="paging">
 								<button
 									title$="{{firsttitle}}"
-									class$="{{getPageupClass(currentpage, 'first')}}"
+									class$="{{getPageupClass(currentpage, 'btn btn--icon first')}}"
 									on-click="firstPage">{{first}}</button>
 								<button
 									title$="{{previoustitle}}"
-									class$="{{getPageupClass(currentpage, 'previous')}}"
+									class$="{{getPageupClass(currentpage, 'btn btn--icon previous')}}"
 									on-click="prevPage">{{previous}}</button>
 								<span class="pager">
 									<span>{{pagetext}}</span>
-									<input type="text" value="{{currentpage}}"/>
+									<input class="text-input input--tiny" type="text" value="{{currentpage}}"/>
 									<span>{{pageoftext}}</span>
 									<span>{{pageCount}}</span>
 								</span>
 								<button
 									title$="{{nexttitle}}"
-									class$="{{getPagedownClass(currentpage, pageCount, 'next')}}"
+									class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--icon next')}}"
 									on-click="nextPage">{{next}}</button>
 								<button
 									title$="{{lasttitle}}"
-									class$="{{getPagedownClass(currentpage, pageCount, 'last')}}"
+									class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--icon last')}}"
 									on-click="lastPage">{{last}}</button>
 							</span>
 							<span class="pagesize">
@@ -692,10 +686,10 @@
 			return optionValue === row[column_name];
 		},
 		getPageupClass: function(currentPage, additionalClass) {
-			return [currentPage === 1 ? "disabled" : "available", additionalClass].join(' ');
+			return [currentPage === 1 ? "btn--disabled" : "", additionalClass].join(' ');
 		},
 		getPagedownClass: function(currentPage, pageCount, additionalClass) {
-			return [pageCount <= 0 || currentPage === pageCount ? "disabled" : "available", additionalClass].join(' ');
+			return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", additionalClass].join(' ');
 		},
 		getEditTitle: function(editable, editTitle) {
 			return editable ? editTitle : '';
@@ -704,9 +698,9 @@
 			return ['aha-', name, '-th'].join('') + (sortable ? ' sortable' : '');
 		},
 		getSortingClass: function(column, sortingColumn, descending) {
-			var classList = ['sorting']
+			var classList = ['sorting', 'fa']
 			if (sortingColumn === column.name) {
-				classList.push(descending ? 'arrow-down' : 'arrow-up');
+				classList.push(descending ? 'fa-arrow-down' : 'fa-arrow-up');
 			}
 			return classList.join(' ');
 		},
