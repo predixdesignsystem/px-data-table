@@ -66,20 +66,6 @@ th {
   text-align: left;
 }
 
-//
-// #dataTable::shadow tfoot .pagination {
-//   @extend %flex;
-//   @extend %flex--right;
-// }
-//
-// #dataTable::shadow tfoot .paging {
-//   @extend %flex__item;
-// }
-//
-// #dataTable::shadow tfoot button {
-//   @extend %btn;
-// }
-
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
