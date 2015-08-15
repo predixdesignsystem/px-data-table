@@ -30,17 +30,28 @@ Predix branding rules go in px-data-table-predix.scss, not in this file.
 @import "px-flexbox-design/_base.flexbox.scss";
 @import "px-viewport-design/_base.viewport.scss";
 @import "px-typography-design/_base.typography.scss";
+@import "px-iconography-design/_base.iconography.scss";
+
+$inuit-enable-input--tiny       : true;
+
+@import "px-forms-design/_base.forms.scss";
 
 $inuit-enable-table--fixed      : true;
 $inuit-enable-table--small      : true;
 $inuit-table-border-color       : $gray5;
+
 @import "px-tables-design/_base.tables.scss";
 
 @import "px-layout-design/_objects.layout.scss";
+
+$inuit-enable-btn--icon         : true;
+$inuit-enable-btn--disabled     : true;
+
 @import "px-buttons-design/_objects.buttons.scss";
 
 :host {
   overflow-x: scroll;
+  display: block;
 }
 
 td {
