@@ -327,11 +327,11 @@
 								<button
 									title$="{{firsttitle}}"
 									class$="{{getPageupClass(currentpage, 'btn btn--icon first')}}"
-									on-click="firstPage">{{first}}</button>
+									on-click="firstPage"><i class="fa fa-angle-double-left"></i></button>
 								<button
 									title$="{{previoustitle}}"
 									class$="{{getPageupClass(currentpage, 'btn btn--icon previous')}}"
-									on-click="prevPage">{{previous}}</button>
+									on-click="prevPage"><i class="fa fa-angle-left"></i></button>
 								<span class="pager">
 									<span>{{pagetext}}</span>
 									<input class="text-input input--tiny" type="text" value="{{currentpage}}"/>
@@ -341,11 +341,11 @@
 								<button
 									title$="{{nexttitle}}"
 									class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--icon next')}}"
-									on-click="nextPage">{{next}}</button>
+									on-click="nextPage"><i class="fa fa-angle-right"></i></button>
 								<button
 									title$="{{lasttitle}}"
 									class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--icon last')}}"
-									on-click="lastPage">{{last}}</button>
+									on-click="lastPage"><i class="fa fa-angle-double-right"></i></button>
 							</span>
 							<span class="pagesize">
 								<span>{{pagesizetext}}</span>
@@ -563,26 +563,6 @@
 			sizelist: {
 				type: Array,
 				value: [5, 10, 20, 50, 100]
-			},
-			//previous: label for the Previous button
-			previous: {
-				type: String,
-				value: "<"
-			},
-			//next: label for the Next button
-			next: {
-				type: String,
-				value: ">"
-			},
-			//first: label for the First page button
-			first: {
-				type: String,
-				value: "<<"
-			},
-			//last: label for the Last page button
-			last: {
-				type: String,
-				value: ">>"
 			},
 			//pagesizetitle: label for page size box
 			pagesizetitle: {
