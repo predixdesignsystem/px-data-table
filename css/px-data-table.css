@@ -2851,6 +2851,24 @@ button.btn {
   margin-left: 0.6666666667rem; }
 
 /**
+   * Buttons with no styles (good a11y practice to use <button> for actions rather than <a>).
+   */
+.btn--bare {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  line-height: inherit; }
+  .btn--bare,
+  .btn--bare:link,
+  .btn--bare:visited,
+  .btn--bare:hover,
+  .btn--bare:active,
+  .btn--bare:focus {
+    box-shadow: none;
+    background: none;
+    color: inherit; }
+
+/**
    * Change button colors for disabled buttons
    */
 .btn--disabled,
@@ -2870,17 +2888,6 @@ button.btn {
   cursor: not-allowed;
   background-color: white;
   color: #d1d0d8; }
-
-/**
-   * Round-ended buttons.
-   *
-   * 1. Overly-large value to ensure the radius rounds the whole end of the
-   *    button.
-   */
-.btn--icon {
-  width: 2em;
-  border-radius: 6.6666666667em;
-  padding: 1px 0 0 1px; }
 
 :host {
   display: block;
@@ -2922,6 +2929,34 @@ th {
  *
  * `.u-(m|p)(t|r|b|l|h|v)(-|+|0) {}` = utility - margin/padding top/right/bottom/left/horizontal/vertical less/more/none
  */
+/**
+     * Margin helper classes.
+     *
+     * Add margins.
+     */
+.u-m {
+  margin: 1rem !important; }
+
+.u-mt {
+  margin-top: 1rem !important; }
+
+.u-mr {
+  margin-right: 1rem !important; }
+
+.u-mb {
+  margin-bottom: 1rem !important; }
+
+.u-ml {
+  margin-left: 1rem !important; }
+
+.u-mh {
+  margin-right: 1rem !important;
+  margin-left: 1rem !important; }
+
+.u-mv {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important; }
+
 /**
      * Add small margins.
      */

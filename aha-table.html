@@ -335,12 +335,12 @@
 				<template is="dom-if" if="{{showGotoFirstLast}}">
 					<button
 						title$="{{firsttitle}}"
-						class$="{{getPageupClass(currentpage, 'btn btn--icon first')}}"
+						class$="{{getPageupClass(currentpage, 'btn btn--bare u-m first')}}"
 						on-click="firstPage"><i class="fa fa-angle-double-left"></i></button>
 				</template>
 				<button
 					title$="{{previoustitle}}"
-					class$="{{getPageupClass(currentpage, 'btn btn--icon previous')}}"
+					class$="{{getPageupClass(currentpage, 'btn btn--bare u-m previous')}}"
 					on-click="prevPage"><i class="fa fa-angle-left"></i></button>
 				<span class="pager">
 					<span>{{pagetext}}</span>
@@ -350,12 +350,12 @@
 				</span>
 				<button
 					title$="{{nexttitle}}"
-					class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--icon next')}}"
+					class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--bare u-m next')}}"
 					on-click="nextPage"><i class="fa fa-angle-right"></i></button>
 				<template is="dom-if" if="{{showGotoFirstLast}}">
 					<button
 						title$="{{lasttitle}}"
-						class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--icon last')}}"
+						class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--bare u-m last')}}"
 						on-click="lastPage"><i class="fa fa-angle-double-right"></i></button>
 				</template>
 			</span>
