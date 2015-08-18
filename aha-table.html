@@ -148,10 +148,10 @@
 		}
 	</style>
 	<template>
-		<table class="table table--small" id="aha_table_main" unresolved="">
+	<table class="table table--small scroll-body" id="aha_table_main" unresolved="">
 			<thead>
 				<tr>
-					<th>
+					<!-- <th>
 						<input type="checkbox"
 							on-change="selectall"
 							title$="{{selectalltitle}}"
@@ -161,7 +161,7 @@
 							hidden$="{{!searchable}}"
 							class="filterrow search"
 							on-click="toggleFilters"></div>
-					</th>
+					</th> -->
 					<template is="dom-repeat" items="{{meta}}" as="column">
 						<th
 							title$="{{columntitle}}"
@@ -169,16 +169,12 @@
 							<span
 								class="column-head"
 								title$="{{sorttitle}}"
-								on-click="sort">{{column.label}}</span>
+								on-click="sort">{{column.label}}<i class$="{{getSortingClass(column, sortedColumn, descending)}}"></i>
+							</span>
 							<span
 								hidden$="{{!column.hint}}"
-								class="hint"
+								class=" hint"
 								title$="{{column.hint}}"></span>
-							<!-- <span
-								class$="{{getSortingClass(column, sortedColumn, descending)}}"></span> -->
-							<i class$="{{getSortingClass(column, sortedColumn, descending)}}"></i>
-
-
 						</th>
 					</template>
 				</tr>
@@ -216,7 +212,7 @@
 			<tbody>
 				<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
 					<tr class$="{{getRowClass(row)}}">
-						<td>
+						<!-- <td>
 							<input type="checkbox"
 							 	title$="{{selecttitle}}"
 							 	hidden$="{{!selectable}}"
@@ -250,7 +246,7 @@
 								title$="{{moveuptitle}}">
 								<i></i>
 							</a>
-						</td>
+						</td> -->
 						<template is="dom-repeat" items="{{meta}}" as="column">
 							<td
 								on-dblclick="dbclick"
@@ -304,70 +300,69 @@
 											checked$="{{getValue(row,column.name)}}" />
 									</template>
 								</div>
-                                <div
+                <div
 									on-click="click"
 									class$="{{getReaderClass(row, column.name)}}">
-                                    <template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
-                                        <span>{{readContent(row, column)}}</span>
-                                    </template>
-                                    <template is="dom-if" if="{{isEqual(column.type, 'html')}}">
-                                        <aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
-                                    </template>
-                                </div>
+                    <template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
+                      <span>{{readContent(row, column)}}</span>
+                    </template>
+                    <template is="dom-if" if="{{isEqual(column.type, 'html')}}">
+                      <aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
+                    </template>
+                </div>
 							</td>
 						</template>
 					</tr>
 				</template>
 			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan$="{{getColspan(meta.length)}}">
-						<div class="pagination">
-							<span class="paging">
-								<button
-									title$="{{firsttitle}}"
-									class$="{{getPageupClass(currentpage, 'btn btn--icon first')}}"
-									on-click="firstPage"><i class="fa fa-angle-double-left"></i></button>
-								<button
-									title$="{{previoustitle}}"
-									class$="{{getPageupClass(currentpage, 'btn btn--icon previous')}}"
-									on-click="prevPage"><i class="fa fa-angle-left"></i></button>
-								<span class="pager">
-									<span>{{pagetext}}</span>
-									<input class="text-input input--tiny" type="text" value="{{currentpage}}"/>
-									<span>{{pageoftext}}</span>
-									<span>{{pageCount}}</span>
-								</span>
-								<button
-									title$="{{nexttitle}}"
-									class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--icon next')}}"
-									on-click="nextPage"><i class="fa fa-angle-right"></i></button>
-								<button
-									title$="{{lasttitle}}"
-									class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--icon last')}}"
-									on-click="lastPage"><i class="fa fa-angle-double-right"></i></button>
-							</span>
-							<span class="pagesize">
-								<span>{{pagesizetext}}</span>
-								<select value="{{pagesize}}" on-change="changeSize">
-									<template is="dom-repeat" items="{{sizelist}}" as="n">
-										<option selected$="{{isEqual(n, pagesize)}}">{{n}}</option>
-									</template>
-								</select>
-							</span>
-							<span class="summary">
-								<span>{{summarytext}}</span>
-								<span>{{firstItemIndex}}</span>
-								 -
-								<span>{{lastItemIndex}}</span>
-								<span>{{itemoftext}}</span>
-								<span>{{itemCount}}</span>
-							</span>
-						</div>
-					</td>
-				</tr>
-			</tfoot>
 		</table>
+		<tfoot>
+			<tr>
+				<td colspan$="{{getColspan(meta.length)}}">
+					<div class="pagination">
+						<span class="pagesize">
+							<span>{{pagesizetitle}}</span>
+							<select value="{{pagesize}}" on-change="changeSize">
+								<template is="dom-repeat" items="{{sizelist}}" as="n">
+									<option selected$="{{isEqual(n, pagesize)}}">{{n}}</option>
+								</template>
+							</select>
+						</span>
+						<span class="summary">
+							<span>{{summarytext}}</span>
+							<span>{{firstItemIndex}}</span>-<span>{{lastItemIndex}}</span>
+							<span>{{itemoftext}}</span>
+							<span>{{itemCount}}</span>
+						</span>
+						<span class="paging">
+							<button
+								title$="{{firsttitle}}"
+								class$="{{getPageupClass(currentpage, 'btn btn--icon first')}}"
+								on-click="firstPage"><i class="fa fa-angle-double-left"></i></button>
+							<button
+								title$="{{previoustitle}}"
+								class$="{{getPageupClass(currentpage, 'btn btn--icon previous')}}"
+								on-click="prevPage"><i class="fa fa-angle-left"></i></button>
+							<span class="pager">
+								<span>{{pagetext}}</span>
+								<input class="text-input input--tiny" type="text" value="{{currentpage}}"/>
+								<span>{{pageoftext}}</span>
+								<span>{{pageCount}}</span>
+							</span>
+							<button
+								title$="{{nexttitle}}"
+								class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--icon next')}}"
+								on-click="nextPage"><i class="fa fa-angle-right"></i></button>
+							<button
+								title$="{{lasttitle}}"
+								class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--icon last')}}"
+								on-click="lastPage"><i class="fa fa-angle-double-right"></i></button>
+						</span>
+					</div>
+				</td>
+			</tr>
+		</tfoot>
+
 		<content></content>
 	</template>
 </dom-module>
@@ -537,7 +532,7 @@
 			},
 			itemoftext: {
 				type: String,
-				value: "/"
+				value: "of"
 			},
 			//pageCount: the number of paginated pages
 			pageCount: {
@@ -567,7 +562,7 @@
 			//pagesizetitle: label for page size box
 			pagesizetitle: {
 				type: String,
-				value: ""
+				value: "Rows per page"
 			},
 			//summarytitle: label for table summary area
 			summarytitle: {
@@ -678,7 +673,7 @@
 			return ['aha-', name, '-th'].join('') + (sortable ? ' sortable' : '');
 		},
 		getSortingClass: function(column, sortingColumn, descending) {
-			var classList = ['sorting', 'fa']
+			var classList = ['u-ml-', 'sorting', 'fa']
 			if (sortingColumn === column.name) {
 				classList.push(descending ? 'fa-angle-down' : 'fa-angle-up');
 			}

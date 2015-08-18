@@ -50,8 +50,13 @@ $inuit-enable-btn--disabled     : true;
 @import "px-buttons-design/_objects.buttons.scss";
 
 :host {
-  overflow-x: scroll;
   display: block;
+  overflow-x: hidden;
+}
+
+.scroll-body{
+  display: block;
+  overflow-x: scroll;
 }
 
 td {
@@ -66,7 +71,14 @@ th {
   text-align: left;
 }
 
+.sorting {
+  min-width: 16px;
+}
+
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";
+
+$inuit-enable-margins--small      : true;
+
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
 @import "px-widths-responsive-design/_trumps.widths-responsive.scss";

@@ -2883,8 +2883,12 @@ button.btn {
   padding: 1px 0 0 1px; }
 
 :host {
-  overflow-x: scroll;
-  display: block; }
+  display: block;
+  overflow-x: hidden; }
+
+.scroll-body {
+  display: block;
+  overflow-x: scroll; }
 
 td .viewing {
   max-height: 15px;
@@ -2893,6 +2897,9 @@ td .viewing {
 th {
   border: 0 !important;
   text-align: left; }
+
+.sorting {
+  min-width: 16px; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
@@ -2918,6 +2925,32 @@ th {
  *
  * `.u-(m|p)(t|r|b|l|h|v)(-|+|0) {}` = utility - margin/padding top/right/bottom/left/horizontal/vertical less/more/none
  */
+/**
+     * Add small margins.
+     */
+.u-m- {
+  margin: 0.6666666667rem !important; }
+
+.u-mt- {
+  margin-top: 0.6666666667rem !important; }
+
+.u-mr- {
+  margin-right: 0.6666666667rem !important; }
+
+.u-mb- {
+  margin-bottom: 0.6666666667rem !important; }
+
+.u-ml- {
+  margin-left: 0.6666666667rem !important; }
+
+.u-mh- {
+  margin-right: 0.6666666667rem !important;
+  margin-left: 0.6666666667rem !important; }
+
+.u-mv- {
+  margin-top: 0.6666666667rem !important;
+  margin-bottom: 0.6666666667rem !important; }
+
 /**
  * A series of width helper classes that you can use to size things like grid
  * systems. Classes can take a fraction-like format (e.g. `.u-2/3`) or a spoken-
