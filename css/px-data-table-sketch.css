@@ -2917,34 +2917,6 @@ th {
  * `.u-(m|p)(t|r|b|l|h|v)(-|+|0) {}` = utility - margin/padding top/right/bottom/left/horizontal/vertical less/more/none
  */
 /**
-     * Margin helper classes.
-     *
-     * Add margins.
-     */
-.u-m {
-  margin: 1rem !important; }
-
-.u-mt {
-  margin-top: 1rem !important; }
-
-.u-mr {
-  margin-right: 1rem !important; }
-
-.u-mb {
-  margin-bottom: 1rem !important; }
-
-.u-ml {
-  margin-left: 1rem !important; }
-
-.u-mh {
-  margin-right: 1rem !important;
-  margin-left: 1rem !important; }
-
-.u-mv {
-  margin-top: 1rem !important;
-  margin-bottom: 1rem !important; }
-
-/**
      * Add small margins.
      */
 .u-m- {
@@ -2969,6 +2941,32 @@ th {
 .u-mv- {
   margin-top: 0.6666666667rem !important;
   margin-bottom: 0.6666666667rem !important; }
+
+/**
+     * Add small paddings.
+     */
+.u-p- {
+  padding: 0.6666666667rem !important; }
+
+.u-pt- {
+  padding-top: 0.6666666667rem !important; }
+
+.u-pr- {
+  padding-right: 0.6666666667rem !important; }
+
+.u-pb- {
+  padding-bottom: 0.6666666667rem !important; }
+
+.u-pl- {
+  padding-left: 0.6666666667rem !important; }
+
+.u-ph- {
+  padding-right: 0.6666666667rem !important;
+  padding-left: 0.6666666667rem !important; }
+
+.u-pv- {
+  padding-top: 0.6666666667rem !important;
+  padding-bottom: 0.6666666667rem !important; }
 
 /**
  * A series of width helper classes that you can use to size things like grid
