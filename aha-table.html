@@ -167,7 +167,7 @@
 							title$="{{columntitle}}"
 							class$="{{getHeaderClass(column.name, column.sortable)}}">
 							<span
-								class="column-head"
+								class$="{{getTextSortingClass(column, sortedColumn, descending)}}"
 								title$="{{sorttitle}}"
 								on-click="sort">{{column.label}}<i class$="{{getSortingClass(column, sortedColumn, descending)}}"></i>
 							</span>
@@ -678,6 +678,14 @@
 			var classList = ['u-ml-', 'sorting', 'fa']
 			if (sortingColumn === column.name) {
 				classList.push(descending ? 'fa-angle-down' : 'fa-angle-up');
+			}
+			return classList.join(' ');
+		},
+		getTextSortingClass: function(column, sortingColumn, descending) {
+
+			var classList = ['column-head']
+			if (sortingColumn === column.name) {
+				classList.push('sorted-text');
 			}
 			return classList.join(' ');
 		},

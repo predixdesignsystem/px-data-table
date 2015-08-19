@@ -3471,3 +3471,6 @@ th {
 
 .striped:nth-child(odd) {
   background-color: #efeff4; }
+
+.sorted-text {
+  color: #0a9ec1; }
