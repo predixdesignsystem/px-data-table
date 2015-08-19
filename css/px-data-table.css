@@ -3474,3 +3474,6 @@ th {
 
 .sorted-text {
   color: #0a9ec1; }
+
+.btn--pagination:focus {
+  outline: 0; }
