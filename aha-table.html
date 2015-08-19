@@ -151,17 +151,6 @@
 	<table class="table table--small scroll-body" id="aha_table_main" unresolved="">
 			<thead>
 				<tr>
-					<!-- <th>
-						<input type="checkbox"
-							on-change="selectall"
-							title$="{{selectalltitle}}"
-							hidden$="{{!selectable}}"/>
-						<div
-							title$="{{searchtitle}}"
-							hidden$="{{!searchable}}"
-							class="filterrow search"
-							on-click="toggleFilters"></div>
-					</th> -->
 					<template is="dom-repeat" items="{{meta}}" as="column">
 						<th
 							title$="{{columntitle}}"
@@ -212,41 +201,6 @@
 			<tbody>
 				<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
 					<tr class$="{{getRowClass(row)}}">
-						<!-- <td>
-							<input type="checkbox"
-							 	title$="{{selecttitle}}"
-							 	hidden$="{{!selectable}}"
-								on-change="select"
-								checked$="{{row._selected}}"/>
-							<a
-							 	hidden$="{{!copyable}}"
-								class="copy-er"
-								on-click="copy"
-								title$="{{copytitle}}">
-								<i></i>
-							</a>
-							<a
-							 	hidden$="{{!removable}}"
-								class="remove-er"
-								on-click="remove"
-								title="{{removetitle}}">
-								<i></i>
-							</a>
-							<a
-							 	hidden$="{{!movable}}"
-								class="move-down-er"
-								on-click="movedown"
-								title$="{{movedowntitle}}">
-								<i></i>
-							</a>
-							<a
-							 	hidden$="{{!movable}}"
-							  class="move-up-er"
-								on-click="moveup"
-								title$="{{moveuptitle}}">
-								<i></i>
-							</a>
-						</td> -->
 						<template is="dom-repeat" items="{{meta}}" as="column">
 							<td
 								on-dblclick="dbclick"
