@@ -17,7 +17,8 @@
     "polymer": "~1.0.0",
     "px-theme": "git://github.build.ge.com/PXc/px-theme.git#~0.2.0",
     "iron-list": "PolymerElements/iron-list#~1.0.2",
-    "px-typography-design": "https://github.build.ge.com/pxd/px-typography-design.git#~0.2.6"
+    "px-typography-design": "https://github.build.ge.com/pxd/px-typography-design.git#~0.2.6",
+    "google-analytics": "~0.1.0"
   },
   "devDependencies": {
     "px-tables-design": "git://github.build.ge.com/PXd/px-tables-design.git#~0.3.0",

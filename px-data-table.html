@@ -5,6 +5,7 @@
     See https://github.sw.ge.com/jreichenberg/grunt-dep-serve#why-do-we-need-this
 -->
 <link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../google-analytics/google-analytics.html">
 <link rel="import" href="aha-table.html">
 
 <!--
@@ -21,6 +22,7 @@ Element providing solution to no problem in particular. As a simple, increments 
 -->
 <dom-module id="px-data-table">
   <template>
+    <google-analytics code="UA-35812695-2"></google-analytics>
     <aha-table striped={{striped}} id="dataTable"></aha-table>
   </template>
 </dom-module>
