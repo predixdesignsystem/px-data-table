@@ -23,8 +23,8 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    'css/noprefix/px-data-table-sketch.css': 'sass/px-data-table-sketch.scss',
-                    'css/noprefix/px-data-table.css': 'sass/px-data-table-predix.scss'
+                    'css/noprefix/aha-table-sketch.css': 'sass/aha-table-sketch.scss',
+                    'css/noprefix/aha-table.css': 'sass/aha-table-predix.scss'
                 }
             }
         },
