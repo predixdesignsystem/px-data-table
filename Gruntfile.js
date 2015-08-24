@@ -21,11 +21,17 @@ module.exports = function (grunt) {
                   bower: true
                 }
             },
-            dist: {
-                files: {
-                    'css/noprefix/aha-table-sketch.css': 'sass/aha-table-sketch.scss',
-                    'css/noprefix/aha-table.css': 'sass/aha-table-predix.scss'
-                }
+            ahaTable: {
+              files: {
+                'css/noprefix/aha-table-sketch.css': 'sass/aha-table-sketch.scss',
+                'css/noprefix/aha-table.css': 'sass/aha-table-predix.scss'
+              }
+            },
+            pxDataTable: {
+              files: {
+                'css/noprefix/px-data-table-sketch.css': 'sass/px-data-table-sketch.scss',
+                'css/noprefix/px-data-table.css': 'sass/px-data-table-predix.scss'
+              }
             }
         },
 

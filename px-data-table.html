@@ -21,9 +21,19 @@ Element providing solution to no problem in particular. As a simple, increments 
 @demo demo.html
 -->
 <dom-module id="px-data-table">
+  <link rel="import" type="css" href="css/px-data-table.css" />
   <template>
     <google-analytics code="UA-35812695-2"></google-analytics>
-    <aha-table striped={{striped}} id="dataTable"></aha-table>
+    <div class="flex">
+      <div class="flex__item flex--right btn-group">
+        <button class="btn btn--bare u-p-"><i class="fa fa-table"></i></button>
+        <button class="btn btn--bare u-p-"><i class="fa fa-filter"></i></button>
+        <button class="btn btn--bare u-p-"><i class="fa fa-share-square-o"></i></button>
+      </div>
+    </div>
+    <div class="flex">
+      <aha-table striped={{striped}} id="dataTable"></aha-table>
+    </div>
   </template>
 </dom-module>
 
