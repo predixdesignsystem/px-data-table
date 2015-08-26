@@ -526,220 +526,6 @@ html {
 .viewport--full-height {
   min-height: 100vh; }
 
-/*------------------------------------*    #PX-COLORS-DESIGN
-\*------------------------------------*/
-/**
- * Brand Colors
- */
-/**
-     * Primary
-     */
-/**
-     * Light
-     */
-/**
-     * Dark
-     */
-/**
- * Monochromatic (gray10 is darkest, gray1 is lightest)
- */
-/**
- * Buttons
- */
-/**
- * Selection
- */
-/**
- * Alerts
- */
-/**
- * Data Visualization
- */
-/**
-     * Basic
-     */
-/**
-     * Light
-     */
-/**
-     * Dark
-     */
-@font-face {
-  font-family: "GE Inspira";
-  font-weight: normal;
-  font-style: normal;
-  src: url("../px-typography-design/type/GEInspMd.eot");
-  src: url("../px-typography-design/type/GEInspMd.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspMd.woff") format("woff"), url("../px-typography-design/type/GEInspMd.ttf") format("truetype"), url("../px-typography-design/type/GEInspMd.svg#GE Inspira") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira";
-  font-weight: normal;
-  font-style: italic;
-  src: url("../px-typography-design/type/GEInspMdIt.eot");
-  src: url("../px-typography-design/type/GEInspMdIt.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspMdIt.woff") format("woff"), url("../px-typography-design/type/GEInspMdIt.ttf") format("truetype"), url("../px-typography-design/type/GEInspMdIt.svg#GE Inspira") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira";
-  font-weight: bold;
-  font-style: normal;
-  src: url("../px-typography-design/type/GEInspBd.eot");
-  src: url("../px-typography-design/type/GEInspBd.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspBd.woff") format("woff"), url("../px-typography-design/type/GEInspBd.ttf") format("truetype"), url("../px-typography-design/type/GEInspBd.svg#GE Inspira") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira";
-  font-weight: bold;
-  font-style: italic;
-  src: url("../px-typography-design/type/GEInspBI.eot");
-  src: url("../px-typography-design/type/GEInspBI.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspBI.woff") format("woff"), url("../px-typography-design/type/GEInspBI.ttf") format("truetype"), url("../px-typography-design/type/GEInspBI.svg#GE Inspira") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira Sans";
-  font-weight: normal;
-  font-style: normal;
-  src: url("../px-typography-design/type/GEInspiraSans-Regular-v01.eot");
-  src: url("../px-typography-design/type/GEInspiraSans-Regular-v01.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspiraSans-Regular-v01.woff") format("woff"), url("../px-typography-design/type/GEInspiraSans-Regular-v01.ttf") format("truetype"), url("../px-typography-design/type/GEInspiraSans-Regular-v01.svg#GE Inspira Sans") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira Sans";
-  font-weight: normal;
-  font-style: italic;
-  src: url("../px-typography-design/type/GEInspiraSans-Italic-v01.eot");
-  src: url("../px-typography-design/type/GEInspiraSans-Italic-v01.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspiraSans-Italic-v01.woff") format("woff"), url("../px-typography-design/type/GEInspiraSans-Italic-v01.ttf") format("truetype"), url("../px-typography-design/type/GEInspiraSans-Italic-v01.svg#GE Inspira Sans") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira Sans";
-  font-weight: bold;
-  font-style: normal;
-  src: url("../px-typography-design/type/GEInspiraSans-Bold-v01.eot");
-  src: url("../px-typography-design/type/GEInspiraSans-Bold-v01.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspiraSans-Bold-v01.woff") format("woff"), url("../px-typography-design/type/GEInspiraSans-Bold-v01.ttf") format("truetype"), url("../px-typography-design/type/GEInspiraSans-Bold-v01.svg#GE Inspira Sans") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira Sans";
-  font-weight: bold;
-  font-style: italic;
-  src: url("../px-typography-design/type/GEInspiraSans-BoldItalic-v01.eot");
-  src: url("../px-typography-design/type/GEInspiraSans-BoldItalic-v01.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspiraSans-BoldItalic-v01.woff") format("woff"), url("../px-typography-design/type/GEInspiraSans-BoldItalic-v01.ttf") format("truetype"), url("../px-typography-design/type/GEInspiraSans-BoldItalic-v01.svg#GE Inspira Sans") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira Serif";
-  font-weight: normal;
-  font-style: normal;
-  src: url("../px-typography-design/type/GEInspiraSerif-Regular-v01.eot");
-  src: url("../px-typography-design/type/GEInspiraSerif-Regular-v01.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspiraSerif-Regular-v01.woff") format("woff"), url("../px-typography-design/type/GEInspiraSerif-Regular-v01.ttf") format("truetype"), url("../px-typography-design/type/GEInspiraSerif-Regular-v01.svg#GE Inspira Serif") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira Serif";
-  font-weight: normal;
-  font-style: italic;
-  src: url("../px-typography-design/type/GEInspiraSerif-Italic-v01.eot");
-  src: url("../px-typography-design/type/GEInspiraSerif-Italic-v01.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspiraSerif-Italic-v01.woff") format("woff"), url("../px-typography-design/type/GEInspiraSerif-Italic-v01.ttf") format("truetype"), url("../px-typography-design/type/GEInspiraSerif-Italic-v01.svg#GE Inspira Serif") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira Serif";
-  font-weight: bold;
-  font-style: normal;
-  src: url("../px-typography-design/type/GEInspiraSerif-Bold-v01.eot");
-  src: url("../px-typography-design/type/GEInspiraSerif-Bold-v01.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspiraSerif-Bold-v01.woff") format("woff"), url("../px-typography-design/type/GEInspiraSerif-Bold-v01.ttf") format("truetype"), url("../px-typography-design/type/GEInspiraSerif-Bold-v01.svg#GE Inspira Serif") format("svg"); }
-
-@font-face {
-  font-family: "GE Inspira Serif";
-  font-weight: bold;
-  font-style: italic;
-  src: url("../px-typography-design/type/GEInspiraSerif-BoldItalic-v01.eot");
-  src: url("../px-typography-design/type/GEInspiraSerif-BoldItalic-v01.eot?#iefix") format("embedded-opentype"), url("../px-typography-design/type/GEInspiraSerif-BoldItalic-v01.woff") format("woff"), url("../px-typography-design/type/GEInspiraSerif-BoldItalic-v01.ttf") format("truetype"), url("../px-typography-design/type/GEInspiraSerif-BoldItalic-v01.svg#GE Inspira Serif") format("svg"); }
-
-html {
-  font-family: "GE Inspira Sans", sans-serif; }
-
-:host {
-  font-family: "GE Inspira Sans", sans-serif; }
-
-/**
- * Font weights
- */
-.weight--light {
-  font-weight: 300 !important; }
-
-.weight--normal {
-  font-weight: 400 !important; }
-
-.weight--semibold {
-  font-weight: 600 !important; }
-
-/* Links
-   ========================================================================== */
-/**
- * Remove the gray background color from active links in IE 10.
- */
-a {
-  background-color: transparent;
-  /**
- * Default link colors
- */
-  /**
- * Improve readability when focused and also mouse hovered in all browsers.
- */ }
-  a:link,
-  a:visited {
-    color: #3e87e8; }
-  a:hover {
-    color: #3573c5; }
-  a:active {
-    color: #2b5ea2; }
-  a:active,
-  a:hover {
-    outline: 0; }
-
-/* Text-level semantics
-   ========================================================================== */
-/**
- * Address styling not present in IE 8/9/10/11, Safari, and Chrome.
- */
-abbr[title] {
-  border-bottom: 1px dotted; }
-
-/**
- * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.
- */
-b,
-strong {
-  font-weight: bold; }
-
-/**
- * Address styling not present in Safari and Chrome.
- */
-dfn {
-  font-style: italic; }
-
-/**
- * Address styling not present in IE 8/9.
- */
-mark {
-  background: #ff0;
-  color: #000; }
-
-/**
- * Address inconsistent and variable font size in all browsers.
- */
-small {
-  font-size: 80%; }
-
-/**
- * Prevent `sub` and `sup` affecting `line-height` in all browsers.
- */
-sub,
-sup {
-  font-size: 75%;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline; }
-
-sup {
-  top: -0.5em; }
-
-sub {
-  bottom: -0.25em; }
-
 /*!
  *  Font Awesome 4.3.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -2546,6 +2332,44 @@ sub {
   -webkit-transform: scale(-1, 1);
           transform: scale(-1, 1); }
 
+/*------------------------------------*    #PX-COLORS-DESIGN
+\*------------------------------------*/
+/**
+ * Brand Colors
+ */
+/**
+     * Primary
+     */
+/**
+     * Light
+     */
+/**
+     * Dark
+     */
+/**
+ * Monochromatic (gray10 is darkest, gray1 is lightest)
+ */
+/**
+ * Buttons
+ */
+/**
+ * Selection
+ */
+/**
+ * Alerts
+ */
+/**
+ * Data Visualization
+ */
+/**
+     * Basic
+     */
+/**
+     * Light
+     */
+/**
+     * Dark
+     */
 fieldset {
   margin: 0; }
   fieldset, fieldset legend {
@@ -2817,7 +2641,7 @@ textarea {
   .btn:hover,
   .btn:focus,
   .btn:active {
-    color: #3b3b3f; }
+    color: black; }
   .btn:hover,
   .btn:focus {
     border-color: #9999a3;
@@ -2827,6 +2651,9 @@ textarea {
     border-color: #7c7c84;
     box-shadow: none;
     background-color: #9999a3; }
+  .btn:active,
+  .btn:focus {
+    outline: none; }
 
 button.btn {
   -webkit-appearance: button; }
@@ -2878,7 +2705,8 @@ button.btn {
 
 :host {
   display: block;
-  overflow-x: hidden; }
+  overflow-x: hidden;
+  font-family: var(--px-font-family); }
 
 .scroll-body {
   display: block;
