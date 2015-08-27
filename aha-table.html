@@ -117,24 +117,6 @@
 		.hint:before {
 			content: 'i';
 		}
-		.searchable input,
-		.searchable select {
-			width: 80px;
-		}
-		.pagination .active {
-			background-color: #ccc;
-		}
-		.pagination .available:hover {
-			background-color: #eee;
-		}
-		.pagination .disabled {
-			color: #ccc;
-		}
-		/*.pagination input {
-			background-color: #fff;
-			border: 1px solid #eee;
-			width: 20px;
-		}*/
 		.hide {
 			display: none !important;
 		}
@@ -319,6 +301,7 @@
 <script>
 	Polymer({
 		is: 'aha-table',
+		behaviors: [pxDataTableBehaviors],
 		properties: {
 			//data: instance of the model data
 			data: {
@@ -858,11 +841,7 @@
 							value: typeof v === "string" ? v.toLowerCase() : v
 						};
 					}, this)
-					.sort(function(a, b) {
-						return this.descending
-						? (a.value < b.value ? 1 : -1)
-						: (a.value > b.value ? 1 : -1);
-					}.bind(this))
+					.sort(pxDataTableBehaviors.sort.bind(this))
 					.map(function(e){
 						return filteredRows[e.index];
 					});

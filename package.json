@@ -22,7 +22,6 @@
         "webdriver-support": "git://github.build.ge.com/DT/webdriver-support.git#v2.2.0",
         "grunt-autoprefixer": "^3.0.3",
         "node-sass-import-once": "^1.2.0",
-        "grunt-concurrent": "^2.0.1",
-        "livereload": "^0.3.7"
+        "grunt-concurrent": "^2.0.1"
     }
 }

@@ -51,7 +51,6 @@ $inuit-enable-btn--disabled     : true;
 :host {
   display: block;
   overflow-x: hidden;
-  font-family: var(--px-font-family);
 }
 
 .scroll-body{
@@ -69,6 +68,11 @@ td {
 th {
   border: 0 !important;
   text-align: left;
+}
+
+.searchable input,
+.searchable select {
+  width: 80px;
 }
 
 // Trumps

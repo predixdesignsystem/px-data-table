@@ -12,6 +12,17 @@
     <link rel="import" href="px-data-table.html" />
     <link rel="import" href="../iron-ajax/iron-ajax.html" />
     <link rel="import" href="../px-card/px-card.html" />
+
+    <script>
+      pxDataTableBehaviors = {
+        sort: function(a, b) {
+          return this.descending
+          ? (a.value < b.value ? 1 : -1)
+          : (a.value > b.value ? 1 : -1);
+        }
+      };
+    </script>
+
     <style>
       body{
         background-color: gray;
