@@ -34,3 +34,9 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 .btn--pagination:focus{
   outline:0;
 }
+
+.text-input{
+    border-top: 1px solid #b1b1bc !important;
+    border-left: 1px solid #b1b1bc !important;
+    background-color: transparent !important;
+}

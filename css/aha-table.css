@@ -2541,6 +2541,12 @@ textarea {
 .input--tiny {
   max-width: 7.0666666667rem; }
 
+/**
+   * Text inputs with no styles.
+   */
+.text-input--bare {
+  border: 0 !important; }
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -2734,7 +2740,7 @@ th {
 
 .searchable input,
 .searchable select {
-  width: 80px; }
+  width: 20px; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
@@ -2787,6 +2793,32 @@ th {
   margin-bottom: 0.6666666667rem !important; }
 
 /**
+     * Remove margins.
+     */
+.u-m0 {
+  margin: 0 !important; }
+
+.u-mt0 {
+  margin-top: 0 !important; }
+
+.u-mr0 {
+  margin-right: 0 !important; }
+
+.u-mb0 {
+  margin-bottom: 0 !important; }
+
+.u-ml0 {
+  margin-left: 0 !important; }
+
+.u-mh0 {
+  margin-right: 0 !important;
+  margin-left: 0 !important; }
+
+.u-mv0 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important; }
+
+/**
      * Add small paddings.
      */
 .u-p- {
@@ -2811,6 +2843,32 @@ th {
 .u-pv- {
   padding-top: 0.6666666667rem !important;
   padding-bottom: 0.6666666667rem !important; }
+
+/**
+     * Remove paddings.
+     */
+.u-p0 {
+  padding: 0 !important; }
+
+.u-pt0 {
+  padding-top: 0 !important; }
+
+.u-pr0 {
+  padding-right: 0 !important; }
+
+.u-pb0 {
+  padding-bottom: 0 !important; }
+
+.u-pl0 {
+  padding-left: 0 !important; }
+
+.u-ph0 {
+  padding-right: 0 !important;
+  padding-left: 0 !important; }
+
+.u-pv0 {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important; }
 
 /**
  * A series of width helper classes that you can use to size things like grid
@@ -3308,3 +3366,8 @@ th {
 
 .btn--pagination:focus {
   outline: 0; }
+
+.text-input {
+  border-top: 1px solid #b1b1bc !important;
+  border-left: 1px solid #b1b1bc !important;
+  background-color: transparent !important; }

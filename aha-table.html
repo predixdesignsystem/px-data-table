@@ -78,9 +78,6 @@
 		.filterrow {
 			cursor: pointer;
 		}
-		.sortable .column-head:hover {
-			text-decoration: underline;
-		}
 		.arrow-up,
 		.arrow-down,
 		.filterrow,
@@ -120,14 +117,7 @@
 		.hide {
 			display: none !important;
 		}
-		.empty {
-			font-style: italic;
-			color: #999;
-		}
-		.viewing {
-			min-width: 100%;
-			min-height: 1em;
-		}
+
 	</style>
 	<template>
 	<table class="table table--small scroll-body" id="aha_table_main" unresolved="">
@@ -149,32 +139,23 @@
 						</th>
 					</template>
 				</tr>
-				<tr class="search-head" id="filter" hidden$="{{!searchable}}">
-
+				<tr id="filter" hidden$="{{!searchable}}">
 					<template is="dom-repeat" items="{{meta}}" as="column">
-						<th>
+						<th class="u-p0">
 							<template is="dom-if" if="{{column.searchable}}">
-								<div
-									class="searchable">
-									<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-										<select
-											on-change="search">
-												<template is="dom-repeat" items="{{column.options}}" as="option">
-													<option value$="{{option.value}}">{{option.label}}</option>
-												</template>
-										</select>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-										<input type="checkbox"
-											title$="{{column.hint}}"
-											on-change="search"/>
-									</template>
-									<template is="dom-if" if="{{isTextType(column.type)}}">
-										<input type="text"
-											on-keyup="search"
-											placeholder$="{{column.searchplaceholder}}"/>
-									</template>
-								</div>
+								<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
+									<select on-change="search">
+											<template is="dom-repeat" items="{{column.options}}" as="option">
+												<option value$="{{option.value}}">{{option.label}}</option>
+											</template>
+									</select>
+								</template>
+								<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
+									<input type="checkbox" title$="{{column.hint}}" on-change="search"/>
+								</template>
+								<template is="dom-if" if="{{isTextType(column.type)}}">
+									<input class="text-input text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
+								</template>
 							</template>
 						</th>
 					</template>
@@ -778,7 +759,6 @@
 				});
 
 				this.filtered = this.data.some(function(row){return row._filtered;});
-
 				this.refreshPagination();
 			}
 		},
