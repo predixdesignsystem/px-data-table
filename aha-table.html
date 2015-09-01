@@ -151,7 +151,7 @@
 									</select>
 								</template>
 								<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-									<input type="checkbox" title$="{{column.hint}}" on-change="search"/>
+									<input class="text-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
 								</template>
 								<template is="dom-if" if="{{isTextType(column.type)}}">
 									<input class="text-input text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
@@ -755,7 +755,7 @@
 						e.target.value === ""
 						||
 						// non-empty search and the content matches.
-						row[searchedColumn]
+						row[searchedColumn].toString()
 						&& row[searchedColumn].toString().toLowerCase().indexOf(e.target.value.toString().toLowerCase()) > -1) {
 						matched = true;
 					}
