@@ -73,7 +73,7 @@
 		.column-head {
 			white-space: nowrap;
 		}
-		.sortable .column-head,
+		/*.sortable .column-head,
 		.hint
 		.filterrow {
 			cursor: pointer;
@@ -116,7 +116,7 @@
 		}
 		.hide {
 			display: none !important;
-		}
+		}*/
 
 	</style>
 	<template>
@@ -826,6 +826,11 @@
 						return filteredRows[e.index];
 					});
 			}
+
+			if (filteredRows.length < this.pagesize) {
+
+			}
+
 			this.set('viewingRows', filteredRows.slice(from, to));
 		},
 		// call this when total count is change.

@@ -32,13 +32,16 @@
 
   <body unresolved>
     <template is="dom-bind">
-      <iron-ajax url="../iron-list/demo/data/contacts.json" last-response="{{data}}" auto></iron-ajax>
+      <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
+
       <px-card header-text="Data Table">
         <px-data-table striped table-data="{{data}}"></px-data-table>
       </px-card>
+
       <px-card header-text="Data Table2">
         <px-data-table table-data="{{data}}"></px-data-table>
       </px-card>
+
     </template>
   </body>
 

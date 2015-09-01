@@ -2731,8 +2731,9 @@ button.btn {
   overflow-x: scroll; }
 
 td .viewing {
-  max-height: 15px;
-  overflow: hidden; }
+  max-height: 30px;
+  overflow: hidden;
+  white-space: nowrap; }
 
 th {
   border: 0 !important;

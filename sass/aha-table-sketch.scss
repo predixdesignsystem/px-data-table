@@ -61,8 +61,9 @@ $inuit-enable-btn--disabled     : true;
 
 td {
   & .viewing {
-    max-height: 15px;
+    max-height: 30px;
     overflow: hidden;
+    white-space: nowrap;
   }
 }
 
