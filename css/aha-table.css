@@ -2570,6 +2570,41 @@ textarea {
   padding: 0.3333333333rem; }
 
 /**
+   * Tables with widely padded cells.
+   */
+.table--large th,
+.table--large td {
+  padding: 1rem; }
+
+/**
+   * Add borders only to `table`’s rows.
+   */
+.table--rows,
+.table--rows th,
+.table--rows td {
+  border: 0 solid #b1b1bc; }
+
+.table--rows {
+  border-top-width: 1px; }
+  .table--rows th,
+  .table--rows td {
+    border-bottom-width: 1px; }
+
+/**
+   * Add borders only to `table`’s columns.
+   */
+.table--columns,
+.table--columns th,
+.table--columns td {
+  border: 0 solid #b1b1bc; }
+
+.table--columns {
+  border-left-width: 1px; }
+  .table--columns th,
+  .table--columns td {
+    border-right-width: 1px; }
+
+/**
  * The Predix Experience layout system uses `box-sizing: border-box;` and
  * `display: flex;` to create an extremely powerful, flexible
  * alternative to the traditional grid system. The number of `.layout__items`

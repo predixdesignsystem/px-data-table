@@ -120,7 +120,7 @@
 
 	</style>
 	<template>
-	<table class="table table--small scroll-body" id="aha_table_main" unresolved="">
+	<table class$="{{getTableClass(tableRows, tableColumns)}}" id="aha_table_main" unresolved="">
 			<thead>
 				<tr>
 					<template is="dom-repeat" items="{{meta}}" as="column">
@@ -329,6 +329,16 @@
 			},
 			//striped: if table row is striped
 			striped: {
+				type: Boolean,
+				value: false
+			},
+			//tableRows: if table row is striped
+			tableRows: {
+				type: Boolean,
+				value: false
+			},
+			//tableColumns: if table row is striped
+			tableColumns: {
 				type: Boolean,
 				value: false
 			},
@@ -608,6 +618,16 @@
 		},
 		getCellClass: function(name) {
 			return ['aha-td aha-', name, '-td'].join('');
+		},
+		getTableClass: function(tableRows, tableColumns){
+			var classList= ['table', 'table--small', 'scroll-body'];
+			if (tableRows){
+				classList.push('table--rows');
+			}
+			if (tableColumns){
+				classList.push('table--columns');
+			}
+			return classList.join(' ');
 		},
 		isTextType: function(type) {
 			return type !== 'choice' && type !== 'boolean';

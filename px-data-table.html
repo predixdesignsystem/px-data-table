@@ -33,7 +33,11 @@ Element providing solution to no problem in particular. As a simple, increments 
       </div>
     </div>
     <div class="flex">
-      <aha-table searchable="{{_isFiltered}}"  striped="{{striped}}" id="dataTable"></aha-table>
+      <aha-table  searchable="{{_isFiltered}}"
+                  striped="{{striped}}"
+                  table-columns="{{tableColumns}}"
+                  table-rows="{{tableRows}}"
+                  id="dataTable"></aha-table>
     </div>
   </template>
 </dom-module>
@@ -55,7 +59,7 @@ Element providing solution to no problem in particular. As a simple, increments 
           return [];
         },
         observer: '_tableDataChanged',
-        reflect: true
+        notify: true
       },
       //striped: if table row is striped
 			striped: {
@@ -64,6 +68,14 @@ Element providing solution to no problem in particular. As a simple, increments 
 			},
       //_isFiltered: if table has column filtering capability turned on.
       _isFiltered: {
+				type: Boolean,
+				value: false
+			},
+      tableColumns:{
+				type: Boolean,
+				value: false
+			},
+      tableRows:{
 				type: Boolean,
 				value: false
 			}

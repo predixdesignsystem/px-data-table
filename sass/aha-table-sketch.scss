@@ -38,6 +38,9 @@ $inuit-enable-text-input--bare  : true;
 
 $inuit-enable-table--fixed      : true;
 $inuit-enable-table--small      : true;
+$inuit-enable-table--large      : true;
+$inuit-enable-table--rows       : true;
+$inuit-enable-table--columns    : true;
 $inuit-table-border-color       : $gray5;
 
 @import "px-tables-design/_base.tables.scss";
