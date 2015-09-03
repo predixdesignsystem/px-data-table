@@ -116,6 +116,7 @@ ul, ol, dl,
 blockquote, p, address,
 hr,
 table,
+.table,
 fieldset, figure,
 pre {
   margin-bottom: 1rem; }
@@ -2539,7 +2540,9 @@ textarea {
   border-collapse: collapse;
   border-spacing: 0; }
   .table th,
-  .table td {
+  .table .th,
+  .table td,
+  .table .td {
     border: 1px solid #b1b1bc;
     padding: 0.6666666667rem; }
 
@@ -2553,14 +2556,18 @@ textarea {
    * Tightly packed cells.
    */
 .table--small th,
-.table--small td {
+.table--small .th,
+.table--small td,
+.table--small .td {
   padding: 0.3333333333rem; }
 
 /**
    * Tables with widely padded cells.
    */
 .table--large th,
-.table--large td {
+.table--large .th,
+.table--large td,
+.table--large .td {
   padding: 1rem; }
 
 /**
@@ -2568,13 +2575,17 @@ textarea {
    */
 .table--rows,
 .table--rows th,
-.table--rows td {
+.table--rows .th,
+.table--rows td,
+.table--rows .td {
   border: 0 solid #b1b1bc; }
 
 .table--rows {
   border-top-width: 1px; }
   .table--rows th,
-  .table--rows td {
+  .table--rows .th,
+  .table--rows td,
+  .table--rows .td {
     border-bottom-width: 1px; }
 
 /**
@@ -2582,13 +2593,17 @@ textarea {
    */
 .table--columns,
 .table--columns th,
-.table--columns td {
+.table--columns .th,
+.table--columns td,
+.table--columns .td {
   border: 0 solid #b1b1bc; }
 
 .table--columns {
   border-left-width: 1px; }
   .table--columns th,
-  .table--columns td {
+  .table--columns .th,
+  .table--columns td,
+  .table--columns .td {
     border-right-width: 1px; }
 
 /**
@@ -2744,6 +2759,18 @@ button.btn {
   background-color: white;
   color: #d1d0d8; }
 
+.th {
+  display: table-cell; }
+
+.table {
+  display: table; }
+
+.tr {
+  display: table-row; }
+
+.td {
+  display: table-cell; }
+
 :host {
   display: block;
   overflow-x: hidden; }
@@ -2752,12 +2779,12 @@ button.btn {
   display: block;
   overflow-x: scroll; }
 
-td .viewing {
+td .viewing, .td .viewing {
   max-height: 30px;
   overflow: hidden;
   white-space: nowrap; }
 
-th {
+th, .th {
   border: 0 !important;
   text-align: left; }
 

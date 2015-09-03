@@ -120,119 +120,123 @@
 
 	</style>
 	<template>
-	<table class$="{{getTableClass(tableRows, tableColumns)}}" id="aha_table_main" unresolved="">
-			<thead>
-				<tr>
-					<template is="dom-repeat" items="{{meta}}" as="column">
-						<th
-							title$="{{columntitle}}"
-							class$="{{getHeaderClass(column.name, column.sortable)}}">
-							<span
-								class$="{{getTextSortingClass(column, sortedColumn)}}"
-								title$="{{sorttitle}}"
-								on-click="sort">{{column.label}}<i class$="{{getSortingClass(column, sortedColumn, descending)}}"></i>
-							</span>
-							<span
-								hidden$="{{!column.hint}}"
-								class=" hint"
-								title$="{{column.hint}}"></span>
-						</th>
-					</template>
-				</tr>
-				<tr id="filter" hidden$="{{!searchable}}">
-					<template is="dom-repeat" items="{{meta}}" as="column">
-						<th class="u-p0">
-							<template is="dom-if" if="{{column.searchable}}">
-								<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-									<select on-change="search">
-											<template is="dom-repeat" items="{{column.options}}" as="option">
-												<option value$="{{option.value}}">{{option.label}}</option>
-											</template>
-									</select>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-									<input class="text-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
-								</template>
-								<template is="dom-if" if="{{isTextType(column.type)}}">
-									<input class="text-input text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
-								</template>
-							</template>
-						</th>
-					</template>
-				</tr>
-			</thead>
-			<tbody>
-				<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
-					<tr class$="{{getRowClass(row)}}">
-						<template is="dom-repeat" items="{{meta}}" as="column">
-							<td
-								on-dblclick="dbclick"
-								title="{{getEditTitle(column.editable, edittitle)}}"
-								class="{{getCellClass(column.name)}}">
-								<div hidden>
-									<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-										<select
-											required$="{{column.required}}"
-											on-blur="save">
-											<template is="dom-repeat" items="{{column.options}}" as="option">
-												<option
-													selected$="{{isOptionSelected(option.value, row, column.name)}}"
-													value="{{option.value}}">{{option.label}}</option>
-											</template>
-										</select>
+	<div class$="{{getTableClass(tableRows, tableColumns)}}" id="aha_table_main" unresolved="">
+		<span class="tr">
+			<template is="dom-repeat" items="{{meta}}" as="column">
+				<span
+					title$="{{columntitle}}"
+					class$="{{getHeaderClass(column.name, column.sortable)}}">
+					<span
+						class$="{{getTextSortingClass(column, sortedColumn)}}"
+						title$="{{sorttitle}}"
+						on-click="sort">{{column.label}}<i class$="{{getSortingClass(column, sortedColumn, descending)}}"></i>
+					</span>
+					<span
+						hidden$="{{!column.hint}}"
+						class=" hint"
+						title$="{{column.hint}}"></span>
+				</span>
+			</template>
+		</span>
+		<!-- <span class="tr" id="filter" hidden$="{{!searchable}}">
+			<template is="dom-repeat" items="{{meta}}" as="column">
+				<span class="u-p0 th">
+					<template is="dom-if" if="{{column.searchable}}">
+						<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
+							<select on-change="search">
+									<template is="dom-repeat" items="{{column.options}}" as="option">
+										<option value$="{{option.value}}">{{option.label}}</option>
 									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'string')}}">
-										<input type="text"
-											required$="{{column.required}}"
-											on-blur="save"
-											value$="{{getValue(row,column.name)}}"/>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'date')}}">
-										<input type="date"
-											required?="{{column.required}}"
-											on-blur="save"
-											value$="{{getValue(row,column.name)}}"/>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'time')}}">
-										<input type="time"
-											required?="{{column.required}}"
-											on-blur="save"
-											value$="{{getValue(row,column.name)}}"/>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'datetime')}}">
-										<input type="datetime"
-											required?="{{column.required}}"
-											on-blur="save"
-											value$="{{getValue(row,column.name)}}"/>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'text')}}">
-										<textarea
-											required?="{{column.required}}"
-											on-blur="save">{{getValue(row,column.name)}}</textarea>
-									</template>
-									<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-										<input type="checkbox"
-											on-change="save"
-											on-blur="save"
-											checked$="{{getValue(row,column.name)}}" />
-									</template>
-								</div>
-                <div
-									on-click="click"
-									class$="{{getReaderClass(row, column.name)}}">
-                    <template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
-                      <span>{{readContent(row, column)}}</span>
-                    </template>
-                    <template is="dom-if" if="{{isEqual(column.type, 'html')}}">
-                      <aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
-                    </template>
-                </div>
-							</td>
+							</select>
 						</template>
-					</tr>
+						<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
+							<div class="filter-group">
+								<input class="filter-control text-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
+								<span class="filter-icon fa fa-fw fa-filter"></span>
+							</div>
+
+						</template>
+						<template is="dom-if" if="{{isTextType(column.type)}}">
+							<div class="filter-group">
+								<input class="filter-control text-input text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
+								<span class="filter-icon fa fa-fw fa-filter"></span>
+							</div>
+						</template>
+					</template>
+				</span>
+			</template>
+		</span> -->
+		<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
+			<span class$="{{getRowClass(row)}}">
+				<template is="dom-repeat" items="{{meta}}" as="column">
+					<span
+						on-dblclick="dbclick"
+						title="{{getEditTitle(column.editable, edittitle)}}"
+						class$="{{getCellClass(column.name)}}">
+						<div hidden>
+							<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
+								<select
+									required$="{{column.required}}"
+									on-blur="save">
+									<template is="dom-repeat" items="{{column.options}}" as="option">
+										<option
+											selected$="{{isOptionSelected(option.value, row, column.name)}}"
+											value="{{option.value}}">{{option.label}}</option>
+									</template>
+								</select>
+							</template>
+							<template is="dom-if" if="{{isEqual(column.type, 'string')}}">
+								<input type="text"
+									required$="{{column.required}}"
+									on-blur="save"
+									value$="{{getValue(row,column.name)}}"/>
+							</template>
+							<template is="dom-if" if="{{isEqual(column.type, 'date')}}">
+								<input type="date"
+									required?="{{column.required}}"
+									on-blur="save"
+									value$="{{getValue(row,column.name)}}"/>
+							</template>
+							<template is="dom-if" if="{{isEqual(column.type, 'time')}}">
+								<input type="time"
+									required?="{{column.required}}"
+									on-blur="save"
+									value$="{{getValue(row,column.name)}}"/>
+							</template>
+							<template is="dom-if" if="{{isEqual(column.type, 'datetime')}}">
+								<input type="datetime"
+									required?="{{column.required}}"
+									on-blur="save"
+									value$="{{getValue(row,column.name)}}"/>
+							</template>
+							<template is="dom-if" if="{{isEqual(column.type, 'text')}}">
+								<textarea
+									required?="{{column.required}}"
+									on-blur="save">{{getValue(row,column.name)}}</textarea>
+							</template>
+							<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
+								<input type="checkbox"
+									on-change="save"
+									on-blur="save"
+									checked$="{{getValue(row,column.name)}}" />
+							</template>
+						</div>
+            <div
+							on-click="click"
+							class$="{{getReaderClass(row, column.name)}}">
+                <template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
+                  <span>{{readContent(row, column)}}</span>
+                </template>
+                <template is="dom-if" if="{{isEqual(column.type, 'html')}}">
+                  <aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
+                </template>
+            </div>
+					</span>
 				</template>
-			</tbody>
-		</table>
+			</span>
+		</template>
+	</div>
+
 		<div style="float: right;" class="pagination">
 			<span class="pagesize">
 				<span>{{pagesizetitle}}</span>
@@ -540,7 +544,7 @@
 			this.$.aha_table_main.removeAttribute('unresolved');
 		},
 		getRowClass: function(row) {
-			return ['rows',
+			return ['tr', 'rows',
 					this.striped  ? 'striped'  : '',
 					row._modified ? 'modified' : '',
 					row._editing  ? 'editing'  : '',
@@ -600,7 +604,7 @@
 			return editable ? editTitle : '';
 		},
 		getHeaderClass: function(name, sortable) {
-			return ['aha-', name, '-th'].join('') + (sortable ? ' sortable' : '');
+			return ['th ', 'aha-', name, '-th'].join('') + (sortable ? ' sortable' : '');
 		},
 		getSortingClass: function(column, sortingColumn, descending) {
 			var classList = ['u-ml-', 'sorting', 'fa']
@@ -617,7 +621,7 @@
 			return classList.join(' ');
 		},
 		getCellClass: function(name) {
-			return ['aha-td aha-', name, '-td'].join('');
+			return ['td ', 'aha-', name, '-td'].join('');
 		},
 		getTableClass: function(tableRows, tableColumns){
 			var classList= ['table', 'table--small', 'scroll-body'];
@@ -848,7 +852,14 @@
 			}
 
 			if (filteredRows.length < this.pagesize) {
+				var noOfEmptyRows = this.pagesize - filteredRows.length;
+				var emptyObject = {};
 
+
+
+				for(i=0 ; i< noOfEmptyRows ; i++) {
+					filteredRows.push({});
+				}
 			}
 
 			this.set('viewingRows', filteredRows.slice(from, to));

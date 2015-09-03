@@ -52,6 +52,26 @@ $inuit-enable-btn--disabled     : true;
 
 @import "px-buttons-design/_objects.buttons.scss";
 
+.th{
+  @extend th;
+  display: table-cell;
+}
+
+.table{
+  @extend table;
+  display: table;
+}
+
+.tr{
+  @extend tr;
+  display: table-row;
+}
+
+.td{
+  @extend td;
+  display: table-cell;
+}
+
 :host {
   display: block;
   overflow-x: hidden;
@@ -80,6 +100,27 @@ th {
   width: 20px;
 
 }
+
+// .filter-group{
+//   display: inline-table;
+//   position: relative;
+// }
+//
+// .filter-icon {
+//   position: absolute;
+//   top: 0px;
+//   right: 0px;
+//   text-align: center;
+//   pointer-events: none;
+//   background: transparent;
+// }
+// //
+// .filter-control {
+//   display: block;
+//   background-image: none;
+// }
+
+
 
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";
