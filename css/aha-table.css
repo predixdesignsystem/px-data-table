@@ -2772,6 +2772,17 @@ button.btn {
   background-color: white;
   color: #d1d0d8; }
 
+/**
+   * Round-ended buttons.
+   *
+   * 1. Overly-large value to ensure the radius rounds the whole end of the
+   *    button.
+   */
+.btn--icon {
+  width: 2em;
+  border-radius: 6.6666666667em;
+  padding: 1px 0 0 1px; }
+
 .th {
   display: table-cell; }
 
@@ -2805,6 +2816,9 @@ th, .th {
 .searchable input,
 .searchable select {
   width: 20px; }
+
+.column-head {
+  white-space: nowrap; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
@@ -2857,6 +2871,32 @@ th, .th {
   margin-bottom: 0.6666666667rem !important; }
 
 /**
+     * Add large margins.
+     */
+.u-m\00002b {
+  margin: 1.3333333333rem !important; }
+
+.u-mt\00002b {
+  margin-top: 1.3333333333rem !important; }
+
+.u-mr\00002b {
+  margin-right: 1.3333333333rem !important; }
+
+.u-mb\00002b {
+  margin-bottom: 1.3333333333rem !important; }
+
+.u-ml\00002b {
+  margin-left: 1.3333333333rem !important; }
+
+.u-mh\00002b {
+  margin-right: 1.3333333333rem !important;
+  margin-left: 1.3333333333rem !important; }
+
+.u-mv\00002b {
+  margin-top: 1.3333333333rem !important;
+  margin-bottom: 1.3333333333rem !important; }
+
+/**
      * Remove margins.
      */
 .u-m0 {
@@ -2907,6 +2947,32 @@ th, .th {
 .u-pv- {
   padding-top: 0.6666666667rem !important;
   padding-bottom: 0.6666666667rem !important; }
+
+/**
+     * Add large paddings.
+     */
+.u-p\00002b {
+  padding: 1.3333333333rem !important; }
+
+.u-pt\00002b {
+  padding-top: 1.3333333333rem !important; }
+
+.u-pr\00002b {
+  padding-right: 1.3333333333rem !important; }
+
+.u-pb\00002b {
+  padding-bottom: 1.3333333333rem !important; }
+
+.u-pl\00002b {
+  padding-left: 1.3333333333rem !important; }
+
+.u-ph\00002b {
+  padding-right: 1.3333333333rem !important;
+  padding-left: 1.3333333333rem !important; }
+
+.u-pv\00002b {
+  padding-top: 1.3333333333rem !important;
+  padding-bottom: 1.3333333333rem !important; }
 
 /**
      * Remove paddings.

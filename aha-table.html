@@ -60,65 +60,6 @@
 
 <dom-module id="aha-table">
 	<link rel="import" type="css" href="css/aha-table.css" />
-	<style>
-		/* styles for the custom element itself - lowest specificity */
-		/*:host {
-
-			box-sizing: border-box;
-		}*/
-		/*.rows:hover,
-		.selected {
-			background-color: #f3f3f3;
-		}*/
-		.column-head {
-			white-space: nowrap;
-		}
-		/*.sortable .column-head,
-		.hint
-		.filterrow {
-			cursor: pointer;
-		}
-		.arrow-up,
-		.arrow-down,
-		.filterrow,
-		.nosearch {
-			width: 0;
-			height: 0;
-			border-left: 5px solid transparent;
-			border-right: 5px solid transparent;
-			border-top: 5px solid black;
-		}
-		.arrow-up,
-		.filterrow.search {
-			border-top: 0;
-			border-bottom: 5px solid black;
-		}
-		.copy-er,
-		.move-down-er,
-		.move-up-er,
-		.remove-er {
-			cursor: pointer;
-		}
-		.copy-er i:before{
-			content: '+';
-		}
-		.remove-er i:before {
-			content: '-';
-		}
-		.move-down-er i:before {
-			content: '\2193';
-		}
-		.move-up-er i:before {
-			content: '\2191';
-		}
-		.hint:before {
-			content: 'i';
-		}
-		.hide {
-			display: none !important;
-		}*/
-
-	</style>
 	<template>
 	<div class$="{{getTableClass(tableRows, tableColumns)}}" id="aha_table_main" unresolved="">
 		<span class="tr">
@@ -153,7 +94,7 @@
 						<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
 							<div class="filter-group">
 								<input class="filter-control text-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
-								<!-- <span class="filter-icon fa fa-fw fa-filter"></span> -->
+								<span class="filter-icon fa fa-fw fa-filter"></span>
 							</div>
 
 						</template>
@@ -247,7 +188,7 @@
 					</template>
 				</select>
 			</span>
-			<span class="summary">
+			<span class="u-pl+ u-m+ summary">
 				<span>{{summarytext}}</span>
 				<span>{{firstItemIndex}}</span>-<span>{{lastItemIndex}}</span>
 				<span>{{itemoftext}}</span>
@@ -265,11 +206,18 @@
 					class$="{{getPageupClass(currentpage, 'btn btn--bare btn--pagination u-p- previous')}}"
 					on-click="prevPage"><i class="fa fa-angle-left"></i></button>
 				<span class="pager">
-					<span>{{pagetext}}</span>
+					<template is="dom-repeat" items="{{pagerButtons(pageCount)}}" as="page">
+						<span class$="{{getPagerButtonClass(page.val, currentpage)}}">{{page.val}}</span>
+					</template>
+					<!-- <span>{{pagetext}}</span>
 					<input class="text-input input--tiny" type="text" value="{{currentpage}}"/>
 					<span>{{pageoftext}}</span>
-					<span>{{pageCount}}</span>
+					<span>{{pageCount}}</span> -->
 				</span>
+
+
+
+
 				<button
 					title$="{{nexttitle}}"
 					class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--bare btn--pagination u-p- next')}}"
@@ -611,6 +559,13 @@
 			var classList = ['tr'];
 			if(!searchable){
 				classList.push('hidden');
+			}
+			return classList.join(' ');
+		},
+		getPagerButtonClass: function(buttonValue, currentPage){
+			var classList = [];
+			if (buttonValue === currentPage){
+				classList.push('btn', 'btn--icon');
 			}
 			return classList.join(' ');
 		},
@@ -1042,6 +997,14 @@
 			e.target.classList.toggle('search');
 			e.target.classList.toggle('nosearch');
 			this.$$('#filter').classList.toggle('hide');
+		},
+		pagerButtons: function(pageCount) {
+			var noOfPagerButtons = 7;
+			var pagerNavButtonsConfig = Array.apply(null, Array(noOfPagerButtons)).map(
+				function (val, index) {
+					return {val: index+1};
+				});
+			return pagerNavButtonsConfig;
 		}
 	});
 </script>

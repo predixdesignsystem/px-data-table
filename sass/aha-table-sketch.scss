@@ -48,6 +48,7 @@ $inuit-table-border-color       : $gray5;
 @import "px-layout-design/_objects.layout.scss";
 
 $inuit-enable-btn--bare         : true;
+$inuit-enable-btn--icon         : true;
 $inuit-enable-btn--disabled     : true;
 
 @import "px-buttons-design/_objects.buttons.scss";
@@ -99,8 +100,12 @@ th {
 .searchable input,
 .searchable select {
   width: 20px;
-
 }
+
+.column-head {
+  white-space: nowrap;
+}
+
 
 // .filter-group{
 //   display: inline-table;
@@ -126,10 +131,11 @@ th {
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";
 
-$inuit-enable-paddings--small     : true;
-$inuit-enable-margins--small      : true;
-$inuit-enable-paddings--none      : true;
 $inuit-enable-margins--none       : true;
-
+$inuit-enable-margins--small      : true;
+$inuit-enable-margins--large      : true;
+$inuit-enable-paddings--none      : true;
+$inuit-enable-paddings--small     : true;
+$inuit-enable-paddings--large      : true;
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
 @import "px-widths-responsive-design/_trumps.widths-responsive.scss";
