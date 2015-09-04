@@ -138,7 +138,7 @@
 				</span>
 			</template>
 		</span>
-		<span class="tr" id="filter" hidden$="{{!searchable}}">
+		<span class$="{{getFilterClass(searchable)}}" id="filter">
 			<template is="dom-repeat" items="{{meta}}" as="column">
 				<span class="u-p0 td">
 
@@ -606,6 +606,13 @@
 		},
 		getHeaderClass: function(name, sortable) {
 			return ['th ', 'aha-', name, '-th'].join('') + (sortable ? ' sortable' : '');
+		},
+		getFilterClass: function(searchable) {
+			var classList = ['tr'];
+			if(!searchable){
+				classList.push('hidden');
+			}
+			return classList.join(' ');
 		},
 		getSortingClass: function(column, sortingColumn, descending) {
 			var classList = ['u-ml-', 'sorting', 'fa']
