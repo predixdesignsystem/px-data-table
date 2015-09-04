@@ -2793,6 +2793,7 @@ button.btn {
   overflow-x: scroll; }
 
 td .viewing, .td .viewing {
+  min-height: 1em;
   max-height: 30px;
   overflow: hidden;
   white-space: nowrap; }
@@ -3431,6 +3432,4 @@ th, .th {
   outline: 0; }
 
 .text-input {
-  border-top: 1px solid #b1b1bc !important;
-  border-left: 1px solid #b1b1bc !important;
-  background-color: #f7f7fc; }
+  box-shadow: none; }

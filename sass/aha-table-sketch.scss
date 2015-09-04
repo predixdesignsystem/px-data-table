@@ -84,6 +84,7 @@ $inuit-enable-btn--disabled     : true;
 
 td {
   & .viewing {
+    min-height: 1em;
     max-height: 30px;
     overflow: hidden;
     white-space: nowrap;

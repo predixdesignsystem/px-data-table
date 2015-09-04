@@ -138,9 +138,10 @@
 				</span>
 			</template>
 		</span>
-		<!-- <span class="tr" id="filter" hidden$="{{!searchable}}">
+		<span class="tr" id="filter" hidden$="{{!searchable}}">
 			<template is="dom-repeat" items="{{meta}}" as="column">
-				<span class="u-p0 th">
+				<span class="u-p0 td">
+
 					<template is="dom-if" if="{{column.searchable}}">
 						<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
 							<select on-change="search">
@@ -152,20 +153,20 @@
 						<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
 							<div class="filter-group">
 								<input class="filter-control text-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
-								<span class="filter-icon fa fa-fw fa-filter"></span>
+								<!-- <span class="filter-icon fa fa-fw fa-filter"></span> -->
 							</div>
 
 						</template>
 						<template is="dom-if" if="{{isTextType(column.type)}}">
 							<div class="filter-group">
 								<input class="filter-control text-input text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
-								<span class="filter-icon fa fa-fw fa-filter"></span>
+								<!-- <span class="filter-icon fa fa-fw fa-filter"></span> -->
 							</div>
 						</template>
 					</template>
 				</span>
 			</template>
-		</span> -->
+		</span>
 		<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
 			<span class$="{{getRowClass(row)}}">
 				<template is="dom-repeat" items="{{meta}}" as="column">
@@ -854,9 +855,6 @@
 			if (filteredRows.length < this.pagesize) {
 				var noOfEmptyRows = this.pagesize - filteredRows.length;
 				var emptyObject = {};
-
-
-
 				for(i=0 ; i< noOfEmptyRows ; i++) {
 					filteredRows.push({});
 				}

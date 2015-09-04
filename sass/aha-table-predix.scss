@@ -36,7 +36,5 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 .text-input{
-    border-top: 1px solid #b1b1bc !important;
-    border-left: 1px solid #b1b1bc !important;
-    background-color: $gray1;
+  box-shadow: none;
 }
