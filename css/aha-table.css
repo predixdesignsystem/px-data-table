@@ -2752,6 +2752,28 @@ button.btn {
     color: inherit; }
 
 /**
+   * Change button colors for primary buttons
+   */
+.btn--primary {
+  border-color: #2b5ea2;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+  background-color: #3e87e8; }
+  .btn--primary,
+  .btn--primary:link,
+  .btn--primary:visited,
+  .btn--primary:hover,
+  .btn--primary:focus,
+  .btn--primary:active {
+    color: white; }
+  .btn--primary:hover,
+  .btn--primary:focus {
+    border-color: transparent;
+    background-color: #3573c5; }
+  .btn--primary:active {
+    border-color: transparent;
+    background-color: #2b5ea2; }
+
+/**
    * Change button colors for disabled buttons
    */
 .btn--disabled,

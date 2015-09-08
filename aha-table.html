@@ -94,7 +94,7 @@
 						<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
 							<div class="filter-group">
 								<input class="filter-control text-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
-								<span class="filter-icon fa fa-fw fa-filter"></span>
+								<!-- <span class="filter-icon fa fa-fw fa-filter"></span> -->
 							</div>
 
 						</template>
@@ -207,17 +207,9 @@
 					on-click="prevPage"><i class="fa fa-angle-left"></i></button>
 				<span class="pager">
 					<template is="dom-repeat" items="{{pagerButtons(pageCount)}}" as="page">
-						<span class$="{{getPagerButtonClass(page.val, currentpage)}}">{{page.val}}</span>
+						<span on-click="gotoPage" class$="{{getPagerButtonClass(page.val, currentpage)}}">{{page.val}}</span>
 					</template>
-					<!-- <span>{{pagetext}}</span>
-					<input class="text-input input--tiny" type="text" value="{{currentpage}}"/>
-					<span>{{pageoftext}}</span>
-					<span>{{pageCount}}</span> -->
 				</span>
-
-
-
-
 				<button
 					title$="{{nexttitle}}"
 					class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--bare btn--pagination u-p- next')}}"
@@ -563,9 +555,11 @@
 			return classList.join(' ');
 		},
 		getPagerButtonClass: function(buttonValue, currentPage){
-			var classList = [];
+			var classList = ['btn'];
 			if (buttonValue === currentPage){
-				classList.push('btn', 'btn--icon');
+				classList.push('btn--icon', 'btn--primary');
+			}else{
+				classList.push('btn--bare');
 			}
 			return classList.join(' ');
 		},
@@ -999,12 +993,34 @@
 			this.$$('#filter').classList.toggle('hide');
 		},
 		pagerButtons: function(pageCount) {
-			var noOfPagerButtons = 7;
-			var pagerNavButtonsConfig = Array.apply(null, Array(noOfPagerButtons)).map(
-				function (val, index) {
-					return {val: index+1};
-				});
-			return pagerNavButtonsConfig;
+			if (this.pageCount){
+				var noOfPagerButtons = 0;
+				var pagerNavButtonsConfig;
+
+				if (this.pageCount <= 7) {
+					noOfPagerButtons = this.pageCount;
+					pagerNavButtonsConfig = Array.apply(null, Array(noOfPagerButtons)).map(
+						function (val, index) {
+							return {val: index+1};
+					});
+				}
+				else {
+					noOfPagerButtons = 7;
+					pagerNavButtonsConfig = Array.apply(null, Array(3)).map(
+						function (val, index) {
+							return {val: index+1};
+					});
+					pagerNavButtonsConfig.push({val: '...'});
+					pagerNavButtonsConfig.push({val: this.pageCount - 2});
+					pagerNavButtonsConfig.push({val: this.pageCount - 1});
+					pagerNavButtonsConfig.push({val: this.pageCount});
+				}
+
+				return pagerNavButtonsConfig;
+			}
+		},
+		gotoPage: function(evt){
+			this.currentpage = parseInt(evt.target.textContent);
 		}
 	});
 </script>
