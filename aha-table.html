@@ -808,8 +808,8 @@
 					});
 			}
 
-			if (filteredRows.length < this.pagesize) {
-				var noOfEmptyRows = this.pagesize - filteredRows.length;
+			if (filteredRows.length  % this.pagesize > 0) {
+				var noOfEmptyRows = filteredRows.length % this.pagesize;
 				var emptyObject = {};
 				for(i=0 ; i< noOfEmptyRows ; i++) {
 					filteredRows.push({});
