@@ -1001,7 +1001,7 @@
 				var noOfPagerButtons = 0;
 				var pagerNavButtonsConfig;
 
-				if (this.pageCount <= 7) {
+				if (this.pageCount <= 9) {
 					noOfPagerButtons = this.pageCount;
 					pagerNavButtonsConfig = Array.apply(null, Array(noOfPagerButtons)).map(
 						function (val, index) {
@@ -1009,12 +1009,13 @@
 					});
 				}
 				else {
-					noOfPagerButtons = 7;
-					pagerNavButtonsConfig = Array.apply(null, Array(3)).map(
+					noOfPagerButtons = 9;
+					pagerNavButtonsConfig = Array.apply(null, Array(4)).map(
 						function (val, index) {
 							return {val: index+1};
 					});
 					pagerNavButtonsConfig.push({val: '...'});
+					pagerNavButtonsConfig.push({val: this.pageCount - 3});
 					pagerNavButtonsConfig.push({val: this.pageCount - 2});
 					pagerNavButtonsConfig.push({val: this.pageCount - 1});
 					pagerNavButtonsConfig.push({val: this.pageCount});
