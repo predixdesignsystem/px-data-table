@@ -81,7 +81,7 @@
 		</span>
 		<span class$="{{getFilterClass(searchable)}}" id="filter">
 			<template is="dom-repeat" items="{{meta}}" as="column">
-				<span class="td">
+				<span class="td filter--cell">
 
 					<template is="dom-if" if="{{column.searchable}}">
 						<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
@@ -92,20 +92,18 @@
 							</select>
 						</template>
 						<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-							<div class="filter-group">
-								<input class="filter-control text-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
-								<!-- <span class="filter-icon fa fa-fw fa-filter"></span> -->
-							</div>
+							<div class="flex">
+								<input class="weight--semibold text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
+					      <i class="fa fa-filter"></i>
+					    </div>
 
 						</template>
 
 						<template is="dom-if" if="{{isTextType(column.type)}}">
-
-								<div class="flex">
-						      <input class="text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
-						      <i class="fa fa-filter"></i>
-						    </div>
-
+							<div class="flex">
+					      <input class="weight--semibold text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
+					      <i class="fa fa-filter"></i>
+					    </div>
 						</template>
 					</template>
 				</span>

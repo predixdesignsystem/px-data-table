@@ -2821,10 +2821,8 @@ th, .th {
 .range-field__field label {
   margin: 0; }
 
-.text-input {
-  width: auto; }
-
 .text-input--bare {
+  width: 100%;
   margin: 0;
   padding: 0; }
   .text-input--bare:focus {

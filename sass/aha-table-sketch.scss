@@ -112,7 +112,7 @@ th {
 
 .range-field__field {
   .text-input--bare {
-    // @include inuit-font-size(15px);
+    // @include inuit-font-size(18px);
     // width: calculateRem(90px);
     margin-right: $inuit-base-spacing-unit--small;
     font-family: var(--px-font-family);
@@ -122,18 +122,14 @@ th {
   }
 }
 
-.text-input {
-  width: auto;
-}
-
 .text-input--bare {
+  width: 100%;
   margin: 0;
   padding: 0;
   &:focus {
     outline: 0;
   }
 }
-
 
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";

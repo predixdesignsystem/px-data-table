@@ -2834,10 +2834,8 @@ th, .th {
 .range-field__field label {
   margin: 0; }
 
-.text-input {
-  width: auto; }
-
 .text-input--bare {
+  width: 100%;
   margin: 0;
   padding: 0; }
   .text-input--bare:focus {
@@ -3514,6 +3512,9 @@ th, .th {
 .striped:nth-child(odd) {
   background-color: #efeff4; }
 
+.filter--cell {
+  background-color: #efeff4; }
+
 .sorted-text {
   color: #0a9ec1; }
 
@@ -3522,9 +3523,6 @@ th, .th {
 
 .text-input {
   box-shadow: none; }
-
-.text-input, .text-input label {
-  color: #7c7c84; }
 
 .text-input--bare {
   background: transparent; }
