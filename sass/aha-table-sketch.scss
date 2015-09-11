@@ -110,17 +110,16 @@ th {
 }
 
 
-.range-field__field {
+
   .text-input--bare {
-    // @include inuit-font-size(18px);
-    // width: calculateRem(90px);
+    @include inuit-font-size(15px);
     margin-right: $inuit-base-spacing-unit--small;
     font-family: var(--px-font-family);
   }
   label {
     margin: 0;
   }
-}
+
 
 .text-input--bare {
   width: 100%;

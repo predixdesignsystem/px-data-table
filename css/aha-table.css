@@ -2827,11 +2827,13 @@ th, .th {
 .column-head {
   white-space: nowrap; }
 
-.range-field__field .text-input--bare {
+.text-input--bare {
+  font-size: 1rem;
+  line-height: 1.3333333333;
   margin-right: 0.6666666667rem;
   font-family: var(--px-font-family); }
 
-.range-field__field label {
+label {
   margin: 0; }
 
 .text-input--bare {
