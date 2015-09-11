@@ -19,7 +19,9 @@ THIS FILE SHOULD CONTAIN ONLY ABSTRACT/'SKETCH' THEME RULES, NOT SPECIFIC TO PRE
 Predix branding rules go in px-data-table-predix.scss, not in this file.
 */
 
-
+// Settings
+@import "px-defaults-design/_settings.defaults.scss";
+@import "px-mixins-design/_tools.mixins.scss";
 
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
@@ -100,7 +102,7 @@ th {
 
 .searchable input,
 .searchable select {
-  width: 20px;
+  // width: 20px;
 }
 
 .column-head {
@@ -108,25 +110,29 @@ th {
 }
 
 
-// .filter-group{
-//   display: inline-table;
-//   position: relative;
-// }
-//
-// .filter-icon {
-//   position: absolute;
-//   top: 0px;
-//   right: 0px;
-//   text-align: center;
-//   pointer-events: none;
-//   background: transparent;
-// }
-// //
-// .filter-control {
-//   display: block;
-//   background-image: none;
-// }
+.range-field__field {
+  .text-input--bare {
+    // @include inuit-font-size(15px);
+    // width: calculateRem(90px);
+    margin-right: $inuit-base-spacing-unit--small;
+    font-family: var(--px-font-family);
+  }
+  label {
+    margin: 0;
+  }
+}
 
+.text-input {
+  width: auto;
+}
+
+.text-input--bare {
+  margin: 0;
+  padding: 0;
+  &:focus {
+    outline: 0;
+  }
+}
 
 
 // Trumps

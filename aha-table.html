@@ -81,7 +81,7 @@
 		</span>
 		<span class$="{{getFilterClass(searchable)}}" id="filter">
 			<template is="dom-repeat" items="{{meta}}" as="column">
-				<span class="u-p0 td">
+				<span class="td">
 
 					<template is="dom-if" if="{{column.searchable}}">
 						<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
@@ -98,11 +98,14 @@
 							</div>
 
 						</template>
+
 						<template is="dom-if" if="{{isTextType(column.type)}}">
-							<div class="filter-group">
-								<input class="filter-control text-input text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
-								<!-- <span class="filter-icon fa fa-fw fa-filter"></span> -->
-							</div>
+
+								<div class="flex">
+						      <input class="text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
+						      <i class="fa fa-filter"></i>
+						    </div>
+
 						</template>
 					</template>
 				</span>
