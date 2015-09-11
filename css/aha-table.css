@@ -3509,7 +3509,7 @@ th, .th {
         -ms-flex: none !important;
             flex: none !important; } }
 
-.striped:nth-child(odd) {
+.striped:nth-child(even) {
   background-color: #efeff4; }
 
 .filter--cell {
