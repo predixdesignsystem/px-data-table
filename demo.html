@@ -40,7 +40,7 @@
       <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
 
       <px-card header-text="Data Table">
-        <span>Row Selected: </span><span>{{mysel.first}}</span>
+        <span>Row Selected: </span><span>{{mysel.last}}</span>
         <px-data-table selected="{{mysel}}" selectable striped table-data="{{data}}"></px-data-table>
       </px-card>
 
