@@ -110,7 +110,7 @@
 			</template>
 		</span>
 		<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
-			<span class$="{{getRowClass(row)}}">
+			<span class$="{{getRowClass(row, selected)}}">
 				<template is="dom-repeat" items="{{meta}}" as="column">
 					<span
 						on-dblclick="dbclick"
@@ -260,8 +260,9 @@
 			},
 			//selected: all selected row will be referenced here.
 			selected: {
-				type: Array,
-				value: function() { return []; }
+				type: Object,
+				value: function() { return {}; },
+				notify: true
 			},
 			//all visiable rows are reference here.
 			viewingRow: {
@@ -315,11 +316,6 @@
 			},
 			// text displayed as title of select checkbox.
 			selecttitle: {
-				type: String,
-				value: ""
-			},
-			// text displayed as title of selectall checkbox.
-			selectalltitle: {
 				type: String,
 				value: ""
 			},
@@ -485,12 +481,12 @@
 			this.$.aha_table_main.setAttribute('resolved', '');
 			this.$.aha_table_main.removeAttribute('unresolved');
 		},
-		getRowClass: function(row) {
+		getRowClass: function(row, selected) {
 			return ['tr', 'rows',
 					this.striped  ? 'striped'  : '',
 					row._modified ? 'modified' : '',
 					row._editing  ? 'editing'  : '',
-					row._selected ? 'selected'  : ''
+					(selected === row) ? 'selected'  : ''
 				].join(' ');
 		},
 		isEditing: function(rowEditable, columnEditable) {
@@ -620,7 +616,6 @@
 				}
 				for (var i = 0; i < this.data.length; i++) {
 					this.set('_editing',  false, this.data[i]);
-					this.set('_selected', false, this.data[i]);
 					this.set('_modified', false, this.data[i]);
 					this.set('_filtered', false, this.data[i]);
 				}
@@ -846,9 +841,10 @@
 			var column = e.model.column;
 			var row = e.model.row;
 			var detail = {"row" : row, "column" : column};
-			if (column.editable) {
-				this.edit(e,p);
-			}
+			// if (column.editable) {
+			// 	this.edit(e,p);
+			// }
+			this.select(e,p);
 			this.fire('after-td-click', detail);
 		},
 		dbclick: function(e,p) {
@@ -861,44 +857,17 @@
 			if (this.selectable) {
 				var row = e.model.row;
 				this.fire('before-select', row);
-				var index = this.selected.indexOf(row);
-				if (index > -1) {
-					if(row._selected){
-						this.selected.splice(index, 1);
-						row._selected = false;
-					}
+				if (row === this.selected) {
+					// clear selected.
+					this.selected = {};
 				} else {
-					if(!row._selected){
-						this.selected.push(row);
-						row._selected = true;
-					}
+					this.selected = row;
 				}
+
 				if (!row._editing) {
 					e.preventDefault();
 				}
 				this.fire('after-select', row);
-			}
-		},
-		selectall: function(e,p){
-			if(e.target.checked){
-				this.viewingRows.forEach(function(row){
-					if(this.selected.indexOf(row)==-1) {
-						this.push('selected', row);
-					}
-					this.set('_selected', true, row);
-				}, this);
-				var selectors = e.target.parentElement.parentElement.parentElement.nextElementSibling.querySelectorAll('td:first-of-type input');
-				for (var i = 0; i < selectors.length; i++) {
-					selectors[i].setAttribute('checked', true);
-				}
-			}else{
-				this.data.forEach(function(row) {
-					this.set('_selected', false, row);
-				}, this);
-				var selectors = e.target.parentElement.parentElement.parentElement.nextElementSibling.querySelectorAll('td:first-of-type input');
-				for (var i = 0; i < selectors.length; i++) {
-					selectors[i].removeAttribute('checked');
-				}
 			}
 		},
 		create: function(obj) {
@@ -921,9 +890,6 @@
 			var _new = JSON.parse(JSON.stringify(obj));
 			if (_new.id) {
 				delete _new.id
-			}
-			if (_new._selected) {
-				_new._selected = false;
 			}
 			_new._modified = true;
 			_new._editing = false;

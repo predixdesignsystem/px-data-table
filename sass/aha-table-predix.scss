@@ -46,3 +46,8 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 .text-input--bare {
   background: transparent;
 }
+
+.selected{
+  background-color: $primary-blue-pressed !important;
+  color: $white !important;
+}

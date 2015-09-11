@@ -36,6 +36,8 @@ Element providing solution to no problem in particular. As a simple, increments 
                   striped="{{striped}}"
                   table-columns="{{tableColumns}}"
                   table-rows="{{tableRows}}"
+                  selectable="{{selectable}}"
+                  selected="{{selected}}"
                   id="dataTable"></aha-table>
     </div>
   </template>
@@ -77,6 +79,18 @@ Element providing solution to no problem in particular. As a simple, increments 
       tableRows:{
 				type: Boolean,
 				value: false
+			},
+      selectable:{
+				type: Boolean,
+				value: false
+			},
+      selected:{
+				type: Array,
+				value: function(){
+          return [];
+        },
+        notify: true,
+        reflectToAttribute: true
 			}
     },
 

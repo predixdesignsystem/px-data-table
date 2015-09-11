@@ -3529,3 +3529,7 @@ label {
 
 .text-input--bare {
   background: transparent; }
+
+.selected {
+  background-color: #2b5ea2 !important;
+  color: white !important; }
