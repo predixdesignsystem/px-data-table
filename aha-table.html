@@ -93,7 +93,7 @@
 						</template>
 						<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
 							<div class="flex">
-								<input class="weight--semibold text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
+								<input class="text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
 					      <i class="fa fa-filter"></i>
 					    </div>
 
@@ -101,7 +101,7 @@
 
 						<template is="dom-if" if="{{isTextType(column.type)}}">
 							<div class="flex">
-					      <input class="weight--semibold text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
+					      <input class="text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
 					      <i class="fa fa-filter"></i>
 					    </div>
 						</template>
@@ -705,6 +705,7 @@
 		search: function(e, p) {
 			if(e.model.column){
 				var searchedColumn = e.model.column.name;
+
 				this.data.forEach(function(row){
 					var matched = false;
 					row._not_matched_columns = row._not_matched_columns || [];
@@ -808,13 +809,8 @@
 						return filteredRows[e.index];
 					});
 			}
-			console.log(filteredRows.length % this.pagesize);
-			console.log((!isNaN(to) && !isNaN(from)) && (to > filteredRows.length));
-			console.log(from + '   ' + to);
-			// if((!isNaN(to) && !isNaN(from)) && ((from - filteredRows.length) < this.pagesize)) {
 			if((!isNaN(to) && !isNaN(from)) && (to > filteredRows.length)) {
 				var noOfEmptyRows = to - filteredRows.length;
-				console.log(noOfEmptyRows);
 				var emptyObject = {};
 				for(i=0 ; i< noOfEmptyRows ; i++) {
 					filteredRows.push({});

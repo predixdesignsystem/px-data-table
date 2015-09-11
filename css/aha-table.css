@@ -2837,6 +2837,7 @@ label {
   margin: 0; }
 
 .text-input--bare {
+  height: 1em;
   width: 100%;
   margin: 0;
   padding: 0; }
