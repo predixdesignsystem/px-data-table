@@ -15,7 +15,7 @@
   ],
   "dependencies": {
     "polymer": "~1.0.0",
-    "px-theme": "git://github.build.ge.com/PXc/px-theme.git#~0.2.11",
+    "px-theme": "git://github.build.ge.com/PXc/px-theme.git#~0.3.3",
     "google-analytics": "~0.1.0"
   },
   "devDependencies": {
