@@ -570,7 +570,6 @@
 		//=============
 		//internal methods
 		dataChanged: function(newValue, oldValue) {
-			console.log('dataC' + '   ' + newValue.length);
 			if (!this.meta || this.meta.length === 0)  {
 				this.$.aha_table_main.setAttribute('unresolved', '');
 				// generate meta from data if meta is not provided from px-data-table-column.
@@ -600,11 +599,6 @@
 			this.refreshPagination(true);
 		},
 		modifiedChanged: function() {},
-		capitalize: function(value) {
-			if (!value instanceof String || value.length === 0)
-				return value;
-			return value.charAt(0).toUpperCase() + value.slice(1);
-		},
 		edit: function(e) {
 			var row = e.model.row;
 			this.set('_editing', true, row);
@@ -752,6 +746,12 @@
 			this.pagesize = parseInt(this.pagesize);
 			this.refreshPagination();
 		},
+		// fallback default sort function if per-column sort isn't specified.
+		_defaultSort: function(a, b) {
+			return this.descending
+			? (a.value < b.value ? 1 : -1)
+			: (a.value > b.value ? 1 : -1);
+		},
 		// call this when total count is no changed.
 		filterPage: function() {
 			var from = (this.currentpage-1) * this.pagesize;
@@ -773,7 +773,8 @@
 							value: typeof v === "string" ? v.toLowerCase() : v
 						};
 					}, this)
-					.sort(pxDataTableBehaviors.sort.bind(this))
+					//need to insert per-column sort here...
+					.sort(this._defaultSort.bind(this))
 					.map(function(e){
 						return filteredRows[e.index];
 					});
