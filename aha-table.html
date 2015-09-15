@@ -226,6 +226,7 @@
 	</template>
 </dom-module>
 <script>
+	var pxDataTableBehaviors = pxDataTableBehaviors || {};
 	Polymer({
 		is: 'aha-table',
 		behaviors: [pxDataTableBehaviors],
@@ -673,17 +674,23 @@
 					var matched = false;
 					row._not_matched_columns = row._not_matched_columns || [];
 
+					var customSortFunction = pxDataTableBehaviors[e.model.column['filter-function-name']];
+					if (customSortFunction) {
+						matched = customSortFunction(e.target.value, row[searchedColumn]);
+					}
 					//checkbox will only filter checked rows.
-					if ("CHECKBOX" === e.target.type.toUpperCase()) {
-						matched = !e.target.checked || row[searchedColumn];
-					} else if (
-						// empty search means it always match
-						e.target.value === ""
-						||
-						// non-empty search and the content matches.
-						row[searchedColumn].toString()
-						&& row[searchedColumn].toString().toLowerCase().indexOf(e.target.value.toString().toLowerCase()) > -1) {
-						matched = true;
+					else {
+						if ("CHECKBOX" === e.target.type.toUpperCase()) {
+							matched = !e.target.checked || row[searchedColumn];
+						} else if (
+							// empty search means it always match
+							e.target.value === ""
+							||
+							// non-empty search and the content matches.
+							row[searchedColumn].toString()
+							&& row[searchedColumn].toString().toLowerCase().indexOf(e.target.value.toString().toLowerCase()) > -1) {
+							matched = true;
+						}
 					}
 
 					if (matched) {
@@ -1015,6 +1022,9 @@
             }
         },
         onHtmlChanged: function() {
+						if (!this.html){
+							this.html = "";
+						}
             this.innerHTML = this.html;
         }
     });
