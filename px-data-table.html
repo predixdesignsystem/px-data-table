@@ -38,6 +38,7 @@ Element providing solution to no problem in particular. As a simple, increments 
                   table-rows="{{tableRows}}"
                   selectable="{{selectable}}"
                   selected="{{selected}}"
+                  meta="{{meta}}"
                   id="dataTable"></aha-table>
     </div>
   </template>
@@ -72,33 +73,72 @@ Element providing solution to no problem in particular. As a simple, increments 
 				type: Boolean,
 				value: false
 			},
-      tableColumns:{
+      tableColumns: {
 				type: Boolean,
 				value: false
 			},
-      tableRows:{
+      tableRows: {
 				type: Boolean,
 				value: false
 			},
-      selectable:{
+      selectable: {
 				type: Boolean,
 				value: false
 			},
-      selected:{
+      selected: {
 				type: Array,
 				value: function(){
           return [];
         },
         notify: true,
         reflectToAttribute: true
+			},
+      meta: {
+        type: Array,
+        value: function(){
+          return [];
+        }
+      }
+    },
+    ready: function(){
+      var children = Polymer.dom(this).querySelectorAll('px-data-table-column');
+
+			if (children.length > 0) {
+				var meta = [];
+				for (var i = 0; i < children.length; i++) {
+					var column = {};
+					for (var j = 0; j < children[i].attributes.length; j++) {
+						var attribute = children[i].attributes[j];
+						if (['sortable', 'searchable', 'editable', 'required'].indexOf(attribute.name) >= 0) {
+							column[attribute.nodeName] = true;
+						} else if (attribute.name === 'data-choices') {
+							column['options'] = [];
+							var choices = JSON.parse(attribute.value);
+							for(option in choices) {
+								column['options'].push({'value': option, 'label': choices[option]});
+							}
+						} else {
+							column[attribute.nodeName] = attribute.value;
+						}
+						if (!column['label']) {
+							var name = column['name'] || '';
+							column['label'] = name.charAt(0).toUpperCase() + name.slice(1);
+						}
+					}
+					meta.push(column);
+				}
+				this.set('meta', meta);
+        console.log('meta set');
 			}
     },
-
     _tableDataChanged: function(changeRecord){
       this.$.dataTable.data = this.tableData;
     },
     filterButtonClicked: function(){
       this._isFiltered = !this._isFiltered;
+    },
+    _getColumns: function(){
+      return Polymer.dom(this).children;
     }
   });
 </script>

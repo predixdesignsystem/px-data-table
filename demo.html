@@ -38,10 +38,49 @@
   <body unresolved>
     <template is="dom-bind">
       <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
+      <iron-ajax url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
 
       <px-card header-text="Data Table">
         <span>Row Selected: </span><span>{{mysel.last}}</span>
-        <px-data-table selected="{{mysel}}" selectable striped table-data="{{data}}"></px-data-table>
+        <px-data-table selected="{{mysel}}" selectable striped table-data="{{minidata}}">
+          <px-data-table-column name="first"
+      			type="string"
+      			sortable
+      			searchable
+      			required
+      			searchplaceholder="Type to filter title"
+      			placeholder="Event Title"
+      			default=""
+      			hint="Meaningful title will help you remember"></px-data-table-column>
+          <px-data-table-column name="last"
+      			type="string"
+      			sortable
+      			searchable
+      			required
+      			searchplaceholder="Type to filter title"
+      			placeholder="Event Title"
+      			default=""
+            filter-function-name="pxDataTableBehaviors.sort"
+            sort-function-name="pxDataTableBehaviors.sort"
+      			hint="Meaningful title will help you remember"></px-data-table-column>
+          <px-data-table-column name="color"
+      			type="html"
+      			sortable
+      			searchable
+      			required
+      			searchplaceholder="Type to filter title"
+      			placeholder="Event Title"
+      			default=""
+      			hint="Meaningful title will help you remember"></px-data-table-column>
+      		<px-data-table-column name="date"
+            type="date" searchable
+            sortable
+      			required
+      			placeholder="Event Date"
+      			hint="Dates are required"
+      			default="2011-12-21"></px-data-table-column>
+
+        </px-data-table>
       </px-card>
 
       <px-card header-text="Data Table2">

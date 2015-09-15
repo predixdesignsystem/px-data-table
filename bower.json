@@ -14,19 +14,19 @@
     "test"
   ],
   "dependencies": {
-    "polymer": "~1.0.0",
+    "polymer": "~1.0.4",
     "px-theme": "git://github.build.ge.com/PXc/px-theme.git#~0.3.3",
     "google-analytics": "~0.1.0"
   },
   "devDependencies": {
-    "px-tables-design": "git://github.build.ge.com/PXd/px-tables-design.git#~0.3.0",
+    "px-tables-design": "git://github.build.ge.com/PXd/px-tables-design.git#~0.3.8",
     "iron-component-page": "PolymerElements/iron-component-page#~v1.0.0",
-    "px-starter-kit-design": "git://github.build.ge.com/PXd/px-starter-kit-design.git#~0.4.0",
+    "px-starter-kit-design": "git://github.build.ge.com/PXd/px-starter-kit-design.git#~0.4.5",
     "iron-ajax": "PolymerElements/iron-ajax#~1.0.3",
     "px-layout-design": "https://github.build.ge.com/pxd/px-layout-design.git#~0.3.7",
-    "px-card": "https://github.build.ge.com/pxc/px-card.git#~0.0.8",
+    "px-card": "https://github.build.ge.com/pxc/px-card.git#~0.0.14",
     "px-spacing-design": "https://github.build.ge.com/pxd/px-spacing-design.git#~0.3.3",
-    "px-buttons-design": "https://github.build.ge.com/pxd/px-buttons-design.git#~0.4.9",
+    "px-buttons-design": "https://github.build.ge.com/pxd/px-buttons-design.git#~0.4.12",
     "px-forms-design": "https://github.build.ge.com/PXd/px-forms-design.git#~0.3.8",
     "px-button-group-design": "https://github.build.ge.com/PXd/px-button-group-design.git#~0.3.6"
   }

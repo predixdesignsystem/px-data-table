@@ -25,7 +25,7 @@
  *         pagesize="20"
  *         pagesizetitle="Page Size:"
  *         summarytitle="Viewing">
- *         <aha-column name="title"
+ *         < name="title"
  *             type="string"
  *             label="My Title"
  *             sortable
@@ -35,7 +35,7 @@
  *             placeholder="Example text"
  *             default=""
  *             hint="Meaning title will help you remember">
- *         </aha-column>
+ *         </>
  *     </aha-table/>
  *
  * Available Event Hander:
@@ -51,7 +51,7 @@
  *     after-move-up(Object moved_record)
  *
  * @class aha-table
- * @author Louis Liu<louis.wenchao.liu@gmail.com>
+ * Based on https://github.com/liuwenchao/aha-table
  *
  */
 -->
@@ -444,33 +444,6 @@
 		},
 
 		ready: function() {
-			var children = this.children || this.impl.children;
-			if (children.length > 1 && children[1].tagName === 'AHA-COLUMN') {
-				var meta = [];
-				for (var i = 1; i < children.length; i++) {
-					var column = {};
-					for (var j = 0; j < children[i].attributes.length; j++) {
-						var attribute = children[i].attributes[j];
-						if (['sortable', 'searchable', 'editable', 'required'].indexOf(attribute.name) >= 0) {
-							column[attribute.nodeName] = true;
-						} else if (attribute.name === 'data-choices') {
-							column['options'] = [];
-							var choices = JSON.parse(attribute.value);
-							for(option in choices) {
-								column['options'].push({'value': option, 'label': choices[option]});
-							}
-						} else {
-							column[attribute.nodeName] = attribute.value;
-						}
-						if (!column['label']) {
-							var name = column['name'] || '';
-							column['label'] = name.charAt(0).toUpperCase() + name.slice(1);
-						}
-					}
-					meta.push(column);
-				}
-				this.set('meta', meta);
-			}
 			if (this.get('meta').length === 0) {
 				this.dataChanged(this.get('data'), []);
 			}
@@ -597,9 +570,10 @@
 		//=============
 		//internal methods
 		dataChanged: function(newValue, oldValue) {
+			console.log('dataC' + '   ' + newValue.length);
 			if (!this.meta || this.meta.length === 0)  {
 				this.$.aha_table_main.setAttribute('unresolved', '');
-				// generate meta from data if meta is not provided from aha-column.
+				// generate meta from data if meta is not provided from px-data-table-column.
 				var meta = [];
 				for (var prop in this.data[0]) {
 					if (prop.indexOf('_') !== 0) {//skip internal field
@@ -1008,95 +982,6 @@
 		}
 	});
 </script>
-
-
-<!--
-/**
- * @module aha-column
- *
- *
- * child element for aha-table, used for meta building
- *
- *    <aha-column
- *         name="content"
- *         type="text"
- *         sortable
- *         searchable
- *         required
- *         editable
- *         placeholder="example"
- *         default="">
- *    </aha-column>
- *
- * @class aha-column
- * @author Louis Liu<louis.wenchao.liu@gmail.com>
- *
- */
--->
-<script>
-	Polymer({
-		is: "aha-column",
-		properties: {
-			//column name
-			name: {
-				type: String,
-				value: ""
-			},
-			label: {
-				type: String,
-				value: ""
-			},
-			//column type: string, text, date, time, datetime, choice
-			type: {
-				type: String,
-				value: "string"
-			},
-			sortable: {
-				type: Boolean,
-				value: true
-			},
-			searchable: {
-				type: Boolean,
-				value: true
-			},
-			editable: {
-				type: Boolean,
-				value: false
-			},
-			requried: {
-				type: Boolean,
-				value: false
-			},
-			//used for placeholder for empty cell.
-			placeholder: {
-				type: String,
-				value: ""
-			},
-			default: {
-				type: String,
-				value: ""
-			},
-			//choices read from data-choices attribute
-			options: {
-				type: String,
-				value: function() { return []; }
-			},
-			//hint text in column header
-			hint: {
-				type: String,
-				value: ""
-			},
-			//placehoder for filter input
-			searchplaceholder: {
-				type: String,
-				value: ""
-			}
-		}
-	});
-</script>
-
-
-
 
 <!--
 /**
