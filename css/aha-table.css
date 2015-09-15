@@ -1002,7 +1002,8 @@ button.btn {
 
 :host {
   display: block;
-  overflow-x: hidden; }
+  overflow-x: hidden;
+  width: 100%; }
 
 .scroll-body {
   display: block;
