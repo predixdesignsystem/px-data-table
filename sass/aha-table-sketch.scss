@@ -62,7 +62,7 @@ $inuit-enable-btn--disabled     : true;
 
 .table{
   @extend table;
-  display: table;
+  display: table !important;
 }
 
 .tr{

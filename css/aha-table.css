@@ -992,7 +992,7 @@ button.btn {
   display: table-cell; }
 
 .table {
-  display: table; }
+  display: table !important; }
 
 .tr {
   display: table-row; }

@@ -9,24 +9,13 @@
     <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
     <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
 
+    <script src="pxDataTableBehaviorsDemo.js"></script>
+
     <link rel="import" href="../px-theme/px-theme.html"/>
     <link rel="import" href="px-data-table.html" />
     <link rel="import" href="../iron-ajax/iron-ajax.html" />
     <link rel="import" href="../px-card/px-card.html" />
 
-    <script>
-      pxDataTableBehaviors = {
-        sort: function(a, b) {
-          return this.descending
-          ? (a.value < b.value ? 1 : -1)
-          : (a.value > b.value ? 1 : -1);
-        }
-      };
-      var mysel = {'first':'no selection'};
-
-
-
-    </script>
 
     <style>
       body{
@@ -49,8 +38,8 @@
       			searchable
       			required
       			searchplaceholder="Type to filter title"
-      			placeholder="Event Title"
       			default=""
+            filter-function-name="filterWholeWord"
       			hint="Meaningful title will help you remember"></px-data-table-column>
           <px-data-table-column name="last"
       			type="string"
@@ -58,10 +47,7 @@
       			searchable
       			required
       			searchplaceholder="Type to filter title"
-      			placeholder="Event Title"
       			default=""
-            filter-function-name="pxDataTableBehaviors.sort"
-            sort-function-name="pxDataTableBehaviors.sort"
       			hint="Meaningful title will help you remember"></px-data-table-column>
           <px-data-table-column name="color"
       			type="html"
@@ -69,14 +55,14 @@
       			searchable
       			required
       			searchplaceholder="Type to filter title"
-      			placeholder="Event Title"
       			default=""
+            filter-function-name="filterMarkupVal"
       			hint="Meaningful title will help you remember"></px-data-table-column>
       		<px-data-table-column name="date"
             type="date" searchable
             sortable
       			required
-      			placeholder="Event Date"
+      			searchplaceholder="Type to filter title"
       			hint="Dates are required"
       			default="2011-12-21"></px-data-table-column>
 

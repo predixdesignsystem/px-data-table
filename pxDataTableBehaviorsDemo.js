@@ -9,5 +9,8 @@ var pxDataTableBehaviors = {
     var content = lhs.substr(0 ,lhs.indexOf('<'));
 
     return (content.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
+  },
+  filterWholeWord: function(searchString, cellValue){
+    return (searchString.toString().toLowerCase() === cellValue.toString().toLowerCase());
   }
 };

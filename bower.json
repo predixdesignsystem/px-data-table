@@ -18,15 +18,15 @@
     "px-theme": "https://github.build.ge.com/PXc/px-theme.git#~0.3.5"
   },
   "devDependencies": {
-    "px-tables-design": "https://github.build.ge.com/PXd/px-tables-design.git#~0.3.8",
+    "px-tables-design": "https://github.com/PredixDev/px-tables-design.git#~0.3.9",
     "iron-component-page": "PolymerElements/iron-component-page#~v1.0.0",
-    "px-starter-kit-design": "https://github.build.ge.com/PXd/px-starter-kit-design.git#~0.4.5",
+    "px-starter-kit-design": "https://github.com/PredixDev/px-starter-kit-design.git#~0.4.6",
     "iron-ajax": "PolymerElements/iron-ajax#~1.0.3",
-    "px-layout-design": "https://github.build.ge.com/pxd/px-layout-design.git#~0.3.7",
+    "px-layout-design": "https://github.com/PredixDev/px-layout-design.git#~0.3.8",
     "px-card": "https://github.build.ge.com/pxc/px-card.git#~0.0.14",
-    "px-spacing-design": "https://github.build.ge.com/pxd/px-spacing-design.git#~0.3.3",
-    "px-buttons-design": "https://github.build.ge.com/pxd/px-buttons-design.git#~0.4.12",
-    "px-forms-design": "https://github.build.ge.com/PXd/px-forms-design.git#~0.3.8",
-    "px-button-group-design": "https://github.build.ge.com/PXd/px-button-group-design.git#~0.3.6"
+    "px-spacing-design": "https://github.com/PredixDev/px-spacing-design.git#~0.3.4",
+    "px-buttons-design": "https://github.com/PredixDev/px-buttons-design.git#~0.4.13",
+    "px-forms-design": "https://github.com/PredixDev/px-forms-design.git#~0.3.9",
+    "px-button-group-design": "https://github.com/PredixDev/px-button-group-design.git#~0.3.7"
   }
 }
