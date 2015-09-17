@@ -86,7 +86,7 @@
 
 						<template is="dom-if" if="{{column.searchable}}">
 							<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-								<select on-change="search">
+								<select class="filter-input" on-change="search">
 										<template is="dom-repeat" items="{{column.options}}" as="option">
 											<option value$="{{option.value}}">{{option.label}}</option>
 										</template>
@@ -94,7 +94,7 @@
 							</template>
 							<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
 								<div class="flex">
-									<input class="text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
+									<input class="filter-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
 						      <i class="fa fa-filter"></i>
 						    </div>
 
@@ -102,7 +102,7 @@
 
 							<template is="dom-if" if="{{isTextType(column.type)}}">
 								<div class="flex">
-						      <input class="text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
+						      <input class="filter-input text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
 						      <i class="fa fa-filter"></i>
 						    </div>
 							</template>
@@ -310,7 +310,8 @@
 			//searchable: if table row is searchable
 			searchable: {
 				type: Boolean,
-				value: false
+				value: false,
+				observer: "_searchableToggled"
 			},
 			// text displayed in first column of search row.
 			searchtitle: {
@@ -760,6 +761,18 @@
 			return this.descending
 			? (a.value < b.value ? 1 : -1)
 			: (a.value > b.value ? 1 : -1);
+		},
+		_searchableToggled: function(changeRecord){
+			if(this.filtered){
+				Polymer.dom(this.root).querySelectorAll('.filter-input').forEach(function(el, idx){
+					el.value=''
+				});
+				this.data.forEach(function(o,i){
+					o._filtered = false
+				});
+				this.filtered = false;
+				this.refreshPagination();
+			}
 		},
 		// call this when total count is no changed.
 		filterPage: function() {
