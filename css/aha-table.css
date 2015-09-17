@@ -1005,6 +1005,13 @@ button.btn {
   overflow-x: hidden;
   width: 100%; }
 
+.pagination {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-tap-highlight-color: transparent; }
+
 .scroll-body {
   display: block;
   overflow-x: scroll; }

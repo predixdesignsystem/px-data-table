@@ -81,6 +81,11 @@ $inuit-enable-btn--disabled     : true;
   width: 100%;
 }
 
+.pagination {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .scroll-body{
   display: block;
   overflow-x: scroll;
