@@ -105,26 +105,18 @@ th {
   text-align: left;
 }
 
-.searchable input,
-.searchable select {
-  // width: 20px;
-}
-
 .column-head {
   white-space: nowrap;
 }
 
-
-
-  .text-input--bare {
-    @include inuit-font-size(15px);
-    margin-right: $inuit-base-spacing-unit--small;
-    font-family: var(--px-font-family);
-  }
-  label {
-    margin: 0;
-  }
-
+.text-input--bare {
+  @include inuit-font-size(15px);
+  margin-right: $inuit-base-spacing-unit--small;
+  font-family: var(--px-font-family);
+}
+label {
+  margin: 0;
+}
 
 .text-input--bare {
   height: 1em;
