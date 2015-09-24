@@ -1,0 +1,140 @@
+<!--
+    Relative paths assume component is being run from inside an app or another component, where dependencies are flat
+    siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
+    'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs
+    See https://github.com/jreichenberg/grunt-dep-serve#why-do-we-need-this
+-->
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="aha-table.html">
+
+<!--
+Element providing solution to no problem in particular. As a simple, increments a counter when clicked.
+
+##### Usage
+
+    <px-data-table counter-value="1">Hi</px-data-table>
+
+@element px-data-table
+@blurb Element providing implementing data table behaviour.
+@homepage index.html
+@demo demo.html
+-->
+<dom-module id="px-data-table">
+  <link rel="import" type="css" href="css/px-data-table.css" />
+
+  <template>
+    <div class="flex">
+      <div class="flex__item flex--right btn-group">
+        <button on-click="filterButtonClicked" class="btn btn--bare u-p-"><i class="fa fa-filter"></i></button>
+      </div>
+    </div>
+    <div class="flex">
+      <aha-table  searchable="{{_isFiltered}}"
+                  striped="{{striped}}"
+                  table-columns="{{tableColumns}}"
+                  table-rows="{{tableRows}}"
+                  selectable="{{selectable}}"
+                  selected="{{selected}}"
+                  meta="{{meta}}"
+                  id="dataTable"></aha-table>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'px-data-table',
+
+    /**
+     * Properties block, expose attribute values to the DOM via 'reflect'
+     *
+     * @property properties
+     * @type Object
+     */
+    properties: {
+      tableData: {
+        type: Array,
+        value: function(){
+          return [];
+        },
+        observer: '_tableDataChanged',
+        notify: true
+      },
+      //striped: if table row is striped
+			striped: {
+				type: Boolean,
+				value: false
+			},
+      //_isFiltered: if table has column filtering capability turned on.
+      _isFiltered: {
+				type: Boolean,
+				value: false
+			},
+      tableColumns: {
+				type: Boolean,
+				value: false
+			},
+      tableRows: {
+				type: Boolean,
+				value: false
+			},
+      selectable: {
+				type: Boolean,
+				value: false
+			},
+      selected: {
+				type: Array,
+				value: function(){
+          return [];
+        },
+        notify: true,
+        reflectToAttribute: true
+			},
+      meta: {
+        type: Array,
+        value: function(){
+          return [];
+        }
+      }
+    },
+    ready: function(){
+      var children = Polymer.dom(this).querySelectorAll('px-data-table-column');
+
+			if (children.length > 0) {
+				var meta = [];
+				for (var i = 0; i < children.length; i++) {
+					var column = {};
+					for (var j = 0; j < children[i].attributes.length; j++) {
+						var attribute = children[i].attributes[j];
+						if (['sortable', 'searchable', 'editable', 'required'].indexOf(attribute.name) >= 0) {
+							column[attribute.nodeName] = true;
+						} else if (attribute.name === 'data-choices') {
+							column['options'] = [];
+							var choices = JSON.parse(attribute.value);
+							for(option in choices) {
+								column['options'].push({'value': option, 'label': choices[option]});
+							}
+						} else {
+							column[attribute.nodeName] = attribute.value;
+						}
+						if (!column['label']) {
+							var name = column['name'] || '';
+							column['label'] = name.charAt(0).toUpperCase() + name.slice(1);
+						}
+					}
+					meta.push(column);
+				}
+				this.set('meta', meta);
+			}
+    },
+    _tableDataChanged: function(changeRecord){
+      this.$.dataTable.data = this.tableData;
+    },
+    filterButtonClicked: function(){
+      this._isFiltered = !this._isFiltered;
+    },
+    _getColumns: function(){
+      return Polymer.dom(this).children;
+    }
+  });
+</script>

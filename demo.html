@@ -1,0 +1,88 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>px-data-table Demo</title>
+    <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+    <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+
+    <script src="pxDataTableBehaviorsDemo.js"></script>
+
+    <link rel="import" href="px-data-table.html" />
+    <link rel="import" href="../iron-ajax/iron-ajax.html" />
+    <link rel="import" href="../px-card/px-card.html" />
+    <link rel="import" href="../px-theme/px-theme.html"/>
+
+
+    <style>
+      body{
+        background-color: gray;
+      }
+    </style>
+  </head>
+
+  <body unresolved>
+    <template is="dom-bind">
+      <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
+      <iron-ajax url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
+
+      <px-card header-text="Data Table">
+        <span>Row Selected: </span><span>{{mysel.last}}</span>
+        <px-data-table selected="{{mysel}}" selectable striped table-data="{{minidata}}">
+          <px-data-table-column name="first"
+      			type="string"
+      			sortable
+      			searchable
+      			required
+      			searchplaceholder="Type to filter title"
+      			default=""
+            filter-function-name="filterWholeWord"
+            sort-function-name="sortColumn"
+      			hint="Meaningful title will help you remember"></px-data-table-column>
+          <px-data-table-column name="last"
+      			type="string"
+      			sortable
+      			searchable
+      			required
+      			searchplaceholder="Type to filter title"
+      			default=""
+      			hint="Meaningful title will help you remember"></px-data-table-column>
+          <px-data-table-column name="color"
+      			type="html"
+      			sortable
+      			searchable
+      			required
+      			searchplaceholder="Type to filter title"
+      			default=""
+            filter-function-name="filterMarkupVal"
+      			hint="Meaningful title will help you remember"></px-data-table-column>
+      		<px-data-table-column name="date"
+            type="date" searchable
+            sortable
+      			required
+      			searchplaceholder="Type to filter title"
+      			hint="Dates are required"
+      			default="2011-12-21"></px-data-table-column>
+
+        </px-data-table>
+      </px-card>
+
+      <px-card header-text="Data Table2">
+        <px-data-table table-data="{{data}}"></px-data-table>
+      </px-card>
+
+      <px-card header-text="Data Table3">
+        <px-data-table table-columns table-data="{{data}}"></px-data-table>
+      </px-card>
+
+      <px-card header-text="Data Table4">
+        <px-data-table table-rows table-data="{{data}}"></px-data-table>
+      </px-card>
+
+    </template>
+  </body>
+
+</html>

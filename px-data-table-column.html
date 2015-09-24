@@ -1,0 +1,94 @@
+<!--
+/**
+ * @module px-data-table-column
+ *
+ *
+ * child element for aha-table, used for meta building
+ *
+ *    <px-data-table-column
+ *				 sort-function-name="pxDataTableBehaviors.textSort"
+ *				 filter-function-name="pxDataTableBehaviors.textFilter"
+ *         name="content"
+ *         type="text"
+ *         sortable
+ *         searchable
+ *         required
+ *         editable
+ *         placeholder="example"
+ *         default="">
+ *    </px-data-table-column>
+ *
+ * @class px-data-table-column
+ * Based on https://github.com/liuwenchao/aha-table
+ *
+ */
+-->
+<script>
+	Polymer({
+		is: "px-data-table-column",
+		properties: {
+			//column name
+			name: {
+				type: String,
+				value: ""
+			},
+			label: {
+				type: String,
+				value: ""
+			},
+			//column type: string, text, date, time, datetime, choice
+			type: {
+				type: String,
+				value: "string"
+			},
+			sortable: {
+				type: Boolean,
+				value: true
+			},
+			searchable: {
+				type: Boolean,
+				value: true
+			},
+			editable: {
+				type: Boolean,
+				value: false
+			},
+			requried: {
+				type: Boolean,
+				value: false
+			},
+			//used for placeholder for empty cell.
+			placeholder: {
+				type: String,
+				value: ""
+			},
+			sortFunctionName: {
+				type: String,
+				value: ""
+			},
+			filterFunctionName: {
+				type: String,
+				value: ""
+			},
+			default: {
+				type: String,
+				value: ""
+			},
+			//choices read from data-choices attribute
+			options: {
+				type: String,
+				value: function() { return []; }
+			},
+			//hint text in column header
+			hint: {
+				type: String,
+				value: ""
+			},
+			//placehoder for filter input
+			searchplaceholder: {
+				type: String,
+				value: ""
+			}
+		}
+	});
+</script>
