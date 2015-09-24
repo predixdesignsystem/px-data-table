@@ -865,6 +865,7 @@ button.btn {
    * Buttons with no styles (good a11y practice to use <button> for actions rather than <a>).
    */
 .btn--bare {
+  height: auto;
   border: 0;
   border-radius: 0;
   padding: 0;
