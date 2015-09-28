@@ -2,7 +2,7 @@
     "name": "px-data-table",
     "author": "General Electric",
     "description": "A Px component",
-    "version": "0.0.6",
+    "version": "0.0.8",
     "private": true,
     "extName" : null,
     "repository" :

@@ -1771,3 +1771,6 @@ label {
   line-height: 1.3333333333;
   margin-right: 0.6666666667rem;
   font-family: var(--px-font-family); }
+
+.th {
+  font-weight: bold; }
