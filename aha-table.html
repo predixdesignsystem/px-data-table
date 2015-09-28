@@ -184,14 +184,14 @@
 
 		<div style="float: right;" class="pagination">
 			<span class="pagesize">
-				<span>{{pagesizetitle}}</span>
+				<span class="u-mr--">{{pagesizetitle}}</span>
 				<select value="{{pagesize}}" on-change="changeSize">
 					<template is="dom-repeat" items="{{sizelist}}" as="n">
 						<option selected$="{{isEqual(n, pagesize)}}">{{n}}</option>
 					</template>
 				</select>
 			</span>
-			<span class="u-pl+ u-m+ summary">
+			<span class="u-pl+ u-ml+ summary">
 				<span>{{summarytext}}</span>
 				<span>{{firstItemIndex}}</span>-<span>{{lastItemIndex}}</span>
 				<span>{{itemoftext}}</span>
@@ -540,7 +540,7 @@
 		getSortingClass: function(column, sortingColumn, descending) {
 			var classList = ['u-ml-', 'sorting', 'fa']
 			if (sortingColumn === column.name) {
-				classList.push(descending ? 'fa-angle-down' : 'fa-angle-up');
+				classList.push(descending ? 'fa-caret-down' : 'fa-caret-up');
 			}
 			return classList.join(' ');
 		},
@@ -825,7 +825,7 @@
 		// call this when total count is change.
 		refreshPagination: function(keepInTheCurentPage) {
 			if (!keepInTheCurentPage) {
-				// make sure observers see a page change and recalculate pagination figures. 
+				// make sure observers see a page change and recalculate pagination figures.
 				this.currentpage = undefined;
 				// Usually go to the first page is the best way to avoid chaos.
 				this.currentpage = 1;

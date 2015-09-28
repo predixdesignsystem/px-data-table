@@ -1081,6 +1081,32 @@ label {
  * `.u-(m|p)(t|r|b|l|h|v)(-|+|0) {}` = utility - margin/padding top/right/bottom/left/horizontal/vertical less/more/none
  */
 /**
+     * Add tiny margins.
+     */
+.u-m-- {
+  margin: 0.3333333333rem !important; }
+
+.u-mt-- {
+  margin-top: 0.3333333333rem !important; }
+
+.u-mr-- {
+  margin-right: 0.3333333333rem !important; }
+
+.u-mb-- {
+  margin-bottom: 0.3333333333rem !important; }
+
+.u-ml-- {
+  margin-left: 0.3333333333rem !important; }
+
+.u-mh-- {
+  margin-right: 0.3333333333rem !important;
+  margin-left: 0.3333333333rem !important; }
+
+.u-mv-- {
+  margin-top: 0.3333333333rem !important;
+  margin-bottom: 0.3333333333rem !important; }
+
+/**
      * Add small margins.
      */
 .u-m- {

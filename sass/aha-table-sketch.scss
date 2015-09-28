@@ -132,9 +132,10 @@ label {
 
 $inuit-enable-margins--none       : true;
 $inuit-enable-margins--small      : true;
+$inuit-enable-margins--tiny       : true;
 $inuit-enable-margins--large      : true;
 $inuit-enable-paddings--none      : true;
 $inuit-enable-paddings--small     : true;
-$inuit-enable-paddings--large      : true;
+$inuit-enable-paddings--large     : true;
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
 @import "px-widths-responsive-design/_trumps.widths-responsive.scss";
