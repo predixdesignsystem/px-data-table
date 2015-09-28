@@ -825,6 +825,8 @@
 		// call this when total count is change.
 		refreshPagination: function(keepInTheCurentPage) {
 			if (!keepInTheCurentPage) {
+				// make sure observers see a page change and recalculate pagination figures. 
+				this.currentpage = undefined;
 				// Usually go to the first page is the best way to avoid chaos.
 				this.currentpage = 1;
 			}
