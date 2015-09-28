@@ -1014,6 +1014,9 @@ button.btn {
   border-radius: 6.6666666667em;
   padding: 1px 0 0 1px; }
 
+.btn--bare__pagination {
+  width: 32px; }
+
 .th {
   display: table-cell; }
 

@@ -55,6 +55,10 @@ $inuit-enable-btn--disabled     : true;
 
 @import "px-buttons-design/_objects.buttons.scss";
 
+.btn--bare__pagination{
+  width: 32px;
+}
+
 .th{
   @extend th;
   display: table-cell;
