@@ -531,9 +531,9 @@
 		getPagerButtonClass: function(buttonValue, currentPage){
 			var classList = ['btn'];
 			if (buttonValue === currentPage){
-				classList.push('btn--icon', 'btn--pagination--number');
+				classList.push('btn--icon', 'u-ml0', 'btn--pagination--number');
 			}else{
-				classList.push('btn--bare');
+				classList.push('btn--bare', 'u-ml0', 'btn--bare__pagination');
 			}
 			return classList.join(' ');
 		},
@@ -825,6 +825,8 @@
 		// call this when total count is change.
 		refreshPagination: function(keepInTheCurentPage) {
 			if (!keepInTheCurentPage) {
+				// make sure observers see a page change and recalculate pagination figures. 
+				this.currentpage = undefined;
 				// Usually go to the first page is the best way to avoid chaos.
 				this.currentpage = 1;
 			}
@@ -1001,7 +1003,7 @@
 					else {
 						pagerNavButtonsConfig.push({val: 1});
 						pagerNavButtonsConfig.push({val: '...'});
-						for (var i = currentpage - 2; i < currentpage+2;i++){
+						for (var i = currentpage - 3; i < currentpage+2;i++){
 							pagerNavButtonsConfig.push({val: i});
 						}
 						pagerNavButtonsConfig.push({val: '...'});
