@@ -29,12 +29,12 @@ Element providing solution to no problem in particular. As a simple, increments 
       </div>
     </div>
     <div class="flex">
-      <aha-table  searchable="{{_isFiltered}}"
+      <aha-table  searchable="{{filterable}}"
                   striped="{{striped}}"
                   table-columns="{{tableColumns}}"
                   table-rows="{{tableRows}}"
                   selectable="{{selectable}}"
-                  selected="{{selected}}"
+                  selected-rows="{{selected}}"
                   meta="{{meta}}"
                   id="dataTable"></aha-table>
     </div>
@@ -65,8 +65,8 @@ Element providing solution to no problem in particular. As a simple, increments 
 				type: Boolean,
 				value: false
 			},
-      //_isFiltered: if table has column filtering capability turned on.
-      _isFiltered: {
+      //filterable: if table has column filtering capability turned on.
+      filterable: {
 				type: Boolean,
 				value: false
 			},
@@ -131,7 +131,7 @@ Element providing solution to no problem in particular. As a simple, increments 
       this.$.dataTable.data = this.tableData;
     },
     filterButtonClicked: function(){
-      this._isFiltered = !this._isFiltered;
+      // this.filterable = !this.filterable;
     },
     _getColumns: function(){
       return Polymer.dom(this).children;

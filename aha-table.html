@@ -111,7 +111,7 @@
 				</template>
 			</span>
 			<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
-				<span class$="{{getRowClass(row, selected)}}">
+				<span class$="{{getRowClass(row, selectedRows.splices)}}">
 					<template is="dom-repeat" items="{{meta}}" as="column">
 						<span
 							on-dblclick="dbclick"
@@ -179,6 +179,7 @@
 					</template>
 				</span>
 			</template>
+
 		</div>
 	</div>
 
@@ -262,10 +263,12 @@
 				value: function() { return []; }
 			},
 			//selected: all selected row will be referenced here.
-			selected: {
-				type: Object,
-				value: function() { return {}; },
-				notify: true
+			selectedRows: {
+				type: Array,
+				value: function(){
+					return [];
+				},
+				observer: '_selectedRowsChanged'
 			},
 			//all visiable rows are reference here.
 			viewingRow: {
@@ -458,12 +461,12 @@
 			this.$.aha_table_main.setAttribute('resolved', '');
 			this.$.aha_table_main.removeAttribute('unresolved');
 		},
-		getRowClass: function(row, selected) {
+		getRowClass: function(row, selectedRows) {
 			return ['tr', 'rows',
 					this.striped  ? 'striped'  : '',
 					row._modified ? 'modified' : '',
 					row._editing  ? 'editing'  : '',
-					(selected === row) ? 'selected'  : ''
+					(this.selectedRows.indexOf(row) > -1) ? 'selected'  : ''
 				].join(' ');
 		},
 		isEditing: function(rowEditable, columnEditable) {
@@ -756,6 +759,13 @@
 			this.pagesize = parseInt(this.pagesize);
 			this.refreshPagination();
 		},
+		_selectedRowsChanged: function(newValue, oldValue){
+			if (Array.isArray(newValue) && (newValue.splices === void 0)){
+				var sr = [];
+				sr.splices = {};
+				this.selectedRows = sr;
+			}
+		},
 		// fallback default sort function if per-column sort isn't specified.
 		_defaultSort: function(a, b) {
 			return this.descending
@@ -867,13 +877,14 @@
 			if (this.selectable) {
 				var row = e.model.row;
 				this.fire('before-select', row);
-				if (row === this.selected) {
+				if (this.selectedRows.indexOf(row) > -1) {
 					// clear selected.
-					this.selected = {};
+					// this.selectedRows.splice(this.selectedRows.indexOf(row), 1);
+					this.splice('selectedRows', this.selectedRows.indexOf(row), 1)
 				} else {
-					this.selected = row;
+					// this.selectedRows.push(row);
+					this.push('selectedRows', row);
 				}
-
 				if (!row._editing) {
 					e.preventDefault();
 				}
