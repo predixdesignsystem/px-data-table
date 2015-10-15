@@ -30,8 +30,8 @@
       <iron-ajax url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
 
       <px-card header-text="Data Table">
-        <span>Row Selected: </span><span>{{mysel.last}}</span>
-        <px-data-table selected="{{mysel}}" selectable striped table-data="{{minidata}}">
+        <span>Num rows Selected: </span><span>{{mysel.length}}</span>
+        <px-data-table selected="{{mysel}}" filterable selectable striped table-data="{{minidata}}">
           <px-data-table-column name="first"
       			type="string"
       			sortable
