@@ -24,11 +24,6 @@ Element providing solution to no problem in particular. As a simple, increments 
 
   <template>
     <div class="flex">
-      <div class="flex__item flex--right btn-group">
-        <button on-click="filterButtonClicked" class="btn btn--bare u-p-"><i class="fa fa-filter"></i></button>
-      </div>
-    </div>
-    <div class="flex">
       <aha-table  searchable="{{filterable}}"
                   striped="{{striped}}"
                   table-columns="{{tableColumns}}"
