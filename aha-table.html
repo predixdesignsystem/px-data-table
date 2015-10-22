@@ -500,8 +500,28 @@
 					datum = datum === undefined || datum === null ? '' : datum;
 					return datum === "" ? blank : datum;
 			} else {
+				if (column['max-column-character-width'] > 0){
+					datum = this._clipDatumString(datum, column);
+				}
 				return datum;
 			}
+		},
+		_clipDatumString: function(datum, column){
+			var colWidth = column['max-column-character-width'];
+			if (datum.length > colWidth){
+				if (column['ellipsis-clip-position'] === 'left') {
+					datum = '\u2026' + datum.substr(datum.length - colWidth, datum.length)
+				}
+				else if (column['ellipsis-clip-position'] === 'center') {
+					var datumLeftIndex = Math.floor(colWidth/2),
+							datumRightIndex = colWidth - datumLeftIndex;
+					datum = datum.substr(0, datumLeftIndex) + '\u2026' + datum.substr(datum.length - datumRightIndex, datum.length);
+				}
+				else { //assume right
+					datum = datum.substr(0, colWidth) + '\u2026';
+				}
+			}
+			return datum;
 		},
 		getColspan: function(metaLength) {
 			return metaLength + 1;
