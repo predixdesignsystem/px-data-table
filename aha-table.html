@@ -64,6 +64,18 @@
 	<div class="scroll-body">
 		<div class$="{{getTableClass(tableRows, tableColumns)}}" id="aha_table_main" unresolved="">
 			<span class="tr">
+				<template is="dom-if" if="{{selectable}}">
+					<span class="th">
+						<div>
+							Selected
+						</div>
+						<div
+							title$="{{searchtitle}}"
+							hidden$="{{!searchable}}"
+							class="filterrow search"
+							on-click="toggleFilters"></div>
+					</span>
+				</template>
 				<template is="dom-repeat" items="{{meta}}" as="column">
 					<span
 						title$="{{columntitle}}"
@@ -81,6 +93,16 @@
 				</template>
 			</span>
 			<span class$="{{getFilterClass(searchable)}}" id="filter">
+				<template is="dom-if" if="{{selectable}}">
+					<span class="td filter--cell">
+						<div class="flex flex--center">
+							<input type="checkbox"
+								on-change="selectall"
+								title$="{{selectalltitle}}"
+								hidden$="{{!selectable}}"/>
+						</div>
+					</span>
+				</template>
 				<template is="dom-repeat" items="{{meta}}" as="column">
 					<span class="td filter--cell">
 
@@ -112,6 +134,19 @@
 			</span>
 			<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
 				<span class$="{{getRowClass(row, selectedRows.splices)}}">
+					<template is="dom-if" if="{{selectable}}">
+						<span on-click="click" class="td">
+							<div class="flex flex--center">
+								<input type="checkbox"
+									class="js-table__select-checkbox"
+									title$="{{selecttitle}}"
+									hidden$="{{!selectable}}"
+									on-change="select"
+									checked$="{{row._selected}}"/>
+								</div>
+						</span>
+					</template>
+
 					<template is="dom-repeat" items="{{meta}}" as="column">
 						<span
 							on-dblclick="dbclick"
@@ -430,7 +465,7 @@
 			//sizelist: range list to adjust page size.
 			sizelist: {
 				type: Array,
-				value: [5, 10, 20, 50, 100]
+				value: function(){return [5, 10, 20, 50, 100]}
 			},
 			//pagesizetitle: label for page size box
 			pagesizetitle: {
@@ -881,9 +916,6 @@
 			var column = e.model.column;
 			var row = e.model.row;
 			var detail = {"row" : row, "column" : column};
-			// if (column.editable) {
-			// 	this.edit(e,p);
-			// }
 			this.select(e,p);
 			this.fire('after-td-click', detail);
 		},
@@ -899,12 +931,13 @@
 				this.fire('before-select', row);
 				if (this.selectedRows.indexOf(row) > -1) {
 					// clear selected.
-					// this.selectedRows.splice(this.selectedRows.indexOf(row), 1);
 					this.splice('selectedRows', this.selectedRows.indexOf(row), 1)
+					this.set('_selected', false, row);
 				} else {
-					// this.selectedRows.push(row);
 					this.push('selectedRows', row);
+					this.set('_selected', true, row);
 				}
+
 				if (!row._editing) {
 					e.preventDefault();
 				}
@@ -999,6 +1032,25 @@
 			e.target.classList.toggle('search');
 			e.target.classList.toggle('nosearch');
 			this.$$('#filter').classList.toggle('hide');
+		},
+		selectall: function(e,p){
+			if(e.target.checked) {
+				this.data.forEach(function(row) {
+					this.push('selectedRows', row);
+				}, this);
+				var selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
+				for (var i = 0; i < selectors.length; i++) {
+					selectors[i].setAttribute('checked', true);
+				}
+			} else {
+				this.data.forEach(function(row) {
+					this.splice('selectedRows', this.selectedRows.indexOf(row), 1)
+				}, this);
+				var selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
+				for (var i = 0; i < selectors.length; i++) {
+					selectors[i].removeAttribute('checked');
+				}
+			}
 		},
 		pagerButtons: function(pageCount, currentpage) {
 			if (this.pageCount){
