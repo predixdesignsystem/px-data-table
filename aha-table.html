@@ -1037,6 +1037,7 @@
 			if(e.target.checked) {
 				this.data.forEach(function(row) {
 					this.push('selectedRows', row);
+					row._selected = true;
 				}, this);
 				var selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
 				for (var i = 0; i < selectors.length; i++) {
@@ -1045,6 +1046,7 @@
 			} else {
 				this.data.forEach(function(row) {
 					this.splice('selectedRows', this.selectedRows.indexOf(row), 1)
+					row._selected = false;
 				}, this);
 				var selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
 				for (var i = 0; i < selectors.length; i++) {
