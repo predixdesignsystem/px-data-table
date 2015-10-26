@@ -938,6 +938,12 @@
 					this.set('_selected', true, row);
 				}
 
+				if(e.target.type == "checkbox") {
+					e.target.checked = row._selected;
+				} else {
+					Polymer.dom(e.target).querySelector("input").checked = row._selected;
+				}
+
 				if (!row._editing) {
 					e.preventDefault();
 				}
