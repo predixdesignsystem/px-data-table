@@ -133,15 +133,14 @@
 				</template>
 			</span>
 			<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
-				<span class$="{{getRowClass(row, selectedRows.splices)}}">
+				<span class$="{{getRowClass(row, selectedRows.splices)}}" on-click="click">
 					<template is="dom-if" if="{{selectable}}">
-						<span on-click="click" class="td">
+						<span  class="td">
 							<div class="flex flex--center">
 								<input type="checkbox"
 									class="js-table__select-checkbox"
 									title$="{{selecttitle}}"
 									hidden$="{{!selectable}}"
-									on-change="select"
 									checked$="{{row._selected}}"/>
 								</div>
 						</span>
@@ -201,7 +200,7 @@
 								</template>
 							</div>
 	            <div
-								on-click="click"
+
 								class$="{{getReaderClass(row, column.name)}}">
 	                <template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
 	                  <span>{{readContent(row, column)}}</span>
@@ -877,6 +876,13 @@
 						return filteredRows[e.index];
 					});
 			}
+			if((!isNaN(to) && !isNaN(from)) && (to > filteredRows.length)) {
+				var noOfEmptyRows = to - filteredRows.length;
+				var emptyObject = {};
+				for(i=0 ; i< noOfEmptyRows ; i++) {
+					filteredRows.push({});
+				}
+			}
 
 			this.set('viewingRows', filteredRows.slice(from, to));
 		},
@@ -926,20 +932,20 @@
 					// clear selected.
 					this.splice('selectedRows', this.selectedRows.indexOf(row), 1)
 					this.set('_selected', false, row);
+					console.log('row._selected = ', row._selected);
 				} else {
 					this.push('selectedRows', row);
 					this.set('_selected', true, row);
+					console.log('row._selected = ', row._selected);
 				}
 
-				if(e.target.type == "checkbox") {
-					e.target.checked = row._selected;
-				} else {
+				if(e.target.type !== "checkbox") {
 					Polymer.dom(e.target).querySelector("input").checked = row._selected;
 				}
 
-				if (!row._editing) {
-					e.preventDefault();
-				}
+				// if (!row._editing) {
+				// 	e.preventDefault();
+				// }
 				this.fire('after-select', row);
 			}
 		},
