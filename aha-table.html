@@ -796,10 +796,10 @@
 			this.currentpage = this.pageCount;
 		},
 		currentpageChanged: function(){
-			this.currentpage = this.currentpage ? parseInt(this.currentpage) : 0;
-			this.currentpage = this.currentpage < 1 ? 1 : this.currentpage;
-			this.currentpage = this.pageCount > 0 && this.currentpage > this.pageCount ? this.pageCount : this.currentpage;
 			this.filterPage();
+			this.updateFirstAndLastDisplayedItemIndexes();
+		},
+		updateFirstAndLastDisplayedItemIndexes: function() {
 			this.firstItemIndex = (this.currentpage-1) * this.pagesize+1;
 			if (this.currentpage === this.pageCount) {
 				this.lastItemIndex = this.itemCount;
@@ -877,24 +877,23 @@
 						return filteredRows[e.index];
 					});
 			}
-			if((!isNaN(to) && !isNaN(from)) && (to > filteredRows.length)) {
-				var noOfEmptyRows = to - filteredRows.length;
-				var emptyObject = {};
-				for(i=0 ; i< noOfEmptyRows ; i++) {
-					filteredRows.push({});
-				}
-			}
+			// if((!isNaN(to) && !isNaN(from)) && (to > filteredRows.length)) {
+			// 	var noOfEmptyRows = to - filteredRows.length;
+			// 	var emptyObject = {};
+			// 	for(i=0 ; i< noOfEmptyRows ; i++) {
+			// 		filteredRows.push({});
+			// 	}
+			// }
 
 			this.set('viewingRows', filteredRows.slice(from, to));
 		},
 		// call this when total count is change.
-		refreshPagination: function(keepInTheCurentPage) {
-			if (!keepInTheCurentPage) {
-				// make sure observers see a page change and recalculate pagination figures.
-				this.currentpage = undefined;
+		refreshPagination: function(keepInTheCurrentPage) {
+			if (!keepInTheCurrentPage) {
 				// Usually go to the first page is the best way to avoid chaos.
 				this.currentpage = 1;
 			}
+
 			// Cache the total page count and item count
 			var count = 0;
 			this.data.forEach(function(row) {
@@ -904,6 +903,7 @@
 			});
 			this.itemCount = count;
 			this.pageCount = Math.ceil( count / this.pagesize );
+			this.updateFirstAndLastDisplayedItemIndexes();
 
 			// Update model bound to UI with filtered range
 			this.filterPage();
