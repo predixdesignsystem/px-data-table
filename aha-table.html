@@ -877,13 +877,6 @@
 						return filteredRows[e.index];
 					});
 			}
-			// if((!isNaN(to) && !isNaN(from)) && (to > filteredRows.length)) {
-			// 	var noOfEmptyRows = to - filteredRows.length;
-			// 	var emptyObject = {};
-			// 	for(i=0 ; i< noOfEmptyRows ; i++) {
-			// 		filteredRows.push({});
-			// 	}
-			// }
 
 			this.set('viewingRows', filteredRows.slice(from, to));
 		},
