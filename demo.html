@@ -21,8 +21,33 @@
       <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
       <iron-ajax url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
 
-      <h3>Data Table 1</h3>
-      <span>Num rows Selected: </span><span>{{mysel.length}}</span>
+      <h3>Data table demos</h3>
+
+      <p>A very simple data table.  Just displays data and has sortable columns.</p>
+      <px-data-table table-data="{{minidata}}"></px-data-table>
+
+      <hr>
+
+      <p>Filterable columns and selectable rows.</p>
+      <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
+
+      <hr>
+
+      <p>Display as columns instead of a grid.</p>
+      <px-data-table table-columns table-data="{{data}}"></px-data-table>
+
+      <hr>
+
+      <p>Display as rows instead of a grid.</p>
+      <px-data-table table-rows table-data="{{data}}"></px-data-table>
+
+      <p>Very customized data table, with:</p>
+      <ul>
+        <li>Custom filtering functions - on an entire word in the first column and on the button text in the third column</li>
+        <li>Custom sorting functions - on the first column</li>
+        <li>Html rendering - in the third column</li>
+        <li>Interacting with the selected rows... there are <span>{{mysel.length}}</span> rows selected</li>
+      </ul>
       <px-data-table selected="{{mysel}}" filterable selectable striped table-data="{{minidata}}">
         <px-data-table-column name="first"
     			type="string"
@@ -32,7 +57,6 @@
     			default=""
           filter-function-name="filterWholeWord"
           sort-function-name="sortColumn"
-          max-column-character-width="5"
           ellipsis-clip-position="right"
     			hint="Meaningful title will help you remember"></px-data-table-column>
         <px-data-table-column name="last"
@@ -58,21 +82,6 @@
     			default="2011-12-21"></px-data-table-column>
 
       </px-data-table>
-
-      <hr>
-
-      <h3>Data Table 2</h3>
-      <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
-
-      <hr>
-
-      <h3>Data Table 3</h3>
-      <px-data-table table-columns table-data="{{data}}"></px-data-table>
-
-      <hr>
-
-      <h3>Data Table 4</h3>
-      <px-data-table table-rows table-data="{{data}}"></px-data-table>
 
     </template>
   </body>

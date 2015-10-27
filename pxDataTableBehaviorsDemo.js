@@ -11,6 +11,9 @@ var pxDataTableBehaviors = {
     return (content.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
   },
   filterWholeWord: function(searchString, cellValue){
+    if(searchString === undefined || searchString === null || searchString === "") {
+      return true;
+    }
     return (searchString.toString().toLowerCase() === cellValue.toString().toLowerCase());
   }
 };
