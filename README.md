@@ -42,7 +42,8 @@ Advanced:
     <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
 
     <px-data-table selected="{{selectedItems}}" filterable selectable striped table-data="{{data}}">
-      <px-data-table-column name="first"
+      <px-data-table-column
+        name="first"
         type="string"
     		sortable
         filter-function-name="filterWholeWord"
@@ -152,9 +153,6 @@ Selected rows in the data table setup for binding.
 <px-data-table selected="{{selectedItems}}" table-data="{{data}}"></px-data-table>
 ```
 
-<br />
-<hr />
-
 ### Events
 
 No events are fired by px-data-table.
@@ -163,12 +161,15 @@ No events are fired by px-data-table.
 
 No functions are exposed by px-data-table.
 
+<br />
+<hr />
+
 ## px-data-table-column
 
 Element that defines a columns in a data table.
 
 ```html
-    <px-data-table-column name="first" type="string"></px-data-table-column>
+<px-data-table-column name="first" type="string"></px-data-table-column>
 ```
 
 ### Attributes
@@ -195,7 +196,7 @@ Type of the item in a row object to display.
 
 Supported options: string, html
 
-WARNING! Potential XSS vulnerability if html comes from an untrusted source
+WARNING! Potential XSS vulnerability if html comes from an untrusted source.  This component does NOT do any sanitizing, it will execute whatever you pass it.
 
 Unsupported: date, time, datetime, choice
 
@@ -293,16 +294,16 @@ Unsupported
 
 Unsupported
 
-<br />
-<hr />
-
 ### Events
 
-No events are fired by px-data-table.
+No events are fired by px-data-table-column.
 
 ### Functions
 
-No functions are exposed by px-data-table.
+No functions are exposed by px-data-table-column.
+
+<br />
+<hr />
 
 ## Using Events
 
