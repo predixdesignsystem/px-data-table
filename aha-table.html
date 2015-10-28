@@ -119,7 +119,6 @@
 									<input class="filter-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
 						      <i class="fa fa-filter"></i>
 						    </div>
-
 							</template>
 
 							<template is="dom-if" if="{{isTextType(column.type)}}">
@@ -141,7 +140,7 @@
 									class="js-table__select-checkbox"
 									title$="{{selecttitle}}"
 									hidden$="{{!selectable}}"
-									checked$="{{row._selected}}"/>
+									/>
 								</div>
 						</span>
 					</template>
@@ -505,7 +504,6 @@
 				].join(' ');
 		},
 		isCheckboxSelected: function(selected) {
-			console.log('in isCheckboxSelected');
 			if (typeof selected === "undefined" || selected === false) {
 				return false;
 			} else {
@@ -849,9 +847,10 @@
 		},
 		// call this when total count is no changed.
 		filterPage: function() {
-			var from = (this.currentpage-1) * this.pagesize;
-			var to   = from + this.pagesize;
-			var filteredRows = this.filtered
+			var from = (this.currentpage-1) * this.pagesize,
+					to   = from + this.pagesize,
+					_this = this,
+					filteredRows = this.filtered
 					? this.data.filter(function(r){return !r._filtered;})
 					: this.data;
 			if (this.sortedColumn) {
@@ -887,8 +886,61 @@
 			}
 
 			this.set('viewingRows', filteredRows.slice(from, to));
-		},
 
+			/* ugliest code i've written in a while.
+			/* the setTimeout is here to ensure that polymer finishes its redraw.
+			/* by using setTimeout, i'm taking this command out of scope, allowing the redraw to finish.
+			/* yes. it's ugly. sorry.*/
+
+			setTimeout(function() {
+				if (_this.selectedRows && _this.selectedRows.length) {
+					_this.findSelectedRows();
+				}
+			},0);
+
+		},
+		findSelectedRows: function() {
+			var viewingRows = this.viewingRows,
+					selectedRows = this.selectedRows,
+					stringifiedViewedRowArray = [],
+					stringifiedSelectedRowArray = [],
+					resultsArray = [],
+					stringifyViewedRow,
+					stringifySelectedRow,
+					result,
+					state,
+					index;
+
+			viewingRows.forEach(function(row) {
+				stringifyViewedRow = JSON.stringify(row);
+				stringifiedViewedRowArray.push(stringifyViewedRow);
+			});
+
+			selectedRows.forEach(function(row) {
+				stringifySelectedRow = JSON.stringify(row);
+				stringifiedSelectedRowArray.push(stringifySelectedRow);
+			});
+
+			stringifiedViewedRowArray.forEach(function(row, i) {
+				index = i;
+				if (stringifiedSelectedRowArray.indexOf(row) > -1) {
+					state = true;
+				} else {
+					state = false;
+				}
+				result = {index: index, state: state};
+				resultsArray.push(result);
+			});
+			this.changeCheckboxState(resultsArray);
+		},
+		changeCheckboxState: function(resultsArray) {
+			if (this.selectedRows && this.selectedRows.length) {
+				var checkboxNodeList = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
+				resultsArray.forEach(function(result) {
+					checkboxNodeList[result.index].checked = result.state;
+				});
+			}
+		},
 		// call this when total count is change.
 		refreshPagination: function(keepInTheCurrentPage) {
 			if (!keepInTheCurrentPage) {
@@ -935,11 +987,9 @@
 					// clear selected.
 					this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
 					this.set('_selected', false, row);
-					console.log('row._selected = ', row._selected);
 				} else {
 					this.push('selectedRows', row);
 					this.set('_selected', true, row);
-					console.log('row._selected = ', row._selected);
 				}
 
 				if(e.target.type !== "checkbox") {
