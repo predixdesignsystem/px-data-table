@@ -67,6 +67,18 @@ Element that defines a columns in a data table.
         value: true
       },
 
+      /**
+       * If column is searchable for filtering.
+       *
+       *      <px-data-table-column searchable ...></px-data-table-column>
+       *
+       * @default false
+       */
+      searchable: {
+        type: Boolean,
+        value: true
+      },
+
       sortFunctionName: {  // TODO this seems gross...... can we change this?
         type: String,
         value: ""
@@ -116,14 +128,6 @@ Element that defines a columns in a data table.
       hint: {
         type: String,
         value: ""
-      },
-
-      /**
-       * Unsupported
-       */
-      searchable: {
-        type: Boolean,
-        value: true
       },
 
       /**

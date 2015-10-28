@@ -99,6 +99,8 @@ Each item in an object will be displayed as a separate column, unless px-data-ta
 
 Use the filterable attribute if the table has filtering functionality per column turned on.
 
+If columns are specified with px-data-table-column, they must have a searchable attribute to be able to be filtered.
+
 ```html
 <px-data-table filterable table-data="{{data}}"></px-data-table>
 ```
@@ -214,6 +216,16 @@ Label in table heading for column. Optional, will use capitalized name attribute
 <px-data-table-column label="The First Name" ...></px-data-table-column>
 ```
 
+##### searchable
+
+*Type:* **Boolean** - (*Optional*) - *Default:* false
+
+If column is searchable for filtering.
+
+```html
+<px-data-table-column searchable ...></px-data-table-column>
+```
+
 ##### sortable
 
 *Type:* **Boolean** - (*Optional*) - *Default:* false
@@ -283,10 +295,6 @@ Unsupported
 Unsupported
 
 ##### required
-
-Unsupported
-
-##### searchable
 
 Unsupported
 
