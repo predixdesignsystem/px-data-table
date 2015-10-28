@@ -45,6 +45,7 @@
       <ul>
         <li>Custom filtering functions - on an entire word in the first column and on the button text in the third column</li>
         <li>Custom sorting functions - on the first column</li>
+        <li>Only first and third columns are filterable</li>
         <li>Html rendering - in the third column</li>
         <li>Ellipsis - in fourth column</li>
         <li>Interacting with the selected rows... there are <span>{{mysel.length}}</span> rows selected</li>
@@ -60,7 +61,6 @@
         </px-data-table-column>
         <px-data-table-column
           name="last"
-          searchable
     			type="string">
         </px-data-table-column>
         <px-data-table-column
@@ -73,6 +73,7 @@
           name="date"
           type="date"
           sortable
+          searchable
           max-column-character-width="30"
           ellipsis-clip-position="right">
         </px-data-table-column>
