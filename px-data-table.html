@@ -1,22 +1,32 @@
-<!--
-    Relative paths assume component is being run from inside an app or another component, where dependencies are flat
-    siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
-    'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs
-    See https://github.com/jreichenberg/grunt-dep-serve#why-do-we-need-this
--->
 <link rel="import" href="../polymer/polymer.html" />
 <link rel="import" href="aha-table.html">
+<link rel="import" href="px-data-table-column.html"> <!-- don't want users to have to import table-column as well as table -->
 
 <!--
-Element providing solution to no problem in particular. As a simple, increments a counter when clicked.
+Element that defines a data table, optionally using a sub-element for advanced column settings.
 
 ##### Usage
 
-    <px-data-table counter-value="1">Hi</px-data-table>
+    <px-data-table table-data="{{data}}"></px-data-table>
 
-@element px-data-table
-@blurb Element providing implementing data table behaviour.
-@homepage index.html
+    <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
+
+    <px-data-table selected="{{selectedItems}}" filterable selectable striped table-data="{{data}}">
+      <px-data-table-column name="first"
+        type="string"
+    		sortable
+    		searchable
+    		required
+    		default=""
+        filter-function-name="filterWholeWord"
+        sort-function-name="sortColumn"
+    		hint="Meaningful title will help you remember">
+      </px-data-table-column>
+      <px-data-table-column name="last" ...></px-data-table-column>
+      <px-data-table-column name="color" ...></px-data-table-column>
+      <px-data-table-column name="date" ...></px-data-table-column>
+    </px-data-table>
+
 @demo demo.html
 -->
 <dom-module id="px-data-table">
@@ -31,7 +41,8 @@ Element providing solution to no problem in particular. As a simple, increments 
                   selectable="{{selectable}}"
                   selected-rows="{{selected}}"
                   meta="{{meta}}"
-                  id="dataTable"></aha-table>
+                  id="dataTable">
+      </aha-table>
     </div>
   </template>
 </dom-module>
@@ -40,43 +51,102 @@ Element providing solution to no problem in particular. As a simple, increments 
   Polymer({
     is: 'px-data-table',
 
-    /**
-     * Properties block, expose attribute values to the DOM via 'reflect'
-     *
-     * @property properties
-     * @type Object
-     */
     properties: {
+
+      /**
+       * Data for the table to display.
+       *
+       * Expected data format is just a json array.  Each object in the array represents a row in the table.
+       *
+       *     [
+       *       {
+       *        "index": 0,
+       *        "name": "Liz Grimes",
+       *        "image": "https://s3.amazonaws.com/uifaces/faces/twitter/enda/73.jpg",
+       *        "date": "Sun Aug 14 1994 03:27:03 GMT-0700 (PDT)"
+       *      },
+       *      {
+       *        "index": 1,
+       *        "name": "Frazier Lara",
+       *        "image": "https://s3.amazonaws.com/uifaces/faces/twitter/guillogo/73.jpg",
+       *        "date": "Tue May 24 1988 14:10:20 GMT-0700 (PDT)",
+       *      }
+       *    ]
+       */
       tableData: {
         type: Array,
         value: function(){
           return [];
         },
         observer: '_tableDataChanged',
-        notify: true
+        notify: true,
+        reflectToAttribute: true
       },
-      //striped: if table row is striped
+
+
+      /**
+       * Use the striped attribute if the table rows are striped
+       *
+       *      <px-data-table striped table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
 			striped: {
 				type: Boolean,
 				value: false
 			},
-      //filterable: if table has column filtering capability turned on.
+
+      /**
+       * Use the filterable attribute if the table has filtering functionality per column turned on.
+       *
+       *      <px-data-table filterable table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
       filterable: {
 				type: Boolean,
 				value: false
 			},
+
+      /**
+       * Use the table-columns attribute if the table should be displayed as columns, instead of a grid.
+       *
+       *      <px-data-table table-columns table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
       tableColumns: {
 				type: Boolean,
 				value: false
 			},
+
+      /**
+       * Use the table-rows attribute if the table should be displayed as rows, instead of a grid.
+       *
+       *      <px-data-table table-rows table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
       tableRows: {
 				type: Boolean,
 				value: false
 			},
+
+      /**
+       * Use the selectable attribute if the table rows should be able to be selected.
+       *
+       *      <px-data-table selectable table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
       selectable: {
 				type: Boolean,
 				value: false
 			},
+
+      /**
+       * Selected rows in the data table setup for binding.
+       */
       selected: {
 				type: Array,
 				value: function(){
@@ -84,13 +154,8 @@ Element providing solution to no problem in particular. As a simple, increments 
         },
         notify: true,
         reflectToAttribute: true
-			},
-      meta: {
-        type: Array,
-        value: function(){
-          return [];
-        }
-      }
+			}
+
     },
     ready: function(){
       var children = Polymer.dom(this).querySelectorAll('px-data-table-column');
