@@ -464,7 +464,7 @@
 			//sizelist: range list to adjust page size.
 			sizelist: {
 				type: Array,
-				value: function(){return [5, 10, 20, 50, 100]}
+				value: function(){return [5, 10, 20, 50, 100];}
 			},
 			//pagesizetitle: label for page size box
 			pagesizetitle: {
@@ -481,7 +481,6 @@
 				type: Boolean,
 				value: false
 			}
-
 		},
 
 		ready: function() {
@@ -502,6 +501,14 @@
 					row._editing  ? 'editing'  : '',
 					(this.selectedRows.indexOf(row) > -1) ? 'selected'  : ''
 				].join(' ');
+		},
+		isCheckboxSelected: function(selected) {
+			console.log('in isCheckboxSelected');
+			if (typeof selected === "undefined" || selected === false) {
+				return false;
+			} else {
+				return true;
+			}
 		},
 		isEditing: function(rowEditable, columnEditable) {
 			return rowEditable && columnEditable;
@@ -526,10 +533,10 @@
 					if (datum !== "" && options) {
 					//translate value to labels for select
 						for (var i = options.length - 1; i >= 0; i--) {
-							if (options[i].value == datum) {
+							if (options[i].value === datum) {
 								return options[i].label;
 							}
-						};
+						}
 					}
 					datum = datum === undefined || datum === null ? '' : datum;
 					return datum === "" ? blank : datum;
@@ -544,7 +551,7 @@
 			var colWidth = column['max-column-character-width'];
 			if (datum.length > colWidth){
 				if (column['ellipsis-clip-position'] === 'left') {
-					datum = '\u2026' + datum.substr(datum.length - colWidth, datum.length)
+					datum = '\u2026' + datum.substr(datum.length - colWidth, datum.length);
 				}
 				else if (column['ellipsis-clip-position'] === 'center') {
 					var datumLeftIndex = Math.floor(colWidth/2),
@@ -595,14 +602,14 @@
 			return classList.join(' ');
 		},
 		getSortingClass: function(column, sortingColumn, descending) {
-			var classList = ['u-ml-', 'sorting', 'fa']
+			var classList = ['u-ml-', 'sorting', 'fa'];
 			if (sortingColumn === column.name) {
 				classList.push(descending ? 'fa-caret-down' : 'fa-caret-up');
 			}
 			return classList.join(' ');
 		},
 		getTextSortingClass: function(column, sortingColumn) {
-			var classList = ['column-head']
+			var classList = ['column-head'];
 			if (sortingColumn === column.name) {
 				classList.push('sorted-text');
 			}
@@ -663,7 +670,7 @@
 		edit: function(e) {
 			var row = e.model.row;
 			this.set('_editing', true, row);
-			if (this.editingRow && this.editingRow != row) {
+			if (this.editingRow && this.editingRow !== row) {
 				this.set('_editing', false, this.editingRow);
 			}
 			this.set('editingRow', row);
@@ -713,7 +720,7 @@
 			var column = e.model.column;
 			if(column && column.sortable){
 				var sortingColumn = column.name;
-				if (sortingColumn == this.sortedColumn){
+				if (sortingColumn === this.sortedColumn){
 					this.set('descending', !this.descending);
 				} else {
 					this.set('sortedColumn', sortingColumn);
@@ -829,10 +836,10 @@
 		_searchableToggled: function(changeRecord){
 			if(this.filtered){
 				Polymer.dom(this.root).querySelectorAll('.filter-input').forEach(function(el, idx){
-					el.value=''
+					el.value='';
 				});
 				this.data.forEach(function(o,i){
-					o._filtered = false
+					o._filtered = false;
 				});
 				this.filtered = false;
 				this.refreshPagination();
@@ -847,7 +854,7 @@
 					: this.data;
 			if (this.sortedColumn) {
 				//work out if customr sort function exists for sorted column.
-				var sortFunction
+				var sortFunction;
 				this.meta.forEach(function(obj){
 					if (this.sortedColumn === obj.name){
 						sortFunction = pxDataTableBehaviors[obj['sort-function-name']];
@@ -877,9 +884,9 @@
 					});
 			}
 
-
 			this.set('viewingRows', filteredRows.slice(from, to));
 		},
+
 		// call this when total count is change.
 		refreshPagination: function(keepInTheCurrentPage) {
 			if (!keepInTheCurrentPage) {
@@ -924,7 +931,7 @@
 				this.fire('before-select', row);
 				if (this.selectedRows.indexOf(row) > -1) {
 					// clear selected.
-					this.splice('selectedRows', this.selectedRows.indexOf(row), 1)
+					this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
 					this.set('_selected', false, row);
 					console.log('row._selected = ', row._selected);
 				} else {
@@ -963,7 +970,7 @@
 			this.fire('before-copy', obj);
 			var _new = JSON.parse(JSON.stringify(obj));
 			if (_new.id) {
-				delete _new.id
+				delete _new.id;
 			}
 			_new._modified = true;
 			_new._editing = false;
@@ -981,7 +988,7 @@
 				this.splice('viewingRows',found_index,1);
 				this.push('deleted', obj);
 			}
-			var found_index_in_modified = this.modified.indexOf(obj)
+			var found_index_in_modified = this.modified.indexOf(obj);
 			if (found_index_in_modified !== -1) {
 				obj._modified = false;
 				this.splice('modified',found_index_in_modified,1);
@@ -1034,7 +1041,8 @@
 			this.$$('#filter').classList.toggle('hide');
 		},
 		selectall: function(e,p){
-			var _this = this;
+			var _this = this,
+					selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
 			if(e.target.checked) {
 				this.selectedRows.forEach(function(row) {
 					_this.set('_selected', false, row);
@@ -1044,16 +1052,14 @@
 					this.push('selectedRows', row);
 					this.set('_selected', true, row);
 				}, this);
-				var selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
 				for (var i = 0; i < selectors.length; i++) {
 					selectors[i].checked = true;
 				}
 			} else {
 				this.data.forEach(function(row) {
-					this.splice('selectedRows', this.selectedRows.indexOf(row), 1)
+					this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
 					this.set('_selected', false, row);
 				}, this);
-				var selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
 				for (var i = 0; i < selectors.length; i++) {
 					//selectors[i].removeAttribute('checked');
 					selectors[i].checked = false;
