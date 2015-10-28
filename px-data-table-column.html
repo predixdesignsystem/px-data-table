@@ -1,104 +1,191 @@
 <!--
-/**
- * @module px-data-table-column
- *
- *
- * child element for aha-table, used for meta building
- *
- *    <px-data-table-column
- *				 sort-function-name="pxDataTableBehaviors.textSort"
- *				 filter-function-name="pxDataTableBehaviors.textFilter"
- *         name="content"
- *         type="text"
- *         sortable
- *         searchable
- *         required
- *         editable
- *         placeholder="example"
- *         default="">
- *    </px-data-table-column>
- *
- * @class px-data-table-column
- * Based on https://github.com/liuwenchao/aha-table
- *
- */
+Element that defines a columns in a data table.
+
+##### Usage
+
+Minimum:
+
+    <px-data-table selected="{{selectedItems}}" filterable selectable striped table-data="{{data}}">
+        <px-data-table-column name="first" type="string"></px-data-table-column>
+        <px-data-table-column name="last" type="string"></px-data-table-column>
+        <px-data-table-column name="color" type="string"></px-data-table-column>
+        <px-data-table-column name="date" type="string"></px-data-table-column>
+    </px-data-table>
+
+Advanced:
+
+    <px-data-table selected="{{selectedItems}}" filterable selectable striped table-data="{{data}}">
+      <px-data-table-column name="first"
+        type="string"
+    		sortable
+    		searchable
+    		required
+    		default=""
+        filter-function-name="filterWholeWord"
+        sort-function-name="sortColumn"
+    		hint="Meaningful title will help you remember">
+      </px-data-table-column>
+      <px-data-table-column name="last" ...></px-data-table-column>
+      <px-data-table-column name="color" ...></px-data-table-column>
+      <px-data-table-column name="date" ...></px-data-table-column>
+    </px-data-table>
+
+@demo demo.html
 -->
 <script>
-	Polymer({
-		is: "px-data-table-column",
-		properties: {
-			//column name
-			name: {
-				type: String,
-				value: ""
-			},
-			label: {
-				type: String,
-				value: ""
-			},
-			//column type: string, text, date, time, datetime, choice
-			type: {
-				type: String,
-				value: "string"
-			},
-			sortable: {
-				type: Boolean,
-				value: true
-			},
-			searchable: {
-				type: Boolean,
-				value: true
-			},
-			editable: {
-				type: Boolean,
-				value: false
-			},
-			requried: {
-				type: Boolean,
-				value: false
-			},
-			//used for placeholder for empty cell.
-			placeholder: {
-				type: String,
-				value: ""
-			},
-			sortFunctionName: {
-				type: String,
-				value: ""
-			},
-			filterFunctionName: {
-				type: String,
-				value: ""
-			},
-			default: {
-				type: String,
-				value: ""
-			},
-			//choices read from data-choices attribute
-			options: {
-				type: String,
-				value: function() { return []; }
-			},
-			//hint text in column header
-			hint: {
-				type: String,
-				value: ""
-			},
-			//placehoder for filter input
-			searchplaceholder: {
-				type: String,
-				value: ""
-			},
-			//column max character width
-			maxColumnCharacterWidth: {
-				type: Number,
-				value: 0
-			},
-			//ellipsis position for clipping data. One of center, left or right.
-			ellipsisClipPosition: {
-				type: String,
-				value: "right"
-			}
-		}
-	});
+  Polymer({
+    is: "px-data-table-column",
+    properties: {
+
+      /**
+       * Required.
+       *
+       * Name of the item in a row object to display.
+       *
+       *     <px-data-table-column name="first" ...></px-data-table-column>
+       *
+       */
+      name: {
+        type: String,
+        value: ""
+      },
+
+      /**
+       * Label in table heading for column.  Optional, will use capitalized name attribute by default.
+       *
+       *      <px-data-table-column label="The First Name" ...></px-data-table-column>
+       *
+       */
+      label: {
+        type: String,
+        value: ""
+      },
+
+      /**
+       * Required.
+       *
+       * Type of the item in a row object to display.
+       *
+       * Supported options: string, html
+       *
+       * WARNING! Potential XSS vulnerability if `html` comes from an untrusted source
+       *
+       * Unsupported: date, time, datetime, choice
+       *
+       *      <px-data-table-column type="html" ...></px-data-table-column>
+       *
+       */
+      type: {
+        type: String,
+        value: "string"
+      },
+
+      /**
+       * If column is sortable.
+       *
+       *    <px-data-table-column sortable ...></px-data-table-column>
+       *
+       * @default false
+       */
+      sortable: {
+        type: Boolean,
+        value: true
+      },
+
+      sortFunctionName: {  // TODO this seems gross...... can we change this?
+        type: String,
+        value: ""
+      },
+      filterFunctionName: {
+        type: String,
+        value: ""
+      },
+
+      /**
+       * Maximum number of characters in a column.  Optional.
+       *
+       *      <px-data-table-column max-column-character-width="10" ...></px-data-table-column>
+       *
+       * @default no maximum, will make row as wide as necessary to display all content
+       */
+      maxColumnCharacterWidth: {
+        type: Number,
+        value: 0
+      },
+
+      /**
+       * Where to clip the data and put ellipsis for the maximum characters in the column.
+       *
+       * Options: center, left, right
+       *
+       *     <px-data-table-column ellipsis-clip-position="center" ...></px-data-table-column>
+       *
+       * @default right
+       */
+      ellipsisClipPosition: {
+        type: String,
+        value: "right"
+      },
+
+      /**
+       * Unsupported
+       */
+      searchplaceholder: {
+        type: String,
+        value: ""
+      },
+
+      /**
+       * Unsupported
+       */
+      hint: {
+        type: String,
+        value: ""
+      },
+
+      /**
+       * Unsupported
+       */
+      searchable: {
+        type: Boolean,
+        value: true
+      },
+
+      /**
+       * Unsupported
+       */
+      editable: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Unsupported
+       */
+      required: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Unsupported
+       */
+      default: {
+        type: String,
+        value: ""
+      },
+
+      //choices read from data-choices attribute
+      /**
+       * Unsupported
+       */
+      options: {
+        type: String,
+        value: function() {
+          return [];
+        }
+      }
+
+    }
+  });
 </script>
