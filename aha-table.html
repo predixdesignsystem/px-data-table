@@ -79,7 +79,7 @@
 				<template is="dom-repeat" items="{{meta}}" as="column">
 					<span
 						title$="{{columntitle}}"
-						class$="{{getHeaderClass(column.name, column.sortable)}}">
+						class$="{{getHeaderClass(column)}}">
 						<span
 							class$="{{getTextSortingClass(column, sortedColumn)}}"
 							title$="{{sorttitle}}"
@@ -582,8 +582,8 @@
 		getEditTitle: function(editable, editTitle) {
 			return editable ? editTitle : '';
 		},
-		getHeaderClass: function(name, sortable) {
-			return ['th ', 'aha-', name, '-th'].join('') + (sortable ? ' sortable' : '');
+		getHeaderClass: function(item) {
+      return ['th ', 'aha-', item.name, '-th'].join('') + (item.sortable ? ' sortable' : '');
 		},
 		getFilterClass: function(searchable) {
 			var classList = ['tr'];
