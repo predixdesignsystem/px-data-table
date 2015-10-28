@@ -51,41 +51,28 @@
         <li>... and you can <button onclick="logSelectedRows()">console.log the selected rows</button></li>
       </ul>
       <px-data-table id="mytable" selected="{{mysel}}" filterable selectable striped table-data="{{minidata}}">
-        <px-data-table-column name="first"
+        <px-data-table-column
+          name="first"
     			type="string"
-    			sortable
-    			searchable
-    			required
-    			default=""
           filter-function-name="filterWholeWord"
-          sort-function-name="sortColumn"
-    			hint="Meaningful title will help you remember">
+          sort-function-name="sortColumn">
         </px-data-table-column>
-        <px-data-table-column name="last"
-    			type="string"
-    			sortable
-    			searchable
-    			required
-    			default=""
-    			hint="Meaningful title will help you remember">
+        <px-data-table-column
+          name="last"
+    			type="string">
         </px-data-table-column>
-        <px-data-table-column name="color"
+        <px-data-table-column
+          name="color"
     			type="html"
     			sortable
-    			searchable
-    			required
-    			default=""
-          filter-function-name="filterMarkupVal"
-    			hint="Meaningful title will help you remember">
+          filter-function-name="filterMarkupVal">
         </px-data-table-column>
-    		<px-data-table-column name="date"
-          type="date" searchable
+    		<px-data-table-column
+          name="date"
+          type="date"
           sortable
-    			required
           max-column-character-width="30"
-          ellipsis-clip-position="right"
-          hint="Dates are required"
-    			default="2011-12-21">
+          ellipsis-clip-position="right">
         </px-data-table-column>
       </px-data-table>
 

@@ -45,12 +45,8 @@ Advanced:
       <px-data-table-column name="first"
         type="string"
     		sortable
-    		searchable
-    		required
-    		default=""
         filter-function-name="filterWholeWord"
-        sort-function-name="sortColumn"
-    		hint="Meaningful title will help you remember">
+        sort-function-name="sortColumn">
       </px-data-table-column>
       <px-data-table-column name="last" ...></px-data-table-column>
       <px-data-table-column name="color" ...></px-data-table-column>
