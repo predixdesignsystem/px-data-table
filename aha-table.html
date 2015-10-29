@@ -40,7 +40,7 @@
  *
  * Available Event Hander:
  *     after-invalid(Object detail)
- *     after-td-click(Object detail)
+ *     px-row-click(Object detail)
  *     after-td-dbclick(Object detail)
  *     after-create(Object new_record)
  *     after-copy(Object new_record)
@@ -79,7 +79,7 @@
 				<template is="dom-repeat" items="{{meta}}" as="column">
 					<span
 						title$="{{columntitle}}"
-						class$="{{getHeaderClass(column.name, column.sortable)}}">
+						class$="{{getHeaderClass(column)}}">
 						<span
 							class$="{{getTextSortingClass(column, sortedColumn)}}"
 							title$="{{sorttitle}}"
@@ -584,8 +584,8 @@
 		getEditTitle: function(editable, editTitle) {
 			return editable ? editTitle : '';
 		},
-		getHeaderClass: function(name, sortable) {
-			return ['th ', 'aha-', name, '-th'].join('') + (sortable ? ' sortable' : '');
+		getHeaderClass: function(item) {
+      return ['th ', 'aha-', item.name, '-th'].join('') + (item.sortable ? ' sortable' : '');
 		},
 		getFilterClass: function(searchable) {
 			var classList = ['tr'];
@@ -987,7 +987,7 @@
 			var row = e.model.row;
 			var detail = {"row" : row, "column" : column};
 			this.select(e,p);
-			this.fire('after-td-click', detail);
+			this.fire('px-row-click', detail);
 		},
 		dbclick: function(e,p) {
 			var column = e.model.column;

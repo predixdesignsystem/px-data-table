@@ -3,32 +3,7 @@ Element that defines a columns in a data table.
 
 ##### Usage
 
-Minimum:
-
-    <px-data-table selected="{{selectedItems}}" filterable selectable striped table-data="{{data}}">
-        <px-data-table-column name="first" type="string"></px-data-table-column>
-        <px-data-table-column name="last" type="string"></px-data-table-column>
-        <px-data-table-column name="color" type="string"></px-data-table-column>
-        <px-data-table-column name="date" type="string"></px-data-table-column>
-    </px-data-table>
-
-Advanced:
-
-    <px-data-table selected="{{selectedItems}}" filterable selectable striped table-data="{{data}}">
-      <px-data-table-column name="first"
-        type="string"
-    		sortable
-    		searchable
-    		required
-    		default=""
-        filter-function-name="filterWholeWord"
-        sort-function-name="sortColumn"
-    		hint="Meaningful title will help you remember">
-      </px-data-table-column>
-      <px-data-table-column name="last" ...></px-data-table-column>
-      <px-data-table-column name="color" ...></px-data-table-column>
-      <px-data-table-column name="date" ...></px-data-table-column>
-    </px-data-table>
+    <px-data-table-column name="first"></px-data-table-column>
 
 @demo demo.html
 -->
@@ -62,8 +37,6 @@ Advanced:
       },
 
       /**
-       * Required.
-       *
        * Type of the item in a row object to display.
        *
        * Supported options: string, html
@@ -74,6 +47,7 @@ Advanced:
        *
        *      <px-data-table-column type="html" ...></px-data-table-column>
        *
+       * @default string
        */
       type: {
         type: String,
@@ -83,11 +57,23 @@ Advanced:
       /**
        * If column is sortable.
        *
-       *    <px-data-table-column sortable ...></px-data-table-column>
+       *      <px-data-table-column sortable ...></px-data-table-column>
        *
        * @default false
        */
       sortable: {
+        type: Boolean,
+        value: true
+      },
+
+      /**
+       * If column is searchable for filtering.
+       *
+       *      <px-data-table-column searchable ...></px-data-table-column>
+       *
+       * @default false
+       */
+      searchable: {
         type: Boolean,
         value: true
       },
@@ -141,14 +127,6 @@ Advanced:
       hint: {
         type: String,
         value: ""
-      },
-
-      /**
-       * Unsupported
-       */
-      searchable: {
-        type: Boolean,
-        value: true
       },
 
       /**

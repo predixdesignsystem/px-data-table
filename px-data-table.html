@@ -1,6 +1,7 @@
-<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="aha-table.html">
-<link rel="import" href="px-data-table-column.html"> <!-- don't want users to have to import table-column as well as table -->
+<link rel="import"
+      href="px-data-table-column.html"> <!-- don't want users to have to import table-column as well as table -->
 
 <!--
 Element that defines a data table, optionally using a sub-element for advanced column settings.
@@ -15,37 +16,43 @@ Advanced:
 
     <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
 
-    <px-data-table selected="{{selectedItems}}" filterable selectable striped table-data="{{data}}">
-      <px-data-table-column name="first"
-        type="string"
+    <px-data-table selected-rows="{{mySelectedRows}}" filterable selectable striped table-data="{{data}}">
+      <px-data-table-column
+        name="first"
     		sortable
-    		searchable
-    		required
-    		default=""
         filter-function-name="filterWholeWord"
-        sort-function-name="sortColumn"
-    		hint="Meaningful title will help you remember">
+        sort-function-name="sortColumn">
       </px-data-table-column>
       <px-data-table-column name="last" ...></px-data-table-column>
       <px-data-table-column name="color" ...></px-data-table-column>
       <px-data-table-column name="date" ...></px-data-table-column>
     </px-data-table>
 
+
+Events:
+
+- px-row-click : fired when table row is clicked (selected or unselected)
+
+      document.getElementById("mytable").addEventListener("px-row-click", function(e) {
+        var clickedRow = e.detail.row;
+        console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
+      });
+
 @demo demo.html
 -->
 <dom-module id="px-data-table">
-  <link rel="import" type="css" href="css/px-data-table.css" />
+  <link rel="import" type="css" href="css/px-data-table.css"/>
 
   <template>
     <div class="flex">
-      <aha-table  searchable="{{filterable}}"
-                  striped="{{striped}}"
-                  table-columns="{{tableColumns}}"
-                  table-rows="{{tableRows}}"
-                  selectable="{{selectable}}"
-                  selected-rows="{{selected}}"
-                  meta="{{meta}}"
-                  id="dataTable">
+      <aha-table searchable="{{filterable}}"
+                 striped="{{striped}}"
+                 table-columns="{{tableColumns}}"
+                 table-rows="{{tableRows}}"
+                 selectable="{{selectable}}"
+                 selected-rows="{{selectedRows}}"
+                 meta="{{meta}}"
+                 id="dataTable">
       </aha-table>
     </div>
   </template>
@@ -83,12 +90,11 @@ Advanced:
        */
       tableData: {
         type: Array,
-        value: function(){
+        value: function() {
           return [];
         },
         observer: '_tableDataChanged',
-        notify: true,
-        reflectToAttribute: true
+        notify: true
       },
 
 
@@ -99,22 +105,24 @@ Advanced:
        *
        * @default false
        */
-			striped: {
-				type: Boolean,
-				value: false
-			},
+      striped: {
+        type: Boolean,
+        value: false
+      },
 
       /**
        * Use the filterable attribute if the table has filtering functionality per column turned on.
        *
        *      <px-data-table filterable table-data="{{data}}"></px-data-table>
        *
+       * If columns are specified with px-data-table-column, they must have a searchable attribute to be able to be filtered.
+       *
        * @default false
        */
       filterable: {
-				type: Boolean,
-				value: false
-			},
+        type: Boolean,
+        value: false
+      },
 
       /**
        * Use the table-columns attribute if the table should be displayed as columns, instead of a grid.
@@ -124,9 +132,9 @@ Advanced:
        * @default false
        */
       tableColumns: {
-				type: Boolean,
-				value: false
-			},
+        type: Boolean,
+        value: false
+      },
 
       /**
        * Use the table-rows attribute if the table should be displayed as rows, instead of a grid.
@@ -136,9 +144,9 @@ Advanced:
        * @default false
        */
       tableRows: {
-				type: Boolean,
-				value: false
-			},
+        type: Boolean,
+        value: false
+      },
 
       /**
        * Use the selectable attribute if the table rows should be able to be selected.
@@ -148,57 +156,78 @@ Advanced:
        * @default false
        */
       selectable: {
-				type: Boolean,
-				value: false
-			},
+        type: Boolean,
+        value: false
+      },
 
       /**
        * Selected rows in the data table setup for binding.
        *
-       *      <px-data-table selected="{{selectedItems}}" table-data="{{data}}"></px-data-table>
+       * This property is read only.
+       *
+       *      <px-data-table selectedRows="{{mySelectedItems}}" table-data="{{data}}"></px-data-table>
        *
        */
-      selected: {
-				type: Array,
-				value: function(){
+      selectedRows: {
+        type: Array,
+        value: function() {
           return [];
         },
-        notify: true,
-        reflectToAttribute: true
-			}
+        notify: true
+      }
 
     },
-    ready: function(){
+
+    /**
+     * Events:
+     *
+     * px-row-click : fired when table row is clicked (selected or unselected)
+     *
+     */
+
+    ready: function() {
       var children = Polymer.dom(this).querySelectorAll('px-data-table-column');
 
-			if (children.length > 0) {
-				var meta = [];
-				for (var i = 0; i < children.length; i++) {
-					var column = {};
-					for (var j = 0; j < children[i].attributes.length; j++) {
-						var attribute = children[i].attributes[j];
-						if (['sortable', 'searchable', 'editable', 'required'].indexOf(attribute.name) >= 0) {
-							column[attribute.nodeName] = true;
-						} else if (attribute.name === 'data-choices') {
-							column['options'] = [];
-							var choices = JSON.parse(attribute.value);
-							for(option in choices) {
-								column['options'].push({'value': option, 'label': choices[option]});
-							}
-						} else {
-							column[attribute.nodeName] = attribute.value;
-						}
-						if (!column['label']) {
-							var name = column['name'] || '';
-							column['label'] = name.charAt(0).toUpperCase() + name.slice(1);
-						}
-					}
-					meta.push(column);
-				}
-				this.set('meta', meta);
-			}
+      if(children.length > 0) {
+        var meta = [];
+        for(var i = 0; i < children.length; i++) {
+          var column = {};
+          for(var j = 0; j < children[i].attributes.length; j++) {
+            var attribute = children[i].attributes[j];
+
+            if(['sortable', 'searchable', 'editable', 'required'].indexOf(attribute.name) >= 0) {
+              column[attribute.nodeName] = true;
+            }
+            else if(attribute.name === 'data-choices') {
+              column['options'] = [];
+              var choices = JSON.parse(attribute.value);
+              for(option in choices) {
+                column['options'].push({'value': option, 'label': choices[option]});
+              }
+            }
+            else {
+              column[attribute.nodeName] = attribute.value;
+            }
+
+            // default the label of the columns to the capitalized name
+            if(!column['label']) {
+              var name = column['name'] || '';
+              column['label'] = name.charAt(0).toUpperCase() + name.slice(1);
+            }
+
+            // default the type of the column to a string
+            if(!column['type']) {
+              column['type'] = 'string';
+            }
+
+          }
+          meta.push(column);
+        }
+        this.set('meta', meta);
+      }
     },
-    _tableDataChanged: function(){
+
+    _tableDataChanged: function() {
       this.$.dataTable.data = this.tableData;
     }
   });
