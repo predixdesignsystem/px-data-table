@@ -49,10 +49,11 @@
         <li>Custom sorting functions - on the first column</li>
         <li>Html rendering - in the third column</li>
         <li>Ellipsis - in fourth column</li>
-        <li>Interacting with the selected rows... there are <span>{{mysel.length}}</span> rows selected</li>
+        <li>Interacting with the selected rows... there are <span>{{mySelectedRows.length}}</span> rows selected</li>
         <li>... and you can <button onclick="logSelectedRows()">console.log the selected rows</button></li>
+        <li>... and you can receive px-row-click events from the table, which can be used by taking action on the row</li>
       </ul>
-      <px-data-table id="mytable" selected="{{mysel}}" filterable selectable striped table-data="{{minidata}}">
+      <px-data-table id="mytable" selected-rows="{{mySelectedRows}}" filterable selectable striped table-data="{{minidata}}">
         <px-data-table-column
           name="first"
           searchable
@@ -80,9 +81,14 @@
       <script>
 
         function logSelectedRows() {
-          var selectedRows = document.getElementById("mytable").selected;
-          console.log("Selected rows:", selectedRows);
+          var selectedRows = document.getElementById("mytable").selectedRows;
+          console.log("Get all selected rows:", selectedRows);
         }
+
+        document.getElementById("mytable").addEventListener("px-row-click", function(e) {
+          var clickedRow = e.detail.row;
+          console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
+        });
 
       </script>
 

@@ -41,7 +41,7 @@ Advanced:
 
     <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
 
-    <px-data-table selected="{{selectedItems}}" filterable selectable striped table-data="{{data}}">
+    <px-data-table selected-rows="{{mySelectedItems}}" filterable selectable striped table-data="{{data}}">
       <px-data-table-column
         name="first"
         type="string"
@@ -145,19 +145,30 @@ Use the table-rows attribute if the table should be displayed as rows, instead o
 <px-data-table table-rows table-data="{{data}}"></px-data-table>
 ```
 
-##### selected
+##### selectedRows
 
 *Type:* **Array** - (*Optional*)
 
 Selected rows in the data table setup for binding.
 
+This property is read only.
+
 ```html
-<px-data-table selected="{{selectedItems}}" table-data="{{data}}"></px-data-table>
+<px-data-table selected-rows="{{mySelectedItems}}" table-data="{{data}}"></px-data-table>
 ```
 
 ### Events
 
-No events are fired by px-data-table.
+#### px-row-click
+
+Fired when table row is clicked (selected or unselected)
+
+```js
+document.getElementById("mytable").addEventListener("px-row-click", function(e) {
+  var clickedRow = e.detail.row;
+  console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
+});
+```
 
 ### Functions
 

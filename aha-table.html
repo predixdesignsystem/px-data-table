@@ -40,7 +40,7 @@
  *
  * Available Event Hander:
  *     after-invalid(Object detail)
- *     after-td-click(Object detail)
+ *     px-row-click(Object detail)
  *     after-td-dbclick(Object detail)
  *     after-create(Object new_record)
  *     after-copy(Object new_record)
@@ -971,7 +971,7 @@
 			var row = e.model.row;
 			var detail = {"row" : row, "column" : column};
 			this.select(e,p);
-			this.fire('after-td-click', detail);
+			this.fire('px-row-click', detail);
 		},
 		dbclick: function(e,p) {
 			var column = e.model.column;
