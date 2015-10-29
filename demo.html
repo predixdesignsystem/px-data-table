@@ -54,7 +54,7 @@
       <px-data-table id="mytable" selected-rows="{{mySelectedRows}}" filterable selectable striped table-data="{{minidata}}">
         <px-data-table-column
           name="first"
-          searchable
+          filterable
           sortable
           filter-function-name="filterWholeWord">
         </px-data-table-column>
@@ -70,7 +70,7 @@
         <px-data-table-column
           name="color"
     			type="html"
-          searchable
+          filterable
           filter-function-name="filterMarkupVal">
         </px-data-table-column>
     		<px-data-table-column

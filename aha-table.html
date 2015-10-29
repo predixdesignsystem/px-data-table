@@ -6,7 +6,7 @@
  * @module aha-table
  *
  *
- * Searchable Sortable Editable Paginatable Data Table
+ * filterable Sortable Editable Paginatable Data Table
  *
  * aha-table is an data table/grid, it cousumes a modal data
  * and modal meta to show a table that can search, sort, edit
@@ -29,7 +29,7 @@
  *             type="string"
  *             label="My Title"
  *             sortable
- *             searchable
+ *             filterable
  *             required
  *             editable
  *             placeholder="Example text"
@@ -71,7 +71,7 @@
 						</div>
 						<div
 							title$="{{searchtitle}}"
-							hidden$="{{!searchable}}"
+							hidden$="{{!filterable}}"
 							class="filterrow search"
 							on-click="toggleFilters"></div>
 					</span>
@@ -92,7 +92,7 @@
 					</span>
 				</template>
 			</span>
-			<span class$="{{getFilterClass(searchable)}}" id="filter">
+			<span class$="{{getFilterClass(filterable)}}" id="filter">
 				<template is="dom-if" if="{{selectable}}">
 					<span class="td filter--cell">
 						<div class="flex flex--center">
@@ -106,7 +106,7 @@
 				<template is="dom-repeat" items="{{meta}}" as="column">
 					<span class="td filter--cell">
 
-						<template is="dom-if" if="{{column.searchable}}">
+						<template is="dom-if" if="{{column.filterable}}">
 							<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
 								<select class="filter-input" on-change="search">
 										<template is="dom-repeat" items="{{column.options}}" as="option">
@@ -345,11 +345,11 @@
 				type: Boolean,
 				value: false
 			},
-			//searchable: if table row is searchable
-			searchable: {
+			//filterable: if table row is filterable
+			filterable: {
 				type: Boolean,
 				value: false,
-				observer: "_searchableToggled"
+				observer: "_filterableToggled"
 			},
 			// text displayed in first column of search row.
 			searchtitle: {
@@ -590,9 +590,9 @@
 		getHeaderClass: function(item) {
       return ['th ', 'aha-', item.name, '-th'].join('') + (item.sortable ? ' sortable' : '');
 		},
-		getFilterClass: function(searchable) {
+		getFilterClass: function(filterable) {
 			var classList = ['tr'];
-			if(!searchable){
+			if(!filterable){
 				classList.push('hidden');
 			}
 			return classList.join(' ');
@@ -654,7 +654,7 @@
 							label: prop.charAt(0).toUpperCase() + prop.slice(1),
 							type: [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string",
 							sortable: true,
-							searchable: true,
+							filterable: true,
 							editable: false,
 							required: false
 						});
@@ -858,7 +858,7 @@
 		_defaultSort: function(a, b) {
 			return this.descending ? (a.value < b.value ? 1 : -1) : (a.value > b.value ? 1 : -1);
 		},
-		_searchableToggled: function(changeRecord){
+		_filterableToggled: function(changeRecord){
 			var _this = this,
 					i,
 					len,
