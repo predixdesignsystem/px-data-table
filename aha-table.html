@@ -219,10 +219,12 @@
 		<div style="float: right;" class="pagination">
 			<span class="pagesize">
 				<span class="u-mr--">{{pagesizetitle}}</span>
-				<select value="{{pagesize}}" on-change="changeSize">
-					<template is="dom-repeat" items="{{sizelist}}" as="n">
-						<option selected$="{{isEqual(n, pagesize)}}">{{n}}</option>
-					</template>
+				<select on-change="changeDropDown">
+						<option>5</option>
+						<option selected>10</option>
+						<option>20</option>
+						<option>50</option>
+						<option>100</option>
 				</select>
 			</span>
 			<span class="u-pl+ u-ml+ summary">
@@ -813,8 +815,26 @@
 				this.lastItemIndex = (this.currentpage)* this.pagesize;
 			}
 		},
-		changeSize: function(e) {
-			this.set('pagesize', parseInt(e.target.value));
+		changeDropDown: function(e) {
+			var size = parseInt(e.target.value),
+					index = this.sizelist.indexOf(size);
+					console.log('index = ', index);
+			var parentElem = this.getClosest(e.target, 'select'),
+					optionList = Polymer.dom(parentElem).querySelectorAll("option");
+					optionList.forEach(function(option) {
+						if (parseInt(option.value) === parseInt(size)) {
+							option.setAttribute('selected', '');
+							e.target.selectedIndex = parseInt(index);
+							console.log('e.target.selectedIndex = ', e.target.selectedIndex);
+						} else {
+							option.removeAttribute('selected');
+						}
+					});
+
+			this.changeSize(size);
+		},
+		changeSize: function(size) {
+			this.set('pagesize', size);
 		},
 		pagesizeChanged: function(newValue, oldValue){
 			this.pagesize = parseInt(this.pagesize);
@@ -902,36 +922,32 @@
 		findSelectedRows: function() {
 			var viewingRows = this.viewingRows,
 					selectedRows = this.selectedRows,
+					resultsArray = [],
 					stringifiedViewedRowArray = [],
 					stringifiedSelectedRowArray = [],
-					resultsArray = [],
-					stringifyViewedRow,
-					stringifySelectedRow,
 					result,
 					state,
 					index;
 
-			viewingRows.forEach(function(row) {
-				stringifyViewedRow = JSON.stringify(row);
-				stringifiedViewedRowArray.push(stringifyViewedRow);
+			stringifiedViewedRowArray = this.createStringifiedJSONArray(viewingRows);
+			stringifiedSelectedRowArray = this.createStringifiedJSONArray(selectedRows);
+
+			resultsArray = stringifiedViewedRowArray.map(function(row, i) {
+				index = i; //set our index
+				state = (stringifiedSelectedRowArray.indexOf(row) > -1) ? true : false; //find out the state
+				return {index: index, state: state}; //and return the object
 			});
 
-			selectedRows.forEach(function(row) {
-				stringifySelectedRow = JSON.stringify(row);
-				stringifiedSelectedRowArray.push(stringifySelectedRow);
-			});
-
-			stringifiedViewedRowArray.forEach(function(row, i) {
-				index = i;
-				if (stringifiedSelectedRowArray.indexOf(row) > -1) {
-					state = true;
-				} else {
-					state = false;
-				}
-				result = {index: index, state: state};
-				resultsArray.push(result);
-			});
 			this.changeCheckboxState(resultsArray);
+		},
+		createStringifiedJSONArray: function(JSONArray) {
+			var i,
+					len,
+					resultArray = [];
+			for (i=0, len=JSONArray.length; i<len;i++) {
+				resultArray.push(JSON.stringify(JSONArray[i]));
+			}
+			return resultArray;
 		},
 		changeCheckboxState: function(resultsArray) {
 			if (this.selectedRows && this.selectedRows.length) {
