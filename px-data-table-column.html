@@ -78,10 +78,29 @@ Element that defines a columns in a data table.
         value: true
       },
 
-      sortFunctionName: {  // TODO this seems gross...... can we change this?
+      /**
+       * Name of the custom function to sort this row with.
+       *
+       * A custom function with this name must be the px-data-table customFunctions attribute.  If not, the column falls back to default sorting behavior.
+       *
+       *      <px-data-table-column sort-function-name="sortByEmailDomain" ...></px-data-table-column>
+       *
+       * @default sort in increasing/decreasing alphanumerical
+       */
+      sortFunctionName: {
         type: String,
         value: ""
       },
+
+      /**
+       * Name of the custom function to filter this row with.
+       *
+       * A custom function with this name must be the px-data-table customFunctions attribute.  If not, the column falls back to default filtering behavior.
+       *
+       *      <px-data-table-column filter-function-name="filterWholeWord" ...></px-data-table-column>
+       *
+       * @default filter on the typed in string
+       */
       filterFunctionName: {
         type: String,
         value: ""

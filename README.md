@@ -46,7 +46,7 @@ Advanced:
         name="first"
         sortable
         filter-function-name="filterWholeWord"
-        sort-function-name="sortColumn">
+        sort-function-name="sortByEmailDomain">
       </px-data-table-column>
       <px-data-table-column name="last" ...></px-data-table-column>
       <px-data-table-column name="color" ...></px-data-table-column>
@@ -154,6 +154,36 @@ This property is read only.
 
 ```html
 <px-data-table selected-rows="{{mySelectedItems}}" table-data="{{data}}"></px-data-table>
+```
+
+##### customFunctions
+
+*Type:* **Object** - (*Optional*) - *Default:* {}
+
+Custom function declarations for any custom filtering/sorting functions.
+
+These are just the declarations of the functions; to use the functions for a column you must pass in the filter-function-name / sort-function-name to px-data-table-column.
+
+```html
+<px-data-table customFunctions="{{myCustomFunctions}}" table-data="{{data}}"></px-data-table>
+```
+
+```js
+myCustomFunctions = {
+  sortByEmailDomain: function(a, b) {
+    var aDomain = a.value.substring(a.value.indexOf("@")+1, a.value.indexOf("."));
+    var bDomain = b.value.substring(b.value.indexOf("@")+1, b.value.indexOf("."));
+    return this.descending
+      ? (aDomain < bDomain ? 1 : -1)
+       : (aDomain > bDomain ? 1 : -1);
+  },
+  filterWholeWord: function(searchString, cellValue) {
+    if(searchString === undefined || searchString === null || searchString === "") {
+      return true;
+    }
+    return (searchString.toString().toLowerCase() === cellValue.toString().toLowerCase());
+  }
+};
 ```
 
 ### Events
@@ -270,22 +300,26 @@ Options: center, left, right
 
 ##### filterFunctionName
 
-*Type:* **Array** - (*Optional*)
+*Type:* **String** - (*Optional*) - *Default:* filter on the typed in string
 
-TODO
+Name of the custom function to filter this row with.
+
+A custom function with this name must be the px-data-table customFunctions attribute. If not, the column falls back to default filtering behavior.
 
 ```html
-<px-data-table selected="{{selectedItems}}" table-data="{{data}}"></px-data-table>
+<px-data-table-column filter-function-name="filterWholeWord" ...></px-data-table-column>
 ```
 
 ##### sortFunctionName
 
-*Type:* **Array** - (*Optional*)
+*Type:* **String** - (*Optional*) - *Default:* sort in increasing/decreasing alphanumerical
 
-TODO
+Name of the custom function to sort this row with.
+
+A custom function with this name must be the px-data-table customFunctions attribute. If not, the column falls back to default sorting behavior.
 
 ```html
-<px-data-table selected="{{selectedItems}}" table-data="{{data}}"></px-data-table>
+<px-data-table-column sort-function-name="sortByEmailDomain" ...></px-data-table-column>
 ```
 
 ##### default

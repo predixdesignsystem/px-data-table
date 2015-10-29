@@ -262,10 +262,8 @@
 	</template>
 </dom-module>
 <script>
-	var pxDataTableBehaviors = pxDataTableBehaviors || {};
 	Polymer({
 		is: 'aha-table',
-		behaviors: [pxDataTableBehaviors],
 		properties: {
 			//data: instance of the model data
 			data: {
@@ -481,7 +479,12 @@
 			showGotoFirstLast: {
 				type: Boolean,
 				value: false
-			}
+			},
+      // custom function declarations, used in individual columns for filtering/sorting
+      customFunctions: {
+        type: Object,
+        value: {}
+      }
 		},
 
 		ready: function() {
@@ -495,6 +498,7 @@
 			this.$.aha_table_main.setAttribute('resolved', '');
 			this.$.aha_table_main.removeAttribute('unresolved');
 		},
+
 		getRowClass: function(row, selectedRows) {
 			return ['tr', 'rows',
 					this.striped  ? 'striped'  : '',
@@ -737,11 +741,12 @@
 			if(e.model.column){
 				var searchedColumn = e.model.column.name;
 
+        var self = this;
 				this.data.forEach(function(row){
 					var matched = false;
 					row._not_matched_columns = row._not_matched_columns || [];
 
-					var customSearchFunction = pxDataTableBehaviors[e.model.column['filter-function-name']];
+					var customSearchFunction = self.customFunctions[e.model.column['filter-function-name']];
 					if (customSearchFunction) {
 						matched = customSearchFunction(e.target.value, row[searchedColumn]);
 					}
@@ -858,7 +863,7 @@
 				var sortFunction;
 				this.meta.forEach(function(obj){
 					if (this.sortedColumn === obj.name){
-						sortFunction = pxDataTableBehaviors[obj['sort-function-name']];
+						sortFunction = this.customFunctions[obj['sort-function-name']];
 					}
 				}, this);
 

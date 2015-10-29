@@ -9,8 +9,6 @@
     <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
     <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
 
-    <script src="pxDataTableBehaviorsDemo.js"></script>
-
     <link rel="import" href="px-data-table.html" />
     <link rel="import" href="../iron-ajax/iron-ajax.html" />
     <link rel="import" href="../px-theme/px-theme.html"/>
@@ -43,12 +41,12 @@
 
       <p>Very customized data table, with:</p>
       <ul>
-        <li>Filter - only first and third columns</li>
-        <li>Custom filtering functions - on an entire word in the first column and on the button text in the third column</li>
-        <li>Sorting - only first and second columns</li>
-        <li>Custom sorting functions - on the first column</li>
-        <li>Html rendering - in the third column</li>
-        <li>Ellipsis - in fourth column</li>
+        <li>Filter - only First and Color columns</li>
+        <li>Custom filtering functions - on an entire word in the First column and on the button text in the Color column</li>
+        <li>Sorting - on the first three columns</li>
+        <li>Custom sorting functions - by the email domain in the Email column</li>
+        <li>Html rendering - in the Color column</li>
+        <li>Ellipsis - in Date column</li>
         <li>Interacting with the selected rows... there are <span>{{mySelectedRows.length}}</span> rows selected</li>
         <li>... and you can <button onclick="logSelectedRows()">console.log the selected rows</button></li>
         <li>... and you can receive px-row-click events from the table, which can be used by taking action on the row</li>
@@ -58,11 +56,15 @@
           name="first"
           searchable
           sortable
-          filter-function-name="filterWholeWord"
-          sort-function-name="sortColumn">
+          filter-function-name="filterWholeWord">
         </px-data-table-column>
         <px-data-table-column
           name="last"
+          sortable>
+        </px-data-table-column>
+        <px-data-table-column
+          name="email"
+          sort-function-name="sortByEmailDomain"
           sortable>
         </px-data-table-column>
         <px-data-table-column
@@ -89,6 +91,28 @@
           var clickedRow = e.detail.row;
           console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
         });
+
+        document.getElementById("mytable").customFunctions = {
+          sortByEmailDomain: function(a, b) {
+            var aDomain = a.value.substring(a.value.indexOf("@")+1, a.value.indexOf("."));
+            var bDomain = b.value.substring(b.value.indexOf("@")+1, b.value.indexOf("."));
+            return this.descending
+              ? (aDomain < bDomain ? 1 : -1)
+              : (aDomain > bDomain ? 1 : -1);
+          },
+          filterMarkupVal: function(searchString, cellValue) {
+            var lhs = cellValue.slice(cellValue.indexOf('>') + 1);
+            var content = lhs.substr(0, lhs.indexOf('<'));
+
+            return (content.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
+          },
+          filterWholeWord: function(searchString, cellValue) {
+            if(searchString === undefined || searchString === null || searchString === "") {
+              return true;
+            }
+            return (searchString.toString().toLowerCase() === cellValue.toString().toLowerCase());
+          }
+        };
 
       </script>
 

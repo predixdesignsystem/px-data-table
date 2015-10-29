@@ -1,7 +1,5 @@
 [
   {
-    "index": 2,
-    "name": "Dora Griffith",
     "first": "Valentine",
     "last": "Meyer",
     "image": "https://s3.amazonaws.com/uifaces/faces/twitter/iboldurev/73.jpg",
@@ -19,8 +17,6 @@
     "color": "<button class='btn' style='color:rgb(201,142,97);'>Blue Bottle cardigan</button>"
   },
   {
-    "index": 3,
-    "name": "Shelley Molina",
     "first": "Silva",
     "last": "Alexander",
     "image": "https://s3.amazonaws.com/uifaces/faces/twitter/smalonso/73.jpg",
@@ -33,13 +29,11 @@
     "state": "Michigan",
     "zip": 22009,
     "country": "Thailand",
-    "email": "silvaalexander@scentric.com",
+    "email": "silvaalexander@gmail.com",
     "phone": "(823) 415-2224",
     "color": "<button class='btn' style='color:rgb(113,105,251);'>Freegan tilde</button>"
   },
   {
-    "index": 4,
-    "name": "Rita Lopez",
     "first": "Hopkins",
     "last": "Wong",
     "image": "https://s3.amazonaws.com/uifaces/faces/twitter/taherrapee/73.jpg",
@@ -52,13 +46,11 @@
     "state": "Maine",
     "zip": 89440,
     "country": "Seychelles",
-    "email": "hopkinswong@scentric.com",
+    "email": "hopkinswong@hotmail.com",
     "phone": "(814) 488-2063",
     "color": "<button class='btn' style='color:rgb(133,126,66);'>bespoke gastropub</button>"
   },
   {
-    "index": 5,
-    "name": "Wagner Shelton",
     "first": "Harriet",
     "last": "Sherman",
     "image": "https://s3.amazonaws.com/uifaces/faces/twitter/ismailmayat/73.jpg",
@@ -76,8 +68,6 @@
     "color": "<button class='btn' style='color:rgb(195,89,110);'>dreamcatcher fingerstache</button>"
   },
   {
-    "index": 6,
-    "name": "Bethany Adkins",
     "first": "Stacie",
     "last": "Bartlett",
     "image": "https://s3.amazonaws.com/uifaces/faces/twitter/carlyson/73.jpg",
@@ -95,9 +85,7 @@
     "color": "<button class='btn' style='color:rgb(164,84,221);'>Etsy beard</button>"
   },
   {
-    "index": 2,
-    "name": "Dora Griffith",
-    "first": "Valentine",
+    "first": "Lindsay",
     "last": "Meyer",
     "image": "https://s3.amazonaws.com/uifaces/faces/twitter/iboldurev/73.jpg",
     "boolean": true,
@@ -109,14 +97,12 @@
     "state": "South Carolina",
     "zip": 41343,
     "country": "Germany",
-    "email": "valentinemeyer@scentric.com",
+    "email": "lindsay@gmail.com",
     "phone": "(956) 428-2996",
     "color": "<button class='btn' style='color:rgb(201,142,97);'>Austin meggings</button>"
   },
   {
-    "index": 3,
-    "name": "Shelley Molina",
-    "first": "Silva",
+    "first": "Shelley",
     "last": "Alexander",
     "image": "https://s3.amazonaws.com/uifaces/faces/twitter/smalonso/73.jpg",
     "boolean": true,
@@ -128,14 +114,12 @@
     "state": "Michigan",
     "zip": 22009,
     "country": "Thailand",
-    "email": "silvaalexander@scentric.com",
+    "email": "shelley@hotmail.com",
     "phone": "(823) 415-2224",
     "color": "<button class='btn' style='color:rgb(113,105,251);'>Kitsch banjo</button>"
   },
   {
-    "index": 4,
-    "name": "Rita Lopez",
-    "first": "Hopkins",
+    "first": "Rita",
     "last": "Wong",
     "image": "https://s3.amazonaws.com/uifaces/faces/twitter/taherrapee/73.jpg",
     "boolean": false,
@@ -147,14 +131,12 @@
     "state": "Maine",
     "zip": 89440,
     "country": "Seychelles",
-    "email": "hopkinswong@scentric.com",
+    "email": "rita@yahoo.com",
     "phone": "(814) 488-2063",
     "color": "<button class='btn' style='color:rgb(133,126,66);'>Brooklyn authentic</button>"
   },
   {
-    "index": 5,
-    "name": "Wagner Shelton",
-    "first": "Harriet",
+    "first": "Joe",
     "last": "Sherman",
     "image": "https://s3.amazonaws.com/uifaces/faces/twitter/ismailmayat/73.jpg",
     "boolean": true,
@@ -166,14 +148,12 @@
     "state": "Kansas",
     "zip": 21389,
     "country": "Chad",
-    "email": "harrietsherman@scentric.com",
+    "email": "joejoe@yahoo.com",
     "phone": "(887) 497-3612",
     "color": "<button class='btn' style='color:rgb(195,89,110);'>Pickled cray scenester</button>"
   },
   {
-    "index": 6,
-    "name": "Bethany Adkins",
-    "first": "Stacie",
+    "first": "Jane",
     "last": "Bartlett",
     "image": "https://s3.amazonaws.com/uifaces/faces/twitter/carlyson/73.jpg",
     "boolean": false,
@@ -185,7 +165,7 @@
     "state": "Iowa",
     "zip": 72190,
     "country": "Uruguay",
-    "email": "staciebartlett@scentric.com",
+    "email": "jane@scentric.com",
     "phone": "(957) 412-3261",
     "color": "<button class='btn' style='color:rgb(164,84,221);'>8-bit migas</button>"
   }
