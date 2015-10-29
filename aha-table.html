@@ -744,7 +744,8 @@
 			if(e.model.column){
 				var searchedColumn = e.model.column.name,
 				i,
-				len, data = this.data;
+				len,
+				data = this.data;
 
 				for (i = 0,len=data.length; i < len; i++) {
 					var matched = false;
@@ -825,14 +826,12 @@
 		changeDropDown: function(e) {
 			var size = parseInt(e.target.value),
 					index = this.sizelist.indexOf(size);
-					console.log('index = ', index);
 			var parentElem = this.getClosest(e.target, 'select'),
 					optionList = Polymer.dom(parentElem).querySelectorAll("option");
 					optionList.forEach(function(option) {
 						if (parseInt(option.value) === parseInt(size)) {
 							option.setAttribute('selected', '');
 							e.target.selectedIndex = parseInt(index);
-							console.log('e.target.selectedIndex = ', e.target.selectedIndex);
 						} else {
 							option.removeAttribute('selected');
 						}
@@ -1179,6 +1178,11 @@
 				for (i = 0, len = selectors.length; i < len; i++) {
 					selectors[i].checked = false;
 				}
+			}
+			if (selectedRows.length) {
+				this.fire('SelectAll', selectedRows);
+			} else {
+				this.fire('unselectAll');
 			}
 		},
 		pagerButtons: function(pageCount, currentpage) {
