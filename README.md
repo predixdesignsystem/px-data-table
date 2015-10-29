@@ -190,7 +190,7 @@ Name of the item in a row object to display.
 
 ##### type
 
-*Type:* **String** - (*Required*)
+*Type:* **String** - (*Optional*) - *Default:* string
 
 Required.
 
