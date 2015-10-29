@@ -45,7 +45,7 @@ Events:
 
   <template>
     <div class="flex">
-      <aha-table searchable="{{filterable}}"
+      <aha-table filterable="{{filterable}}"
                  striped="{{striped}}"
                  table-columns="{{tableColumns}}"
                  table-rows="{{tableRows}}"
@@ -116,7 +116,7 @@ Events:
        *
        *      <px-data-table filterable table-data="{{data}}"></px-data-table>
        *
-       * If columns are specified with px-data-table-column, they must have a searchable attribute to be able to be filtered.
+       * If columns are specified with px-data-table-column, they must have a filterable attribute to be able to be filtered.
        *
        * @default false
        */
@@ -227,7 +227,7 @@ Events:
           for(var j = 0; j < children[i].attributes.length; j++) {
             var attribute = children[i].attributes[j];
 
-            if(['sortable', 'searchable', 'editable', 'required'].indexOf(attribute.name) >= 0) {
+            if(['sortable', 'filterable', 'editable', 'required'].indexOf(attribute.name) >= 0) {
               column[attribute.nodeName] = true;
             }
             else if(attribute.name === 'data-choices') {
