@@ -44,8 +44,7 @@ Advanced:
     <px-data-table selected-rows="{{mySelectedItems}}" filterable selectable striped table-data="{{data}}">
       <px-data-table-column
         name="first"
-        type="string"
-    		sortable
+        sortable
         filter-function-name="filterWholeWord"
         sort-function-name="sortColumn">
       </px-data-table-column>
@@ -182,7 +181,7 @@ No functions are exposed by px-data-table.
 Element that defines a columns in a data table.
 
 ```html
-<px-data-table-column name="first" type="string"></px-data-table-column>
+<px-data-table-column name="first"></px-data-table-column>
 ```
 
 ### Attributes
