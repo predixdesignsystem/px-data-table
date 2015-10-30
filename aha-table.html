@@ -66,9 +66,9 @@
 			<span class="tr">
 				<template is="dom-if" if="{{selectable}}">
 					<span class="th">
-						<span on-click="sortChecked" class$="{{getTextSortingCheckboxClass()}}">
-							Selected  <i class$="{{getSortingCheckboxClass()}}"></i>
-						</span>
+						<label on-click="clickSortChecked" class$="{{getTextSortingCheckboxClass(sortedColumn)}}">
+							Selected <i class$="{{getSortingCheckboxIconClass(sortedColumn)}}"></i>
+						</label>
 						<div
 							title$="{{searchtitle}}"
 							hidden$="{{!filterable}}"
@@ -80,11 +80,11 @@
 					<span
 						title$="{{columntitle}}"
 						class$="{{getHeaderClass(column)}}">
-						<span
+						<label
 							class$="{{getTextSortingClass(column, sortedColumn)}}"
 							title$="{{sorttitle}}"
 							on-click="sort">{{column.label}}<i class$="{{getSortingClass(column, sortedColumn, descending)}}"></i>
-						</span>
+						</label>
 						<span
 							hidden$="{{!column.hint}}"
 							class=" hint"
@@ -624,6 +624,26 @@
 			}
 			return classList.join(' ');
 		},
+		getTextSortingCheckboxClass: function() { //special case the select column, cause it's bad.
+			var classList = ['column-head'];
+			if (this.groupBySelect && this.sortedColumn == "selected") {
+				classList.push('sorted-text');
+			}
+			return classList.join(' ');
+		},
+		getSortingCheckboxIconClass: function() { //special case the select column, cause it's bad.
+			var classList = ['u-ml-', 'sorting', 'fa'];
+			var desc;
+			if(this.groupBySelect == 1) {
+				desc = false;
+			} else if(this.groupBySelect == -1) {
+				desc = true;
+			}
+			if (this.groupBySelect && this.sortedColumn == "selected") {
+				classList.push(desc ? 'fa-caret-down' : 'fa-caret-up');
+			}
+			return classList.join(' ');
+		},
 		getCellClass: function(name) {
 			return ['td ', 'aha-', name, '-td'].join('');
 		},
@@ -800,12 +820,17 @@
 				this.refreshPagination();
 			}
 		},
+		clickSortChecked: function(){
+			this.groupBySelect = this.groupBySelect *-1;
+			this.sortChecked();
+		},
 		sortChecked: function(){
 			//since the selected column is not connected to the row data logic a seperate function is needed.
 			//this will prevent cascading sorting and the selected column will need to be re-build to be a proper column
 			//set chart to default state before selected grouping
 			this.set('sortedColumn', "");
 			this.refreshPagination();
+			this.set('sortedColumn', "selected");
 			//decide to group selected to top or bottom
 			if(this.groupBySelect == -1) {
 				var showPageOfSelected = [], i=0, pagesize = this.pagesize, unselected = null;
@@ -832,7 +857,6 @@
 						i++
 					}
 				}
-				this.groupBySelect = 1;
 				this.set('viewingRows', showPageOfSelected);
 			} else if(this.groupBySelect == 1){
 				var showPageOfSelected = [], i=0, pagesize = this.pagesize, unselected=null;
@@ -861,7 +885,6 @@
 						}
 					}
 				}
-				this.groupBySelect = -1;
 				this.set('viewingRows', showPageOfSelected);
 			}
 		},
@@ -1102,7 +1125,7 @@
 				// if (!row._editing) {
 				// 	e.preventDefault();
 				// }
-				this.groupBySelect = 1; //
+				this.groupBySelect = -1; //
 				selectAllCheckbox = Polymer.dom(this.root).querySelector("#filter");
 				selectAllCheckbox.querySelector("input[type=checkbox]").checked = false;
 				this.fire('after-select', row);
