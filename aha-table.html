@@ -66,9 +66,9 @@
 			<span class="tr">
 				<template is="dom-if" if="{{selectable}}">
 					<span class="th">
-						<div>
-							Selected
-						</div>
+						<span on-click="sortChecked" class$="{{getTextSortingCheckboxClass()}}">
+							Selected  <i class$="{{getSortingCheckboxClass()}}"></i>
+						</span>
 						<div
 							title$="{{searchtitle}}"
 							hidden$="{{!filterable}}"
@@ -486,7 +486,11 @@
       customFunctions: {
         type: Object,
         value: {}
-      }
+      },
+			groupBySelect: {
+				type: Number,
+				value: 0
+			},
 		},
 
 		ready: function() {
@@ -643,6 +647,7 @@
 		//=============
 		//internal methods
 		dataChanged: function(newValue, oldValue) {
+			this.fire("befor-data-change", [newValue, oldValue])
 			if (!this.meta || this.meta.length === 0)  {
 				this.$.aha_table_main.setAttribute('unresolved', '');
 				// generate meta from data if meta is not provided from px-data-table-column.
@@ -670,6 +675,8 @@
 				this.$.aha_table_main.removeAttribute('unresolved');
 			}
 			this.refreshPagination(true);
+
+			this.fire("after-data-change", [newValue, oldValue])
 		},
 		modifiedChanged: function() {},
 		edit: function(e) {
@@ -725,6 +732,7 @@
 		},
 		sort: function(e, p) {
 			var column = e.model.column;
+
 			if(column && column.sortable){
 				var sortingColumn = column.name;
 				if (sortingColumn === this.sortedColumn){
@@ -792,7 +800,71 @@
 				this.refreshPagination();
 			}
 		},
-
+		sortChecked: function(){
+			//since the selected column is not connected to the row data logic a seperate function is needed.
+			//this will prevent cascading sorting and the selected column will need to be re-build to be a proper column
+			//set chart to default state before selected grouping
+			this.set('sortedColumn', "");
+			this.refreshPagination();
+			//decide to group selected to top or bottom
+			if(this.groupBySelect == -1) {
+				var showPageOfSelected = [], i=0, pagesize = this.pagesize, unselected = null;
+				if(showPageOfSelected.length < pagesize) { //if page not full
+					var j =0; end = this.data.length
+					for (i; i<pagesize; i++) {//fill of page with unselected data
+						for(j; j<end; ++j) {//find unselected data
+								if(!this.data[j]._selected) {
+									unselected = this.data[j];
+									++j
+									break;
+								}
+						}
+						if(unselected) {//sanity check
+							showPageOfSelected.push(unselected);// add unselected data
+						}
+					}
+				}
+				if(showPageOfSelected.length < pagesize) {//fill of page with selected data
+					for (i=0; i<pagesize;) {
+						if(this.selectedRows[i]) {
+							showPageOfSelected.push(this.selectedRows[i]);
+						}
+						i++
+					}
+				}
+				this.groupBySelect = 1;
+				this.set('viewingRows', showPageOfSelected);
+			} else if(this.groupBySelect == 1){
+				var showPageOfSelected = [], i=0, pagesize = this.pagesize, unselected=null;
+				if(this.selectedRows.length) {
+					for (i; i<pagesize; i++) {
+						if(this.selectedRows[i]) {
+							showPageOfSelected.push(this.selectedRows[i]);
+						}
+						else{
+							break;
+						}
+					}
+				}
+				if(showPageOfSelected.length < pagesize) { //if page not full
+					var j =0; end = this.data.length
+					for (i; i<pagesize; i++) {//fill rest of page with unselected data
+						for(j; j<end; ++j) {//find unselected data
+								if(!this.data[j]._selected) {
+									unselected = this.data[j];
+									++j
+									break;
+								}
+						}
+						if(unselected) {//sanity check
+							showPageOfSelected.push(unselected);// add unselected data
+						}
+					}
+				}
+				this.groupBySelect = -1;
+				this.set('viewingRows', showPageOfSelected);
+			}
+		},
 		//==================
 		//pagination
 		firstPage: function() {
@@ -1030,7 +1102,7 @@
 				// if (!row._editing) {
 				// 	e.preventDefault();
 				// }
-
+				this.groupBySelect = 1; //
 				selectAllCheckbox = Polymer.dom(this.root).querySelector("#filter");
 				selectAllCheckbox.querySelector("input[type=checkbox]").checked = false;
 				this.fire('after-select', row);
