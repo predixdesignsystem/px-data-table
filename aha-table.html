@@ -66,8 +66,8 @@
 			<span class="tr">
 				<template is="dom-if" if="{{selectable}}">
 					<span class="th">
-						<label on-click="clickSortChecked" class$="{{getTextSortingCheckboxClass(sortedColumn)}}">
-							Selected <i class$="{{getSortingCheckboxIconClass(sortedColumn)}}"></i>
+						<label on-click="clickSortChecked" class$="{{getTextSortingCheckboxClass(sortedColumn, groupBySelect)}}">
+							Selected <i class$="{{getSortingCheckboxIconClass(sortedColumn, groupBySelect)}}"></i>
 						</label>
 						<div
 							title$="{{searchtitle}}"
@@ -822,20 +822,23 @@
 		},
 		clickSortChecked: function(){
 			this.groupBySelect = this.groupBySelect *-1;
+			if(this.groupBySelect == 0) {
+				this.groupBySelect = 1;
+			}
 			this.sortChecked();
 		},
 		sortChecked: function(){
 			//since the selected column is not connected to the row data logic a seperate function is needed.
 			//this will prevent cascading sorting and the selected column will need to be re-build to be a proper column
 			//set chart to default state before selected grouping
-			this.set('sortedColumn', "");
+			//this.set('sortedColumn', "");
 			this.refreshPagination();
 			this.set('sortedColumn', "selected");
 			//decide to group selected to top or bottom
 			if(this.groupBySelect == -1) {
 				var showPageOfSelected = [], i=0, pagesize = this.pagesize, unselected = null;
 				if(showPageOfSelected.length < pagesize) { //if page not full
-					var j =0; end = this.data.length
+					var j =0; end = this.data.length, selectedLength = this.selectedRows.length
 					for (i; i<pagesize; i++) {//fill of page with unselected data
 						for(j; j<end; ++j) {//find unselected data
 								if(!this.data[j]._selected) {
@@ -843,6 +846,9 @@
 									++j
 									break;
 								}
+						}
+						if(end - selectedLength == showPageOfSelected.length) {
+							break;
 						}
 						if(unselected) {//sanity check
 							showPageOfSelected.push(unselected);// add unselected data
@@ -1010,9 +1016,8 @@
 						return filteredRows[e.index];
 					});
 			}
-
+			//this.sortChecked(filteredRows)
 			this.set('viewingRows', filteredRows.slice(from, to));
-
 			/* ugliest code i've written in a while.
 			/* the setTimeout is here to ensure that polymer finishes its redraw.
 			/* by using setTimeout, i'm taking this command out of scope, allowing the redraw to finish.
@@ -1125,7 +1130,7 @@
 				// if (!row._editing) {
 				// 	e.preventDefault();
 				// }
-				this.groupBySelect = -1; //
+				this.groupBySelect = 0; //
 				selectAllCheckbox = Polymer.dom(this.root).querySelector("#filter");
 				selectAllCheckbox.querySelector("input[type=checkbox]").checked = false;
 				this.fire('after-select', row);
