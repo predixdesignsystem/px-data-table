@@ -80,6 +80,8 @@ Element that provides pagination.
        * Passes the firstItemIndexToDisplay back to the user
        *
        * Read only.
+       *
+       * 1-based
        */
       firstItemIndexToDisplay: {
         type: Number,
@@ -100,13 +102,20 @@ Element that provides pagination.
     },
 
     _updateDisplay: function() {
-        this.set('pageCount', Math.ceil(this.numberOfItems / this.pageSize));
+      this.set('pageCount', Math.ceil(this.numberOfItems / this.pageSize));
+
+      if(this.pageCount === 0) {
+        this._setFirstItemIndexToDisplay(0);
+        this.set('lastItemIndexToDisplay', 0);
+      }
+      else {
         this._setFirstItemIndexToDisplay(((this.currentPage - 1) * this.pageSize) + 1);
         if(this.currentPage === this.pageCount) {
           this.set('lastItemIndexToDisplay', this.numberOfItems);
         } else {
           this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
         }
+      }
     },
 
     prevPage: function() {
@@ -146,7 +155,7 @@ Element that provides pagination.
       this._updateDisplay();
     },
 
-    goToPage: function(evt){
+    goToPage: function(evt) {
       this.goToPageNumber(parseInt(evt.target.textContent));
     },
 
@@ -170,34 +179,34 @@ Element that provides pagination.
     },
 
     _pagerButtons: function() {
-      if (this.pageCount){
+      if(this.pageCount) {
         var noOfPagerButtons = 0,
-          pagerNavButtonsConfig=[],
+          pagerNavButtonsConfig = [],
           i;
 
         // if less than 9 pages, display all buttons
-        if (this.pageCount <= 9) {
+        if(this.pageCount <= 9) {
           noOfPagerButtons = this.pageCount;
           pagerNavButtonsConfig = Array.apply(null, Array(noOfPagerButtons)).map(
-            function (val, index) {
-              return {val: index+1};
+            function(val, index) {
+              return {val: index + 1};
             });
         }
         // if near end, show final pages
-        else if (this.pageCount <= this.currentPage + 3 ) {
+        else if(this.pageCount <= this.currentPage + 3) {
           pagerNavButtonsConfig.push({val: 1});
           pagerNavButtonsConfig.push({val: '...'});
 
-          for (i = this.pageCount - 6; i <= this.pageCount;i++){
+          for(i = this.pageCount - 6; i <= this.pageCount; i++) {
             pagerNavButtonsConfig.push({val: i});
           }
         }
         // if somewhere in beginning/middle, show pages around where we are
         else {
-          if (this.currentPage <= 5){
+          if(this.currentPage <= 5) {
             pagerNavButtonsConfig = Array.apply(null, Array(7)).map(
-              function (val, index) {
-                return {val: index+1};
+              function(val, index) {
+                return {val: index + 1};
               });
             pagerNavButtonsConfig.push({val: '...'});
             pagerNavButtonsConfig.push({val: this.pageCount});
@@ -205,7 +214,7 @@ Element that provides pagination.
           else {
             pagerNavButtonsConfig.push({val: 1});
             pagerNavButtonsConfig.push({val: '...'});
-            for (i = this.currentPage - 3; i < this.currentPage+2;i++){
+            for(i = this.currentPage - 3; i < this.currentPage + 2; i++) {
               pagerNavButtonsConfig.push({val: i});
             }
             pagerNavButtonsConfig.push({val: '...'});

@@ -914,7 +914,7 @@
 
     updateViewingRows: function() {
 
-      if(this.firstItemIndex && this.pageSize) {
+      if(this.firstItemIndex !== null && this.firstItemIndex !== undefined && this.pageSize !== null && this.pageSize !== undefined) {
 
         var from = this.firstItemIndex - 1; // pagination is 1-based
         var to   = from + this.pageSize;
