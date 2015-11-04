@@ -860,11 +860,15 @@
     ],
 
     updateViewingRows: function() {
-      
-      var from = this.firstItemIndex,
-        to   = from + this.pageSize;
 
-      this.set('viewingRows', this.filteredSortedData.slice(from, to));
+      if(this.firstItemIndex && this.pageSize) {
+
+        var from = this.firstItemIndex - 1; // pagination is 1-based
+        var to   = from + this.pageSize;
+        
+        this.set('viewingRows', this.filteredSortedData.slice(from, to));
+
+      }
 
     },
 
