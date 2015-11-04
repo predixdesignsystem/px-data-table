@@ -22,9 +22,7 @@
  *         removable
  *         movable
  *         seachable
- *         pagesize="20"
- *         pagesizetitle="Page Size:"
- *         summarytitle="Viewing">
+ *         pagesize="20">
  *         < name="title"
  *             type="string"
  *             label="My Title"
@@ -57,6 +55,7 @@
 -->
 
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="px-pagination.html">
 
 <dom-module id="aha-table">
 	<link rel="import" type="css" href="css/aha-table.css" />
@@ -215,52 +214,10 @@
 
 		</div>
 	</div>
+    <div style="float: right;" class="pagination">
+      <px-pagination number-of-items="{{numberOfItems}}" page-size="{{pageSize}}" first-item-index-to-display="{{firstItemIndex}}"></px-pagination>
+    </div>
 
-		<div style="float: right;" class="pagination">
-			<span class="pagesize">
-				<span class="u-mr--">{{pagesizetitle}}</span>
-				<select on-change="changeDropDown">
-						<option>5</option>
-						<option selected>10</option>
-						<option>20</option>
-						<option>50</option>
-						<option>100</option>
-				</select>
-			</span>
-			<span class="u-pl+ u-ml+ summary">
-				<span>{{summarytext}}</span>
-				<span>{{firstItemIndex}}</span>-<span>{{lastItemIndex}}</span>
-				<span>{{itemoftext}}</span>
-				<span>{{itemCount}}</span>
-			</span>
-			<span class="paging">
-				<template is="dom-if" if="{{showGotoFirstLast}}">
-					<button
-						title$="{{firsttitle}}"
-						class$="{{getPageupClass(currentpage, 'btn btn--bare btn--pagination u-p- first')}}"
-						on-click="firstPage"><i class="fa fa-angle-double-left"></i></button>
-				</template>
-				<button
-					title$="{{previoustitle}}"
-					class$="{{getPageupClass(currentpage, 'btn btn--bare btn--pagination u-p- previous')}}"
-					on-click="prevPage"><i class="fa fa-angle-left"></i></button>
-				<span class="pager">
-					<template is="dom-repeat" items="{{pagerButtons(pageCount, currentpage)}}" as="page">
-						<span on-click="gotoPage" class$="{{getPagerButtonClass(page.val, currentpage)}}">{{page.val}}</span>
-					</template>
-				</span>
-				<button
-					title$="{{nexttitle}}"
-					class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--bare btn--pagination u-p- next')}}"
-					on-click="nextPage"><i class="fa fa-angle-right"></i></button>
-				<template is="dom-if" if="{{showGotoFirstLast}}">
-					<button
-						title$="{{lasttitle}}"
-						class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--bare btn--pagination u-p- last')}}"
-						on-click="lastPage"><i class="fa fa-angle-double-right"></i></button>
-				</template>
-			</span>
-		</div>
 	</template>
 </dom-module>
 <script>
@@ -422,66 +379,6 @@
 				type: Boolean,
 				value: false
 			},
-			//pagesize: the number of items to show per page
-			pagesize: {
-				type: Number,
-				value: 10,
-				observer: 'pagesizeChanged'
-			},
-			//currentpage: the current active page in view
-			currentpage: {
-				type: Number,
-				value: 1,
-				observer: 'currentpageChanged'
-			},
-			pageoftext: {
-				type: String,
-				value: "/"
-			},
-			itemoftext: {
-				type: String,
-				value: "of"
-			},
-			//pageCount: the number of paginated pages
-			pageCount: {
-				type: Number,
-				value: 0
-			},
-			//itemCount: the number of visible items
-			itemCount: {
-				type: Number,
-				value: 0
-			},
-			//firstItemIndex: the index number of first item in the page, start from 1
-			firstItemIndex: {
-				type: Number,
-				value: 1
-			},
-			//lastItemIndex: the index number of last item in the page, start from 1
-			lastItemIndex:  {
-				type: Number,
-				value: 1
-			},
-			//sizelist: range list to adjust page size.
-			sizelist: {
-				type: Array,
-				value: function(){return [5, 10, 20, 50, 100];}
-			},
-			//pagesizetitle: label for page size box
-			pagesizetitle: {
-				type: String,
-				value: "Rows per page"
-			},
-			//summarytitle: label for table summary area
-			summarytitle: {
-				type: String,
-				value: ""
-			},
-			//show go-to first/last pagination buttons.
-			showGotoFirstLast: {
-				type: Boolean,
-				value: false
-			},
       // custom function declarations, used in individual columns for filtering/sorting
       customFunctions: {
         type: Object,
@@ -492,9 +389,6 @@
 		ready: function() {
 			if (this.get('meta').length === 0) {
 				this.dataChanged(this.get('data'), []);
-			}
-			if (this.dataset && this.dataset.sizelist) {
-				this.sizelist = JSON.parse(this.dataset.sizelist);
 			}
 		},
 		getRowClass: function(row, selectedRows) {
@@ -575,12 +469,6 @@
 		isOptionSelected: function(optionValue, row, column_name) {
 			return optionValue === row[column_name];
 		},
-		getPageupClass: function(currentPage, additionalClass) {
-			return [currentPage === 1 ? "btn--disabled" : "", additionalClass].join(' ');
-		},
-		getPagedownClass: function(currentPage, pageCount, additionalClass) {
-			return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", additionalClass].join(' ');
-		},
 		getEditTitle: function(editable, editTitle) {
 			return editable ? editTitle : '';
 		},
@@ -591,15 +479,6 @@
 			var classList = ['tr'];
 			if(!filterable){
 				classList.push('hidden');
-			}
-			return classList.join(' ');
-		},
-		getPagerButtonClass: function(buttonValue, currentPage){
-			var classList = ['btn'];
-			if (buttonValue === currentPage){
-				classList.push('btn--icon', 'u-ml0', 'btn--pagination--number');
-			}else{
-				classList.push('btn--bare', 'u-ml0', 'btn--bare__pagination');
 			}
 			return classList.join(' ');
 		},
@@ -641,13 +520,10 @@
 		//internal methods
 		dataChanged: function(newValue, oldValue) {
 			if (!this.meta || this.meta.length === 0)  {
-        var self = this;
-        setTimeout(function() {
-          var meta = self._generateMetaFromData();
-          self.set('meta', meta, self);
-        }, 2000);
+        var meta = this._generateMetaFromData();
+        this.set('meta', meta);
 			}
-			this.refreshPagination(true);
+			this.refreshDataInTable(true);
 		},
     _generateMetaFromData: function() {
       var meta = [];
@@ -734,11 +610,11 @@
 				}
 			}
 
-			this.refreshPagination();
+			this.refreshDataInTable();
 		},
 		unsort: function() {
 			this.set('sortedColumn', "");
-			this.refreshPagination();
+			this.refreshDataInTable();
 		},
 		search: function(e, p) {
 			if(e.model.column){
@@ -789,63 +665,10 @@
 				}
 
 				this.filtered = this.data.some(function(row){return row._filtered;});
-				this.refreshPagination();
+				this.refreshDataInTable();
 			}
 		},
 
-		//==================
-		//pagination
-		firstPage: function() {
-			this.currentpage = 1;
-		},
-		prevPage: function() {
-			if ( this.currentpage > 1 ) {
-				this.currentpage--;
-			}
-		},
-		nextPage: function() {
-			if ( this.currentpage < this.pageCount ) {
-				this.currentpage++;
-			}
-		},
-		lastPage: function() {
-			this.currentpage = this.pageCount;
-		},
-		currentpageChanged: function(){
-			this.filterPage();
-			this.updateFirstAndLastDisplayedItemIndexes();
-		},
-		updateFirstAndLastDisplayedItemIndexes: function() {
-			this.firstItemIndex = (this.currentpage-1) * this.pagesize+1;
-			if (this.currentpage === this.pageCount) {
-				this.lastItemIndex = this.itemCount;
-			} else {
-				this.lastItemIndex = (this.currentpage)* this.pagesize;
-			}
-		},
-		changeDropDown: function(e) {
-			var size = parseInt(e.target.value),
-					index = this.sizelist.indexOf(size);
-			var parentElem = this.getClosest(e.target, 'select'),
-					optionList = Polymer.dom(parentElem).querySelectorAll("option");
-					optionList.forEach(function(option) {
-						if (parseInt(option.value) === parseInt(size)) {
-							option.setAttribute('selected', '');
-							e.target.selectedIndex = parseInt(index);
-						} else {
-							option.removeAttribute('selected');
-						}
-					});
-
-			this.changeSize(size);
-		},
-		changeSize: function(size) {
-			this.set('pagesize', size);
-		},
-		pagesizeChanged: function(newValue, oldValue){
-			this.pagesize = parseInt(this.pagesize);
-			this.refreshPagination();
-		},
 		_selectedRowsChanged: function(newValue, oldValue){
 			if (Array.isArray(newValue) && (newValue.splices === void 0)){
 				var sr = [];
@@ -874,7 +697,7 @@
 				}
 
 				this.filtered = false;
-				this.refreshPagination();
+				this.refreshDataInTable();
 			}
 		},
 		// call this when total count is no changed.
@@ -968,12 +791,12 @@
 				});
 			}
 		},
-		// call this when total count is change.
-		refreshPagination: function(keepInTheCurrentPage) {
-			if (!keepInTheCurrentPage) {
-				// Usually go to the first page is the best way to avoid chaos.
-				this.currentpage = 1;
-			}
+
+		refreshDataInTable: function(keepInTheCurrentPage) {
+//			if (!keepInTheCurrentPage) {
+//				// Usually go to the first page is the best way to avoid chaos.
+//				this.currentpage = 1;
+//			}
 
 			// Cache the total page count and item count
 			var count = 0;
@@ -982,13 +805,29 @@
 					count++;
 				}
 			});
-			this.itemCount = count;
-			this.pageCount = Math.ceil( count / this.pagesize );
-			this.updateFirstAndLastDisplayedItemIndexes();
 
-			// Update model bound to UI with filtered range
-			this.filterPage();
+      this.set('numberOfItems', count);
+
+      this.updateViewingRows();
 		},
+
+    observers: [
+      'updateViewingRows(firstItemIndex)',
+      'updateViewingRows(pageSize)'
+    ],
+
+    updateViewingRows: function() {
+
+      console.log("total number", this.numberOfItems);
+      console.log("from", this.firstItemIndex);
+      console.log("pageSize", this.pageSize);
+
+      var from = this.firstItemIndex,
+        to   = from + this.pageSize;
+
+      this.set('viewingRows', this.data.slice(from, to));
+
+    },
 
 
 		//=======================//
@@ -1184,54 +1023,6 @@
 			} else {
 				this.fire('unselectAll');
 			}
-		},
-		pagerButtons: function(pageCount, currentpage) {
-			if (this.pageCount){
-				var noOfPagerButtons = 0,
-						pagerNavButtonsConfig=[],
-						i;
-
-				if (this.pageCount <= 9) {
-					noOfPagerButtons = this.pageCount;
-					pagerNavButtonsConfig = Array.apply(null, Array(noOfPagerButtons)).map(
-						function (val, index) {
-							return {val: index+1};
-					});
-				}
-				else if (this.pageCount <= currentpage + 3 ) {
-					noOfPagerButtons = 9;
-					pagerNavButtonsConfig.push({val: 1});
-					pagerNavButtonsConfig.push({val: '...'});
-
-					for (i = this.pageCount - 6; i <= this.pageCount;i++){
-						pagerNavButtonsConfig.push({val: i});
-					}
-				}
-				else {
-					noOfPagerButtons = 9;
-					if (currentpage <= 5){
-						pagerNavButtonsConfig = Array.apply(null, Array(7)).map(
-							function (val, index) {
-								return {val: index+1};
-						});
-						pagerNavButtonsConfig.push({val: '...'});
-						pagerNavButtonsConfig.push({val: this.pageCount});
-					}
-					else {
-						pagerNavButtonsConfig.push({val: 1});
-						pagerNavButtonsConfig.push({val: '...'});
-						for (i = currentpage - 3; i < currentpage+2;i++){
-							pagerNavButtonsConfig.push({val: i});
-						}
-						pagerNavButtonsConfig.push({val: '...'});
-						pagerNavButtonsConfig.push({val: this.pageCount});
-					}
-				}
-				return pagerNavButtonsConfig;
-			}
-		},
-		gotoPage: function(evt){
-			this.currentpage = parseInt(evt.target.textContent);
 		},
 		getClosest: function(elem, selector) {
     var firstChar = selector.charAt(0);
