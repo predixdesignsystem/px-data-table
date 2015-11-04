@@ -107,7 +107,7 @@
 
 						<template is="dom-if" if="{{column.filterable}}">
 							<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-								<select class="filter-input" on-change="search">
+								<select class="filter-input" on-change="filter">
 										<template is="dom-repeat" items="{{column.options}}" as="option">
 											<option value$="{{option.value}}">{{option.label}}</option>
 										</template>
@@ -115,14 +115,14 @@
 							</template>
 							<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
 								<div class="flex">
-									<input class="filter-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
+									<input class="filter-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="filter"/>
 						      <i class="fa fa-filter"></i>
 						    </div>
 							</template>
 
 							<template is="dom-if" if="{{isTextType(column.type)}}">
 								<div class="flex">
-						      <input class="filter-input text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
+						      <input class="filter-input text-input--bare" type="text" on-keyup="filter" placeholder$="{{column.searchplaceholder}}"/>
 						      <i class="fa fa-filter"></i>
 						    </div>
 							</template>
@@ -358,6 +358,11 @@
 				type: String,
 				value: ""
 			},
+      // the column names that are filtered on
+      filteredColumns: {
+        type: Array,
+        value: []
+      },
 			//editingRow: current editing row
 			//@type {Object}
 			editingRow : {
@@ -609,65 +614,48 @@
 					this.set('sortedColumn', sortingColumn);
 				}
 			}
-
 			this.refreshDataInTable();
 		},
 		unsort: function() {
 			this.set('sortedColumn', "");
 			this.refreshDataInTable();
 		},
-		search: function(e, p) {
-			if(e.model.column){
-				var searchedColumn = e.model.column.name,
-				i,
-				len,
-				data = this.data;
+		filter: function(e, p) {
+      var column = e.model.column;
 
-				for (i = 0,len=data.length; i < len; i++) {
-					var matched = false;
-					data[i]._not_matched_columns = data[i]._not_matched_columns || [];
+      if(column && column.filterable) {
 
-					var customSearchFunction = this.customFunctions[e.model.column['filter-function-name']];
-					if (customSearchFunction) {
-						matched = customSearchFunction(e.target.value, data[i][searchedColumn]);
-					}
-					//checkbox will only filter checked data[i]s.
-					else {
-						if ("CHECKBOX" === e.target.type.toUpperCase()) {
-							matched = !e.target.checked || data[i][searchedColumn];
-						} else if (
-							// empty search means it always match
-							e.target.value === ""
-							||
-							// non-empty search and the content matches.
-							data[i][searchedColumn].toString()
-							&& data[i][searchedColumn].toString().toLowerCase().indexOf(e.target.value.toString().toLowerCase()) > -1) {
-							matched = true;
-						}
-					}
+        var userEntry = e.target.value;
 
-					if (matched) {
-						if (data[i]._not_matched_columns.indexOf(searchedColumn) > -1) {
-							// then we remove matched column from _not_matched_columns list.
-							data[i]._not_matched_columns.splice(data[i]._not_matched_columns.indexOf(searchedColumn), 1);
-						}
-						// update _filtered state
-						// true if there's other not-matched_column
-						// false if all column matches.
-						data[i]._filtered = data[i]._not_matched_columns.length > 0;
-					} else {
-						// Not matched!
-						data[i]._filtered = true;
-						if (data[i]._not_matched_columns.indexOf(searchedColumn) === -1) {
-							data[i]._not_matched_columns.push(searchedColumn);
-						}
-					}
-				}
+        var isNotInFilteredColumnsList = true;
 
-				this.filtered = this.data.some(function(row){return row._filtered;});
-				this.refreshDataInTable();
-			}
-		},
+        for(var index in this.filteredColumns) {
+          var filteredColumn = this.filteredColumns[index];
+
+          if(filteredColumn.name === column.name) {
+            isNotInFilteredColumnsList = false;
+
+            if(userEntry === "" || userEntry === undefined || userEntry === null ) {
+              // don't filter on this column anymore
+              this.filteredColumns.splice(index, 1);
+            }
+            else {
+              // update the user entry with the latest content
+              filteredColumn.userEntry = userEntry;
+            }
+
+          }
+        }
+
+        if(isNotInFilteredColumnsList) {
+          // add the new column to the filtered list
+          this.filteredColumns.push({"name": column.name, "userEntry": userEntry});
+        }
+
+        this.refreshDataInTable();
+
+      }
+    },
 
 		_selectedRowsChanged: function(newValue, oldValue){
 			if (Array.isArray(newValue) && (newValue.splices === void 0)){
@@ -680,6 +668,12 @@
 		_defaultSort: function(a, b) {
 			return this.descending ? (a.value < b.value ? 1 : -1) : (a.value > b.value ? 1 : -1);
 		},
+    _defaultFilter: function(searchString, cellValue) {
+      if(searchString === undefined || searchString === null || searchString === "") {
+        return true;
+      }
+      return (cellValue.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
+    },
 		_filterableToggled: function(changeRecord){
 			var _this = this,
 					i,
@@ -796,21 +790,80 @@
 
       this.filteredSortedData = this.data;
 
+      // reset back to falses
+      for (var i = 0; i < this.data.length; i++) {
+        this.set('_editing',  false, this.data[i]);
+        this.set('_modified', false, this.data[i]);
+        this.set('_filtered', false, this.data[i]);
+      }
+
       if(this.sortedColumn) {
         this.filteredSortedData = this.sortByColumn(this.filteredSortedData);
+      }
+
+      for(var index in this.filteredColumns) {
+        this.filteredSortedData = this.filterByColumn(this.filteredColumns[index].name,
+          this.filteredColumns[index].userEntry, this.filteredSortedData);
       }
 
 			// update the total number of rows
 			var count = 0;
 			this.data.forEach(function(row) {
-//				if (!row._filtered) {
+				if (!row._filtered) {
 					count++;
-//				}
+				}
 			});
       this.set('numberOfItems', count);
 
       this.updateViewingRows();
 		},
+
+    filterByColumn: function(columnName, userEntry, rowsToFilter) {
+
+      var filterFunction = this.getFilterFunction(columnName);
+
+      for (var i = 0, len=rowsToFilter.length; i < len; i++) {
+
+        // if it's not filtered already
+        if(rowsToFilter[i]._filtered === false) {
+
+          var matched = filterFunction(userEntry, rowsToFilter[i][columnName]);
+
+          if (!matched) {
+            rowsToFilter[i]._filtered = true;
+          }
+
+        }
+
+      }
+
+      this.filtered =  rowsToFilter.some(function(row){
+        return row._filtered;
+      });
+
+      var filteredRows = rowsToFilter.filter(function(r){
+        return !r._filtered;
+      });
+
+      return filteredRows;
+    },
+
+    getFilterFunction: function(columnName) {
+      var filterFunction;
+
+      // use custom filter function if there is one
+      this.meta.forEach(function(obj){
+        if (columnName === obj.name){
+          filterFunction = this.customFunctions[obj['filter-function-name']];
+        }
+      }, this);
+
+      if(!filterFunction) {
+        filterFunction = this._defaultFilter;
+      }
+
+      return filterFunction;
+    },
 
     sortByColumn: function(rowsToSort) {
 
@@ -865,7 +918,7 @@
 
         var from = this.firstItemIndex - 1; // pagination is 1-based
         var to   = from + this.pageSize;
-        
+
         this.set('viewingRows', this.filteredSortedData.slice(from, to));
 
       }
