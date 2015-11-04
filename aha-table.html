@@ -63,18 +63,6 @@
 	<div class="scroll-body">
 		<div class$="{{getTableClass(tableRows, tableColumns)}}">
 			<span class="tr">
-				<template is="dom-if" if="{{selectable}}">
-					<span class="th">
-						<div>
-							Selected
-						</div>
-						<div
-							title$="{{searchtitle}}"
-							hidden$="{{!filterable}}"
-							class="filterrow search"
-							on-click="toggleFilters"></div>
-					</span>
-				</template>
 				<template is="dom-repeat" items="{{meta}}" as="column">
 					<span
 						title$="{{columntitle}}"
@@ -84,24 +72,20 @@
 							title$="{{sorttitle}}"
 							on-click="sort">{{column.label}}<i class$="{{getSortingClass(column, sortedColumn, descending)}}"></i>
 						</span>
-						<span
-							hidden$="{{!column.hint}}"
-							class=" hint"
-							title$="{{column.hint}}"></span>
 					</span>
 				</template>
 			</span>
 			<span class$="{{getFilterClass(filterable)}}" id="filter">
-				<template is="dom-if" if="{{selectable}}">
-					<span class="td filter--cell">
-						<div class="flex flex--center">
-							<input type="checkbox"
-								on-change="selectall"
-								title$="{{selectalltitle}}"
-								hidden$="{{!selectable}}"/>
-						</div>
-					</span>
-				</template>
+				<!--<template is="dom-if" if="{{selectable}}">-->
+					<!--<span class="td filter&#45;&#45;cell">-->
+						<!--<div class="flex flex&#45;&#45;center">-->
+							<!--<input type="checkbox"-->
+								<!--on-change="selectall"-->
+								<!--title$="{{selectalltitle}}"-->
+								<!--hidden$="{{!selectable}}"/>-->
+						<!--</div>-->
+					<!--</span>-->
+				<!--</template>-->
 				<template is="dom-repeat" items="{{meta}}" as="column">
 					<span class="td filter--cell">
 
@@ -115,7 +99,7 @@
 							</template>
 							<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
 								<div class="flex">
-									<input class="filter-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="filter"/>
+									<input class="filter-input text-input--bare" type="text" on-keyup="filter"/>
 						      <i class="fa fa-filter"></i>
 						    </div>
 							</template>
@@ -131,19 +115,7 @@
 				</template>
 			</span>
 			<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
-				<span class$="{{getRowClass(row, selectedRows.splices)}}" on-click="click">
-					<template is="dom-if" if="{{selectable}}">
-						<span  class="td">
-							<div class="flex flex--center">
-								<input type="checkbox"
-									class="js-table__select-checkbox"
-									title$="{{selecttitle}}"
-									hidden$="{{!selectable}}"
-									/>
-								</div>
-						</span>
-					</template>
-
+				<span class$="{{getRowClass(row, row._selected)}}" foo="{{row._selected}}" on-click="selectRow">
 					<template is="dom-repeat" items="{{meta}}" as="column">
 						<span
 							on-dblclick="dbclick"
@@ -200,9 +172,16 @@
 	            <div
 
 								class$="{{getReaderClass(row, column.name)}}">
-	                <template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
+	                <template is="dom-if" if="{{isEqual(column.type, 'string')}}">
 	                  <span>{{readContent(row, column)}}</span>
 	                </template>
+                  <template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
+                    <div class="flex flex--center">
+                      <input type="checkbox"
+                             class="js-table__select-checkbox"
+                             checked="{{row._selected::change}}"/>
+                    </div>
+                  </template>
 	                <template is="dom-if" if="{{isEqual(column.type, 'html')}}">
 	                  <aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
 	                </template>
@@ -223,6 +202,7 @@
 <script>
 	Polymer({
 		is: 'aha-table',
+
 		properties: {
 			//data: instance of the model data
 			data: {
@@ -396,12 +376,13 @@
 				this.dataChanged(this.get('data'), []);
 			}
 		},
-		getRowClass: function(row, selectedRows) {
+		getRowClass: function(row, isSelected) {
+      console.log("computing row class", isSelected);
 			return ['tr', 'rows',
 					this.striped  ? 'striped'  : '',
 					row._modified ? 'modified' : '',
 					row._editing  ? 'editing'  : '',
-					(this.selectedRows.indexOf(row) > -1) ? 'selected'  : ''
+          row._selected ? 'selected' : ''
 				].join(' ');
 		},
 		isCheckboxSelected: function(selected) {
@@ -528,29 +509,41 @@
         var meta = this._generateMetaFromData();
         this.set('meta', meta);
 			}
-			this.refreshDataInTable(true);
-		},
-    _generateMetaFromData: function() {
-      var meta = [];
-      for (var prop in this.data[0]) {
-        if (prop.indexOf('_') !== 0) {//skip internal field
-          meta.push({
-            name: prop,
-            label: prop.charAt(0).toUpperCase() + prop.slice(1),
-            type: [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string",
-            sortable: true,
-            filterable: true,
-            editable: false,
-            required: false
-          });
-        }
-      }
+
+      // initialize shadow fields on all rows
       for (var i = 0; i < this.data.length; i++) {
         this.set('_editing',  false, this.data[i]);
         this.set('_modified', false, this.data[i]);
         this.set('_filtered', false, this.data[i]);
+        this.set('_selected', false, this.data[i]);
       }
+
+			this.refreshDataInTable(true);
+		},
+    _generateMetaFromData: function() {
+      var meta = [];
+      if(this.selectable && this.data.length > 0) {
+        // add a selected column if selectable
+        meta.push(this._generateMetaForColumn("Selected", "boolean"));
+      }
+      for (var prop in this.data[0]) {
+        if (prop.indexOf('_') !== 0) {//skip internal field
+          meta.push(this._generateMetaForColumn(prop, [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string"));
+        }
+      }
+      console.log("X", meta);
       return meta;
+    },
+    _generateMetaForColumn: function(prop, type) {
+      return {
+        name: prop,
+        label: prop.charAt(0).toUpperCase() + prop.slice(1),
+        type: type,
+        sortable: true,
+        filterable: true,
+        editable: false,
+        required: false
+      };
     },
 		modifiedChanged: function() {},
 		edit: function(e) {
@@ -564,46 +557,46 @@
 			e.target.previousElementSibling.removeAttribute('hidden');
 			Polymer.dom(e.target.previousElementSibling).querySelector('input,select,textarea').focus();
 		},
-		save: function(e) {
-			var row = e.model.row,
-					column = e.model.column,
-					editor,
-					reader;
-			if(row){
-				this.fire('before-save', {"event": e, "row" : row, "column" : column});
-				if ("CHECKBOX" === e.target.type.toUpperCase()) {
-					this.set(column.name, e.target.checked, row);
-				} else {
-					this.set(column.name, e.target.value,   row);
-				}
-				if (this.modified.indexOf(row) === -1) {
-					this.set('_modified', true, row);
-					this.push('modified', row);
-				}
-
-				if (!e.relatedTarget
-					|| !e.relatedTarget.templateInstance
-					|| e.relatedmodel.row !== e.model.row) {
-					this.set('_editing', false, row);
-
-					editor = e.target.parentElement;
-					reader = editor.nextElementSibling;
-					editor.setAttribute('hidden', true);
-					reader.removeAttribute('hidden');
-					reader.innerText = this.readContent(row, column);
-					if (row[column.name] !== undefined && row[column.name] !== '') {
-						reader.classList.remove('empty');
-					} else {
-						reader.classList.add('empty');
-					}
-				}
-
-				if (column.required && !e.target.validity.valid) {
-					this.fire('after-invalid', {"event": e, "row" : row, "column" : column});
-				}
-				this.fire('after-save', {"event": e, "row" : row, "column" : column});
-			}
-		},
+//		save: function(e) {
+//			var row = e.model.row,
+//					column = e.model.column,
+//					editor,
+//					reader;
+//			if(row){
+//				this.fire('before-save', {"event": e, "row" : row, "column" : column});
+//				if ("CHECKBOX" === e.target.type.toUpperCase()) {
+//					this.set(column.name, e.target.checked, row);
+//				} else {
+//					this.set(column.name, e.target.value,   row);
+//				}
+//				if (this.modified.indexOf(row) === -1) {
+//					this.set('_modified', true, row);
+//					this.push('modified', row);
+//				}
+//
+//				if (!e.relatedTarget
+//					|| !e.relatedTarget.templateInstance
+//					|| e.relatedmodel.row !== e.model.row) {
+//					this.set('_editing', false, row);
+//
+//					editor = e.target.parentElement;
+//					reader = editor.nextElementSibling;
+//					editor.setAttribute('hidden', true);
+//					reader.removeAttribute('hidden');
+//					reader.innerText = this.readContent(row, column);
+//					if (row[column.name] !== undefined && row[column.name] !== '') {
+//						reader.classList.remove('empty');
+//					} else {
+//						reader.classList.add('empty');
+//					}
+//				}
+//
+//				if (column.required && !e.target.validity.valid) {
+//					this.fire('after-invalid', {"event": e, "row" : row, "column" : column});
+//				}
+//				this.fire('after-save', {"event": e, "row" : row, "column" : column});
+//			}
+//		},
 		sort: function(e, p) {
 			var column = e.model.column;
 			if(column && column.sortable){
@@ -657,13 +650,13 @@
       }
     },
 
-		_selectedRowsChanged: function(newValue, oldValue){
-			if (Array.isArray(newValue) && (newValue.splices === void 0)){
-				var sr = [];
-				sr.splices = {};
-				this.selectedRows = sr;
-			}
-		},
+//		_selectedRowsChanged: function(newValue, oldValue){
+//			if (Array.isArray(newValue) && (newValue.splices === void 0)){
+//				var sr = [];
+//				sr.splices = {};
+//				this.selectedRows = sr;
+//			}
+//		},
 		// fallback default sort function if per-column sort isn't specified.
 		_defaultSort: function(a, b) {
 			return this.descending ? (a.value < b.value ? 1 : -1) : (a.value > b.value ? 1 : -1);
@@ -735,39 +728,39 @@
 
 			this.set('viewingRows', filteredRows.slice(from, to));
 
-			/* ugliest code i've written in a while.
-			/* the setTimeout is here to ensure that polymer finishes its redraw.
-			/* by using setTimeout, i'm taking this command out of scope, allowing the redraw to finish.
-			/* yes. it's ugly. sorry.*/
-
-			setTimeout(function() {
-				if (_this.selectedRows && _this.selectedRows.length) {
-					_this.findSelectedRows();
-				}
-			},0);
+//			/* ugliest code i've written in a while.
+//			/* the setTimeout is here to ensure that polymer finishes its redraw.
+//			/* by using setTimeout, i'm taking this command out of scope, allowing the redraw to finish.
+//			/* yes. it's ugly. sorry.*/
+//
+//			setTimeout(function() {
+//				if (_this.selectedRows && _this.selectedRows.length) {
+//					_this.findSelectedRows();
+//				}
+//			},0);
 
 		},
-		findSelectedRows: function() {
-			var viewingRows = this.viewingRows,
-					selectedRows = this.selectedRows,
-					resultsArray = [],
-					stringifiedViewedRowArray = [],
-					stringifiedSelectedRowArray = [],
-					result,
-					state,
-					index;
-
-			stringifiedViewedRowArray = this.createStringifiedJSONArray(viewingRows);
-			stringifiedSelectedRowArray = this.createStringifiedJSONArray(selectedRows);
-
-			resultsArray = stringifiedViewedRowArray.map(function(row, i) {
-				index = i; //set our index
-				state = (stringifiedSelectedRowArray.indexOf(row) > -1) ? true : false; //find out the state
-				return {"index": index, "state": state}; //and return the object
-			});
-
-			this.changeCheckboxState(resultsArray);
-		},
+//		findSelectedRows: function() {
+//			var viewingRows = this.viewingRows,
+//					selectedRows = this.selectedRows,
+//					resultsArray = [],
+//					stringifiedViewedRowArray = [],
+//					stringifiedSelectedRowArray = [],
+//					result,
+//					state,
+//					index;
+//
+//			stringifiedViewedRowArray = this.createStringifiedJSONArray(viewingRows);
+//			stringifiedSelectedRowArray = this.createStringifiedJSONArray(selectedRows);
+//
+//			resultsArray = stringifiedViewedRowArray.map(function(row, i) {
+//				index = i; //set our index
+//				state = (stringifiedSelectedRowArray.indexOf(row) > -1) ? true : false; //find out the state
+//				return {"index": index, "state": state}; //and return the object
+//			});
+//
+//			this.changeCheckboxState(resultsArray);
+//		},
 		createStringifiedJSONArray: function(JSONArray) {
 			var i,
 					len,
@@ -778,12 +771,12 @@
 			return resultArray;
 		},
 		changeCheckboxState: function(resultsArray) {
-			if (this.selectedRows && this.selectedRows.length) {
-				var checkboxNodeList = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
-				resultsArray.forEach(function(result) {
-					checkboxNodeList[result.index].checked = result.state;
-				});
-			}
+//			if (this.selectedRows && this.selectedRows.length) {
+//				var checkboxNodeList = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
+//				resultsArray.forEach(function(result) {
+//					checkboxNodeList[result.index].checked = result.state;
+//				});
+//			}
 		},
 
 		refreshDataInTable: function() {
@@ -928,48 +921,59 @@
 
 		//=======================//
 		//data manipulation//
-		click: function(e,p) {
+		selectRow: function(e,p) {
 			var column = e.model.column;
 			var row = e.model.row;
 			var detail = {"row" : row, "column" : column};
-			this.select(e,p);
 			this.fire('px-row-click', detail);
+
+      if (this.selectable) {
+        var row = e.model.row,
+          selectAllCheckbox;
+        this.fire('before-select', row);
+
+        console.log(row._selected);
+
+        if(row._selected) {
+          this.set('viewingRows.' + e.model.index + '._selected', false);
+          console.log("here: shoudl be false" ,row._selected);
+        }
+        else {
+          this.set('viewingRows.' + e.model.index + '._selected', true);
+        }
+
+        //
+//				if (this.selectedRows.indexOf(row) > -1) {
+//					// the row is already selected, we'll remove it from the  selectedRows array.
+//					this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
+//					this.set('_selected', false, row);
+//				} else {
+//					this.push('selectedRows', row);
+//					this.set('_selected', true, row);
+//				}
+//
+//        if(e.target.type !== "checkbox") {
+//          var parentElem = this.getClosest(e.target, '.tr');
+//          Polymer.dom(parentElem).querySelector("input").checked = row._selected;
+//        }
+
+        /* this is commented out since it disables the checkbox from being checked.
+         /* leaving this here for when we add editing functionality */
+        // if (!row._editing) {
+        // 	e.preventDefault();
+        // }
+//
+//        selectAllCheckbox = Polymer.dom(this.root).querySelector("#filter");
+//        selectAllCheckbox.querySelector("input[type=checkbox]").checked = false;
+        this.fire('after-select', row);
+      }
+
 		},
 		dbclick: function(e,p) {
 			var column = e.model.column,
 					row = e.model.row,
 					detail = {"row" : row, "column" : column};
 			this.fire('after-td-dbclick', detail);
-		},
-		select: function(e,p){
-			if (this.selectable) {
-				var row = e.model.row,
-						selectAllCheckbox;
-				this.fire('before-select', row);
-				if (this.selectedRows.indexOf(row) > -1) {
-					// the row is already selected, we'll remove it from the  selectedRows array.
-					this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
-					this.set('_selected', false, row);
-				} else {
-					this.push('selectedRows', row);
-					this.set('_selected', true, row);
-				}
-
-				if(e.target.type !== "checkbox") {
-					var parentElem = this.getClosest(e.target, '.tr');
-					Polymer.dom(parentElem).querySelector("input").checked = row._selected;
-				}
-
-				/* this is commented out since it disables the checkbox from being checked.
-				/* leaving this here for when we add editing functionality */
-				// if (!row._editing) {
-				// 	e.preventDefault();
-				// }
-
-				selectAllCheckbox = Polymer.dom(this.root).querySelector("#filter");
-				selectAllCheckbox.querySelector("input[type=checkbox]").checked = false;
-				this.fire('after-select', row);
-			}
 		},
 		create: function(obj) {
 			this.fire('before-create', obj);
@@ -1079,47 +1083,47 @@
 			e.target.classList.toggle('nosearch');
 			this.$$('#filter').classList.toggle('hide');
 		},
-		selectall: function(e,p){
-			var _this = this,
-					selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox'),
-					selectedRows = this.selectedRows,
-					data = this.data,
-					len,
-					i;
-			if(e.target.checked) {
-				for (i=0, len=selectedRows.length;i<len;i++) {
-					_this.set('_selected', false, selectedRows[i]);
-				}
-				//to ensure we don't have any doubles, we empty out the array first
-					_this.splice('selectedRows', 0, _this.selectedRows.length);
-				//next, we add EVERYTHING into the selectedRows array, and use set to set the property and notify Polymer
-				for (i = 0, len = data.length; i <len; i++) {
-					_this.push('selectedRows', data[i]);
-					_this.set('_selected', true, data[i]);
-				}
-				//lastly, we manually change the .checked property on the checkboxes.
-				for (i = 0, len = selectors.length ; i < len; i++) {
-					selectors[i].checked = true;
-				}
-			} else {
-				//this will reset our selectedRows array
-				_this.splice('selectedRows', 0, _this.selectedRows.length);
-
-				//set _selected to false on each row
-				for (i = 0, len = data.length; i <len; i++) {
-					_this.set('_selected', false, data[i]);
-				}
-				//and unckeck our checkboxes
-				for (i = 0, len = selectors.length; i < len; i++) {
-					selectors[i].checked = false;
-				}
-			}
-			if (selectedRows.length) {
-				this.fire('SelectAll', selectedRows);
-			} else {
-				this.fire('unselectAll');
-			}
-		},
+//		selectall: function(e,p){
+//			var _this = this,
+//					selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox'),
+//					selectedRows = this.selectedRows,
+//					data = this.data,
+//					len,
+//					i;
+//			if(e.target.checked) {
+//				for (i=0, len=selectedRows.length;i<len;i++) {
+//					_this.set('_selected', false, selectedRows[i]);
+//				}
+//				//to ensure we don't have any doubles, we empty out the array first
+//					_this.splice('selectedRows', 0, _this.selectedRows.length);
+//				//next, we add EVERYTHING into the selectedRows array, and use set to set the property and notify Polymer
+//				for (i = 0, len = data.length; i <len; i++) {
+//					_this.push('selectedRows', data[i]);
+//					_this.set('_selected', true, data[i]);
+//				}
+//				//lastly, we manually change the .checked property on the checkboxes.
+//				for (i = 0, len = selectors.length ; i < len; i++) {
+//					selectors[i].checked = true;
+//				}
+//			} else {
+//				//this will reset our selectedRows array
+//				_this.splice('selectedRows', 0, _this.selectedRows.length);
+//
+//				//set _selected to false on each row
+//				for (i = 0, len = data.length; i <len; i++) {
+//					_this.set('_selected', false, data[i]);
+//				}
+//				//and unckeck our checkboxes
+//				for (i = 0, len = selectors.length; i < len; i++) {
+//					selectors[i].checked = false;
+//				}
+//			}
+//			if (selectedRows.length) {
+//				this.fire('SelectAll', selectedRows);
+//			} else {
+//				this.fire('unselectAll');
+//			}
+//		},
 		getClosest: function(elem, selector) {
     var firstChar = selector.charAt(0);
     // Get closest match

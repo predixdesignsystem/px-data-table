@@ -265,3 +265,27 @@ Events:
 
   });
 </script>
+
+
+<!--_generateMetaFromData: function() {-->
+<!--var meta = [];-->
+<!--for (var prop in this.data[0]) {-->
+<!--if (prop.indexOf('_') !== 0) {//skip internal field-->
+<!--meta.push(this._generateMetaForColumn(prop, [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string"));-->
+<!--}-->
+<!--}-->
+<!--//      meta.push(this._generateMetaForColumn("Selected", "boolean"));-->
+<!--console.log(meta);-->
+<!--return meta;-->
+<!--},-->
+<!--_generateMetaForColumn: function(prop, type) {-->
+<!--return {-->
+<!--name: prop,-->
+<!--label: prop.charAt(0).toUpperCase() + prop.slice(1),-->
+<!--type: type,-->
+<!--sortable: true,-->
+<!--filterable: true,-->
+<!--editable: false,-->
+<!--required: false-->
+<!--};-->
+<!--},-->
