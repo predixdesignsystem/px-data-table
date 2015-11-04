@@ -37,7 +37,7 @@ Element that provides pagination.
           on-click="prevPage"><i class="fa fa-angle-left"></i></button>
 				<span class="pager">
 					<template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
-            <span on-click="gotoPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
+            <span on-click="goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
           </template>
 				</span>
 				<button
@@ -60,7 +60,8 @@ Element that provides pagination.
       numberOfItems: {
         type: Number,
         notify: true,
-        observer: '_numberOfItemsChanged'
+        observer: '_goBackToFirstPage',
+
       },
 
       /**
@@ -71,7 +72,8 @@ Element that provides pagination.
       pageSize: {
         type: Number,
         value: 10,
-        notify: true
+        notify: true,
+        readOnly: true
       },
 
       /**
@@ -82,42 +84,40 @@ Element that provides pagination.
       firstItemIndexToDisplay: {
         type: Number,
         notify: true,
-        value: 1
+        value: 1,
+        readOnly: true
       }
 
     },
-
-    observers: ['_changeCurrentPage(currentPage)'],
 
     ready: function() {
       this.set('itemoftext', 'of');
       this.set('pagesizetitle', 'Rows per page');
-
-      this.currentPage = 1;
     },
 
-    _changeCurrentPage: function() {
-      this.set('firstItemIndexToDisplay', ((this.currentPage - 1) * this.pageSize) + 1);
-      if(this.currentPage === this.pageCount) {
-        this.set('lastItemIndexToDisplay', this.numberOfItems);
-      } else {
-        this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
-      }
+    _goBackToFirstPage: function() {
+      this.goToPageNumber(1);
     },
 
-    _numberOfItemsChanged: function() {
-      this.pageCount = Math.ceil(this.numberOfItems / this.pageSize);
+    _updateDisplay: function() {
+        this.set('pageCount', Math.ceil(this.numberOfItems / this.pageSize));
+        this._setFirstItemIndexToDisplay(((this.currentPage - 1) * this.pageSize) + 1);
+        if(this.currentPage === this.pageCount) {
+          this.set('lastItemIndexToDisplay', this.numberOfItems);
+        } else {
+          this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
+        }
     },
 
     prevPage: function() {
       if(this.currentPage > 1) {
-        this.currentPage--;
+        this.goToPageNumber(this.currentPage - 1);
       }
     },
 
     nextPage: function() {
       if(this.currentPage < this.pageCount) {
-        this.currentPage++;
+        this.goToPageNumber(this.currentPage + 1);
       }
     },
 
@@ -137,13 +137,17 @@ Element that provides pagination.
         }
       });
 
-      this.set('pageSize', size);
-      this.currentPage = 1; // set currentPage back to first page to avoid weird state
+      this._setPageSize(size);
+      this._goBackToFirstPage();
     },
 
+    goToPageNumber: function(number) {
+      this.currentPage = number;
+      this._updateDisplay();
+    },
 
-    gotoPage: function(evt){
-      this.currentPage = parseInt(evt.target.textContent);
+    goToPage: function(evt){
+      this.goToPageNumber(parseInt(evt.target.textContent));
     },
 
     _getPageupClass: function(currentPage) {
