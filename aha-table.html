@@ -62,7 +62,7 @@
 	<link rel="import" type="css" href="css/aha-table.css" />
 	<template>
 	<div class="scroll-body">
-		<div class$="{{getTableClass(tableRows, tableColumns)}}" id="aha_table_main" unresolved="">
+		<div class$="{{getTableClass(tableRows, tableColumns)}}">
 			<span class="tr">
 				<template is="dom-if" if="{{selectable}}">
 					<span class="th">
@@ -496,9 +496,6 @@
 			if (this.dataset && this.dataset.sizelist) {
 				this.sizelist = JSON.parse(this.dataset.sizelist);
 			}
-			//Show element when it's ready.
-			this.$.aha_table_main.setAttribute('resolved', '');
-			this.$.aha_table_main.removeAttribute('unresolved');
 		},
 		getRowClass: function(row, selectedRows) {
 			return ['tr', 'rows',
@@ -644,33 +641,36 @@
 		//internal methods
 		dataChanged: function(newValue, oldValue) {
 			if (!this.meta || this.meta.length === 0)  {
-				this.$.aha_table_main.setAttribute('unresolved', '');
-				// generate meta from data if meta is not provided from px-data-table-column.
-				var meta = [];
-				for (var prop in this.data[0]) {
-					if (prop.indexOf('_') !== 0) {//skip internal field
-						meta.push({
-							name: prop,
-							label: prop.charAt(0).toUpperCase() + prop.slice(1),
-							type: [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string",
-							sortable: true,
-							filterable: true,
-							editable: false,
-							required: false
-						});
-					}
-				}
-				for (var i = 0; i < this.data.length; i++) {
-					this.set('_editing',  false, this.data[i]);
-					this.set('_modified', false, this.data[i]);
-					this.set('_filtered', false, this.data[i]);
-				}
-				this.set('meta', meta, this);
-				this.$.aha_table_main.setAttribute('resolved', '');
-				this.$.aha_table_main.removeAttribute('unresolved');
+        var self = this;
+        setTimeout(function() {
+          var meta = self._generateMetaFromData();
+          self.set('meta', meta, self);
+        }, 2000);
 			}
 			this.refreshPagination(true);
 		},
+    _generateMetaFromData: function() {
+      var meta = [];
+      for (var prop in this.data[0]) {
+        if (prop.indexOf('_') !== 0) {//skip internal field
+          meta.push({
+            name: prop,
+            label: prop.charAt(0).toUpperCase() + prop.slice(1),
+            type: [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string",
+            sortable: true,
+            filterable: true,
+            editable: false,
+            required: false
+          });
+        }
+      }
+      for (var i = 0; i < this.data.length; i++) {
+        this.set('_editing',  false, this.data[i]);
+        this.set('_modified', false, this.data[i]);
+        this.set('_filtered', false, this.data[i]);
+      }
+      return meta;
+    },
 		modifiedChanged: function() {},
 		edit: function(e) {
 			var row = e.model.row;
