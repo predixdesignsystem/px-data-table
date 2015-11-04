@@ -792,40 +792,79 @@
 			}
 		},
 
-		refreshDataInTable: function(keepInTheCurrentPage) {
-//			if (!keepInTheCurrentPage) {
-//				// Usually go to the first page is the best way to avoid chaos.
-//				this.currentpage = 1;
-//			}
+		refreshDataInTable: function() {
 
-			// Cache the total page count and item count
+      this.filteredSortedData = this.data;
+
+      if(this.sortedColumn) {
+        this.filteredSortedData = this.sortByColumn(this.filteredSortedData);
+      }
+
+			// update the total number of rows
 			var count = 0;
 			this.data.forEach(function(row) {
-				if (!row._filtered) {
+//				if (!row._filtered) {
 					count++;
-				}
+//				}
 			});
-
       this.set('numberOfItems', count);
 
       this.updateViewingRows();
 		},
 
+    sortByColumn: function(rowsToSort) {
+
+      var sortFunction = this.getSortFunction();
+
+      // sorting map: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Sorting_maps
+      var sortedRows =
+        rowsToSort
+          .map(function(e, i){
+            var v = e[this.sortedColumn];
+            if (undefined === v || null === v) {
+              v = '';
+            }
+            return {
+              index: i,
+              value: typeof v === "string" ? v.toLowerCase() : v
+            };
+          }, this)
+          .sort(sortFunction.bind(this))
+          .map(function(e){
+            return rowsToSort[e.index];
+          });
+
+      return sortedRows;
+    },
+
+    getSortFunction: function() {
+      var sortFunction;
+
+      // use custom sort function if there is one
+      this.meta.forEach(function(obj){
+        if (this.sortedColumn === obj.name){
+          sortFunction = this.customFunctions[obj['sort-function-name']];
+        }
+      }, this);
+
+      if (!sortFunction) {
+        sortFunction = this._defaultSort;
+      }
+
+      return sortFunction;
+    },
+
     observers: [
-      'updateViewingRows(firstItemIndex)',
-      'updateViewingRows(pageSize)'
+      'updateViewingRows(firstItemIndex)', // when the first item to display changes
+      'updateViewingRows(pageSize)' // when the size of the page changes
     ],
 
     updateViewingRows: function() {
-
-      console.log("total number", this.numberOfItems);
-      console.log("from", this.firstItemIndex);
-      console.log("pageSize", this.pageSize);
-
+      
       var from = this.firstItemIndex,
         to   = from + this.pageSize;
 
-      this.set('viewingRows', this.data.slice(from, to));
+      this.set('viewingRows', this.filteredSortedData.slice(from, to));
 
     },
 
