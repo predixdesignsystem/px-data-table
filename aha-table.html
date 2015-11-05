@@ -58,13 +58,13 @@
                 </template>
                 <template is="dom-if" if="{{_isEqual(column.type, 'boolean')}}">
                   <div class="flex">
-                    <input class="filter-input text-input--bare" type="text" on-keyup="filter"/>
+                    <input class="filter-input text-input--bare" type="text" on-keyup="_filter"/>
                     <i class="fa fa-filter"></i>
                   </div>
                 </template>
                 <template is="dom-if" if="{{_isTextType(column.type)}}">
                   <div class="flex">
-                    <input class="filter-input text-input--bare" type="text" on-keyup="filter"
+                    <input class="filter-input text-input--bare" type="text" on-keyup="_filter"
                            placeholder$="{{column.searchplaceholder}}"/>
                     <i class="fa fa-filter"></i>
                   </div>
@@ -523,6 +523,11 @@
         // always just make sure selectAll checkbox is unchecked when 1 row is clicked
         var selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
         selectAllCheckbox.checked = false;
+
+        // if sorted row is selected, then it is no longer selected
+        if(this.sortedColumn === '_selected') {
+          this.set('sortedColumn', '');
+        }
       }
     },
 
