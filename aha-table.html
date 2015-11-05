@@ -944,10 +944,12 @@
         this.fire('before-select', row);
 
         if(row._selected) {
-          this.set('viewingRows.' + e.model.index + '._selected', false);
+          row._selected = false;
+          this.notifyPath('viewingRows.' + e.model.index + '._selected', row._selected);
         }
         else {
-          this.set('viewingRows.' + e.model.index + '._selected', true);
+          row._selected = true;
+          this.notifyPath('viewingRows.' + e.model.index + '._selected', row._selected);
         }
 
         //
@@ -1093,17 +1095,24 @@
 		},
     selectAll: function(e) {
       if(e.target.checked) {
-        // select all viewing rows
-        for(var i=0; i<this.viewingRows.length; i++) {
-          this.set('viewingRows.' + i + '._selected', true);
+
+        // select all rows
+        for(var i=0; i<this.data.length; i++) {
+          this.data[i]._selected = true;
         }
       }
       else {
         // unselect everything
-        for(var i=0; i<this.viewingRows.length; i++) {
-          this.set('viewingRows.' + i + '._selected', false);
+        for(var i=0; i<this.data.length; i++) {
+          this.data[i]._selected = false;
         }
       }
+
+      // notify viewing rows of change
+      for(var i=0; i<this.viewingRows.length; i++) {
+        this.notifyPath('viewingRows.' + i + '._selected', this.viewingRows[i]._selected);
+      }
+
     },
 //		selectall: function(e,p){
 //			var _this = this,
