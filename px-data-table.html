@@ -226,7 +226,7 @@ Events:
         // need the Selected column if the table is selectable
         if(this.selectable) {
           // add a selected column if selectable
-          meta.push(this.$.dataTable._generateMetaForColumn("Selected", "boolean", true));
+          meta.push(this.$.dataTable._generateMetaForColumn("_selected", "selected", true, "Selected"));
         }
 
         for(var i = 0; i < children.length; i++) {
@@ -237,13 +237,13 @@ Events:
             if(['sortable', 'filterable', 'editable', 'required'].indexOf(attribute.name) >= 0) {
               column[attribute.nodeName] = true;
             }
-            else if(attribute.name === 'data-choices') {
-              column['options'] = [];
-              var choices = JSON.parse(attribute.value);
-              for(option in choices) {
-                column['options'].push({'value': option, 'label': choices[option]});
-              }
-            }
+//            else if(attribute.name === 'data-choices') {
+//              column['options'] = [];
+//              var choices = JSON.parse(attribute.value);
+//              for(option in choices) {
+//                column['options'].push({'value': option, 'label': choices[option]});
+//              }
+//            }
             else {
               column[attribute.nodeName] = attribute.value;
             }
