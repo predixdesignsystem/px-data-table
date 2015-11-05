@@ -234,16 +234,9 @@ Events:
           for(var j = 0; j < children[i].attributes.length; j++) {
             var attribute = children[i].attributes[j];
 
-            if(['sortable', 'filterable', 'editable', 'required'].indexOf(attribute.name) >= 0) {
+            if(['sortable', 'filterable'].indexOf(attribute.name) >= 0) {
               column[attribute.nodeName] = true;
             }
-//            else if(attribute.name === 'data-choices') {
-//              column['options'] = [];
-//              var choices = JSON.parse(attribute.value);
-//              for(option in choices) {
-//                column['options'].push({'value': option, 'label': choices[option]});
-//              }
-//            }
             else {
               column[attribute.nodeName] = attribute.value;
             }
@@ -272,27 +265,3 @@ Events:
 
   });
 </script>
-
-
-<!--_generateMetaFromData: function() {-->
-<!--var meta = [];-->
-<!--for (var prop in this.data[0]) {-->
-<!--if (prop.indexOf('_') !== 0) {//skip internal field-->
-<!--meta.push(this._generateMetaForColumn(prop, [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string"));-->
-<!--}-->
-<!--}-->
-<!--//      meta.push(this._generateMetaForColumn("Selected", "boolean"));-->
-<!--console.log(meta);-->
-<!--return meta;-->
-<!--},-->
-<!--_generateMetaForColumn: function(prop, type) {-->
-<!--return {-->
-<!--name: prop,-->
-<!--label: prop.charAt(0).toUpperCase() + prop.slice(1),-->
-<!--type: type,-->
-<!--sortable: true,-->
-<!--filterable: true,-->
-<!--editable: false,-->
-<!--required: false-->
-<!--};-->
-<!--},-->

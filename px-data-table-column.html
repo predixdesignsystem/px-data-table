@@ -39,7 +39,7 @@ Element that defines a columns in a data table.
       /**
        * Type of the item in a row object to display.
        *
-       * Supported options: string, html
+       * Options: string, html
        *
        * WARNING! Potential XSS vulnerability if `html` comes from an untrusted source
        *
@@ -128,57 +128,6 @@ Element that defines a columns in a data table.
       ellipsisClipPosition: {
         type: String,
         value: "right"
-      },
-
-      /**
-       * Unsupported
-       */
-      searchplaceholder: {
-        type: String,
-        value: ""
-      },
-
-      /**
-       * Unsupported
-       */
-      hint: {
-        type: String,
-        value: ""
-      },
-
-      /**
-       * Unsupported
-       */
-      editable: {
-        type: Boolean,
-        value: false
-      },
-
-      /**
-       * Unsupported
-       */
-      required: {
-        type: Boolean,
-        value: false
-      },
-
-      /**
-       * Unsupported
-       */
-      default: {
-        type: String,
-        value: ""
-      },
-
-      //choices read from data-choices attribute
-      /**
-       * Unsupported
-       */
-      options: {
-        type: String,
-        value: function() {
-          return [];
-        }
       }
 
     }
