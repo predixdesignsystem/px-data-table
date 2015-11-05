@@ -62,6 +62,8 @@
 	<template>
 	<div class="scroll-body">
 		<div class$="{{getTableClass(tableRows, tableColumns)}}">
+
+      <!-- Header -->
 			<span class="tr">
 				<template is="dom-repeat" items="{{meta}}" as="column">
 					<span
@@ -75,21 +77,25 @@
 					</span>
 				</template>
 			</span>
-			<span class$="{{getFilterClass(filterable)}}" id="filter">
-				<!--<template is="dom-if" if="{{selectable}}">-->
-					<!--<span class="td filter&#45;&#45;cell">-->
-						<!--<div class="flex flex&#45;&#45;center">-->
-							<!--<input type="checkbox"-->
-								<!--on-change="selectall"-->
-								<!--title$="{{selectalltitle}}"-->
-								<!--hidden$="{{!selectable}}"/>-->
-						<!--</div>-->
-					<!--</span>-->
-				<!--</template>-->
-				<template is="dom-repeat" items="{{meta}}" as="column">
-					<span class="td filter--cell">
 
-						<template is="dom-if" if="{{column.filterable}}">
+
+      <!-- Second Header (filter/select all) -->
+			<span class$="{{getSecondHeaderClass(filterable)}}" id="filter">
+
+				<template is="dom-repeat" items="{{meta}}" as="column">
+					<div class="td filter--cell">
+
+            <!-- select all checkbox -->
+            <template is="dom-if" if="{{isSelectAllColumn(column)}}">
+              <div class="flex flex--center">
+                <input type="checkbox"
+                  on-change="selectAll"
+                  title$="{{selectalltitle}}"/>
+              </div>
+            </template>
+
+            <!-- filter entry -->
+						<template is="dom-if" if="{{isFilterableColumn(column)}}">
 							<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
 								<select class="filter-input" on-change="filter">
 										<template is="dom-repeat" items="{{column.options}}" as="option">
@@ -103,7 +109,6 @@
 						      <i class="fa fa-filter"></i>
 						    </div>
 							</template>
-
 							<template is="dom-if" if="{{isTextType(column.type)}}">
 								<div class="flex">
 						      <input class="filter-input text-input--bare" type="text" on-keyup="filter" placeholder$="{{column.searchplaceholder}}"/>
@@ -111,9 +116,12 @@
 						    </div>
 							</template>
 						</template>
-					</span>
+					</div>
 				</template>
+
 			</span>
+
+      <!-- Data rows -->
 			<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
 				<span class$="{{getRowClass(row, row._selected)}}" foo="{{row._selected}}" on-click="selectRow">
 					<template is="dom-repeat" items="{{meta}}" as="column">
@@ -377,7 +385,6 @@
 			}
 		},
 		getRowClass: function(row, isSelected) {
-      console.log("computing row class", isSelected);
 			return ['tr', 'rows',
 					this.striped  ? 'striped'  : '',
 					row._modified ? 'modified' : '',
@@ -392,6 +399,12 @@
 				return true;
 			}
 		},
+    isSelectAllColumn: function(column) {
+      return column.selectAll;
+    },
+    isFilterableColumn: function(column) {
+      return !column.selectAll && column.filterable;
+    },
 		isEditing: function(rowEditable, columnEditable) {
 			return rowEditable && columnEditable;
 		},
@@ -461,7 +474,7 @@
 		getHeaderClass: function(item) {
       return ['th ', 'aha-', item.name, '-th'].join('') + (item.sortable ? ' sortable' : '');
 		},
-		getFilterClass: function(filterable) {
+		getSecondHeaderClass: function(filterable) {
 			var classList = ['tr'];
 			if(!filterable){
 				classList.push('hidden');
@@ -524,17 +537,16 @@
       var meta = [];
       if(this.selectable && this.data.length > 0) {
         // add a selected column if selectable
-        meta.push(this._generateMetaForColumn("Selected", "boolean"));
+        meta.push(this._generateMetaForColumn("Selected", "boolean", true));
       }
       for (var prop in this.data[0]) {
         if (prop.indexOf('_') !== 0) {//skip internal field
-          meta.push(this._generateMetaForColumn(prop, [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string"));
+          meta.push(this._generateMetaForColumn(prop, [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string", false));
         }
       }
-      console.log("X", meta);
       return meta;
     },
-    _generateMetaForColumn: function(prop, type) {
+    _generateMetaForColumn: function(prop, type, isSelectAll) {
       return {
         name: prop,
         label: prop.charAt(0).toUpperCase() + prop.slice(1),
@@ -542,7 +554,8 @@
         sortable: true,
         filterable: true,
         editable: false,
-        required: false
+        required: false,
+        selectAll: isSelectAll
       };
     },
 		modifiedChanged: function() {},
@@ -785,8 +798,6 @@
 
       // reset back to falses
       for (var i = 0; i < this.data.length; i++) {
-        this.set('_editing',  false, this.data[i]);
-        this.set('_modified', false, this.data[i]);
         this.set('_filtered', false, this.data[i]);
       }
 
@@ -932,11 +943,8 @@
           selectAllCheckbox;
         this.fire('before-select', row);
 
-        console.log(row._selected);
-
         if(row._selected) {
           this.set('viewingRows.' + e.model.index + '._selected', false);
-          console.log("here: shoudl be false" ,row._selected);
         }
         else {
           this.set('viewingRows.' + e.model.index + '._selected', true);
@@ -1083,6 +1091,20 @@
 			e.target.classList.toggle('nosearch');
 			this.$$('#filter').classList.toggle('hide');
 		},
+    selectAll: function(e) {
+      if(e.target.checked) {
+        // select all viewing rows
+        for(var i=0; i<this.viewingRows.length; i++) {
+          this.set('viewingRows.' + i + '._selected', true);
+        }
+      }
+      else {
+        // unselect everything
+        for(var i=0; i<this.viewingRows.length; i++) {
+          this.set('viewingRows.' + i + '._selected', false);
+        }
+      }
+    },
 //		selectall: function(e,p){
 //			var _this = this,
 //					selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox'),
