@@ -1109,6 +1109,7 @@ button.btn {
   width: 100%; }
 
 .pagination {
+  float: right;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;

@@ -1,0 +1,239 @@
+<link rel="import" href="../polymer/polymer.html"/>
+
+<!--
+Element that provides pagination.
+
+##### Usage
+
+      <px-pagination number-of-items="{{numberOfItems}}" page-size="{{pageSize}}" first-item-index-to-display="{{firstItemIndex}}"></px-pagination>
+
+@demo demo.html
+-->
+<dom-module id="px-pagination">
+  <link rel="import" type="css" href="css/aha-table.css"/>
+
+  <template>
+
+			<span class="pagesize">
+				<span class="u-mr--">{{pagesizetitle}}</span>
+				<select id="pageSizeSelect" on-change="_changeDropDown">
+          <option>5</option>
+          <option selected>10</option>
+          <option>20</option>
+          <option>50</option>
+          <option>100</option>
+        </select>
+			</span>
+
+			<span class="u-pl+ u-ml+ summary">
+				<span>{{firstItemIndexToDisplay}}</span>-<span>{{lastItemIndexToDisplay}}</span>
+				<span>{{itemoftext}}</span>
+				<span>{{numberOfItems}}</span>
+			</span>
+
+			<span class="paging">
+				<button
+          class$="{{_getPageupClass(currentPage)}}"
+          on-click="goToPreviousPage"><i class="fa fa-angle-left"></i></button>
+				<span class="pager">
+					<template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
+            <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
+          </template>
+				</span>
+				<button
+          class$="{{_getPagedownClass(currentPage, pageCount)}}"
+          on-click="goToNextPage"><i class="fa fa-angle-right"></i></button>
+			</span>
+
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'px-pagination',
+
+    properties: {
+
+      /**
+       * The total number of items
+       */
+      numberOfItems: {
+        type: Number,
+        notify: true,
+        observer: '_goBackToFirstPage',
+
+      },
+
+      /**
+       * The size of a page
+       *
+       * Read only.
+       */
+      pageSize: {
+        type: Number,
+        value: 10,
+        notify: true,
+        readOnly: true
+      },
+
+      /**
+       * Passes the firstItemIndexToDisplay back to the user
+       *
+       * Read only.
+       *
+       * 1-based
+       */
+      firstItemIndexToDisplay: {
+        type: Number,
+        notify: true,
+        value: 1,
+        readOnly: true
+      }
+
+    },
+
+    ready: function() {
+      this.set('itemoftext', 'of');
+      this.set('pagesizetitle', 'Rows per page');
+    },
+
+    _goBackToFirstPage: function() {
+      this.goToPageNumber(1);
+    },
+
+    _updateDisplay: function() {
+      this.set('pageCount', Math.ceil(this.numberOfItems / this.pageSize));
+
+      if(this.pageCount === 0) {
+        this._setFirstItemIndexToDisplay(0);
+        this.set('lastItemIndexToDisplay', 0);
+      }
+      else {
+        this._setFirstItemIndexToDisplay(((this.currentPage - 1) * this.pageSize) + 1);
+        if(this.currentPage === this.pageCount) {
+          this.set('lastItemIndexToDisplay', this.numberOfItems);
+        } else {
+          this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
+        }
+      }
+    },
+
+    /**
+     * Go to the previous page
+     **/
+    goToPreviousPage: function() {
+      if(this.currentPage > 1) {
+        this.goToPageNumber(this.currentPage - 1);
+      }
+    },
+
+    /**
+     * Go to the next page
+     */
+    goToNextPage: function() {
+      if(this.currentPage < this.pageCount) {
+        this.goToPageNumber(this.currentPage + 1);
+      }
+    },
+
+    _changeDropDown: function(e) {
+      var sizelist = [5, 10, 20, 50, 100];
+      var size = parseInt(e.target.value),
+        index = sizelist.indexOf(size);
+      var parentElem = this.$.pageSizeSelect,
+        optionList = Polymer.dom(parentElem).querySelectorAll("option");
+
+      optionList.forEach(function(option) {
+        if(parseInt(option.value) === parseInt(size)) {
+          option.setAttribute('selected', '');
+          e.target.selectedIndex = parseInt(index);
+        } else {
+          option.removeAttribute('selected');
+        }
+      });
+
+      this._setPageSize(size);
+      this._goBackToFirstPage();
+    },
+
+    /**
+     * Go to the page number specified
+     * @param number
+     */
+    goToPageNumber: function(number) {
+      this.currentPage = number;
+      this._updateDisplay();
+    },
+
+    _goToPage: function(evt) {
+      this.goToPageNumber(parseInt(evt.target.textContent));
+    },
+
+    _getPageupClass: function(currentPage) {
+      return [currentPage === 1 ? "btn--disabled" : "", 'btn btn--bare btn--pagination u-p- previous'].join(' ');
+    },
+
+    _getPagedownClass: function(currentPage, pageCount) {
+      return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", 'btn btn--bare btn--pagination u-p- next'].join(' ');
+    },
+
+    _getPagerButtonClass: function(buttonValue, currentPage) {
+      var classList = ['btn'];
+      if(buttonValue === currentPage) {
+        classList.push('btn--icon', 'u-ml0', 'btn--pagination--number');
+      }
+      else {
+        classList.push('btn--bare', 'u-ml0', 'btn--bare__pagination');
+      }
+      return classList.join(' ');
+    },
+
+    _pagerButtons: function() {
+      if(this.pageCount) {
+        var noOfPagerButtons = 0,
+          pagerNavButtonsConfig = [],
+          i;
+
+        // if less than 9 pages, display all buttons
+        if(this.pageCount <= 9) {
+          noOfPagerButtons = this.pageCount;
+          pagerNavButtonsConfig = Array.apply(null, Array(noOfPagerButtons)).map(
+            function(val, index) {
+              return {val: index + 1};
+            });
+        }
+        // if near end, show final pages
+        else if(this.pageCount <= this.currentPage + 3) {
+          pagerNavButtonsConfig.push({val: 1});
+          pagerNavButtonsConfig.push({val: '...'});
+
+          for(i = this.pageCount - 6; i <= this.pageCount; i++) {
+            pagerNavButtonsConfig.push({val: i});
+          }
+        }
+        // if somewhere in beginning/middle, show pages around where we are
+        else {
+          if(this.currentPage <= 5) {
+            pagerNavButtonsConfig = Array.apply(null, Array(7)).map(
+              function(val, index) {
+                return {val: index + 1};
+              });
+            pagerNavButtonsConfig.push({val: '...'});
+            pagerNavButtonsConfig.push({val: this.pageCount});
+          }
+          else {
+            pagerNavButtonsConfig.push({val: 1});
+            pagerNavButtonsConfig.push({val: '...'});
+            for(i = this.currentPage - 3; i < this.currentPage + 2; i++) {
+              pagerNavButtonsConfig.push({val: i});
+            }
+            pagerNavButtonsConfig.push({val: '...'});
+            pagerNavButtonsConfig.push({val: this.pageCount});
+          }
+        }
+        return pagerNavButtonsConfig;
+      }
+    }
+
+  });
+</script>

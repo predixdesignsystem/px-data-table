@@ -1,1368 +1,696 @@
 <!--
-//http://webcomponents.github.io/articles/web-components-best-practices/
--->
-<!--
 /**
  * @module aha-table
  *
+ * Internal table helper component used by px-data-table.
  *
- * filterable Sortable Editable Paginatable Data Table
- *
- * aha-table is an data table/grid, it cousumes a modal data
- * and modal meta to show a table that can search, sort, edit
- * in place and pagiation, click to edit.
- *
- * Examples:
- *
- *     <aha-table></aha-table>
- *
- *     <aha-table id="raw"
- *         selectable
- *         copyable
- *         removable
- *         movable
- *         seachable
- *         pagesize="20"
- *         pagesizetitle="Page Size:"
- *         summarytitle="Viewing">
- *         < name="title"
- *             type="string"
- *             label="My Title"
- *             sortable
- *             filterable
- *             required
- *             editable
- *             placeholder="Example text"
- *             default=""
- *             hint="Meaning title will help you remember">
- *         </>
- *     </aha-table/>
- *
- * Available Event Hander:
- *     after-invalid(Object detail)
- *     px-row-click(Object detail)
- *     after-td-dbclick(Object detail)
- *     after-create(Object new_record)
- *     after-copy(Object new_record)
- *     after-save(Object new_record)
- *     after-select(Object new_record)
- *     after-remove(Object removed_record)
- *     after-move-down(Object moved_record)
- *     after-move-up(Object moved_record)
- *
- * @class aha-table
- * Based on https://github.com/liuwenchao/aha-table
+ * Originally based on https://github.com/liuwenchao/aha-table, but heavily modified.
  *
  */
 -->
 
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="px-pagination.html">
 
 <dom-module id="aha-table">
-	<link rel="import" type="css" href="css/aha-table.css" />
-	<template>
-	<div class="scroll-body">
-		<div class$="{{getTableClass(tableRows, tableColumns)}}" id="aha_table_main" unresolved="">
-			<span class="tr">
-				<template is="dom-if" if="{{selectable}}">
-					<span class="th">
-						<label on-click="clickSortChecked" class$="{{getTextSortingCheckboxClass(sortedColumn, groupBySelect)}}">
-							Selected <i class$="{{getSortingCheckboxIconClass(sortedColumn, groupBySelect)}}"></i>
-						</label>
-						<div
-							title$="{{searchtitle}}"
-							hidden$="{{!filterable}}"
-							class="filterrow search"
-							on-click="toggleFilters"></div>
-					</span>
-				</template>
-				<template is="dom-repeat" items="{{meta}}" as="column">
-					<span
-						title$="{{columntitle}}"
-						class$="{{getHeaderClass(column)}}">
-						<label
-							class$="{{getTextSortingClass(column, sortedColumn)}}"
-							title$="{{sorttitle}}"
-							on-click="sort">{{column.label}}<i class$="{{getSortingClass(column, sortedColumn, descending)}}"></i>
-						</label>
-						<span
-							hidden$="{{!column.hint}}"
-							class=" hint"
-							title$="{{column.hint}}"></span>
-					</span>
-				</template>
-			</span>
-			<span class$="{{getFilterClass(filterable)}}" id="filter">
-				<template is="dom-if" if="{{selectable}}">
-					<span class="td filter--cell">
-						<div class="flex flex--center">
-							<input type="checkbox"
-								on-change="selectall"
-								title$="{{selectalltitle}}"
-								hidden$="{{!selectable}}"/>
-						</div>
-					</span>
-				</template>
-				<template is="dom-repeat" items="{{meta}}" as="column">
-					<span class="td filter--cell">
+  <link rel="import" type="css" href="css/aha-table.css"/>
+  <template>
 
-						<template is="dom-if" if="{{column.filterable}}">
-							<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-								<select class="filter-input" on-change="search">
-										<template is="dom-repeat" items="{{column.options}}" as="option">
-											<option value$="{{option.value}}">{{option.label}}</option>
-										</template>
-								</select>
-							</template>
-							<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-								<div class="flex">
-									<input class="filter-input text-input--bare" type="text" title$="{{column.hint}}" on-keyup="search"/>
-						      <i class="fa fa-filter"></i>
-						    </div>
-							</template>
+    <div class="scroll-body">
 
-							<template is="dom-if" if="{{isTextType(column.type)}}">
-								<div class="flex">
-						      <input class="filter-input text-input--bare" type="text" on-keyup="search" placeholder$="{{column.searchplaceholder}}"/>
-						      <i class="fa fa-filter"></i>
-						    </div>
-							</template>
-						</template>
-					</span>
-				</template>
-			</span>
-			<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
-				<span class$="{{getRowClass(row, selectedRows.splices)}}" on-click="click">
-					<template is="dom-if" if="{{selectable}}">
-						<span  class="td">
-							<div class="flex flex--center">
-								<input type="checkbox"
-									class="js-table__select-checkbox"
-									title$="{{selecttitle}}"
-									hidden$="{{!selectable}}"
-									/>
-								</div>
-						</span>
-					</template>
+      <div class$="{{_getTableClass(tableRows, tableColumns)}}">
 
-					<template is="dom-repeat" items="{{meta}}" as="column">
-						<span
-							on-dblclick="dbclick"
-							title="{{getEditTitle(column.editable, edittitle)}}"
-							class$="{{getCellClass(column.name)}}">
-							<div hidden>
-								<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-									<select
-										required$="{{column.required}}"
-										on-blur="save">
-										<template is="dom-repeat" items="{{column.options}}" as="option">
-											<option
-												selected$="{{isOptionSelected(option.value, row, column.name)}}"
-												value="{{option.value}}">{{option.label}}</option>
-										</template>
-									</select>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'string')}}">
-									<input type="text"
-										required$="{{column.required}}"
-										on-blur="save"
-										value$="{{getValue(row,column.name)}}"/>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'date')}}">
-									<input type="date"
-										required?="{{column.required}}"
-										on-blur="save"
-										value$="{{getValue(row,column.name)}}"/>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'time')}}">
-									<input type="time"
-										required?="{{column.required}}"
-										on-blur="save"
-										value$="{{getValue(row,column.name)}}"/>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'datetime')}}">
-									<input type="datetime"
-										required?="{{column.required}}"
-										on-blur="save"
-										value$="{{getValue(row,column.name)}}"/>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'text')}}">
-									<textarea
-										required?="{{column.required}}"
-										on-blur="save">{{getValue(row,column.name)}}</textarea>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-									<input type="checkbox"
-										on-change="save"
-										on-blur="save"
-										checked$="{{getValue(row,column.name)}}" />
-								</template>
-							</div>
-	            <div
+        <!-- Header -->
+        <span class="tr">
+          <template is="dom-repeat" items="{{meta}}" as="column">
+            <span class$="{{_getHeaderClass(column)}}">
+              <label
+                class$="{{_getTextSortingClass(column, sortedColumn)}}"
+                on-click="_sort">{{column.label}}<i class$="{{_getSortingClass(column, sortedColumn, descending)}}"></i>
+              </label>
+            </span>
+          </template>
+        </span>
 
-								class$="{{getReaderClass(row, column.name)}}">
-	                <template is="dom-if" if="{{!isEqual(column.type, 'html')}}">
-	                  <span>{{readContent(row, column)}}</span>
-	                </template>
-	                <template is="dom-if" if="{{isEqual(column.type, 'html')}}">
-	                  <aha-html-echo html="{{readContent(row, column)}}"></aha-html-echo>
-	                </template>
-	            </div>
-						</span>
-					</template>
-				</span>
-			</template>
 
-		</div>
-	</div>
+        <!-- Second Header (filter/select all) -->
+        <span class$="{{_getSecondHeaderClass(filterable)}}" id="filter">
 
-		<div style="float: right;" class="pagination">
-			<span class="pagesize">
-				<span class="u-mr--">{{pagesizetitle}}</span>
-				<select on-change="changeDropDown">
-						<option>5</option>
-						<option selected>10</option>
-						<option>20</option>
-						<option>50</option>
-						<option>100</option>
-				</select>
-			</span>
-			<span class="u-pl+ u-ml+ summary">
-				<span>{{summarytext}}</span>
-				<span>{{firstItemIndex}}</span>-<span>{{lastItemIndex}}</span>
-				<span>{{itemoftext}}</span>
-				<span>{{itemCount}}</span>
-			</span>
-			<span class="paging">
-				<template is="dom-if" if="{{showGotoFirstLast}}">
-					<button
-						title$="{{firsttitle}}"
-						class$="{{getPageupClass(currentpage, 'btn btn--bare btn--pagination u-p- first')}}"
-						on-click="firstPage"><i class="fa fa-angle-double-left"></i></button>
-				</template>
-				<button
-					title$="{{previoustitle}}"
-					class$="{{getPageupClass(currentpage, 'btn btn--bare btn--pagination u-p- previous')}}"
-					on-click="prevPage"><i class="fa fa-angle-left"></i></button>
-				<span class="pager">
-					<template is="dom-repeat" items="{{pagerButtons(pageCount, currentpage)}}" as="page">
-						<span on-click="gotoPage" class$="{{getPagerButtonClass(page.val, currentpage)}}">{{page.val}}</span>
-					</template>
-				</span>
-				<button
-					title$="{{nexttitle}}"
-					class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--bare btn--pagination u-p- next')}}"
-					on-click="nextPage"><i class="fa fa-angle-right"></i></button>
-				<template is="dom-if" if="{{showGotoFirstLast}}">
-					<button
-						title$="{{lasttitle}}"
-						class$="{{getPagedownClass(currentpage, pageCount, 'btn btn--bare btn--pagination u-p- last')}}"
-						on-click="lastPage"><i class="fa fa-angle-double-right"></i></button>
-				</template>
-			</span>
-		</div>
-	</template>
+          <template is="dom-repeat" items="{{meta}}" as="column">
+            <div class="td filter--cell">
+
+              <!-- select all checkbox -->
+              <template is="dom-if" if="{{_isSelectAllColumn(column)}}">
+                <div class="flex flex--center">
+                  <input id="selectAllCheckbox" type="checkbox"
+                         on-change="_clickSelectAll"/>
+                </div>
+              </template>
+
+              <!-- filter entry -->
+              <template is="dom-if" if="{{_isFilterableColumn(column)}}">
+                <template is="dom-if" if="{{_isEqual(column.type, 'choice')}}">
+                  <select class="filter-input" on-change="_filter">
+                    <template is="dom-repeat" items="{{column.options}}" as="option">
+                      <option value$="{{option.value}}">{{option.label}}</option>
+                    </template>
+                  </select>
+                </template>
+                <template is="dom-if" if="{{_isEqual(column.type, 'boolean')}}">
+                  <div class="flex">
+                    <input class="filter-input text-input--bare" type="text" on-keyup="_filter"/>
+                    <i class="fa fa-filter"></i>
+                  </div>
+                </template>
+                <template is="dom-if" if="{{_isTextType(column.type)}}">
+                  <div class="flex">
+                    <input class="filter-input text-input--bare" type="text" on-keyup="_filter"
+                           placeholder$="{{column.searchplaceholder}}"/>
+                    <i class="fa fa-filter"></i>
+                  </div>
+                </template>
+              </template>
+            </div>
+          </template>
+
+        </span>
+
+        <!-- Data rows -->
+        <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="row">
+          <span class$="{{_getRowClass(row, row._selected)}}" on-click="_clickRow">
+
+            <!-- Data cells -->
+            <template is="dom-repeat" items="{{meta}}" as="column">
+              <span class$="{{_getCellClass(column.name)}}">
+                <div class$="{{_getReaderClass(row, column.name)}}">
+
+                  <!-- selected column checkbox -->
+                  <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
+                    <div class="flex flex--center">
+                      <input type="checkbox"
+                             class="js-table__select-checkbox"
+                             checked="{{row._selected::change}}"/>
+                    </div>
+                  </template>
+
+                  <!-- string content -->
+                  <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
+                    <span>{{_readContent(row, column)}}</span>
+                  </template>
+
+                  <!-- html content -->
+                  <template is="dom-if" if="{{_isEqual(column.type, 'html')}}">
+                    <aha-html-echo html="{{_readContent(row, column)}}"></aha-html-echo>
+                  </template>
+
+                </div>
+              </span>
+            </template>
+
+          </span>
+        </template>
+
+      </div>
+    </div>
+
+    <!-- Pagination controls -->
+    <div class="pagination">
+      <px-pagination id="pagination" number-of-items="{{numberOfItems}}" page-size="{{pageSize}}"
+                     first-item-index-to-display="{{firstItemIndex}}"></px-pagination>
+    </div>
+
+  </template>
 </dom-module>
 <script>
-	Polymer({
-		is: 'aha-table',
-		properties: {
-			//data: instance of the model data
-			data: {
-				type: Array,
-				value: function() { return []; },
-				observer: 'dataChanged'
-			},
-			//meta: instance of the model meta
-			meta: {
-				type: Array,
-				value: function() { return []; }
-			},
-			/**
-			 * modified: all created or modified row will be referenced here.
-			 * it's hard to determine if it's created or modified after multiple
-			 * operations, because the element doesn't assume there's an id column,
-			 * so you need to determine if by yourself, like check
-			 * if the id exists if your model has an id column.
-			 */
-			modified: {
-				type: Array,
-				value: function() { return []; },
-				observer: 'modifiedChanged'
-			},
-			//deleted: all deleted row will be moved here.
-			deleted: {
-				type: Array,
-				value: function() { return []; }
-			},
-			//selected: all selected row will be referenced here.
-			selectedRows: {
-				type: Array,
-				value: function(){
-					return [];
-				},
-        notify: true,
-        reflectToAttribute: true,
-				observer: '_selectedRowsChanged'
-			},
-			//all visiable rows are reference here.
-			viewingRow: {
-				type: Array,
-				value: function() { return []; }
-			},
-			//selectable: if table row is selectable
-			selectable: {
-				type: Boolean,
-				value: false
-			},
-			//striped: if table row is striped
-			striped: {
-				type: Boolean,
-				value: false
-			},
-			//tableRows: if table row is striped
-			tableRows: {
-				type: Boolean,
-				value: false
-			},
-			//tableColumns: if table row is striped
-			tableColumns: {
-				type: Boolean,
-				value: false
-			},
-			//copyable: if table row is copyable
-			copyable: {
-				type: Boolean,
-				value: false
-			},
-			//removable: if table row is removable
-			removable: {
-				type: Boolean,
-				value: false
-			},
-			//movable: if table row is movable
-			movable: {
-				type: Boolean,
-				value: false
-			},
-			//filterable: if table row is filterable
-			filterable: {
-				type: Boolean,
-				value: false,
-				observer: "_filterableToggled"
-			},
-			// text displayed in first column of search row.
-			searchtitle: {
-				type: String,
-				value: ""
-			},
-			// text displayed as title of select checkbox.
-			selecttitle: {
-				type: String,
-				value: ""
-			},
-			// text displayed as title of sorting column.
-			sorttitle: {
-				type: String,
-				value: ""
-			},
-			// text displayed as title of column name.
-			columntitle: {
-				type: String,
-				value: ""
-			},
-			// text displayed as title of copy indicator.
-			copytitle: {
-				type: String,
-				value: ""
-			},
-			// text displayed as title of remove checkbox..
-			removetitle: {
-				type: String,
-				value: ""
-			},
-			// text displayed as title of move up indicator.
-			moveuptitle: {
-				type: String,
-				value: ""
-			},
-			// text displayed as title of move down indicator.
-			movedowntitle: {
-				type: String,
-				value: ""
-			},
-			// text displayed as title of editable cell.
-			edittitle: {
-				type: String,
-				value: ""
-			},
-			//sortedColumn: sorted column name
-			sortedColumn: {
-				type: String,
-				value: ""
-			},
-			//editingRow: current editing row
-			//@type {Object}
-			editingRow : {
-				type: Object,
-				value: function() { return {}; }
-			},
-			//if filtering has been performed.
-			filtered: {
-				type: Boolean,
-				value: false
-			},
-			//editingRow: current rows in display/view
-			viewingRows : {
-				type: Array,
-				value: function() { return []; }
-			},
-			//descending: current sorting order
-			descending: {
-				type: Boolean,
-				value: false
-			},
-			//pagesize: the number of items to show per page
-			pagesize: {
-				type: Number,
-				value: 10,
-				observer: 'pagesizeChanged'
-			},
-			//currentpage: the current active page in view
-			currentpage: {
-				type: Number,
-				value: 1,
-				observer: 'currentpageChanged'
-			},
-			pageoftext: {
-				type: String,
-				value: "/"
-			},
-			itemoftext: {
-				type: String,
-				value: "of"
-			},
-			//pageCount: the number of paginated pages
-			pageCount: {
-				type: Number,
-				value: 0
-			},
-			//itemCount: the number of visible items
-			itemCount: {
-				type: Number,
-				value: 0
-			},
-			//firstItemIndex: the index number of first item in the page, start from 1
-			firstItemIndex: {
-				type: Number,
-				value: 1
-			},
-			//lastItemIndex: the index number of last item in the page, start from 1
-			lastItemIndex:  {
-				type: Number,
-				value: 1
-			},
-			//sizelist: range list to adjust page size.
-			sizelist: {
-				type: Array,
-				value: function(){return [5, 10, 20, 50, 100];}
-			},
-			//pagesizetitle: label for page size box
-			pagesizetitle: {
-				type: String,
-				value: "Rows per page"
-			},
-			//summarytitle: label for table summary area
-			summarytitle: {
-				type: String,
-				value: ""
-			},
-			//show go-to first/last pagination buttons.
-			showGotoFirstLast: {
-				type: Boolean,
-				value: false
-			},
+  Polymer({
+    is: 'aha-table',
+
+    properties: {
+      //data: instance of the model data
+      data: {
+        type: Array,
+        value: function() {
+          return [];
+        },
+        observer: '_dataChanged'
+      },
+      //meta: instance of the model meta
+      meta: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      },
+      //selected: all selected row will be referenced here.  Really only readable.
+      selectedRows: {
+        type: Array,
+        value: function() {
+          return [];
+        },
+        notify: true
+      },
+      //selectable: if table row is selectable
+      selectable: {
+        type: Boolean,
+        value: false
+      },
+      //striped: if table row is striped
+      striped: {
+        type: Boolean,
+        value: false
+      },
+      //tableRows: if table row is striped
+      tableRows: {
+        type: Boolean,
+        value: false
+      },
+      //tableColumns: if table row is striped
+      tableColumns: {
+        type: Boolean,
+        value: false
+      },
+      //filterable: if table row is filterable
+      filterable: {
+        type: Boolean,
+        value: false
+      },
+      //sortedColumn: sorted column name
+      sortedColumn: {
+        type: String,
+        value: ""
+      },
+      // the column names that are filtered on
+      filteredColumns: {
+        type: Array,
+        value: []
+      },
+      //all rows that are currently displayed on the page (visible right now)
+      displayedRows: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      },
+      //descending: current sorting order
+      descending: {
+        type: Boolean,
+        value: false
+      },
       // custom function declarations, used in individual columns for filtering/sorting
       customFunctions: {
         type: Object,
         value: {}
-      },
-			groupBySelect: {
-				type: Number,
-				value: 0
-			},
-		},
+      }
+    },
 
-		ready: function() {
-			if (this.get('meta').length === 0) {
-				this.dataChanged(this.get('data'), []);
-			}
-			if (this.dataset && this.dataset.sizelist) {
-				this.sizelist = JSON.parse(this.dataset.sizelist);
-			}
-			//Show element when it's ready.
-			this.$.aha_table_main.setAttribute('resolved', '');
-			this.$.aha_table_main.removeAttribute('unresolved');
-		},
-		getRowClass: function(row, selectedRows) {
-			return ['tr', 'rows',
-					this.striped  ? 'striped'  : '',
-					row._modified ? 'modified' : '',
-					row._editing  ? 'editing'  : '',
-					(this.selectedRows.indexOf(row) > -1) ? 'selected'  : ''
-				].join(' ');
-		},
-		isCheckboxSelected: function(selected) {
-			if (typeof selected === "undefined" || selected === false) {
-				return false;
-			} else {
-				return true;
-			}
-		},
-		isEditing: function(rowEditable, columnEditable) {
-			return rowEditable && columnEditable;
-		},
-		isNotEditing: function(rowEditable, columnEditable) {
-			return !rowEditable || !columnEditable;
-		},
-		getReaderClass: function(row, columnName) {
-			var datum = row[columnName], classList = ['viewing'];
-			if (datum === null || datum === undefined
-				|| typeof datum === 'string' && datum.trim().length === 0) {
-				classList.push('empty');
-			}
-			return classList.join(' ');
-		},
-		readContent: function(row, column) {
-			var datum = row[column.name];
-			if (datum === null || datum === undefined
-				|| typeof datum === 'string' && datum.trim().length === 0) {
-					var options = column.options;
-					var blank = column.placeholder;
-					if (datum !== "" && options) {
-					//translate value to labels for select
-						for (var i = options.length - 1; i >= 0; i--) {
-							if (options[i].value === datum) {
-								return options[i].label;
-							}
-						}
-					}
-					datum = datum === undefined || datum === null ? '' : datum;
-					return datum === "" ? blank : datum;
-			} else {
-				if (column['max-column-character-width'] > 0){
-					datum = this._clipDatumString(datum, column);
-				}
-				return datum;
-			}
-		},
-		_clipDatumString: function(datum, column){
-			var colWidth = column['max-column-character-width'];
-			if (datum.length > colWidth){
-				if (column['ellipsis-clip-position'] === 'left') {
-					datum = '\u2026' + datum.substr(datum.length - colWidth, datum.length);
-				}
-				else if (column['ellipsis-clip-position'] === 'center') {
-					var datumLeftIndex = Math.floor(colWidth/2),
-							datumRightIndex = colWidth - datumLeftIndex;
-					datum = datum.substr(0, datumLeftIndex) + '\u2026' + datum.substr(datum.length - datumRightIndex, datum.length);
-				}
-				else { //assume right
-					datum = datum.substr(0, colWidth) + '\u2026';
-				}
-			}
-			return datum;
-		},
-		getColspan: function(metaLength) {
-			return metaLength + 1;
-		},
-		isEqual: function(source, target) {
-			return source === target;
-		},
-		isOptionSelected: function(optionValue, row, column_name) {
-			return optionValue === row[column_name];
-		},
-		getPageupClass: function(currentPage, additionalClass) {
-			return [currentPage === 1 ? "btn--disabled" : "", additionalClass].join(' ');
-		},
-		getPagedownClass: function(currentPage, pageCount, additionalClass) {
-			return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", additionalClass].join(' ');
-		},
-		getEditTitle: function(editable, editTitle) {
-			return editable ? editTitle : '';
-		},
-		getHeaderClass: function(item) {
+    observers: [
+      '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
+      '_updateDisplayedRows(pageSize)' // when the size of the page changes
+    ],
+
+    ready: function() {
+      if(this.get('meta').length === 0) {
+        this._dataChanged(this.get('data'), []);
+      }
+    },
+
+    _dataChanged: function() {
+
+      // initialize the meta if there is none
+      if(!this.meta || this.meta.length === 0) {
+        var meta = this._generateMetaFromData();
+        this.set('meta', meta);
+      }
+
+      // initialize shadow fields on all rows
+      for(var i = 0; i < this.data.length; i++) {
+        this.set('_filtered', false, this.data[i]);
+        this.set('_selected', false, this.data[i]);
+      }
+
+      this._filterSortAndUpdateDisplayedTable();
+    },
+
+    /********** Generating column metadata *************/
+
+    _generateMetaFromData: function() {
+      var meta = [];
+      if(this.selectable && this.data.length > 0) {
+        // add a selected column if selectable
+        meta.push(this._generateMetaForColumn("_selected", "selected", true, "Selected"));
+      }
+      for(var prop in this.data[0]) {
+        if(prop.indexOf('_') !== 0) {//skip internal field
+          meta.push(this._generateMetaForColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1)));
+        }
+      }
+      return meta;
+    },
+
+    _generateMetaForColumn: function(prop, type, isSelectAll, label) {
+      return {
+        name: prop,
+        label: label,
+        type: type,
+        sortable: true,
+        filterable: true,
+        editable: false,
+        required: false,
+        selectAll: isSelectAll
+      };
+    },
+
+    /********** Filter/Sort main function *************/
+
+    _filterSortAndUpdateDisplayedTable: function() {
+
+      // start at original data source (shadow fields, _selected and _filtered are still set)
+      this.filteredSortedData = this.data;
+
+      // reset back to unfiltered
+      // leave _selected as is since selected rows should stay selected
+      for(var i = 0; i < this.data.length; i++) {
+        this.set('_filtered', false, this.data[i]);
+      }
+
+      // sort
+      if(this.sortedColumn) {
+        this.filteredSortedData = this._sortByColumn(this.filteredSortedData);
+      }
+
+      // filter
+      for(var index in this.filteredColumns) {
+        this.filteredSortedData = this._filterByColumn(this.filteredColumns[index].name,
+          this.filteredColumns[index].userEntry, this.filteredSortedData);
+      }
+
+      // count total number of rows
+      var count = 0;
+      this.data.forEach(function(row) {
+        if(!row._filtered) {
+          count++;
+        }
+      });
+      this.set('numberOfItems', count);
+
+      // with filtering/sorting, it's best just to go back to the first page
+      this.$.pagination.goToPageNumber(1);
+
+      this._updateDisplayedRows();
+    },
+
+    /******* Update Displayed rows when major changes ****/
+
+    _updateDisplayedRows: function() {
+
+      if(this.firstItemIndex !== null && this.firstItemIndex !== undefined && this.pageSize !== null && this.pageSize !== undefined) {
+
+        var from = this.firstItemIndex - 1; // pagination is 1-based
+        var to = from + this.pageSize;
+
+        this.set('displayedRows', this.filteredSortedData.slice(from, to));
+
+      }
+    },
+
+    /********** Sorting ************/
+
+    // sort by header click handler
+    _sort: function(e, p) {
+      var column = e.model.column;
+      if(column && column.sortable) {
+        var sortingColumn = column.name;
+        if(sortingColumn === this.sortedColumn) {
+          this.set('descending', !this.descending);
+        } else {
+          this.set('sortedColumn', sortingColumn);
+          this.set('descending', false); // always start ascending when click new column
+        }
+      }
+      this._filterSortAndUpdateDisplayedTable();
+    },
+
+    _sortByColumn: function(rowsToSort) {
+
+      var sortFunction = this._getSortFunction();
+
+      // sorting map: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Sorting_maps
+      var sortedRows =
+        rowsToSort
+          .map(function(e, i) {
+            var v = e[this.sortedColumn];
+            if(undefined === v || null === v) {
+              v = '';
+            }
+            return {
+              index: i,
+              value: typeof v === "string" ? v.toLowerCase() : v
+            };
+          }, this)
+          .sort(sortFunction.bind(this))
+          .map(function(e) {
+            return rowsToSort[e.index];
+          });
+
+      return sortedRows;
+    },
+
+    _getSortFunction: function() {
+      var sortFunction;
+
+      // use custom sort function if there is one
+      this.meta.forEach(function(obj) {
+        if(this.sortedColumn === obj.name) {
+          sortFunction = this.customFunctions[obj['sort-function-name']];
+        }
+      }, this);
+
+      if(!sortFunction) {
+        if(this.sortedColumn === "_selected") {
+          sortFunction = this._defaultSortSelected;
+        }
+        else {
+          sortFunction = this._defaultSortAlphabetically;
+        }
+      }
+
+      return sortFunction;
+    },
+
+    // fallback default sort function if per-column sort isn't specified.
+    _defaultSortAlphabetically: function(a, b) {
+      if(this.descending) {
+        if(a.value < b.value) {
+          return 1;
+        }
+        return -1;
+      }
+      else {
+        if(a.value > b.value) {
+          return 1;
+        }
+        return -1;
+      }
+    },
+
+    _defaultSortSelected: function(a, b) {
+      if(this.descending) {
+        if(a.value && !b.value) {
+          return 1;
+        }
+        else if(!a.value && b.value) {
+          return -1;
+        }
+        return 0;
+      }
+      else {
+        if(a.value && !b.value) {
+          return -1;
+        }
+        else if(!a.value && b.value) {
+          return 1;
+        }
+        return 0;
+      }
+    },
+
+    /********** Filtering ************/
+
+    // filter on typed content in header handler
+    _filter: function(e, p) {
+      var column = e.model.column;
+
+      if(column && column.filterable) {
+
+        var userEntry = e.target.value;
+
+        var isNotInFilteredColumnsList = true;
+
+        for(var index in this.filteredColumns) {
+          var filteredColumn = this.filteredColumns[index];
+
+          if(filteredColumn.name === column.name) {
+            isNotInFilteredColumnsList = false;
+
+            if(userEntry === "" || userEntry === undefined || userEntry === null) {
+              // don't filter on this column anymore
+              this.filteredColumns.splice(index, 1);
+            }
+            else {
+              // update the user entry with the latest content
+              filteredColumn.userEntry = userEntry;
+            }
+
+          }
+        }
+
+        if(isNotInFilteredColumnsList) {
+          // add the new column to the filtered list
+          this.filteredColumns.push({"name": column.name, "userEntry": userEntry});
+        }
+
+        this._filterSortAndUpdateDisplayedTable();
+
+      }
+    },
+
+    _filterByColumn: function(columnName, userEntry, rowsToFilter) {
+
+      var filterFunction = this._getFilterFunction(columnName);
+
+      for(var i = 0, len = rowsToFilter.length; i < len; i++) {
+
+        // if it's not filtered already
+        if(rowsToFilter[i]._filtered === false) {
+
+          var matched = filterFunction(userEntry, rowsToFilter[i][columnName]);
+
+          if(!matched) {
+            rowsToFilter[i]._filtered = true;
+          }
+
+        }
+
+      }
+
+      this.filtered = rowsToFilter.some(function(row) {
+        return row._filtered;
+      });
+
+      var filteredRows = rowsToFilter.filter(function(r) {
+        return !r._filtered;
+      });
+
+      return filteredRows;
+    },
+
+    _getFilterFunction: function(columnName) {
+      var filterFunction;
+
+      // use custom filter function if there is one
+      this.meta.forEach(function(obj) {
+        if(columnName === obj.name) {
+          filterFunction = this.customFunctions[obj['filter-function-name']];
+        }
+      }, this);
+
+      if(!filterFunction) {
+        filterFunction = this._defaultFilter;
+      }
+
+      return filterFunction;
+    },
+
+    _defaultFilter: function(searchString, cellValue) {
+      if(searchString === undefined || searchString === null || searchString === "") {
+        return true;
+      }
+      return (cellValue.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
+    },
+
+
+    /********** Selecting ************/
+
+    _clickRow: function(e) {
+      var column = e.model.column;
+      var row = e.model.row;
+      var detail = {"row": row, "column": column};
+
+      if(this.selectable) {
+        this._selectRow(row, e.model.index);
+
+        this.fire('px-row-click', detail); // fire the event after it is marked selected
+
+        // always just make sure selectAll checkbox is unchecked when 1 row is clicked
+        var selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+        selectAllCheckbox.checked = false;
+
+        // if sorted row is selected, then it is no longer selected
+        if(this.sortedColumn === '_selected') {
+          this.set('sortedColumn', '');
+        }
+      }
+    },
+
+    _clickSelectAll: function(e) {
+      if(e.target.checked) {
+        this._setAllRows(true); // selected
+      }
+      else {
+        this._setAllRows(false); // unselected
+      }
+    },
+
+    _setAllRows: function(isSelected) {
+
+      // set all rows selected/unselected
+      for(var i = 0; i < this.data.length; i++) {
+        this.data[i]._selected = isSelected;
+      }
+
+      // notify viewing rows of change
+      for(var i = 0; i < this.displayedRows.length; i++) {
+        this.notifyPath('displayedRows.' + i + '._selected', this.displayedRows[i]._selected);
+      }
+
+      // remove everything from user-facing selectedRows property
+      this.splice('selectedRows', 0, this.selectedRows.length);
+      if(isSelected) {
+        // add everything to selectedRows property
+        for(i = 0; i < this.data.length; i++) {
+          this.push('selectedRows', this.data[i]);
+        }
+      }
+
+      this.fire('px-select-all-click', this.selectedRows);
+
+    },
+
+    _selectRow: function(row, indexInDisplayedRows) {
+
+      if(row._selected) {
+        row._selected = false;
+        this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
+        this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
+      }
+      else {
+        row._selected = true;
+        this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
+        this.push('selectedRows', row);
+
+      }
+
+      this.fire('after-select', row);
+
+    },
+
+
+    /******** Display table helpers (classes, dom-if functions, etc.) *************/
+
+    _getRowClass: function(row, isSelected) {
+      return ['tr', 'rows',
+        this.striped ? 'striped' : '',
+        row._selected ? 'selected' : ''
+      ].join(' ');
+    },
+    _isSelectAllColumn: function(column) {
+      return column.selectAll;
+    },
+    _isFilterableColumn: function(column) {
+      return !column.selectAll && column.filterable;
+    },
+    _getReaderClass: function(row, columnName) {
+      var datum = row[columnName], classList = ['viewing'];
+      if(datum === null || datum === undefined
+        || typeof datum === 'string' && datum.trim().length === 0) {
+        classList.push('empty');
+      }
+      return classList.join(' ');
+    },
+    _readContent: function(row, column) {
+      var datum = row[column.name];
+      if(datum === null || datum === undefined
+        || typeof datum === 'string' && datum.trim().length === 0) {
+        var options = column.options;
+        var blank = column.placeholder;
+        if(datum !== "" && options) {
+          //translate value to labels for select
+          for(var i = options.length - 1; i >= 0; i--) {
+            if(options[i].value === datum) {
+              return options[i].label;
+            }
+          }
+        }
+        datum = datum === undefined || datum === null ? '' : datum;
+        return datum === "" ? blank : datum;
+      } else {
+        if(column['max-column-character-width'] > 0) {
+          datum = this._clipDatumString(datum, column);
+        }
+        return datum;
+      }
+    },
+    _clipDatumString: function(datum, column) {
+      var colWidth = column['max-column-character-width'];
+      if(datum.length > colWidth) {
+        if(column['ellipsis-clip-position'] === 'left') {
+          datum = '\u2026' + datum.substr(datum.length - colWidth, datum.length);
+        }
+        else if(column['ellipsis-clip-position'] === 'center') {
+          var datumLeftIndex = Math.floor(colWidth / 2),
+            datumRightIndex = colWidth - datumLeftIndex;
+          datum = datum.substr(0, datumLeftIndex) + '\u2026' + datum.substr(datum.length - datumRightIndex, datum.length);
+        }
+        else { //assume right
+          datum = datum.substr(0, colWidth) + '\u2026';
+        }
+      }
+      return datum;
+    },
+    _isEqual: function(source, target) {
+      return source === target;
+    },
+    _getHeaderClass: function(item) {
       return ['th ', 'aha-', item.name, '-th'].join('') + (item.sortable ? ' sortable' : '');
-		},
-		getFilterClass: function(filterable) {
-			var classList = ['tr'];
-			if(!filterable){
-				classList.push('hidden');
-			}
-			return classList.join(' ');
-		},
-		getPagerButtonClass: function(buttonValue, currentPage){
-			var classList = ['btn'];
-			if (buttonValue === currentPage){
-				classList.push('btn--icon', 'u-ml0', 'btn--pagination--number');
-			}else{
-				classList.push('btn--bare', 'u-ml0', 'btn--bare__pagination');
-			}
-			return classList.join(' ');
-		},
-		getSortingClass: function(column, sortingColumn, descending) {
-			var classList = ['u-ml-', 'sorting', 'fa'];
-			if (sortingColumn === column.name) {
-				classList.push(descending ? 'fa-caret-down' : 'fa-caret-up');
-			}
-			return classList.join(' ');
-		},
-		getTextSortingClass: function(column, sortingColumn) {
-			var classList = ['column-head'];
-			if (sortingColumn === column.name) {
-				classList.push('sorted-text');
-			}
-			return classList.join(' ');
-		},
-		getTextSortingCheckboxClass: function() { //special case the select column, cause it's bad.
-			var classList = ['column-head'];
-			if (this.groupBySelect && this.sortedColumn == "selected") {
-				classList.push('sorted-text');
-			}
-			return classList.join(' ');
-		},
-		getSortingCheckboxIconClass: function() { //special case the select column, cause it's bad.
-			var classList = ['u-ml-', 'sorting', 'fa'];
-			var desc;
-			if(this.groupBySelect == 1) {
-				desc = false;
-			} else if(this.groupBySelect == -1) {
-				desc = true;
-			}
-			if (this.groupBySelect && this.sortedColumn == "selected") {
-				classList.push(desc ? 'fa-caret-down' : 'fa-caret-up');
-			}
-			return classList.join(' ');
-		},
-		getCellClass: function(name) {
-			return ['td ', 'aha-', name, '-td'].join('');
-		},
-		getTableClass: function(tableRows, tableColumns){
-			var classList= ['table', 'table--small'];
-			if (tableRows){
-				classList.push('table--rows');
-			}
-			if (tableColumns){
-				classList.push('table--columns');
-			}
-			return classList.join(' ');
-		},
-		isTextType: function(type) {
-			return type !== 'choice' && type !== 'boolean';
-		},
-		getValue: function(row, name) {
-			return row[name];
-		},
-
-		//=============
-		//internal methods
-		dataChanged: function(newValue, oldValue) {
-			this.fire("befor-data-change", [newValue, oldValue])
-			if (!this.meta || this.meta.length === 0)  {
-				this.$.aha_table_main.setAttribute('unresolved', '');
-				// generate meta from data if meta is not provided from px-data-table-column.
-				var meta = [];
-				for (var prop in this.data[0]) {
-					if (prop.indexOf('_') !== 0) {//skip internal field
-						meta.push({
-							name: prop,
-							label: prop.charAt(0).toUpperCase() + prop.slice(1),
-							type: [true, false].indexOf(this.data[0][prop]) > -1 ? "boolean" : "string",
-							sortable: true,
-							filterable: true,
-							editable: false,
-							required: false
-						});
-					}
-				}
-				for (var i = 0; i < this.data.length; i++) {
-					this.set('_editing',  false, this.data[i]);
-					this.set('_modified', false, this.data[i]);
-					this.set('_filtered', false, this.data[i]);
-				}
-				this.set('meta', meta, this);
-				this.$.aha_table_main.setAttribute('resolved', '');
-				this.$.aha_table_main.removeAttribute('unresolved');
-			}
-			this.refreshPagination(true);
-
-			this.fire("after-data-change", [newValue, oldValue])
-		},
-		modifiedChanged: function() {},
-		edit: function(e) {
-			var row = e.model.row;
-			this.set('_editing', true, row);
-			if (this.editingRow && this.editingRow !== row) {
-				this.set('_editing', false, this.editingRow);
-			}
-			this.set('editingRow', row);
-			e.target.setAttribute('hidden', true);
-			e.target.previousElementSibling.removeAttribute('hidden');
-			Polymer.dom(e.target.previousElementSibling).querySelector('input,select,textarea').focus();
-		},
-		save: function(e) {
-			var row = e.model.row,
-					column = e.model.column,
-					editor,
-					reader;
-			if(row){
-				this.fire('before-save', {"event": e, "row" : row, "column" : column});
-				if ("CHECKBOX" === e.target.type.toUpperCase()) {
-					this.set(column.name, e.target.checked, row);
-				} else {
-					this.set(column.name, e.target.value,   row);
-				}
-				if (this.modified.indexOf(row) === -1) {
-					this.set('_modified', true, row);
-					this.push('modified', row);
-				}
-
-				if (!e.relatedTarget
-					|| !e.relatedTarget.templateInstance
-					|| e.relatedmodel.row !== e.model.row) {
-					this.set('_editing', false, row);
-
-					editor = e.target.parentElement;
-					reader = editor.nextElementSibling;
-					editor.setAttribute('hidden', true);
-					reader.removeAttribute('hidden');
-					reader.innerText = this.readContent(row, column);
-					if (row[column.name] !== undefined && row[column.name] !== '') {
-						reader.classList.remove('empty');
-					} else {
-						reader.classList.add('empty');
-					}
-				}
-
-				if (column.required && !e.target.validity.valid) {
-					this.fire('after-invalid', {"event": e, "row" : row, "column" : column});
-				}
-				this.fire('after-save', {"event": e, "row" : row, "column" : column});
-			}
-		},
-		sort: function(e, p) {
-			var column = e.model.column;
-
-			if(column && column.sortable){
-				var sortingColumn = column.name;
-				if (sortingColumn === this.sortedColumn){
-					this.set('descending', !this.descending);
-				} else {
-					this.set('sortedColumn', sortingColumn);
-				}
-			}
-
-			this.refreshPagination();
-		},
-		unsort: function() {
-			this.set('sortedColumn', "");
-			this.refreshPagination();
-		},
-		search: function(e, p) {
-			if(e.model.column){
-				var searchedColumn = e.model.column.name,
-				i,
-				len,
-				data = this.data;
-
-				for (i = 0,len=data.length; i < len; i++) {
-					var matched = false;
-					data[i]._not_matched_columns = data[i]._not_matched_columns || [];
-
-					var customSearchFunction = this.customFunctions[e.model.column['filter-function-name']];
-					if (customSearchFunction) {
-						matched = customSearchFunction(e.target.value, data[i][searchedColumn]);
-					}
-					//checkbox will only filter checked data[i]s.
-					else {
-						if ("CHECKBOX" === e.target.type.toUpperCase()) {
-							matched = !e.target.checked || data[i][searchedColumn];
-						} else if (
-							// empty search means it always match
-							e.target.value === ""
-							||
-							// non-empty search and the content matches.
-							data[i][searchedColumn].toString()
-							&& data[i][searchedColumn].toString().toLowerCase().indexOf(e.target.value.toString().toLowerCase()) > -1) {
-							matched = true;
-						}
-					}
-
-					if (matched) {
-						if (data[i]._not_matched_columns.indexOf(searchedColumn) > -1) {
-							// then we remove matched column from _not_matched_columns list.
-							data[i]._not_matched_columns.splice(data[i]._not_matched_columns.indexOf(searchedColumn), 1);
-						}
-						// update _filtered state
-						// true if there's other not-matched_column
-						// false if all column matches.
-						data[i]._filtered = data[i]._not_matched_columns.length > 0;
-					} else {
-						// Not matched!
-						data[i]._filtered = true;
-						if (data[i]._not_matched_columns.indexOf(searchedColumn) === -1) {
-							data[i]._not_matched_columns.push(searchedColumn);
-						}
-					}
-				}
-
-				this.filtered = this.data.some(function(row){return row._filtered;});
-				this.refreshPagination();
-			}
-		},
-		clickSortChecked: function(){
-			this.groupBySelect = this.groupBySelect *-1;
-			if(this.groupBySelect == 0) {
-				this.groupBySelect = 1;
-			}
-			this.sortChecked();
-		},
-		sortChecked: function(){
-			//since the selected column is not connected to the row data logic a seperate function is needed.
-			//this will prevent cascading sorting and the selected column will need to be re-build to be a proper column
-			//set chart to default state before selected grouping
-			//this.set('sortedColumn', "");
-			this.refreshPagination();
-			this.set('sortedColumn', "selected");
-			//decide to group selected to top or bottom
-			if(this.groupBySelect == -1) {
-				var showPageOfSelected = [], i=0, pagesize = this.pagesize, unselected = null;
-				if(showPageOfSelected.length < pagesize) { //if page not full
-					var j =0; end = this.data.length, selectedLength = this.selectedRows.length
-					for (i; i<pagesize; i++) {//fill of page with unselected data
-						for(j; j<end; ++j) {//find unselected data
-								if(!this.data[j]._selected) {
-									unselected = this.data[j];
-									++j
-									break;
-								}
-						}
-						if(end - selectedLength == showPageOfSelected.length) {
-							break;
-						}
-						if(unselected) {//sanity check
-							showPageOfSelected.push(unselected);// add unselected data
-						}
-					}
-				}
-				if(showPageOfSelected.length < pagesize) {//fill of page with selected data
-					for (i=0; i<pagesize;) {
-						if(this.selectedRows[i]) {
-							showPageOfSelected.push(this.selectedRows[i]);
-						}
-						i++
-					}
-				}
-				this.set('viewingRows', showPageOfSelected);
-			} else if(this.groupBySelect == 1){
-				var showPageOfSelected = [], i=0, pagesize = this.pagesize, unselected=null;
-				if(this.selectedRows.length) {
-					for (i; i<pagesize; i++) {
-						if(this.selectedRows[i]) {
-							showPageOfSelected.push(this.selectedRows[i]);
-						}
-						else{
-							break;
-						}
-					}
-				}
-				if(showPageOfSelected.length < pagesize) { //if page not full
-					var j =0; end = this.data.length
-					for (i; i<pagesize; i++) {//fill rest of page with unselected data
-						for(j; j<end; ++j) {//find unselected data
-								if(!this.data[j]._selected) {
-									unselected = this.data[j];
-									++j
-									break;
-								}
-						}
-						if(unselected) {//sanity check
-							showPageOfSelected.push(unselected);// add unselected data
-						}
-					}
-				}
-				this.set('viewingRows', showPageOfSelected);
-			}
-		},
-		//==================
-		//pagination
-		firstPage: function() {
-			this.currentpage = 1;
-		},
-		prevPage: function() {
-			if ( this.currentpage > 1 ) {
-				this.currentpage--;
-			}
-		},
-		nextPage: function() {
-			if ( this.currentpage < this.pageCount ) {
-				this.currentpage++;
-			}
-		},
-		lastPage: function() {
-			this.currentpage = this.pageCount;
-		},
-		currentpageChanged: function(){
-			this.filterPage();
-			this.updateFirstAndLastDisplayedItemIndexes();
-		},
-		updateFirstAndLastDisplayedItemIndexes: function() {
-			this.firstItemIndex = (this.currentpage-1) * this.pagesize+1;
-			if (this.currentpage === this.pageCount) {
-				this.lastItemIndex = this.itemCount;
-			} else {
-				this.lastItemIndex = (this.currentpage)* this.pagesize;
-			}
-		},
-		changeDropDown: function(e) {
-			var size = parseInt(e.target.value),
-					index = this.sizelist.indexOf(size);
-			var parentElem = this.getClosest(e.target, 'select'),
-					optionList = Polymer.dom(parentElem).querySelectorAll("option");
-					optionList.forEach(function(option) {
-						if (parseInt(option.value) === parseInt(size)) {
-							option.setAttribute('selected', '');
-							e.target.selectedIndex = parseInt(index);
-						} else {
-							option.removeAttribute('selected');
-						}
-					});
-
-			this.changeSize(size);
-		},
-		changeSize: function(size) {
-			this.set('pagesize', size);
-		},
-		pagesizeChanged: function(newValue, oldValue){
-			this.pagesize = parseInt(this.pagesize);
-			this.refreshPagination();
-		},
-		_selectedRowsChanged: function(newValue, oldValue){
-			if (Array.isArray(newValue) && (newValue.splices === void 0)){
-				var sr = [];
-				sr.splices = {};
-				this.selectedRows = sr;
-			}
-		},
-		// fallback default sort function if per-column sort isn't specified.
-		_defaultSort: function(a, b) {
-			return this.descending ? (a.value < b.value ? 1 : -1) : (a.value > b.value ? 1 : -1);
-		},
-		_filterableToggled: function(changeRecord){
-			var _this = this,
-					i,
-					len,
-					toggeldSerachable = Polymer.dom(this.root).querySelectorAll('.filter-input'),
-					data = this.data;
-
-			if(this.filtered){
-				for (i = 0, len=toggeldSerachable.length; i<len; i++) {
-					toggeldSerachable[i].value='';
-				}
-
-				for (i = 0, len=data.length; i<len; i++) {
-					data[i]._filtered=false;
-				}
-
-				this.filtered = false;
-				this.refreshPagination();
-			}
-		},
-		// call this when total count is no changed.
-		filterPage: function() {
-			var from = (this.currentpage-1) * this.pagesize,
-					to   = from + this.pagesize,
-					_this = this,
-					filteredRows = this.filtered ? this.data.filter(function(r){return !r._filtered;}) : this.data;
-
-			if (this.sortedColumn) {
-				//work out if customr sort function exists for sorted column.
-				var sortFunction;
-				this.meta.forEach(function(obj){
-					if (this.sortedColumn === obj.name){
-						sortFunction = this.customFunctions[obj['sort-function-name']];
-					}
-				}, this);
-
-				if (!sortFunction) {
-					sortFunction = this._defaultSort;
-				}
-
-				// sorting map: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Sorting_maps
-				filteredRows =
-				filteredRows
-					.map(function(e, i){
-						var v = e[this.sortedColumn];
-						if (undefined === v || null === v) {
-							v = '';
-						}
-						return {
-							index: i,
-							value: typeof v === "string" ? v.toLowerCase() : v
-						};
-					}, this)
-					.sort(sortFunction.bind(this))
-					.map(function(e){
-						return filteredRows[e.index];
-					});
-			}
-			//this.sortChecked(filteredRows)
-			this.set('viewingRows', filteredRows.slice(from, to));
-			/* ugliest code i've written in a while.
-			/* the setTimeout is here to ensure that polymer finishes its redraw.
-			/* by using setTimeout, i'm taking this command out of scope, allowing the redraw to finish.
-			/* yes. it's ugly. sorry.*/
-
-			setTimeout(function() {
-				if (_this.selectedRows && _this.selectedRows.length) {
-					_this.findSelectedRows();
-				}
-			},0);
-
-		},
-		findSelectedRows: function() {
-			var viewingRows = this.viewingRows,
-					selectedRows = this.selectedRows,
-					resultsArray = [],
-					stringifiedViewedRowArray = [],
-					stringifiedSelectedRowArray = [],
-					result,
-					state,
-					index;
-
-			stringifiedViewedRowArray = this.createStringifiedJSONArray(viewingRows);
-			stringifiedSelectedRowArray = this.createStringifiedJSONArray(selectedRows);
-
-			resultsArray = stringifiedViewedRowArray.map(function(row, i) {
-				index = i; //set our index
-				state = (stringifiedSelectedRowArray.indexOf(row) > -1) ? true : false; //find out the state
-				return {"index": index, "state": state}; //and return the object
-			});
-
-			this.changeCheckboxState(resultsArray);
-		},
-		createStringifiedJSONArray: function(JSONArray) {
-			var i,
-					len,
-					resultArray = [];
-			for (i=0, len=JSONArray.length; i<len;i++) {
-				resultArray.push(JSON.stringify(JSONArray[i]));
-			}
-			return resultArray;
-		},
-		changeCheckboxState: function(resultsArray) {
-			if (this.selectedRows && this.selectedRows.length) {
-				var checkboxNodeList = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
-				resultsArray.forEach(function(result) {
-					checkboxNodeList[result.index].checked = result.state;
-				});
-			}
-		},
-		// call this when total count is change.
-		refreshPagination: function(keepInTheCurrentPage) {
-			if (!keepInTheCurrentPage) {
-				// Usually go to the first page is the best way to avoid chaos.
-				this.currentpage = 1;
-			}
-
-			// Cache the total page count and item count
-			var count = 0;
-			this.data.forEach(function(row) {
-				if (!row._filtered) {
-					count++;
-				}
-			});
-			this.itemCount = count;
-			this.pageCount = Math.ceil( count / this.pagesize );
-			this.updateFirstAndLastDisplayedItemIndexes();
-
-			// Update model bound to UI with filtered range
-			this.filterPage();
-		},
-
-
-		//=======================//
-		//data manipulation//
-		click: function(e,p) {
-			var column = e.model.column;
-			var row = e.model.row;
-			var detail = {"row" : row, "column" : column};
-			this.select(e,p);
-			this.fire('px-row-click', detail);
-		},
-		dbclick: function(e,p) {
-			var column = e.model.column,
-					row = e.model.row,
-					detail = {"row" : row, "column" : column};
-			this.fire('after-td-dbclick', detail);
-		},
-		select: function(e,p){
-			if (this.selectable) {
-				var row = e.model.row,
-						selectAllCheckbox;
-				this.fire('before-select', row);
-				if (this.selectedRows.indexOf(row) > -1) {
-					// the row is already selected, we'll remove it from the  selectedRows array.
-					this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
-					this.set('_selected', false, row);
-				} else {
-					this.push('selectedRows', row);
-					this.set('_selected', true, row);
-				}
-
-				if(e.target.type !== "checkbox") {
-					var parentElem = this.getClosest(e.target, '.tr');
-					Polymer.dom(parentElem).querySelector("input").checked = row._selected;
-				}
-
-				/* this is commented out since it disables the checkbox from being checked.
-				/* leaving this here for when we add editing functionality */
-				// if (!row._editing) {
-				// 	e.preventDefault();
-				// }
-				this.groupBySelect = 0; //
-				selectAllCheckbox = Polymer.dom(this.root).querySelector("#filter");
-				selectAllCheckbox.querySelector("input[type=checkbox]").checked = false;
-				this.fire('after-select', row);
-			}
-		},
-		create: function(obj) {
-			this.fire('before-create', obj);
-			var _default = {_editing: true, _modified: true},
-					_new = obj instanceof Object ? obj : _default,
-					len,
-					i,
-					meta = this.meta;
-
-			for (i=0,len=meta.length;i<len;i++) {
-				if (meta[i].default && _new[meta[i].name] === undefined) {
-					_new[meta[i].name] = meta[i].default;
-				}
-			}
-
-			this.splice('data',0,0,_new);
-			this.splice('viewingRows',0,0,_new);
-			this.push('modified', _new);
-			this.fire('after-create', _new);
-		},
-		copy: function(e, detail, sender) {
-			var obj = e.model.row,
-					_new;
-
-			this.fire('before-copy', obj);
-			_new = JSON.parse(JSON.stringify(obj));
-			if (_new.id) {
-				delete _new.id;
-			}
-			_new._modified = true;
-			_new._editing = false;
-
-			this.splice('data',0,0,_new);
-			this.splice('viewingRows',0,0,_new);
-			this.push('modified', _new);
-			this.fire('after-copy', _new);
-		},
-		remove: function(e, detail, sender) {
-			var obj = e.model.row,
-					found_index,
-					found_index_in_modified;
-
-			this.fire('before-remove', obj);
-			found_index = this.data.indexOf(obj);
-			if (found_index !== -1) {
-				this.splice('data',found_index,1);
-				this.splice('viewingRows',found_index,1);
-				this.push('deleted', obj);
-			}
-			found_index_in_modified = this.modified.indexOf(obj);
-			if (found_index_in_modified !== -1) {
-				obj._modified = false;
-				this.splice('modified',found_index_in_modified,1);
-			}
-			this.fire('after-remove', obj);
-		},
-		movedown: function(e) {
-			var row = e.model.row;
-
-			this.fire('before-move-down', row);
-
-			if (this.sortedColumn) {
-				this.unsort();
-			}
-
-			this._movedown('viewingRows', row);
-			this._movedown('data', row);
-			this.fire('after-move-down', row);
-		},
-		_movedown: function(setName, row) {
-			var index = this.get(setName).indexOf(row),
-					newPosition = index + 1;
-
-			if (newPosition >= this.get(setName).length) {
-				newPosition = this.get(setName).length;
-			}
-
-			this.splice(setName,index,1);
-			this.splice(setName,newPosition,0,row);
-		},
-		moveup: function(e) {
-			var row = e.model.row;
-
-			this.fire('before-move-up', row);
-
-			if (this.sortedColumn) {
-				this.unsort();
-			}
-
-			this._moveup('viewingRows', row);
-			this._moveup('data', row);
-			this.fire('after-move-up', row);
-		},
-		_moveup: function(setName, row) {
-			var index = this.get(setName).indexOf(row),
-					newPosition = index - 1;
-
-			if (newPosition < 0) {
-				newPosition = 0;
-			}
-
-			this.splice(setName,index,1);
-			this.splice(setName,newPosition,0,row);
-		},
-		toggleFilters: function(e) {
-			e.target.classList.toggle('search');
-			e.target.classList.toggle('nosearch');
-			this.$$('#filter').classList.toggle('hide');
-		},
-		selectall: function(e,p){
-			var _this = this,
-					selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox'),
-					selectedRows = this.selectedRows,
-					data = this.data,
-					len,
-					i;
-			if(e.target.checked) {
-				for (i=0, len=selectedRows.length;i<len;i++) {
-					_this.set('_selected', false, selectedRows[i]);
-				}
-				//to ensure we don't have any doubles, we empty out the array first
-					_this.splice('selectedRows', 0, _this.selectedRows.length);
-				//next, we add EVERYTHING into the selectedRows array, and use set to set the property and notify Polymer
-				for (i = 0, len = data.length; i <len; i++) {
-					_this.push('selectedRows', data[i]);
-					_this.set('_selected', true, data[i]);
-				}
-				//lastly, we manually change the .checked property on the checkboxes.
-				for (i = 0, len = selectors.length ; i < len; i++) {
-					selectors[i].checked = true;
-				}
-			} else {
-				//this will reset our selectedRows array
-				_this.splice('selectedRows', 0, _this.selectedRows.length);
-
-				//set _selected to false on each row
-				for (i = 0, len = data.length; i <len; i++) {
-					_this.set('_selected', false, data[i]);
-				}
-				//and unckeck our checkboxes
-				for (i = 0, len = selectors.length; i < len; i++) {
-					selectors[i].checked = false;
-				}
-			}
-			if (selectedRows.length) {
-				this.fire('SelectAll', selectedRows);
-			} else {
-				this.fire('unselectAll');
-			}
-		},
-		pagerButtons: function(pageCount, currentpage) {
-			if (this.pageCount){
-				var noOfPagerButtons = 0,
-						pagerNavButtonsConfig=[],
-						i;
-
-				if (this.pageCount <= 9) {
-					noOfPagerButtons = this.pageCount;
-					pagerNavButtonsConfig = Array.apply(null, Array(noOfPagerButtons)).map(
-						function (val, index) {
-							return {val: index+1};
-					});
-				}
-				else if (this.pageCount <= currentpage + 3 ) {
-					noOfPagerButtons = 9;
-					pagerNavButtonsConfig.push({val: 1});
-					pagerNavButtonsConfig.push({val: '...'});
-
-					for (i = this.pageCount - 6; i <= this.pageCount;i++){
-						pagerNavButtonsConfig.push({val: i});
-					}
-				}
-				else {
-					noOfPagerButtons = 9;
-					if (currentpage <= 5){
-						pagerNavButtonsConfig = Array.apply(null, Array(7)).map(
-							function (val, index) {
-								return {val: index+1};
-						});
-						pagerNavButtonsConfig.push({val: '...'});
-						pagerNavButtonsConfig.push({val: this.pageCount});
-					}
-					else {
-						pagerNavButtonsConfig.push({val: 1});
-						pagerNavButtonsConfig.push({val: '...'});
-						for (i = currentpage - 3; i < currentpage+2;i++){
-							pagerNavButtonsConfig.push({val: i});
-						}
-						pagerNavButtonsConfig.push({val: '...'});
-						pagerNavButtonsConfig.push({val: this.pageCount});
-					}
-				}
-				return pagerNavButtonsConfig;
-			}
-		},
-		gotoPage: function(evt){
-			this.currentpage = parseInt(evt.target.textContent);
-		},
-		getClosest: function(elem, selector) {
-    var firstChar = selector.charAt(0);
-    // Get closest match
-    for ( ; elem && elem !== document; elem = elem.parentNode ) {
-        // If selector is a class
-        if ( firstChar === '.' ) {
-            if ( elem.classList.contains( selector.substr(1) ) ) {
-                return elem;
-            }
-        }
-        // If selector is an ID
-        if ( firstChar === '#' ) {
-            if ( elem.id === selector.substr(1) ) {
-                return elem;
-            }
-        }
-        // If selector is a data attribute
-        if ( firstChar === '[' ) {
-            if ( elem.hasAttribute( selector.substr(1, selector.length - 2) ) ) {
-                return elem;
-            }
-        }
-        // If selector is a tag
-        if ( elem.tagName.toLowerCase() === selector ) {
-            return elem;
-        }
+    },
+    _getSecondHeaderClass: function(filterable) {
+      var classList = ['tr'];
+      if(!filterable) {
+        classList.push('hidden');
+      }
+      return classList.join(' ');
+    },
+    _getSortingClass: function(column, sortingColumn, descending) {
+      var classList = ['u-ml-', 'sorting', 'fa'];
+      if(sortingColumn === column.name) {
+        classList.push(descending ? 'fa-caret-down' : 'fa-caret-up');
+      }
+      return classList.join(' ');
+    },
+    _getTextSortingClass: function(column, sortingColumn) {
+      var classList = ['column-head'];
+      if(sortingColumn === column.name) {
+        classList.push('sorted-text');
+      }
+      return classList.join(' ');
+    },
+    _getCellClass: function(name) {
+      return ['td ', 'aha-', name, '-td'].join('');
+    },
+    _getTableClass: function(tableRows, tableColumns) {
+      var classList = ['table', 'table--small'];
+      if(tableRows) {
+        classList.push('table--rows');
+      }
+      if(tableColumns) {
+        classList.push('table--columns');
+      }
+      return classList.join(' ');
+    },
+    _isTextType: function(type) {
+      return type !== 'choice' && type !== 'boolean';
     }
-    return false;
-}
-	});
+  });
 </script>
 
 <!--
@@ -1385,21 +713,21 @@
  */
 -->
 <script>
-    Polymer({
-        is: "aha-html-echo",
-        properties: {
-            //column name
-            html: {
-                type: String,
-                value: "",
-                observer: "onHtmlChanged"
-            }
-        },
-        onHtmlChanged: function() {
-						if (!this.html){
-							this.html = "";
-						}
-            this.innerHTML = this.html;
-        }
-    });
+  Polymer({
+    is: "aha-html-echo",
+    properties: {
+      //column name
+      html: {
+        type: String,
+        value: "",
+        observer: "onHtmlChanged"
+      }
+    },
+    onHtmlChanged: function() {
+      if(!this.html) {
+        this.html = "";
+      }
+      this.innerHTML = this.html;
+    }
+  });
 </script>
