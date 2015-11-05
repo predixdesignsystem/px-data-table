@@ -24,10 +24,10 @@
         <span class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <span class$="{{_getHeaderClass(column)}}">
-              <span
+              <label
                 class$="{{_getTextSortingClass(column, sortedColumn)}}"
                 on-click="_sort">{{column.label}}<i class$="{{_getSortingClass(column, sortedColumn, descending)}}"></i>
-              </span>
+              </label>
             </span>
           </template>
         </span>
@@ -515,10 +515,11 @@
       var column = e.model.column;
       var row = e.model.row;
       var detail = {"row": row, "column": column};
-      this.fire('px-row-click', detail);
 
       if(this.selectable) {
         this._selectRow(row, e.model.index);
+
+        this.fire('px-row-click', detail); // fire the event after it is marked selected
 
         // always just make sure selectAll checkbox is unchecked when 1 row is clicked
         var selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
