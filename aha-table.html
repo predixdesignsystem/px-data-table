@@ -971,16 +971,30 @@
         this.notifyPath('displayedRows.' + i + '._selected', this.displayedRows[i]._selected);
       }
 
+      // remove everything from user-facing selectedRows property
+      this.splice('selectedRows', 0, this.selectedRows.length);
+      if(isSelected) {
+        // add everything to selectedRows property
+        for(i = 0; i < this.data.length; i++) {
+          this.push('selectedRows', this.data[i]);
+        }
+      }
+
+      this.fire('px-select-all-click', this.selectedRows);
+
     },
 		selectRow: function(row, indexInDisplayedRows) {
 
       if(row._selected) {
         row._selected = false;
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
+        this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
       }
       else {
         row._selected = true;
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
+        this.push('selectedRows', row);
+
       }
 
       this.fire('after-select', row);
