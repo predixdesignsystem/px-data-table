@@ -88,8 +88,8 @@
             <!-- select all checkbox -->
             <template is="dom-if" if="{{isSelectAllColumn(column)}}">
               <div class="flex flex--center">
-                <input type="checkbox"
-                  on-change="selectAll"
+                <input id="selectAllCheckbox" type="checkbox"
+                  on-change="clickSelectAll"
                   title$="{{selectalltitle}}"/>
               </div>
             </template>
@@ -122,61 +122,62 @@
 			</span>
 
       <!-- Data rows -->
-			<template id="recordList" is="dom-repeat" items="{{viewingRows}}" as="row">
-				<span class$="{{getRowClass(row, row._selected)}}" foo="{{row._selected}}" on-click="selectRow">
+			<template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="row">
+				<span class$="{{getRowClass(row, row._selected)}}" foo="{{row._selected}}" on-click="clickRow">
 					<template is="dom-repeat" items="{{meta}}" as="column">
 						<span
-							on-dblclick="dbclick"
-							title="{{getEditTitle(column.editable, edittitle)}}"
 							class$="{{getCellClass(column.name)}}">
-							<div hidden>
-								<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">
-									<select
-										required$="{{column.required}}"
-										on-blur="save">
-										<template is="dom-repeat" items="{{column.options}}" as="option">
-											<option
-												selected$="{{isOptionSelected(option.value, row, column.name)}}"
-												value="{{option.value}}">{{option.label}}</option>
-										</template>
-									</select>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'string')}}">
-									<input type="text"
-										required$="{{column.required}}"
-										on-blur="save"
-										value$="{{getValue(row,column.name)}}"/>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'date')}}">
-									<input type="date"
-										required?="{{column.required}}"
-										on-blur="save"
-										value$="{{getValue(row,column.name)}}"/>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'time')}}">
-									<input type="time"
-										required?="{{column.required}}"
-										on-blur="save"
-										value$="{{getValue(row,column.name)}}"/>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'datetime')}}">
-									<input type="datetime"
-										required?="{{column.required}}"
-										on-blur="save"
-										value$="{{getValue(row,column.name)}}"/>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'text')}}">
-									<textarea
-										required?="{{column.required}}"
-										on-blur="save">{{getValue(row,column.name)}}</textarea>
-								</template>
-								<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">
-									<input type="checkbox"
-										on-change="save"
-										on-blur="save"
-										checked$="{{getValue(row,column.name)}}" />
-								</template>
-							</div>
+
+							<!--on-dblclick="dbclick"-->
+							<!--title="{{getEditTitle(column.editable, edittitle)}}"-->
+							<!--<div hidden>-->
+								<!--<template is="dom-if" if="{{isEqual(column.type, 'choice')}}">-->
+									<!--<select-->
+										<!--required$="{{column.required}}"-->
+										<!--on-blur="save">-->
+										<!--<template is="dom-repeat" items="{{column.options}}" as="option">-->
+											<!--<option-->
+												<!--selected$="{{isOptionSelected(option.value, row, column.name)}}"-->
+												<!--value="{{option.value}}">{{option.label}}</option>-->
+										<!--</template>-->
+									<!--</select>-->
+								<!--</template>-->
+								<!--<template is="dom-if" if="{{isEqual(column.type, 'string')}}">-->
+									<!--<input type="text"-->
+										<!--required$="{{column.required}}"-->
+										<!--on-blur="save"-->
+										<!--value$="{{getValue(row,column.name)}}"/>-->
+								<!--</template>-->
+								<!--<template is="dom-if" if="{{isEqual(column.type, 'date')}}">-->
+									<!--<input type="date"-->
+										<!--required?="{{column.required}}"-->
+										<!--on-blur="save"-->
+										<!--value$="{{getValue(row,column.name)}}"/>-->
+								<!--</template>-->
+								<!--<template is="dom-if" if="{{isEqual(column.type, 'time')}}">-->
+									<!--<input type="time"-->
+										<!--required?="{{column.required}}"-->
+										<!--on-blur="save"-->
+										<!--value$="{{getValue(row,column.name)}}"/>-->
+								<!--</template>-->
+								<!--<template is="dom-if" if="{{isEqual(column.type, 'datetime')}}">-->
+									<!--<input type="datetime"-->
+										<!--required?="{{column.required}}"-->
+										<!--on-blur="save"-->
+										<!--value$="{{getValue(row,column.name)}}"/>-->
+								<!--</template>-->
+								<!--<template is="dom-if" if="{{isEqual(column.type, 'text')}}">-->
+									<!--<textarea-->
+										<!--required?="{{column.required}}"-->
+										<!--on-blur="save">{{getValue(row,column.name)}}</textarea>-->
+								<!--</template>-->
+								<!--<template is="dom-if" if="{{isEqual(column.type, 'boolean')}}">-->
+									<!--<input type="checkbox"-->
+										<!--on-change="save"-->
+										<!--on-blur="save"-->
+										<!--checked$="{{getValue(row,column.name)}}" />-->
+								<!--</template>-->
+							<!--</div>-->
 	            <div
 
 								class$="{{getReaderClass(row, column.name)}}">
@@ -363,7 +364,7 @@
 				value: false
 			},
 			//editingRow: current rows in display/view
-			viewingRows : {
+			displayedRows : {
 				type: Array,
 				value: function() { return []; }
 			},
@@ -531,7 +532,7 @@
         this.set('_selected', false, this.data[i]);
       }
 
-			this.refreshDataInTable(true);
+			this.filterSortAndUpdateDisplayedTable();
 		},
     _generateMetaFromData: function() {
       var meta = [];
@@ -558,18 +559,18 @@
         selectAll: isSelectAll
       };
     },
-		modifiedChanged: function() {},
-		edit: function(e) {
-			var row = e.model.row;
-			this.set('_editing', true, row);
-			if (this.editingRow && this.editingRow !== row) {
-				this.set('_editing', false, this.editingRow);
-			}
-			this.set('editingRow', row);
-			e.target.setAttribute('hidden', true);
-			e.target.previousElementSibling.removeAttribute('hidden');
-			Polymer.dom(e.target.previousElementSibling).querySelector('input,select,textarea').focus();
-		},
+//		modifiedChanged: function() {},
+//		edit: function(e) {
+//			var row = e.model.row;
+//			this.set('_editing', true, row);
+//			if (this.editingRow && this.editingRow !== row) {
+//				this.set('_editing', false, this.editingRow);
+//			}
+//			this.set('editingRow', row);
+//			e.target.setAttribute('hidden', true);
+//			e.target.previousElementSibling.removeAttribute('hidden');
+//			Polymer.dom(e.target.previousElementSibling).querySelector('input,select,textarea').focus();
+//		},
 //		save: function(e) {
 //			var row = e.model.row,
 //					column = e.model.column,
@@ -620,12 +621,12 @@
 					this.set('sortedColumn', sortingColumn);
 				}
 			}
-			this.refreshDataInTable();
+			this.filterSortAndUpdateDisplayedTable();
 		},
-		unsort: function() {
-			this.set('sortedColumn', "");
-			this.refreshDataInTable();
-		},
+//		unsort: function() {
+//			this.set('sortedColumn', "");
+//			this.filterSortAndUpdateDisplayedTable();
+//		},
 		filter: function(e, p) {
       var column = e.model.column;
 
@@ -658,7 +659,7 @@
           this.filteredColumns.push({"name": column.name, "userEntry": userEntry});
         }
 
-        this.refreshDataInTable();
+        this.filterSortAndUpdateDisplayedTable();
 
       }
     },
@@ -680,81 +681,81 @@
       }
       return (cellValue.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
     },
-		_filterableToggled: function(changeRecord){
-			var _this = this,
-					i,
-					len,
-					toggeldSerachable = Polymer.dom(this.root).querySelectorAll('.filter-input'),
-					data = this.data;
-
-			if(this.filtered){
-				for (i = 0, len=toggeldSerachable.length; i<len; i++) {
-					toggeldSerachable[i].value='';
-				}
-
-				for (i = 0, len=data.length; i<len; i++) {
-					data[i]._filtered=false;
-				}
-
-				this.filtered = false;
-				this.refreshDataInTable();
-			}
-		},
-		// call this when total count is no changed.
-		filterPage: function() {
-			var from = (this.currentpage-1) * this.pagesize,
-					to   = from + this.pagesize,
-					_this = this,
-					filteredRows = this.filtered ? this.data.filter(function(r){return !r._filtered;}) : this.data;
-
-			if (this.sortedColumn) {
-				//work out if customr sort function exists for sorted column.
-				var sortFunction;
-				this.meta.forEach(function(obj){
-					if (this.sortedColumn === obj.name){
-						sortFunction = this.customFunctions[obj['sort-function-name']];
-					}
-				}, this);
-
-				if (!sortFunction) {
-					sortFunction = this._defaultSort;
-				}
-
-				// sorting map: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Sorting_maps
-				filteredRows =
-				filteredRows
-					.map(function(e, i){
-						var v = e[this.sortedColumn];
-						if (undefined === v || null === v) {
-							v = '';
-						}
-						return {
-							index: i,
-							value: typeof v === "string" ? v.toLowerCase() : v
-						};
-					}, this)
-					.sort(sortFunction.bind(this))
-					.map(function(e){
-						return filteredRows[e.index];
-					});
-			}
-
-			this.set('viewingRows', filteredRows.slice(from, to));
-
-//			/* ugliest code i've written in a while.
-//			/* the setTimeout is here to ensure that polymer finishes its redraw.
-//			/* by using setTimeout, i'm taking this command out of scope, allowing the redraw to finish.
-//			/* yes. it's ugly. sorry.*/
+//		_filterableToggled: function(changeRecord){
+//			var _this = this,
+//					i,
+//					len,
+//					toggeldSerachable = Polymer.dom(this.root).querySelectorAll('.filter-input'),
+//					data = this.data;
 //
-//			setTimeout(function() {
-//				if (_this.selectedRows && _this.selectedRows.length) {
-//					_this.findSelectedRows();
+//			if(this.filtered){
+//				for (i = 0, len=toggeldSerachable.length; i<len; i++) {
+//					toggeldSerachable[i].value='';
 //				}
-//			},0);
-
-		},
+//
+//				for (i = 0, len=data.length; i<len; i++) {
+//					data[i]._filtered=false;
+//				}
+//
+//				this.filtered = false;
+//				this.refreshDataInTable();
+//			}
+//		},
+//		// call this when total count is no changed.
+//		filterPage: function() {
+//			var from = (this.currentpage-1) * this.pagesize,
+//					to   = from + this.pagesize,
+//					_this = this,
+//					filteredRows = this.filtered ? this.data.filter(function(r){return !r._filtered;}) : this.data;
+//
+//			if (this.sortedColumn) {
+//				//work out if customr sort function exists for sorted column.
+//				var sortFunction;
+//				this.meta.forEach(function(obj){
+//					if (this.sortedColumn === obj.name){
+//						sortFunction = this.customFunctions[obj['sort-function-name']];
+//					}
+//				}, this);
+//
+//				if (!sortFunction) {
+//					sortFunction = this._defaultSort;
+//				}
+//
+//				// sorting map: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Sorting_maps
+//				filteredRows =
+//				filteredRows
+//					.map(function(e, i){
+//						var v = e[this.sortedColumn];
+//						if (undefined === v || null === v) {
+//							v = '';
+//						}
+//						return {
+//							index: i,
+//							value: typeof v === "string" ? v.toLowerCase() : v
+//						};
+//					}, this)
+//					.sort(sortFunction.bind(this))
+//					.map(function(e){
+//						return filteredRows[e.index];
+//					});
+//			}
+//
+//			this.set('displayedRows', filteredRows.slice(from, to));
+//
+////			/* ugliest code i've written in a while.
+////			/* the setTimeout is here to ensure that polymer finishes its redraw.
+////			/* by using setTimeout, i'm taking this command out of scope, allowing the redraw to finish.
+////			/* yes. it's ugly. sorry.*/
+////
+////			setTimeout(function() {
+////				if (_this.selectedRows && _this.selectedRows.length) {
+////					_this.findSelectedRows();
+////				}
+////			},0);
+//
+//		},
 //		findSelectedRows: function() {
-//			var viewingRows = this.viewingRows,
+//			var displayedRows = this.displayedRows,
 //					selectedRows = this.selectedRows,
 //					resultsArray = [],
 //					stringifiedViewedRowArray = [],
@@ -763,7 +764,7 @@
 //					state,
 //					index;
 //
-//			stringifiedViewedRowArray = this.createStringifiedJSONArray(viewingRows);
+//			stringifiedViewedRowArray = this.createStringifiedJSONArray(displayedRows);
 //			stringifiedSelectedRowArray = this.createStringifiedJSONArray(selectedRows);
 //
 //			resultsArray = stringifiedViewedRowArray.map(function(row, i) {
@@ -774,43 +775,45 @@
 //
 //			this.changeCheckboxState(resultsArray);
 //		},
-		createStringifiedJSONArray: function(JSONArray) {
-			var i,
-					len,
-					resultArray = [];
-			for (i=0, len=JSONArray.length; i<len;i++) {
-				resultArray.push(JSON.stringify(JSONArray[i]));
-			}
-			return resultArray;
-		},
-		changeCheckboxState: function(resultsArray) {
-//			if (this.selectedRows && this.selectedRows.length) {
-//				var checkboxNodeList = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
-//				resultsArray.forEach(function(result) {
-//					checkboxNodeList[result.index].checked = result.state;
-//				});
+//		createStringifiedJSONArray: function(JSONArray) {
+//			var i,
+//					len,
+//					resultArray = [];
+//			for (i=0, len=JSONArray.length; i<len;i++) {
+//				resultArray.push(JSON.stringify(JSONArray[i]));
 //			}
-		},
+//			return resultArray;
+//		},
+//		changeCheckboxState: function(resultsArray) {
+////			if (this.selectedRows && this.selectedRows.length) {
+////				var checkboxNodeList = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox');
+////				resultsArray.forEach(function(result) {
+////					checkboxNodeList[result.index].checked = result.state;
+////				});
+////			}
+//		},
 
-		refreshDataInTable: function() {
+		filterSortAndUpdateDisplayedTable: function() {
 
       this.filteredSortedData = this.data;
 
-      // reset back to falses
+      // reset back to unfiltered
       for (var i = 0; i < this.data.length; i++) {
         this.set('_filtered', false, this.data[i]);
       }
 
+      // sort
       if(this.sortedColumn) {
         this.filteredSortedData = this.sortByColumn(this.filteredSortedData);
       }
 
+      // filter
       for(var index in this.filteredColumns) {
         this.filteredSortedData = this.filterByColumn(this.filteredColumns[index].name,
           this.filteredColumns[index].userEntry, this.filteredSortedData);
       }
 
-			// update the total number of rows
+			// count total number of rows
 			var count = 0;
 			this.data.forEach(function(row) {
 				if (!row._filtered) {
@@ -819,8 +822,26 @@
 			});
       this.set('numberOfItems', count);
 
-      this.updateViewingRows();
+      this.updateDisplayedRows();
 		},
+
+    observers: [
+      'updateDisplayedRows(firstItemIndex)', // when the first item to display changes
+      'updateDisplayedRows(pageSize)' // when the size of the page changes
+    ],
+
+    updateDisplayedRows: function() {
+
+      if(this.firstItemIndex !== null && this.firstItemIndex !== undefined && this.pageSize !== null && this.pageSize !== undefined) {
+
+        var from = this.firstItemIndex - 1; // pagination is 1-based
+        var to   = from + this.pageSize;
+
+        this.set('displayedRows', this.filteredSortedData.slice(from, to));
+
+      }
+
+    },
 
     filterByColumn: function(columnName, userEntry, rowsToFilter) {
 
@@ -911,48 +932,60 @@
       return sortFunction;
     },
 
-    observers: [
-      'updateViewingRows(firstItemIndex)', // when the first item to display changes
-      'updateViewingRows(pageSize)' // when the size of the page changes
-    ],
-
-    updateViewingRows: function() {
-
-      if(this.firstItemIndex !== null && this.firstItemIndex !== undefined && this.pageSize !== null && this.pageSize !== undefined) {
-
-        var from = this.firstItemIndex - 1; // pagination is 1-based
-        var to   = from + this.pageSize;
-
-        this.set('viewingRows', this.filteredSortedData.slice(from, to));
-
-      }
-
-    },
-
 
 		//=======================//
 		//data manipulation//
-		selectRow: function(e,p) {
-			var column = e.model.column;
-			var row = e.model.row;
-			var detail = {"row" : row, "column" : column};
-			this.fire('px-row-click', detail);
+    clickRow: function(e) {
+      var column = e.model.column;
+      var row = e.model.row;
+      var detail = {"row" : row, "column" : column};
+      this.fire('px-row-click', detail);
 
       if (this.selectable) {
-        var row = e.model.row,
-          selectAllCheckbox;
-        this.fire('before-select', row);
+        this.selectRow(row, e.model.index);
 
-        if(row._selected) {
-          row._selected = false;
-          this.notifyPath('viewingRows.' + e.model.index + '._selected', row._selected);
-        }
-        else {
-          row._selected = true;
-          this.notifyPath('viewingRows.' + e.model.index + '._selected', row._selected);
-        }
+        // always just make sure selectAll checkbox is unchecked when 1 row is clicked
+        var selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+        selectAllCheckbox.checked = false;
+      }
+    },
+    clickSelectAll: function(e) {
 
-        //
+      if(e.target.checked) {
+        this.setAllRows(true); // selected
+      }
+      else {
+        this.setAllRows(false); // unselected
+      }
+
+    },
+    setAllRows: function(isSelected) {
+
+      // set all rows selected/unselected
+      for(var i=0; i<this.data.length; i++) {
+        this.data[i]._selected = isSelected;
+      }
+
+      // notify viewing rows of change
+      for(var i=0; i<this.displayedRows.length; i++) {
+        this.notifyPath('displayedRows.' + i + '._selected', this.displayedRows[i]._selected);
+      }
+
+    },
+		selectRow: function(row, indexInDisplayedRows) {
+
+      if(row._selected) {
+        row._selected = false;
+        this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
+      }
+      else {
+        row._selected = true;
+        this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
+      }
+
+      this.fire('after-select', row);
+
+      //
 //				if (this.selectedRows.indexOf(row) > -1) {
 //					// the row is already selected, we'll remove it from the  selectedRows array.
 //					this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
@@ -973,147 +1006,122 @@
         // 	e.preventDefault();
         // }
 //
-//        selectAllCheckbox = Polymer.dom(this.root).querySelector("#filter");
-//        selectAllCheckbox.querySelector("input[type=checkbox]").checked = false;
-        this.fire('after-select', row);
-      }
 
 		},
-		dbclick: function(e,p) {
-			var column = e.model.column,
-					row = e.model.row,
-					detail = {"row" : row, "column" : column};
-			this.fire('after-td-dbclick', detail);
-		},
-		create: function(obj) {
-			this.fire('before-create', obj);
-			var _default = {_editing: true, _modified: true},
-					_new = obj instanceof Object ? obj : _default,
-					len,
-					i,
-					meta = this.meta;
-
-			for (i=0,len=meta.length;i<len;i++) {
-				if (meta[i].default && _new[meta[i].name] === undefined) {
-					_new[meta[i].name] = meta[i].default;
-				}
-			}
-
-			this.splice('data',0,0,_new);
-			this.splice('viewingRows',0,0,_new);
-			this.push('modified', _new);
-			this.fire('after-create', _new);
-		},
-		copy: function(e, detail, sender) {
-			var obj = e.model.row,
-					_new;
-
-			this.fire('before-copy', obj);
-			_new = JSON.parse(JSON.stringify(obj));
-			if (_new.id) {
-				delete _new.id;
-			}
-			_new._modified = true;
-			_new._editing = false;
-
-			this.splice('data',0,0,_new);
-			this.splice('viewingRows',0,0,_new);
-			this.push('modified', _new);
-			this.fire('after-copy', _new);
-		},
-		remove: function(e, detail, sender) {
-			var obj = e.model.row,
-					found_index,
-					found_index_in_modified;
-
-			this.fire('before-remove', obj);
-			found_index = this.data.indexOf(obj);
-			if (found_index !== -1) {
-				this.splice('data',found_index,1);
-				this.splice('viewingRows',found_index,1);
-				this.push('deleted', obj);
-			}
-			found_index_in_modified = this.modified.indexOf(obj);
-			if (found_index_in_modified !== -1) {
-				obj._modified = false;
-				this.splice('modified',found_index_in_modified,1);
-			}
-			this.fire('after-remove', obj);
-		},
-		movedown: function(e) {
-			var row = e.model.row;
-
-			this.fire('before-move-down', row);
-
-			if (this.sortedColumn) {
-				this.unsort();
-			}
-
-			this._movedown('viewingRows', row);
-			this._movedown('data', row);
-			this.fire('after-move-down', row);
-		},
-		_movedown: function(setName, row) {
-			var index = this.get(setName).indexOf(row),
-					newPosition = index + 1;
-
-			if (newPosition >= this.get(setName).length) {
-				newPosition = this.get(setName).length;
-			}
-
-			this.splice(setName,index,1);
-			this.splice(setName,newPosition,0,row);
-		},
-		moveup: function(e) {
-			var row = e.model.row;
-
-			this.fire('before-move-up', row);
-
-			if (this.sortedColumn) {
-				this.unsort();
-			}
-
-			this._moveup('viewingRows', row);
-			this._moveup('data', row);
-			this.fire('after-move-up', row);
-		},
-		_moveup: function(setName, row) {
-			var index = this.get(setName).indexOf(row),
-					newPosition = index - 1;
-
-			if (newPosition < 0) {
-				newPosition = 0;
-			}
-
-			this.splice(setName,index,1);
-			this.splice(setName,newPosition,0,row);
-		},
-		toggleFilters: function(e) {
-			e.target.classList.toggle('search');
-			e.target.classList.toggle('nosearch');
-			this.$$('#filter').classList.toggle('hide');
-		},
-    selectAll: function(e) {
-      if(e.target.checked) {
-
-        // select all rows
-        for(var i=0; i<this.data.length; i++) {
-          this.data[i]._selected = true;
-        }
-      }
-      else {
-        // unselect everything
-        for(var i=0; i<this.data.length; i++) {
-          this.data[i]._selected = false;
-        }
-      }
-
-      // notify viewing rows of change
-      for(var i=0; i<this.viewingRows.length; i++) {
-        this.notifyPath('viewingRows.' + i + '._selected', this.viewingRows[i]._selected);
-      }
-
-    },
+//		dbclick: function(e,p) {
+//			var column = e.model.column,
+//					row = e.model.row,
+//					detail = {"row" : row, "column" : column};
+//			this.fire('after-td-dbclick', detail);
+//		},
+//		create: function(obj) {
+//			this.fire('before-create', obj);
+//			var _default = {_editing: true, _modified: true},
+//					_new = obj instanceof Object ? obj : _default,
+//					len,
+//					i,
+//					meta = this.meta;
+//
+//			for (i=0,len=meta.length;i<len;i++) {
+//				if (meta[i].default && _new[meta[i].name] === undefined) {
+//					_new[meta[i].name] = meta[i].default;
+//				}
+//			}
+//
+//			this.splice('data',0,0,_new);
+//			this.splice('displayedRows',0,0,_new);
+//			this.push('modified', _new);
+//			this.fire('after-create', _new);
+//		},
+//		copy: function(e, detail, sender) {
+//			var obj = e.model.row,
+//					_new;
+//
+//			this.fire('before-copy', obj);
+//			_new = JSON.parse(JSON.stringify(obj));
+//			if (_new.id) {
+//				delete _new.id;
+//			}
+//			_new._modified = true;
+//			_new._editing = false;
+//
+//			this.splice('data',0,0,_new);
+//			this.splice('displayedRows',0,0,_new);
+//			this.push('modified', _new);
+//			this.fire('after-copy', _new);
+//		},
+//		remove: function(e, detail, sender) {
+//			var obj = e.model.row,
+//					found_index,
+//					found_index_in_modified;
+//
+//			this.fire('before-remove', obj);
+//			found_index = this.data.indexOf(obj);
+//			if (found_index !== -1) {
+//				this.splice('data',found_index,1);
+//				this.splice('displayedRows',found_index,1);
+//				this.push('deleted', obj);
+//			}
+//			found_index_in_modified = this.modified.indexOf(obj);
+//			if (found_index_in_modified !== -1) {
+//				obj._modified = false;
+//				this.splice('modified',found_index_in_modified,1);
+//			}
+//			this.fire('after-remove', obj);
+//		},
+//		movedown: function(e) {
+//			var row = e.model.row;
+//
+//			this.fire('before-move-down', row);
+//
+//			if (this.sortedColumn) {
+//				this.unsort();
+//			}
+//
+//			this._movedown('displayedRows', row);
+//			this._movedown('data', row);
+//			this.fire('after-move-down', row);
+//		},
+//		_movedown: function(setName, row) {
+//			var index = this.get(setName).indexOf(row),
+//					newPosition = index + 1;
+//
+//			if (newPosition >= this.get(setName).length) {
+//				newPosition = this.get(setName).length;
+//			}
+//
+//			this.splice(setName,index,1);
+//			this.splice(setName,newPosition,0,row);
+//		},
+//		moveup: function(e) {
+//			var row = e.model.row;
+//
+//			this.fire('before-move-up', row);
+//
+//			if (this.sortedColumn) {
+//				this.unsort();
+//			}
+//
+//			this._moveup('displayedRows', row);
+//			this._moveup('data', row);
+//			this.fire('after-move-up', row);
+//		},
+//		_moveup: function(setName, row) {
+//			var index = this.get(setName).indexOf(row),
+//					newPosition = index - 1;
+//
+//			if (newPosition < 0) {
+//				newPosition = 0;
+//			}
+//
+//			this.splice(setName,index,1);
+//			this.splice(setName,newPosition,0,row);
+//		},
+//		toggleFilters: function(e) {
+//			e.target.classList.toggle('search');
+//			e.target.classList.toggle('nosearch');
+//			this.$$('#filter').classList.toggle('hide');
+//		},
 //		selectall: function(e,p){
 //			var _this = this,
 //					selectors = Polymer.dom(this.root).querySelectorAll('.js-table__select-checkbox'),
@@ -1155,35 +1163,35 @@
 //				this.fire('unselectAll');
 //			}
 //		},
-		getClosest: function(elem, selector) {
-    var firstChar = selector.charAt(0);
-    // Get closest match
-    for ( ; elem && elem !== document; elem = elem.parentNode ) {
-        // If selector is a class
-        if ( firstChar === '.' ) {
-            if ( elem.classList.contains( selector.substr(1) ) ) {
-                return elem;
-            }
-        }
-        // If selector is an ID
-        if ( firstChar === '#' ) {
-            if ( elem.id === selector.substr(1) ) {
-                return elem;
-            }
-        }
-        // If selector is a data attribute
-        if ( firstChar === '[' ) {
-            if ( elem.hasAttribute( selector.substr(1, selector.length - 2) ) ) {
-                return elem;
-            }
-        }
-        // If selector is a tag
-        if ( elem.tagName.toLowerCase() === selector ) {
-            return elem;
-        }
-    }
-    return false;
-}
+//		getClosest: function(elem, selector) {
+//    var firstChar = selector.charAt(0);
+//    // Get closest match
+//    for ( ; elem && elem !== document; elem = elem.parentNode ) {
+//        // If selector is a class
+//        if ( firstChar === '.' ) {
+//            if ( elem.classList.contains( selector.substr(1) ) ) {
+//                return elem;
+//            }
+//        }
+//        // If selector is an ID
+//        if ( firstChar === '#' ) {
+//            if ( elem.id === selector.substr(1) ) {
+//                return elem;
+//            }
+//        }
+//        // If selector is a data attribute
+//        if ( firstChar === '[' ) {
+//            if ( elem.hasAttribute( selector.substr(1, selector.length - 2) ) ) {
+//                return elem;
+//            }
+//        }
+//        // If selector is a tag
+//        if ( elem.tagName.toLowerCase() === selector ) {
+//            return elem;
+//        }
+//    }
+//    return false;
+//}
 	});
 </script>
 

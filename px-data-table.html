@@ -222,6 +222,13 @@ Events:
 
       if(children.length > 0) {
         var meta = [];
+
+        // need the Selected column if the table is selectable
+        if(this.selectable) {
+          // add a selected column if selectable
+          meta.push(this.$.dataTable._generateMetaForColumn("Selected", "boolean", true));
+        }
+
         for(var i = 0; i < children.length; i++) {
           var column = {};
           for(var j = 0; j < children[i].attributes.length; j++) {
@@ -251,10 +258,10 @@ Events:
             if(!column['type']) {
               column['type'] = 'string';
             }
-
           }
           meta.push(column);
         }
+
         this.set('meta', meta);
       }
     },
