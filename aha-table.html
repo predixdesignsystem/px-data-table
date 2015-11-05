@@ -216,6 +216,10 @@
 
     _dataChanged: function() {
 
+      if(this.data === undefined || this.data === null) {
+        return;
+      }
+
       // initialize the meta if there is none
       if(!this.meta || this.meta.length === 0) {
         var meta = this._generateMetaFromData();
