@@ -16,7 +16,7 @@ Element that provides pagination.
 
 			<span class="pagesize">
 				<span class="u-mr--">{{pagesizetitle}}</span>
-				<select id="pageSizeSelect" on-change="changeDropDown">
+				<select id="pageSizeSelect" on-change="_changeDropDown">
           <option>5</option>
           <option selected>10</option>
           <option>20</option>
@@ -34,15 +34,15 @@ Element that provides pagination.
 			<span class="paging">
 				<button
           class$="{{_getPageupClass(currentPage)}}"
-          on-click="prevPage"><i class="fa fa-angle-left"></i></button>
+          on-click="goToPreviousPage"><i class="fa fa-angle-left"></i></button>
 				<span class="pager">
 					<template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
-            <span on-click="goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
+            <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
           </template>
 				</span>
 				<button
           class$="{{_getPagedownClass(currentPage, pageCount)}}"
-          on-click="nextPage"><i class="fa fa-angle-right"></i></button>
+          on-click="goToNextPage"><i class="fa fa-angle-right"></i></button>
 			</span>
 
   </template>
@@ -118,19 +118,25 @@ Element that provides pagination.
       }
     },
 
-    prevPage: function() {
+    /**
+     * Go to the previous page
+     **/
+    goToPreviousPage: function() {
       if(this.currentPage > 1) {
         this.goToPageNumber(this.currentPage - 1);
       }
     },
 
-    nextPage: function() {
+    /**
+     * Go to the next page
+     */
+    goToNextPage: function() {
       if(this.currentPage < this.pageCount) {
         this.goToPageNumber(this.currentPage + 1);
       }
     },
 
-    changeDropDown: function(e) {
+    _changeDropDown: function(e) {
       var sizelist = [5, 10, 20, 50, 100];
       var size = parseInt(e.target.value),
         index = sizelist.indexOf(size);
@@ -150,12 +156,16 @@ Element that provides pagination.
       this._goBackToFirstPage();
     },
 
+    /**
+     * Go to the page number specified
+     * @param number
+     */
     goToPageNumber: function(number) {
       this.currentPage = number;
       this._updateDisplay();
     },
 
-    goToPage: function(evt) {
+    _goToPage: function(evt) {
       this.goToPageNumber(parseInt(evt.target.textContent));
     },
 

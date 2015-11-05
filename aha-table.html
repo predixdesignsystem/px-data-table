@@ -201,7 +201,7 @@
 		</div>
 	</div>
     <div style="float: right;" class="pagination">
-      <px-pagination number-of-items="{{numberOfItems}}" page-size="{{pageSize}}" first-item-index-to-display="{{firstItemIndex}}"></px-pagination>
+      <px-pagination id="pagination" number-of-items="{{numberOfItems}}" page-size="{{pageSize}}" first-item-index-to-display="{{firstItemIndex}}"></px-pagination>
     </div>
 
 	</template>
@@ -617,7 +617,8 @@
 					this.set('descending', !this.descending);
 				} else {
 					this.set('sortedColumn', sortingColumn);
-				}
+          this.set('descending', false); // always start ascending when click new column
+        }
 			}
 			this.filterSortAndUpdateDisplayedTable();
 		},
@@ -850,6 +851,9 @@
 				}
 			});
       this.set('numberOfItems', count);
+
+      // with filtering/sorting, it's best just to go back to the first page
+      this.$.pagination.goToPageNumber(1);
 
       this.updateDisplayedRows();
 		},
