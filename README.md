@@ -54,6 +54,26 @@ Advanced:
     </px-data-table>
 ```
 
+Integrating with other frameworks (ex: Angular):
+
+You may not be able to use 2-way binding with the objects/arrays in other frameworks such as Angular.
+
+We suggest instead to use events and selectors, for example:
+
+```
+document.getElementById("myDataTable").addEventListener("px-row-click", function(e) {
+    ...
+});
+
+document.getElementById("myDataTable").addEventListener("px-select-all-click", function(e) {
+    ...
+});
+
+$scope.doSomethingWithSelectedRows = function() {
+    $scope.allSelectedRows = document.getElementById("myDataTable").selectedRows;
+};
+```
+
 <br />
 <hr />
 
@@ -196,6 +216,17 @@ Fired when table row is clicked (selected or unselected)
 document.getElementById("mytable").addEventListener("px-row-click", function(e) {
   var clickedRow = e.detail.row;
   console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
+});
+```
+
+#### px-select-all-click 
+
+Fired when the select all button is clicked (selected or unselected)
+
+```js
+document.getElementById("mytable").addEventListener("px-select-all-click", function(e) {
+  var allSelectedRows = e.detail;
+  console.log("Select/unselect all", allSelectedRows);
 });
 ```
 
