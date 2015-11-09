@@ -15,6 +15,9 @@
 <dom-module id="aha-table">
   <link rel="import" type="css" href="css/aha-table.css"/>
   <template>
+
+    <div class="scroll-body">
+
       <div class$="{{_getTableClass(tableRows, tableColumns)}}">
 
         <!-- Header -->
@@ -106,6 +109,8 @@
         </template>
 
       </div>
+
+    </div>
 
     <!-- Pagination controls -->
     <div class="pagination">
