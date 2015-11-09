@@ -1927,6 +1927,6 @@ label {
 .th {
   font-weight: bold; }
 
-.filter-cell-fix {
+.filter-cell {
   overflow: auto;
 }

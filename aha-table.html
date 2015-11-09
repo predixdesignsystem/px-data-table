@@ -52,14 +52,14 @@
                 </template>
                 <template is="dom-if" if="{{_isEqual(column.type, 'boolean')}}">
                   <div class="">
-                    <input class="filter-input text-input--bare" type="text" on-keyup="_filter"/>
+                    <input class="filter-input text-input--bare filter-cell" type="text" on-keyup="_filter"/>
                     <i class="fa fa-filter"></i>
                   </div>
                 </template>
                 <template is="dom-if" if="{{_isTextType(column.type)}}">
                   <div>
                     <span class="flex flex--justify">
-                      <input class="filter-input text-input--bare filter-cell-fix" type="text" on-keyup="_filter"
+                      <input class="filter-input text-input--bare filter-cell" type="text" on-keyup="_filter"
                              style="overflow:hidden" placeholder$="{{column.searchplaceholder}}"/>
                       <i class="fa fa-filter"></i>
                     </span>
