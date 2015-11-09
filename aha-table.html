@@ -515,8 +515,7 @@
       var detail = {"row": row, "column": column};
 
       if(this.selectable) {
-        this._selectRow(row, e.model.index);
-
+        this._selectRow(row, row.index);
         this.fire('px-row-click', detail); // fire the event after it is marked selected
 
         // always just make sure selectAll checkbox is unchecked when 1 row is clicked
@@ -565,8 +564,7 @@
     },
 
     _selectRow: function(row, indexInDisplayedRows) {
-
-      if(row._selected) {
+      if(this.selectedRows.indexOf(row) > -1) {
         row._selected = false;
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
         this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
