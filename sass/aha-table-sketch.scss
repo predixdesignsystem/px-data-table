@@ -119,6 +119,7 @@ label {
 }
 
 .text-input--bare {
+  overflow: auto;
   height: 1em;
   width: 100%;
   margin: 0;
@@ -126,6 +127,9 @@ label {
   &:focus {
     outline: 0;
   }
+}
+.filter-cell-fix {
+  overflow: auto;
 }
 
 // Trumps

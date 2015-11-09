@@ -15,9 +15,6 @@
 <dom-module id="aha-table">
   <link rel="import" type="css" href="css/aha-table.css"/>
   <template>
-
-    <div class="scroll-body">
-
       <div class$="{{_getTableClass(tableRows, tableColumns)}}">
 
         <!-- Header -->
@@ -32,13 +29,10 @@
           </template>
         </span>
 
-
         <!-- Second Header (filter/select all) -->
         <span class$="{{_getSecondHeaderClass(filterable)}}" id="filter">
-
           <template is="dom-repeat" items="{{meta}}" as="column">
             <div class="td filter--cell">
-
               <!-- select all checkbox -->
               <template is="dom-if" if="{{_isSelectAllColumn(column)}}">
                 <div class="flex flex--center">
@@ -57,22 +51,23 @@
                   </select>
                 </template>
                 <template is="dom-if" if="{{_isEqual(column.type, 'boolean')}}">
-                  <div class="flex">
+                  <div class="">
                     <input class="filter-input text-input--bare" type="text" on-keyup="_filter"/>
                     <i class="fa fa-filter"></i>
                   </div>
                 </template>
                 <template is="dom-if" if="{{_isTextType(column.type)}}">
-                  <div class="flex">
-                    <input class="filter-input text-input--bare" type="text" on-keyup="_filter"
-                           placeholder$="{{column.searchplaceholder}}"/>
-                    <i class="fa fa-filter"></i>
+                  <div>
+                    <span class="flex flex--justify">
+                      <input class="filter-input text-input--bare filter-cell-fix" type="text" on-keyup="_filter"
+                             style="overflow:hidden" placeholder$="{{column.searchplaceholder}}"/>
+                      <i class="fa fa-filter"></i>
+                    </span>
                   </div>
                 </template>
               </template>
             </div>
           </template>
-
         </span>
 
         <!-- Data rows -->
@@ -111,7 +106,6 @@
         </template>
 
       </div>
-    </div>
 
     <!-- Pagination controls -->
     <div class="pagination">
