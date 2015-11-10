@@ -33,8 +33,8 @@
         </span>
 
         <!-- Second Header (filter/select all) -->
-        <span class$="{{_getSecondHeaderClass(filterable)}}" id="filter">
-          <template is="dom-repeat" items="{{meta}}" as="column">
+        <span class$="{{_getSecondHeaderClass(filterable)}}">
+          <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
             <div class="td filter--cell">
               <!-- select all checkbox -->
               <template is="dom-if" if="{{_isSelectAllColumn(column)}}">
@@ -46,28 +46,10 @@
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column)}}">
-                <template is="dom-if" if="{{_isEqual(column.type, 'choice')}}">
-                  <select class="filter-input" on-change="_filter">
-                    <template is="dom-repeat" items="{{column.options}}" as="option">
-                      <option value$="{{option.value}}">{{option.label}}</option>
-                    </template>
-                  </select>
-                </template>
-                <template is="dom-if" if="{{_isEqual(column.type, 'boolean')}}">
-                  <div class="">
-                    <input class="filter-input text-input--bare filter-cell" type="text" on-keyup="_filter"/>
-                    <i class="fa fa-filter"></i>
-                  </div>
-                </template>
-                <template is="dom-if" if="{{_isTextType(column.type)}}">
-                  <div>
-                    <span class="flex flex--justify">
-                      <input class="filter-input text-input--bare filter-cell" type="text" on-keyup="_filter"
-                             style="overflow:hidden" placeholder$="{{column.searchplaceholder}}"/>
-                      <i class="fa fa-filter"></i>
-                    </span>
-                  </div>
-                </template>
+                <span class="flex flex--justify">
+                  <input class="filter-input text-input--bare filter-cell" type="text" on-keyup="_filter"/>
+                  <i class="fa fa-filter"></i>
+                </span>
               </template>
             </div>
           </template>
@@ -420,8 +402,10 @@
     /********** Filtering ************/
 
     // filter on typed content in header handler
-    _filter: function(e, p) {
-      var column = e.model.column;
+    _filter: function(e) {
+
+      // have to do modelForElement because dom-if cancels out dom-repeat model (https://github.com/Polymer/polymer/issues/1865)
+      var column = this.$.filterRepeat.modelForElement(e.target).column;
 
       if(column && column.filterable) {
 
@@ -687,9 +671,6 @@
         classList.push('table--columns');
       }
       return classList.join(' ');
-    },
-    _isTextType: function(type) {
-      return type !== 'choice' && type !== 'boolean';
     }
   });
 </script>
