@@ -84,6 +84,7 @@ $inuit-enable-btn--disabled     : true;
 .td{
   @extend td;
   display: table-cell;
+  vertical-align: middle;
 }
 
 :host {

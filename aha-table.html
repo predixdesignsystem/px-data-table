@@ -21,7 +21,7 @@
       <div class$="{{_getTableClass(tableRows, tableColumns)}}">
 
         <!-- Header -->
-        <span class="tr">
+        <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <span class$="{{_getHeaderClass(column)}}">
               <label
@@ -30,18 +30,18 @@
               </label>
             </span>
           </template>
-        </span>
+        </div>
 
         <!-- Second Header (filter/select all) -->
-        <span class$="{{_getSecondHeaderClass(filterable)}}">
+        <div class$="{{_getSecondHeaderClass(filterable)}}">
           <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
-            <div class="td filter--cell">
+            <span class="td filter--cell">
               <!-- select all checkbox -->
               <template is="dom-if" if="{{_isSelectAllColumn(column)}}">
-                <div class="flex flex--center">
+                <span class="flex flex--center">
                   <input id="selectAllCheckbox" type="checkbox"
                          on-change="_clickSelectAll"/>
-                </div>
+                </span>
               </template>
 
               <!-- filter entry -->
@@ -51,26 +51,25 @@
                   <i class="fa fa-filter"></i>
                 </span>
               </template>
-            </div>
+            </span>
           </template>
-        </span>
+        </div>
 
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="row">
-          <span class$="{{_getRowClass(row, row._selected)}}" on-click="_clickRow">
+          <div class$="{{_getRowClass(row, row._selected)}}" on-click="_clickRow">
 
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <span class$="{{_getCellClass(column.name)}}">
-                <div class$="{{_getReaderClass(row, column.name)}}">
+                <span class$="{{_getReaderClass(row, column.name)}}">
 
                   <!-- selected column checkbox -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                    <div class="flex flex--center">
+                    <span class="flex flex--center flex--middle">
                       <input type="checkbox"
-                             class="js-table__select-checkbox"
                              checked="{{row._selected::change}}"/>
-                    </div>
+                    </span>
                   </template>
 
                   <!-- string content -->
@@ -83,11 +82,11 @@
                     <aha-html-echo html="{{_readContent(row, column)}}"></aha-html-echo>
                   </template>
 
-                </div>
+                </span>
               </span>
             </template>
 
-          </span>
+          </div>
         </template>
 
       </div>

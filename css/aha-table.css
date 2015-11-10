@@ -1157,7 +1157,8 @@ button.btn {
   display: table-row; }
 
 .td {
-  display: table-cell; }
+  display: table-cell;
+  vertical-align: middle; }
 
 :host {
   display: block;
