@@ -64,6 +64,13 @@ $inuit-enable-btn--disabled     : true;
   display: table-cell;
 }
 
+// making th--no-borders class specific enough to override other table.table.aha-table, etc. selectors
+.th--no-borders.th--no-borders.th--no-borders {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+}
+
 .table{
   @extend table;
   display: table !important;
@@ -106,7 +113,6 @@ td {
 }
 
 th {
-  border: 0 !important;
   text-align: left;
 }
 

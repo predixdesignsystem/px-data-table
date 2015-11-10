@@ -1145,6 +1145,11 @@ button.btn {
 .th {
   display: table-cell; }
 
+.th--no-borders.th--no-borders.th--no-borders {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0; }
+
 .table {
   display: table !important; }
 
@@ -1178,7 +1183,6 @@ td .viewing, .td .viewing {
   white-space: nowrap; }
 
 th, .th {
-  border: 0 !important;
   text-align: left; }
 
 .column-head {
@@ -1188,12 +1192,16 @@ label {
   margin: 0; }
 
 .text-input--bare {
+  overflow: auto;
   height: 1em;
   width: 100%;
   margin: 0;
   padding: 0; }
   .text-input--bare:focus {
     outline: 0; }
+
+.filter-cell {
+  overflow: auto; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
@@ -1926,7 +1934,3 @@ label {
 
 .th {
   font-weight: bold; }
-
-.filter-cell {
-  overflow: auto;
-}

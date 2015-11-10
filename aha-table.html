@@ -636,7 +636,14 @@
       return source === target;
     },
     _getHeaderClass: function(item) {
-      return ['th ', 'aha-', item.name, '-th'].join('') + (item.sortable ? ' sortable' : '');
+      var classList = ['th ', 'aha-' + item.name + '-th'];
+      if(item.sortable) {
+        classList.push('sortable');
+      }
+      if(!this.tableRows && !this.tableColumns) {
+        classList.push('th--no-borders');
+      }
+      return classList.join(' ');
     },
     _getSecondHeaderClass: function(filterable) {
       var classList = ['tr'];
