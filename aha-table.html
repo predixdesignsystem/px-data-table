@@ -15,10 +15,13 @@
 <dom-module id="aha-table">
   <link rel="import" type="css" href="css/aha-table.css"/>
   <template>
+
+    <div class="scroll-body">
+
       <div class$="{{_getTableClass(tableRows, tableColumns)}}">
 
         <!-- Header -->
-        <span class="tr">
+        <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <span class$="{{_getHeaderClass(column)}}">
               <label
@@ -27,65 +30,46 @@
               </label>
             </span>
           </template>
-        </span>
+        </div>
 
         <!-- Second Header (filter/select all) -->
-        <span class$="{{_getSecondHeaderClass(filterable)}}" id="filter">
-          <template is="dom-repeat" items="{{meta}}" as="column">
-            <div class="td filter--cell">
+        <div class$="{{_getSecondHeaderClass(filterable)}}">
+          <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
+            <span class="td filter--cell">
               <!-- select all checkbox -->
               <template is="dom-if" if="{{_isSelectAllColumn(column)}}">
-                <div class="flex flex--center">
+                <span class="flex flex--center">
                   <input id="selectAllCheckbox" type="checkbox"
                          on-change="_clickSelectAll"/>
-                </div>
+                </span>
               </template>
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column)}}">
-                <template is="dom-if" if="{{_isEqual(column.type, 'choice')}}">
-                  <select class="filter-input" on-change="_filter">
-                    <template is="dom-repeat" items="{{column.options}}" as="option">
-                      <option value$="{{option.value}}">{{option.label}}</option>
-                    </template>
-                  </select>
-                </template>
-                <template is="dom-if" if="{{_isEqual(column.type, 'boolean')}}">
-                  <div class="">
-                    <input class="filter-input text-input--bare" type="text" on-keyup="_filter"/>
-                    <i class="fa fa-filter"></i>
-                  </div>
-                </template>
-                <template is="dom-if" if="{{_isTextType(column.type)}}">
-                  <div>
-                    <span class="flex flex--justify">
-                      <input class="filter-input text-input--bare filter-cell-fix" type="text" on-keyup="_filter"
-                             style="overflow:hidden" placeholder$="{{column.searchplaceholder}}"/>
-                      <i class="fa fa-filter"></i>
-                    </span>
-                  </div>
-                </template>
+                <span class="flex flex--justify">
+                  <input class="filter-input text-input--bare filter-cell" type="text" on-keyup="_filter"/>
+                  <i class="fa fa-filter"></i>
+                </span>
               </template>
-            </div>
+            </span>
           </template>
-        </span>
+        </div>
 
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="row">
-          <span class$="{{_getRowClass(row, row._selected)}}" on-click="_clickRow">
+          <div class$="{{_getRowClass(row, row._selected)}}" on-click="_clickRow">
 
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <span class$="{{_getCellClass(column.name)}}">
-                <div class$="{{_getReaderClass(row, column.name)}}">
+                <span class$="{{_getReaderClass(row, column.name)}}">
 
                   <!-- selected column checkbox -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                    <div class="flex flex--center">
+                    <span class="flex flex--center flex--middle">
                       <input type="checkbox"
-                             class="js-table__select-checkbox"
                              checked="{{row._selected::change}}"/>
-                    </div>
+                    </span>
                   </template>
 
                   <!-- string content -->
@@ -98,14 +82,16 @@
                     <aha-html-echo html="{{_readContent(row, column)}}"></aha-html-echo>
                   </template>
 
-                </div>
+                </span>
               </span>
             </template>
 
-          </span>
+          </div>
         </template>
 
       </div>
+
+    </div>
 
     <!-- Pagination controls -->
     <div class="pagination">
@@ -415,8 +401,10 @@
     /********** Filtering ************/
 
     // filter on typed content in header handler
-    _filter: function(e, p) {
-      var column = e.model.column;
+    _filter: function(e) {
+
+      // have to do modelForElement because dom-if cancels out dom-repeat model (https://github.com/Polymer/polymer/issues/1865)
+      var column = this.$.filterRepeat.modelForElement(e.target).column;
 
       if(column && column.filterable) {
 
@@ -516,7 +504,6 @@
 
       if(this.selectable) {
         this._selectRow(row, e.model.index);
-
         this.fire('px-row-click', detail); // fire the event after it is marked selected
 
         // always just make sure selectAll checkbox is unchecked when 1 row is clicked
@@ -565,8 +552,7 @@
     },
 
     _selectRow: function(row, indexInDisplayedRows) {
-
-      if(row._selected) {
+      if(this.selectedRows.indexOf(row) > -1) {
         row._selected = false;
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
         this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
@@ -649,7 +635,14 @@
       return source === target;
     },
     _getHeaderClass: function(item) {
-      return ['th ', 'aha-', item.name, '-th'].join('') + (item.sortable ? ' sortable' : '');
+      var classList = ['th ', 'aha-' + item.name + '-th'];
+      if(item.sortable) {
+        classList.push('sortable');
+      }
+      if(!this.tableRows && !this.tableColumns) {
+        classList.push('th--no-borders');
+      }
+      return classList.join(' ');
     },
     _getSecondHeaderClass: function(filterable) {
       var classList = ['tr'];
@@ -684,9 +677,6 @@
         classList.push('table--columns');
       }
       return classList.join(' ');
-    },
-    _isTextType: function(type) {
-      return type !== 'choice' && type !== 'boolean';
     }
   });
 </script>

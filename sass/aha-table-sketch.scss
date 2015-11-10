@@ -64,6 +64,13 @@ $inuit-enable-btn--disabled     : true;
   display: table-cell;
 }
 
+// making th--no-borders class specific enough to override other table.table.aha-table, etc. selectors
+.th--no-borders.th--no-borders.th--no-borders {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+}
+
 .table{
   @extend table;
   display: table !important;
@@ -77,6 +84,7 @@ $inuit-enable-btn--disabled     : true;
 .td{
   @extend td;
   display: table-cell;
+  vertical-align: middle;
 }
 
 :host {
@@ -94,6 +102,7 @@ $inuit-enable-btn--disabled     : true;
 .scroll-body{
   display: block;
   overflow-x: scroll;
+  padding-left: 1px; /*firefox border collapse fix*/
 }
 
 td {
@@ -106,7 +115,6 @@ td {
 }
 
 th {
-  border: 0 !important;
   text-align: left;
 }
 
@@ -128,7 +136,7 @@ label {
     outline: 0;
   }
 }
-.filter-cell-fix {
+.filter-cell {
   overflow: auto;
 }
 
