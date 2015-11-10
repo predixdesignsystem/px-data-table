@@ -5,11 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>px-data-table Demo</title>
-    <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
 
+    <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
     <!-- MUST use webcomponents.min.js, NOT webcomponents-lite to avoid crazy IE bug (https://github.com/Polymer/polymer/issues/2292) -->
     <script src="../webcomponentsjs/webcomponents.min.js"></script>
-    <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
 
     <link rel="import" href="px-data-table.html" />
     <link rel="import" href="../iron-ajax/iron-ajax.html" />
@@ -89,32 +88,36 @@
           console.log("Get all selected rows:", selectedRows);
         }
 
-        document.getElementById("mytable").addEventListener("px-row-click", function(e) {
-          var clickedRow = e.detail.row;
-          console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
-        });
+        document.addEventListener('WebComponentsReady', function() {
 
-        document.getElementById("mytable").customFunctions = {
-          sortByEmailDomain: function(a, b) {
-            var aDomain = a.value.substring(a.value.indexOf("@")+1, a.value.indexOf("."));
-            var bDomain = b.value.substring(b.value.indexOf("@")+1, b.value.indexOf("."));
-            return this.descending
-              ? (aDomain < bDomain ? 1 : -1)
-              : (aDomain > bDomain ? 1 : -1);
-          },
-          filterMarkupVal: function(searchString, cellValue) {
-            var lhs = cellValue.slice(cellValue.indexOf('>') + 1);
-            var content = lhs.substr(0, lhs.indexOf('<'));
+          document.getElementById("mytable").addEventListener("px-row-click", function(e) {
+            var clickedRow = e.detail.row;
+            console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
+          });
 
-            return (content.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
-          },
-          filterWholeWord: function(searchString, cellValue) {
-            if(searchString === undefined || searchString === null || searchString === "") {
-              return true;
+          document.getElementById("mytable").customFunctions = {
+            sortByEmailDomain: function(a, b) {
+              var aDomain = a.value.substring(a.value.indexOf("@")+1, a.value.indexOf("."));
+              var bDomain = b.value.substring(b.value.indexOf("@")+1, b.value.indexOf("."));
+              return this.descending
+                ? (aDomain < bDomain ? 1 : -1)
+                : (aDomain > bDomain ? 1 : -1);
+            },
+            filterMarkupVal: function(searchString, cellValue) {
+              var lhs = cellValue.slice(cellValue.indexOf('>') + 1);
+              var content = lhs.substr(0, lhs.indexOf('<'));
+
+              return (content.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
+            },
+            filterWholeWord: function(searchString, cellValue) {
+              if(searchString === undefined || searchString === null || searchString === "") {
+                return true;
+              }
+              return (searchString.toString().toLowerCase() === cellValue.toString().toLowerCase());
             }
-            return (searchString.toString().toLowerCase() === cellValue.toString().toLowerCase());
-          }
-        };
+          };
+
+        });
 
       </script>
 
