@@ -1082,6 +1082,7 @@ label {
     outline: 0; }
 
 .filter-cell {
+  flex:1;
   overflow: auto; }
 
 /*------------------------------------*    #CLEARFIX
