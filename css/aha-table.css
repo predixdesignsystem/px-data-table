@@ -1053,7 +1053,9 @@ button.btn {
 
 .scroll-body {
   display: block;
-  overflow-x: scroll; }
+  overflow-x: scroll;
+  padding-left: 1px;
+  /*firefox border collapse fix*/ }
 
 td .viewing, .td .viewing {
   min-height: 1em;
