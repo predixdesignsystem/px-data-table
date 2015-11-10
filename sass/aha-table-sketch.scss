@@ -102,6 +102,7 @@ $inuit-enable-btn--disabled     : true;
 .scroll-body{
   display: block;
   overflow-x: scroll;
+  padding-left: 1px; /*firefox border collapse fix*/
 }
 
 td {
