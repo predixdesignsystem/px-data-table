@@ -27,7 +27,7 @@ bower install https://github.com/PredixDev/px-data-table.git --save
 Second, import the component to your application with the following tag in your head.
 
 ```html
-<link rel="import" href="/bower_components/px-data-table/px-data-table.html" ></link>
+<link rel="import" href="bower_components/px-data-table/px-data-table.html"/>
 ```
 
 Finally, use the component in your application:
