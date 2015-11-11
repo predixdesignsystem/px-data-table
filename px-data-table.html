@@ -70,7 +70,8 @@ Events:
 
   <template>
     <div class="flex">
-      <aha-table filterable="{{filterable}}"
+      <aha-table xdata="{{tableData}}"
+                 filterable="{{filterable}}"
                  striped="{{striped}}"
                  table-columns="{{tableColumns}}"
                  table-rows="{{tableRows}}"
@@ -119,7 +120,6 @@ Events:
         value: function() {
           return [];
         },
-        observer: '_tableDataChanged',
         notify: true
       },
 
@@ -282,10 +282,6 @@ Events:
 
         this.set('meta', meta);
       }
-    },
-
-    _tableDataChanged: function() {
-      this.$.dataTable.data = this.tableData;
     }
 
   });
