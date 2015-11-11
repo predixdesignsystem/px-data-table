@@ -107,12 +107,12 @@
 
     properties: {
       //data: instance of the model data
-      xdata: {
+      data: {
         type: Array,
         value: function() {
           return [];
         },
-        observer: '_xdataChanged'
+        observer: '_dataChanged'
       },
       //meta: instance of the model meta
       meta: {
@@ -188,9 +188,9 @@
       '_updateDisplayedRows(pageSize)' // when the size of the page changes
     ],
 
-    _xdataChanged: function() {
+    _dataChanged: function() {
 
-      if(this.xdata === undefined || this.xdata === null) {
+      if(this.data === undefined || this.data === null) {
         return;
       }
 
@@ -209,11 +209,11 @@
 
     _generateMetaFromData: function() {
       var meta = [];
-      if(this.selectable && this.xdata.length > 0) {
+      if(this.selectable && this.data.length > 0) {
         // add a selected column if selectable
         meta.push(this._generateMetaForColumn("_selected", "selected", true, "Selected"));
       }
-      for(var prop in this.xdata[0]) {
+      for(var prop in this.data[0]) {
         if(prop.indexOf('_') !== 0) {//skip internal field
           meta.push(this._generateMetaForColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1)));
         }
@@ -279,9 +279,9 @@
     _initializeInternalData: function() {
       // make internal data structure with shadow fields
       var internalData = [];
-      for(var i = 0; i < this.xdata.length; i++) {
+      for(var i = 0; i < this.data.length; i++) {
         internalData.push({
-          row: this.xdata[i],
+          row: this.data[i],
           _filtered: false,
           _selected: false
         });
