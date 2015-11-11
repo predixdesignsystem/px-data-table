@@ -62,7 +62,7 @@
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <span class$="{{_getCellClass(column.name)}}">
-                <span class$="{{_getReaderClass(internalRow.row, column.name)}}">
+                <span class$="{{_getReaderClass(internalRow, column.name)}}">
 
                   <!-- selected column checkbox -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
@@ -74,12 +74,12 @@
 
                   <!-- string content -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
-                    <span>{{_readContent(internalRow.row, column)}}</span>
+                    <span>{{_readContent(internalRow, column)}}</span>
                   </template>
 
                   <!-- html content -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'html')}}">
-                    <aha-html-echo html="{{_readContent(internalRow.row, column)}}"></aha-html-echo>
+                    <aha-html-echo html="{{_readContent(internalRow, column)}}"></aha-html-echo>
                   </template>
 
                 </span>
@@ -188,12 +188,6 @@
       '_updateDisplayedRows(pageSize)' // when the size of the page changes
     ],
 
-    ready: function() {
-      if(this.get('meta').length === 0) {
-        this._xdataChanged(this.get('xdata'), []);
-      }
-    },
-
     _xdataChanged: function() {
 
       if(this.xdata === undefined || this.xdata === null) {
@@ -206,15 +200,7 @@
         this.set('meta', meta);
       }
 
-      // make internal data structure with shadow fields
-      this.internalData = [];
-      for(var i = 0; i < this.xdata.length; i++) {
-        this.internalData.push({
-          row: this.xdata[i],
-          _filtered: false,
-          _selected: false
-        });
-      }
+      this.internalData = this._initializeInternalData();
 
       this._filterSortAndUpdateDisplayedTable();
     },
@@ -258,7 +244,7 @@
       // reset back to unfiltered
       // leave _selected as is since selected rows should stay selected
       for(var i = 0; i < this.internalData.length; i++) {
-        this.set('_filtered', false, this.internalData[i]);
+        this._setInternalDataAt(this.internalData[i], '_filtered', false);
       }
 
       // sort
@@ -274,8 +260,9 @@
 
       // count total number of rows
       var count = 0;
+      var self = this;
       this.internalData.forEach(function(row) {
-        if(!row._filtered) {
+        if(!self._getInternalDataAt(row, '_filtered')) {
           count++;
         }
       });
@@ -287,6 +274,34 @@
       this._updateDisplayedRows();
     },
 
+    /********** Internal data structure ***********/
+
+    _initializeInternalData: function() {
+      // make internal data structure with shadow fields
+      var internalData = [];
+      for(var i = 0; i < this.xdata.length; i++) {
+        internalData.push({
+          row: this.xdata[i],
+          _filtered: false,
+          _selected: false
+        });
+      }
+      return internalData;
+    },
+
+    // set helper method so we don't have to sprinkle logic of this internal data structure throughout
+    _setInternalDataAt: function(row, columnName, value) {
+      if(columnName === '_selected' || columnName === '_filtered') {
+        // shadow fields are in root of row in internal data
+        row[columnName] = value;
+      }
+      else {
+        // the user's data is in the row column of internal data
+        row.row[columnName] = value;
+      }
+    },
+
+    // get helper method so we don't have to sprinkle logic of this internal data structure throughout
     _getInternalDataAt: function(row, columnName) {
       if(columnName === '_selected' || columnName === '_filtered') {
         // shadow fields are in root of row in internal data
@@ -294,7 +309,7 @@
       }
       else {
         // the user's data is in the row column of internal data
-        return row.row[this.sortedColumn];
+        return row.row[columnName];
       }
     },
 
@@ -464,22 +479,23 @@
         // if it's not filtered already
         if(rowsToFilter[i]._filtered === false) {
 
-          var matched = filterFunction(userEntry, rowsToFilter[i].row[columnName]);
+          var matched = filterFunction(userEntry, this._getInternalDataAt(rowsToFilter[i], columnName));
 
           if(!matched) {
-            rowsToFilter[i]._filtered = true;
+            this._setInternalDataAt(rowsToFilter[i], '_filtered', true);
           }
 
         }
 
       }
 
+      var self = this;
       this.filtered = rowsToFilter.some(function(row) {
-        return row._filtered;
+        return self._getInternalDataAt(row, '_filtered');
       });
 
       var filteredRows = rowsToFilter.filter(function(r) {
-        return !r._filtered;
+        return !self._getInternalDataAt(r, '_filtered');
       });
 
       return filteredRows;
@@ -545,7 +561,7 @@
 
       // set all rows selected/unselected
       for(var i = 0; i < this.internalData.length; i++) {
-        this.internalData[i]._selected = isSelected;
+        this._setInternalDataAt(this.internalData[i], '_selected', isSelected);
       }
 
       // notify viewing rows of change
@@ -598,8 +614,9 @@
     _isFilterableColumn: function(column) {
       return !column.selectAll && column.filterable;
     },
-    _getReaderClass: function(row, columnName) {
-      var datum = row[columnName], classList = ['viewing'];
+    _getReaderClass: function(internalRow, columnName) {
+      var datum = this._getInternalDataAt(internalRow, columnName);
+      var classList = ['viewing'];
       if(datum === null || datum === undefined
         || typeof datum === 'string' && datum.trim().length === 0) {
         classList.push('empty');
@@ -607,7 +624,7 @@
       return classList.join(' ');
     },
     _readContent: function(row, column) {
-      var datum = row[column.name];
+      var datum = this._getInternalDataAt(row, column.name);
       if(datum === null || datum === undefined
         || typeof datum === 'string' && datum.trim().length === 0) {
         var options = column.options;
