@@ -161,8 +161,10 @@ Element that provides pagination.
      * @param number
      */
     goToPageNumber: function(number) {
-      this.currentPage = number;
-      this._updateDisplay();
+      if(number) {
+        this.currentPage = number;
+        this._updateDisplay();
+      }
     },
 
     _goToPage: function(evt) {
