@@ -56,30 +56,31 @@
         </div>
 
         <!-- Data rows -->
-        <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="row">
-          <div class$="{{_getRowClass(row, row._selected)}}" on-click="_clickRow">
+        <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow">
+
+          <div class$="{{_getRowClass(internalRow, internalRow._selected)}}" on-click="_clickRow">
 
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <span class$="{{_getCellClass(column.name)}}">
-                <span class$="{{_getReaderClass(row, column.name)}}">
+                <span class$="{{_getReaderClass(internalRow, column.name)}}">
 
                   <!-- selected column checkbox -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
                     <span class="flex flex--center flex--middle">
                       <input type="checkbox"
-                             checked="{{row._selected::change}}"/>
+                             checked="{{internalRow._selected::change}}"/>
                     </span>
                   </template>
 
                   <!-- string content -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
-                    <span>{{_readContent(row, column)}}</span>
+                    <span>{{_readContent(internalRow, column)}}</span>
                   </template>
 
                   <!-- html content -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'html')}}">
-                    <aha-html-echo html="{{_readContent(row, column)}}"></aha-html-echo>
+                    <aha-html-echo html="{{_readContent(internalRow, column)}}"></aha-html-echo>
                   </template>
 
                 </span>
@@ -132,7 +133,8 @@
       //selectable: if table row is selectable
       selectable: {
         type: Boolean,
-        value: false
+        value: false,
+        observer: "_selectableChanged"
       },
       //striped: if table row is striped
       striped: {
@@ -162,7 +164,9 @@
       // the column names that are filtered on
       filteredColumns: {
         type: Array,
-        value: []
+        value: function() {
+          return [];
+        }
       },
       //all rows that are currently displayed on the page (visible right now)
       displayedRows: {
@@ -179,7 +183,9 @@
       // custom function declarations, used in individual columns for filtering/sorting
       customFunctions: {
         type: Object,
-        value: {}
+        value: function() {
+          return {};
+        }
       }
     },
 
@@ -187,12 +193,6 @@
       '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
       '_updateDisplayedRows(pageSize)' // when the size of the page changes
     ],
-
-    ready: function() {
-      if(this.get('meta').length === 0) {
-        this._dataChanged(this.get('data'), []);
-      }
-    },
 
     _dataChanged: function() {
 
@@ -206,13 +206,16 @@
         this.set('meta', meta);
       }
 
-      // initialize shadow fields on all rows
-      for(var i = 0; i < this.data.length; i++) {
-        this.set('_filtered', false, this.data[i]);
-        this.set('_selected', false, this.data[i]);
-      }
+      this.internalData = this._initializeInternalData();
 
       this._filterSortAndUpdateDisplayedTable();
+    },
+
+    _selectableChanged: function(newSelectable) {
+      // if meta is already defined and then selectable is set, we need to backfill the meta with the _selected column
+      if(newSelectable === true && this.meta !== null && this.meta !== undefined && this.meta.length > 0) {
+        this.splice('meta', 0, 0, this._generateMetaForColumn("_selected", "selected", true, "Selected"));
+      }
     },
 
     /********** Generating column metadata *************/
@@ -249,12 +252,12 @@
     _filterSortAndUpdateDisplayedTable: function() {
 
       // start at original data source (shadow fields, _selected and _filtered are still set)
-      this.filteredSortedData = this.data;
+      this.filteredSortedData = this.internalData;
 
       // reset back to unfiltered
       // leave _selected as is since selected rows should stay selected
-      for(var i = 0; i < this.data.length; i++) {
-        this.set('_filtered', false, this.data[i]);
+      for(var i = 0; i < this.internalData.length; i++) {
+        this._setInternalDataAt(this.internalData[i], '_filtered', false);
       }
 
       // sort
@@ -270,8 +273,9 @@
 
       // count total number of rows
       var count = 0;
-      this.data.forEach(function(row) {
-        if(!row._filtered) {
+      var self = this;
+      this.internalData.forEach(function(row) {
+        if(!self._getInternalDataAt(row, '_filtered')) {
           count++;
         }
       });
@@ -283,11 +287,52 @@
       this._updateDisplayedRows();
     },
 
+    /********** Internal data structure ***********/
+
+    _initializeInternalData: function() {
+      // make internal data structure with shadow fields
+      var internalData = [];
+      for(var i = 0; i < this.data.length; i++) {
+        internalData.push({
+          row: this.data[i],
+          _filtered: false,
+          _selected: false
+        });
+      }
+      return internalData;
+    },
+
+    // set helper method so we don't have to sprinkle logic of this internal data structure throughout
+    _setInternalDataAt: function(row, columnName, value) {
+      if(columnName === '_selected' || columnName === '_filtered') {
+        // shadow fields are in root of row in internal data
+        row[columnName] = value;
+      }
+      else {
+        // the user's data is in the row column of internal data
+        row.row[columnName] = value;
+      }
+    },
+
+    // get helper method so we don't have to sprinkle logic of this internal data structure throughout
+    _getInternalDataAt: function(row, columnName) {
+      if(columnName === '_selected' || columnName === '_filtered') {
+        // shadow fields are in root of row in internal data
+        return row[columnName];
+      }
+      else {
+        // the user's data is in the row column of internal data
+        return row.row[columnName];
+      }
+    },
+
     /******* Update Displayed rows when major changes ****/
 
     _updateDisplayedRows: function() {
 
-      if(this.firstItemIndex !== null && this.firstItemIndex !== undefined && this.pageSize !== null && this.pageSize !== undefined) {
+      if(this.firstItemIndex !== null && this.firstItemIndex !== undefined &&
+        this.pageSize !== null && this.pageSize !== undefined &&
+        this.filteredSortedData !== undefined && this.filteredSortedData !== null) {
 
         var from = this.firstItemIndex - 1; // pagination is 1-based
         var to = from + this.pageSize;
@@ -322,7 +367,7 @@
       var sortedRows =
         rowsToSort
           .map(function(e, i) {
-            var v = e[this.sortedColumn];
+            var v = this._getInternalDataAt(e, this.sortedColumn);
             if(undefined === v || null === v) {
               v = '';
             }
@@ -449,22 +494,23 @@
         // if it's not filtered already
         if(rowsToFilter[i]._filtered === false) {
 
-          var matched = filterFunction(userEntry, rowsToFilter[i][columnName]);
+          var matched = filterFunction(userEntry, this._getInternalDataAt(rowsToFilter[i], columnName));
 
           if(!matched) {
-            rowsToFilter[i]._filtered = true;
+            this._setInternalDataAt(rowsToFilter[i], '_filtered', true);
           }
 
         }
 
       }
 
+      var self = this;
       this.filtered = rowsToFilter.some(function(row) {
-        return row._filtered;
+        return self._getInternalDataAt(row, '_filtered');
       });
 
       var filteredRows = rowsToFilter.filter(function(r) {
-        return !r._filtered;
+        return !self._getInternalDataAt(r, '_filtered');
       });
 
       return filteredRows;
@@ -499,7 +545,7 @@
 
     _clickRow: function(e) {
       var column = e.model.column;
-      var row = e.model.row;
+      var row = e.model.internalRow;
       var detail = {"row": row, "column": column};
 
       if(this.selectable) {
@@ -529,8 +575,8 @@
     _setAllRows: function(isSelected) {
 
       // set all rows selected/unselected
-      for(var i = 0; i < this.data.length; i++) {
-        this.data[i]._selected = isSelected;
+      for(var i = 0; i < this.internalData.length; i++) {
+        this._setInternalDataAt(this.internalData[i], '_selected', isSelected);
       }
 
       // notify viewing rows of change
@@ -542,8 +588,8 @@
       this.splice('selectedRows', 0, this.selectedRows.length);
       if(isSelected) {
         // add everything to selectedRows property
-        for(i = 0; i < this.data.length; i++) {
-          this.push('selectedRows', this.data[i]);
+        for(i = 0; i < this.internalData.length; i++) {
+          this.push('selectedRows', this.internalData[i]);
         }
       }
 
@@ -583,8 +629,9 @@
     _isFilterableColumn: function(column) {
       return !column.selectAll && column.filterable;
     },
-    _getReaderClass: function(row, columnName) {
-      var datum = row[columnName], classList = ['viewing'];
+    _getReaderClass: function(internalRow, columnName) {
+      var datum = this._getInternalDataAt(internalRow, columnName);
+      var classList = ['viewing'];
       if(datum === null || datum === undefined
         || typeof datum === 'string' && datum.trim().length === 0) {
         classList.push('empty');
@@ -592,7 +639,7 @@
       return classList.join(' ');
     },
     _readContent: function(row, column) {
-      var datum = row[column.name];
+      var datum = this._getInternalDataAt(row, column.name);
       if(datum === null || datum === undefined
         || typeof datum === 'string' && datum.trim().length === 0) {
         var options = column.options;
