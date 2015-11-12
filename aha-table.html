@@ -162,7 +162,9 @@
       // the column names that are filtered on
       filteredColumns: {
         type: Array,
-        value: []
+        value: function() {
+          return [];
+        }
       },
       //all rows that are currently displayed on the page (visible right now)
       displayedRows: {
@@ -179,7 +181,9 @@
       // custom function declarations, used in individual columns for filtering/sorting
       customFunctions: {
         type: Object,
-        value: {}
+        value: function() {
+          return {};
+        }
       }
     },
 
