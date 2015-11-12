@@ -57,6 +57,7 @@
 
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow">
+
           <div class$="{{_getRowClass(internalRow, internalRow._selected)}}" on-click="_clickRow">
 
             <!-- Data cells -->
@@ -132,7 +133,8 @@
       //selectable: if table row is selectable
       selectable: {
         type: Boolean,
-        value: false
+        value: false,
+        observer: "_selectableChanged"
       },
       //striped: if table row is striped
       striped: {
@@ -207,6 +209,13 @@
       this.internalData = this._initializeInternalData();
 
       this._filterSortAndUpdateDisplayedTable();
+    },
+
+    _selectableChanged: function(newSelectable) {
+      // if meta is already defined and then selectable is set, we need to backfill the meta with the _selected column
+      if(newSelectable === true && this.meta !== null && this.meta !== undefined && this.meta.length > 0) {
+        this.splice('meta', 0, 0, this._generateMetaForColumn("_selected", "selected", true, "Selected"));
+      }
     },
 
     /********** Generating column metadata *************/
