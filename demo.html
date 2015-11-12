@@ -53,9 +53,6 @@
         <li>... and you can receive px-row-click events from the table, which can be used by taking action on the row</li>
       </ul>
 
-      <button onclick="changeTheData()">Change the data</button>
-      <button onclick="addToTheData()">Add to the data</button>
-
       <px-data-table id="mytable" selected-rows="{{mySelectedRows}}" filterable selectable striped table-data="{{minidata}}">
         <px-data-table-column
           name="first"
@@ -90,42 +87,6 @@
         function logSelectedRows() {
           var selectedRows = document.getElementById("mytable").selectedRows;
           console.log("Get all selected rows:", selectedRows);
-        }
-
-        function changeTheData() {
-          document.getElementById("mytable").tableData = [
-            {
-              "first": "Daniel",
-              "last": "Boone",
-              "date": "Sun Aug 14 1994 03:27:03 GMT-0700 (PDT)",
-              "email": "danielboone@scentric.com",
-              "color": "<button class='btn' style='color:rgb(201,142,97);'>Blue Bottle cardigan</button>"
-            },
-            {
-              "first": "Tom",
-              "last": "Cruise",
-              "date": "Mon Aug 15 2015 03:27:03 GMT-0700 (PDT)",
-              "email": "tomcruise@yahoo.com",
-              "color": "<button class='btn' style='color:rgb(113,105,251);'>Freegan tilde</button>"
-            },
-            {
-              "first": "Lisa",
-              "last": "Simpson",
-              "date": "Tues Aug 16 1994 03:27:03 GMT-0700 (PDT)",
-              "email": "simpson@gmail.com",
-              "color": "<button class='btn' style='color:rgb(195,89,110);'>dreamcatcher fingerstache</button>"
-            }
-          ];
-        }
-
-        function addToTheData() {
-          document.getElementById("mytable").push('tableData', {
-              "first": "Tony",
-              "last": "Hawk",
-              "date": "Sun Aug 14 1994 03:27:03 GMT-0700 (PDT)",
-              "email": "tonyhawk@gmail.com",
-              "color": "<button class='btn' style='color:rgb(195,89,110);'>Pickled cray scenester</button>"
-            });
         }
 
         document.addEventListener('WebComponentsReady', function() {
