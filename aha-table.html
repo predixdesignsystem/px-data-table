@@ -199,7 +199,6 @@
       if(this.data === undefined || this.data === null) {
         return;
       }
-      console.log("DC")
       // initialize the meta if there is none
       if(!this.meta || this.meta.length === 0) {
         var meta = this._generateMetaFromData();
@@ -598,7 +597,7 @@
     },
 
     _selectRow: function(row, indexInDisplayedRows) {
-      console.log(this.meta)
+      this.fire('before-select', row);
       if(this.selectedRows.indexOf(row) > -1) {
         row._selected = false;
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
@@ -609,7 +608,6 @@
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
         this.push('selectedRows', row);
       }
-      console.log(this.meta[0].label)
       this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")")
       this.fire('after-select', row);
 
