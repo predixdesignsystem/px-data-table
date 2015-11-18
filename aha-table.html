@@ -199,7 +199,7 @@
       if(this.data === undefined || this.data === null) {
         return;
       }
-
+      console.log("DC")
       // initialize the meta if there is none
       if(!this.meta || this.meta.length === 0) {
         var meta = this._generateMetaFromData();
@@ -214,7 +214,7 @@
     _selectableChanged: function(newSelectable) {
       // if meta is already defined and then selectable is set, we need to backfill the meta with the _selected column
       if(newSelectable === true && this.meta !== null && this.meta !== undefined && this.meta.length > 0) {
-        this.splice('meta', 0, 0, this._generateMetaForColumn("_selected", "selected", true, "Selected"));
+        this.splice('meta', 0, 0, this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
       }
     },
 
@@ -224,7 +224,7 @@
       var meta = [];
       if(this.selectable && this.data.length > 0) {
         // add a selected column if selectable
-        meta.push(this._generateMetaForColumn("_selected", "selected", true, "Selected"));
+        meta.push(this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
       }
       for(var prop in this.data[0]) {
         if(prop.indexOf('_') !== 0) {//skip internal field
@@ -547,10 +547,9 @@
       var column = e.model.column;
       var row = e.model.internalRow;
       var detail = {"row": row, "column": column};
-
+      this.fire('px-row-click', detail); // fire the event after it is marked selected
       if(this.selectable) {
         this._selectRow(row, e.model.index);
-        this.fire('px-row-click', detail); // fire the event after it is marked selected
 
         // always just make sure selectAll checkbox is unchecked when 1 row is clicked
         var selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
@@ -593,11 +592,13 @@
         }
       }
 
+      this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")")
       this.fire('px-select-all-click', this.selectedRows);
 
     },
 
     _selectRow: function(row, indexInDisplayedRows) {
+      console.log(this.meta)
       if(this.selectedRows.indexOf(row) > -1) {
         row._selected = false;
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
@@ -607,9 +608,9 @@
         row._selected = true;
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
         this.push('selectedRows', row);
-
       }
-
+      console.log(this.meta[0].label)
+      this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")")
       this.fire('after-select', row);
 
     },
