@@ -140,6 +140,8 @@ label {
   flex:1;
   overflow: auto;
 }
+.sorted-text-hover:hover {
+    cursor: pointer;}
 
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";

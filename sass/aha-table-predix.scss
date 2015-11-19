@@ -70,3 +70,6 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 .th{
   font-weight: bold;
 }
+.sorted-text-hover:hover {
+    color: $select-blue-hover ;
+    cursor: pointer;}

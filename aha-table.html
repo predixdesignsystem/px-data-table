@@ -24,10 +24,10 @@
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <span class$="{{_getHeaderClass(column)}}">
-              <label
+              <span
                 class$="{{_getTextSortingClass(column, sortedColumn)}}"
                 on-click="_sort">{{column.label}}<i class$="{{_getSortingClass(column, sortedColumn, descending)}}"></i>
-              </label>
+              </span>
             </span>
           </template>
         </div>
@@ -706,6 +706,9 @@
     },
     _getTextSortingClass: function(column, sortingColumn) {
       var classList = ['column-head'];
+      if(column.sortable) {
+        classList.push('sorted-text-hover');
+      }
       if(sortingColumn === column.name) {
         classList.push('sorted-text');
       }
