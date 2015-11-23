@@ -1043,13 +1043,7 @@ label {
   margin: 0; }
 
 .text-input--bare {
-  overflow: auto;
-  height: 1em;
-  width: 100%;
-  margin: 0;
-  padding: 0; }
-  .text-input--bare:focus {
-    outline: 0; }
+  width: 100%; }
 
 .filter-cell {
   -webkit-flex: 1;
@@ -1758,7 +1752,8 @@ label {
   background-color: #efeff4; }
 
 .filter--cell {
-  background-color: #efeff4; }
+  background-color: #efeff4;
+  border: 1px #d1d0d8 solid !important; }
 
 .sorted-text {
   color: #0a9ec1; }
@@ -1775,9 +1770,6 @@ label {
 
 .text-input {
   box-shadow: none; }
-
-.text-input--bare {
-  background: transparent; }
 
 .selected {
   background-color: #0a9ec1 !important;

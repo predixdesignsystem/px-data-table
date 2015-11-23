@@ -35,7 +35,7 @@
         <!-- Second Header (filter/select all) -->
         <div class$="{{_getSecondHeaderClass(filterable)}}">
           <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
-            <span class="td filter--cell">
+            <span class="td">
               <!-- select all checkbox -->
               <template is="dom-if" if="{{_isSelectAllColumn(column)}}">
                 <span class="flex flex--center">
@@ -46,10 +46,7 @@
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column)}}">
-                <span class="flex flex--justify">
-                  <input class="filter-input text-input--bare filter-cell" type="text" on-keyup="_filter"/>
-                  <i class="fa fa-filter"></i>
-                </span>
+                  <input placeholder="Filter" class="filter--cell text-input--bare" type="text" on-keyup="_filter"/>
               </template>
             </span>
           </template>

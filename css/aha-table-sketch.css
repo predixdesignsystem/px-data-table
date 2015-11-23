@@ -1030,13 +1030,7 @@ label {
   margin: 0; }
 
 .text-input--bare {
-  overflow: auto;
-  height: 1em;
-  width: 100%;
-  margin: 0;
-  padding: 0; }
-  .text-input--bare:focus {
-    outline: 0; }
+  width: 100%; }
 
 .filter-cell {
   -webkit-flex: 1;

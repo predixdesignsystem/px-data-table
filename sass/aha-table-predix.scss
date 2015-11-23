@@ -29,6 +29,7 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 
 .filter--cell {
   background-color: $gray2;
+  border: 1px $gray4 solid !important;
 }
 
 .sorted-text {
@@ -50,10 +51,6 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 
 .text-input{
   box-shadow: none;
-}
-
-.text-input--bare {
-  background: transparent;
 }
 
 .selected {
