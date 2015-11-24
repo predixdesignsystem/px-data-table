@@ -251,7 +251,7 @@ Events:
         // need the Selected column if the table is selectable
         if(this.selectable) {
           // add a selected column if selectable
-          meta.push(this.$.dataTable._generateMetaForColumn("_selected", "selected", true, "Selected"));
+          meta.push(this.$.dataTable._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
         }
 
         for(var i = 0; i < children.length; i++) {
