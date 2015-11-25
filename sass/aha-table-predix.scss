@@ -7,24 +7,21 @@
  * with the terms and conditions stipulated in the agreement/contract
  * under which the software has been supplied.
  */
-
 //
 // Sass for the Predix notion of the px-data-table component
 //
 // @author
 //
-
 /*
 THIS FILE SHOULD CONTAIN ONLY RULES SPECIFIC TO PREDIX BRANDING
 common/abstract rules go in px-data-table-sketch.scss, not in this file.
 */
-
 // Settings
 @import "px-colors-design/_settings.colors.scss";
 @import 'aha-table-sketch.scss';
 
 .striped:nth-child(even) {
-   background-color: $gray2;
+  background-color: $gray2;
 }
 
 .sorted-text {
@@ -41,11 +38,15 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 .btn--pagination:focus {
-    outline:0;
+  outline: 0;
 }
 
-.text-input{
-  box-shadow: none;
+.text-input--filter {
+  background-color: $white;
+}
+
+.tr--filter {
+  background-color: $gray4;
 }
 
 .selected {
@@ -53,9 +54,11 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   color: $white !important;
 }
 
-.th{
+.th {
   font-weight: bold;
 }
+
 .sorted-text-hover:hover {
-    color: $select-blue-hover ;
-    cursor: pointer;}
+  color: $select-blue-hover;
+  cursor: pointer;
+}

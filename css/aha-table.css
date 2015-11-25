@@ -1907,8 +1907,11 @@ label {
 .btn--pagination:focus {
   outline: 0; }
 
-.text-input {
-  box-shadow: none; }
+.text-input--filter {
+  background-color: white; }
+
+.tr--filter {
+  background-color: #d1d0d8; }
 
 .selected {
   background-color: #0a9ec1 !important;

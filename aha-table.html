@@ -46,7 +46,7 @@
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column)}}">
-                <input placeholder="Filter" class="text-input" type="text" on-keyup="_filter"/>
+                <input placeholder="Filter" class="text-input text-input--filter" type="text" on-keyup="_filter"/>
               </template>
 
             </span>
@@ -689,7 +689,7 @@
       return classList.join(' ');
     },
     _getSecondHeaderClass: function(filterable) {
-      var classList = ['tr'];
+      var classList = ['tr', 'tr--filter'];
       if(!filterable) {
         classList.push('hidden');
       }
