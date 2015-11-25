@@ -46,8 +46,9 @@
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column)}}">
-                  <input placeholder="Filter" class="filter--cell text-input--bare" type="text" on-keyup="_filter"/>
+                <input placeholder="Filter" class="text-input" type="text" on-keyup="_filter"/>
               </template>
+
             </span>
           </template>
         </div>
