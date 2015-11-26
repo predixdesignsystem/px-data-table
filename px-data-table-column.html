@@ -77,11 +77,13 @@ Element that defines a columns in a data table.
       },
 
       /**
-       * Name of the custom function to sort this row with.
+       * Full path to the custom function (on window) to sort this row with.
        *
-       * A custom function with this name must be the px-data-table customFunctions attribute.  If not, the column falls back to default sorting behavior.
+       * A custom function with this path must on window.  If not, the column falls back to default sorting behavior.
        *
-       *      <px-data-table-column sort-function-name="sortByEmailDomain" ...></px-data-table-column>
+       * We highly suggest namespacing this function name so you don't pollute the global namespace and so you can have multiple datatables with different sorting functions.
+       *
+       *      <px-data-table-column sort-function-name="temperatureDataTableCustomFunctions.sortByEmailDomain" ...></px-data-table-column>
        *
        * @default sort in increasing/decreasing alphanumerical
        */
@@ -91,11 +93,13 @@ Element that defines a columns in a data table.
       },
 
       /**
-       * Name of the custom function to filter this row with.
+       * Full path to the custom function (on window) to filter this row with.
        *
-       * A custom function with this name must be the px-data-table customFunctions attribute.  If not, the column falls back to default filtering behavior.
+       * A custom function with this path must on window.  If not, the column falls back to default filtering behavior.
        *
-       *      <px-data-table-column filter-function-name="filterWholeWord" ...></px-data-table-column>
+       * We highly suggest namespacing this function name so you don't pollute the global namespace and so you can have multiple datatables with different filtering functions.
+       *
+       *      <px-data-table-column filter-function-name="pressureDataTableCustomFunctions.filterWholeWord" ...></px-data-table-column>
        *
        * @default filter on the typed in string
        */

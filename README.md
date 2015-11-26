@@ -45,8 +45,8 @@ Advanced:
       <px-data-table-column
         name="first"
         sortable
-        filter-function-name="filterWholeWord"
-        sort-function-name="sortByEmailDomain">
+        filter-function-name="myTableCustomFunctions.filterWholeWord"
+        sort-function-name="myTableCustomFunctions.sortByEmailDomain">
       </px-data-table-column>
       <px-data-table-column name="last" ...></px-data-table-column>
       <px-data-table-column name="color" ...></px-data-table-column>
@@ -176,36 +176,6 @@ This property is read only.
 <px-data-table selected-rows="{{mySelectedItems}}" table-data="{{data}}"></px-data-table>
 ```
 
-##### customFunctions
-
-*Type:* **Object** - (*Optional*) - *Default:* {}
-
-Custom function declarations for any custom filtering/sorting functions.
-
-These are just the declarations of the functions; to use the functions for a column you must pass in the filter-function-name / sort-function-name to px-data-table-column.
-
-```html
-<px-data-table customFunctions="{{myCustomFunctions}}" table-data="{{data}}"></px-data-table>
-```
-
-```js
-myCustomFunctions = {
-  sortByEmailDomain: function(a, b) {
-    var aDomain = a.value.substring(a.value.indexOf("@")+1, a.value.indexOf("."));
-    var bDomain = b.value.substring(b.value.indexOf("@")+1, b.value.indexOf("."));
-    return this.descending
-      ? (aDomain < bDomain ? 1 : -1)
-       : (aDomain > bDomain ? 1 : -1);
-  },
-  filterWholeWord: function(searchString, cellValue) {
-    if(searchString === undefined || searchString === null || searchString === "") {
-      return true;
-    }
-    return (searchString.toString().toLowerCase() === cellValue.toString().toLowerCase());
-  }
-};
-```
-
 ### Events
 
 #### px-row-click
@@ -219,7 +189,7 @@ document.getElementById("mytable").addEventListener("px-row-click", function(e) 
 });
 ```
 
-#### px-select-all-click 
+#### px-select-all-click
 
 Fired when the select all button is clicked (selected or unselected)
 
@@ -267,11 +237,9 @@ Required.
 
 Type of the item in a row object to display.
 
-Supported options: string, html
+Options: string, html
 
 WARNING! Potential XSS vulnerability if html comes from an untrusted source.  This component does NOT do any sanitizing, it will execute whatever you pass it.
-
-Unsupported: date, time, datetime, choice
 
 ```html
 <px-data-table-column type="html" ...></px-data-table-column>
@@ -333,49 +301,30 @@ Options: center, left, right
 
 *Type:* **String** - (*Optional*) - *Default:* filter on the typed in string
 
-Name of the custom function to filter this row with.
+Full path to the custom function (on window) to filter this row with.
 
-A custom function with this name must be the px-data-table customFunctions attribute. If not, the column falls back to default filtering behavior.
+A custom function with this path must on window.  If not, the column falls back to default filtering behavior.
+
+We highly suggest namespacing this function name so you don't pollute the global namespace and so you can have multiple datatables with different filtering functions.
 
 ```html
-<px-data-table-column filter-function-name="filterWholeWord" ...></px-data-table-column>
+<px-data-table-column filter-function-name="pressureDataTableCustomFunctions.filterWholeWord" ...></px-data-table-column>
 ```
 
 ##### sortFunctionName
 
 *Type:* **String** - (*Optional*) - *Default:* sort in increasing/decreasing alphanumerical
 
-Name of the custom function to sort this row with.
+Full path to the custom function (on window) to sort this row with.
 
-A custom function with this name must be the px-data-table customFunctions attribute. If not, the column falls back to default sorting behavior.
+A custom function with this path must on window.  If not, the column falls back to default sorting behavior.
+
+We highly suggest namespacing this function name so you don't pollute the global namespace and so you can have
+multiple datatables with different sorting functions.
 
 ```html
-<px-data-table-column sort-function-name="sortByEmailDomain" ...></px-data-table-column>
+<px-data-table-column sort-function-name="temperatureDataTableCustomFunctions.sortByEmailDomain" ...></px-data-table-column>
 ```
-
-##### default
-
-Unsupported
-
-##### editable
-
-Unsupported
-
-##### hint
-
-Unsupported
-
-##### options
-
-Unsupported
-
-##### required
-
-Unsupported
-
-##### searchplaceholder
-
-Unsupported
 
 ### Events
 
