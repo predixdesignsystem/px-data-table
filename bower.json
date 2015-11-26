@@ -1,6 +1,6 @@
 {
   "name": "px-data-table",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": [
     "px-data-table.html"
   ],
@@ -14,16 +14,16 @@
     "test"
   ],
   "dependencies": {
-    "polymer": "~1.1.4",
-    "px-theme": "https://github.com/PredixDev/px-theme.git#~0.3.9"
+    "polymer": "~v1.2.3",
+    "px-theme": "https://github.com/PredixDev/px-theme.git#~0.4.0"
   },
   "devDependencies": {
     "px-tables-design": "https://github.com/PredixDev/px-tables-design.git#~0.3.9",
-    "iron-component-page": "PolymerElements/iron-component-page#~v1.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#~v1.1.0",
     "px-starter-kit-design": "https://github.com/PredixDev/px-starter-kit-design.git#~0.4.6",
-    "iron-ajax": "PolymerElements/iron-ajax#~1.0.3",
+    "iron-ajax": "PolymerElements/iron-ajax#~1.1.1",
     "px-layout-design": "https://github.com/PredixDev/px-layout-design.git#~0.3.8",
-    "px-card": "https://github.com/PredixDev/px-card.git#~0.0.14",
+    "px-card": "https://github.com/PredixDev/px-card.git#~0.2.0",
     "px-spacing-design": "https://github.com/PredixDev/px-spacing-design.git#~0.3.4",
     "px-buttons-design": "https://github.com/PredixDev/px-buttons-design.git#~0.4.13",
     "px-forms-design": "https://github.com/PredixDev/px-forms-design.git#~0.3.12",

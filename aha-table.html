@@ -53,7 +53,7 @@
         </div>
 
         <!-- Data rows -->
-        <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow">
+        <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
           <div class$="{{_getRowClass(internalRow, internalRow._selected)}}" on-click="_clickRow">
 
