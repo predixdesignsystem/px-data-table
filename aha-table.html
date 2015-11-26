@@ -46,8 +46,9 @@
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column)}}">
-                  <input placeholder="Filter" class="filter--cell text-input--bare" type="text" on-keyup="_filter"/>
+                <input placeholder="Filter" class="text-input text-input--filter" type="text" on-keyup="_filter"/>
               </template>
+
             </span>
           </template>
         </div>
@@ -176,13 +177,6 @@
       descending: {
         type: Boolean,
         value: false
-      },
-      // custom function declarations, used in individual columns for filtering/sorting
-      customFunctions: {
-        type: Object,
-        value: function() {
-          return {};
-        }
       }
     },
 
@@ -386,7 +380,7 @@
       // use custom sort function if there is one
       this.meta.forEach(function(obj) {
         if(this.sortedColumn === obj.name) {
-          sortFunction = this.customFunctions[obj['sort-function-name']];
+          sortFunction = this._resolveFunctionOnWindow("sort-function-name", obj);
         }
       }, this);
 
@@ -400,6 +394,26 @@
       }
 
       return sortFunction;
+    },
+
+    _resolveFunctionOnWindow: function(columnAttributeName, customFunctionPeriodSeperatedPath) {
+      var customFunction = window;
+
+      if(customFunctionPeriodSeperatedPath[columnAttributeName] === null || customFunctionPeriodSeperatedPath[columnAttributeName] === undefined) {
+        return null;
+      }
+
+      var customFunctionFullPath = customFunctionPeriodSeperatedPath[columnAttributeName].split(".");
+
+      for(var i in customFunctionFullPath) {
+        customFunction = customFunction[customFunctionFullPath[i]];
+        if(customFunction === undefined) {
+          console.warn("px-data-table: Custom function was used, but was not found on window. Is the path correct?");
+          return null;
+        }
+      }
+
+      return customFunction;
     },
 
     // fallback default sort function if per-column sort isn't specified.
@@ -518,7 +532,7 @@
       // use custom filter function if there is one
       this.meta.forEach(function(obj) {
         if(columnName === obj.name) {
-          filterFunction = this.customFunctions[obj['filter-function-name']];
+          filterFunction = this._resolveFunctionOnWindow('filter-function-name', obj);
         }
       }, this);
 
@@ -688,7 +702,7 @@
       return classList.join(' ');
     },
     _getSecondHeaderClass: function(filterable) {
-      var classList = ['tr'];
+      var classList = ['tr', 'tr--filter'];
       if(!filterable) {
         classList.push('hidden');
       }

@@ -7,59 +7,54 @@
  * with the terms and conditions stipulated in the agreement/contract
  * under which the software has been supplied.
  */
-
 //
 // Sass for the "sketch" notion of the px-data-table component
 //
 // @author
 //
-
 /*
 THIS FILE SHOULD CONTAIN ONLY ABSTRACT/'SKETCH' THEME RULES, NOT SPECIFIC TO PREDIX BRANDING
 Predix branding rules go in px-data-table-predix.scss, not in this file.
 */
-
 // Settings
 @import "px-defaults-design/_settings.defaults.scss";
 @import "px-mixins-design/_tools.mixins.scss";
-
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 @import "px-helpers-design/_generic.helpers.scss";
-
 // Base
 @import "px-flexbox-design/_base.flexbox.scss";
 @import "px-viewport-design/_base.viewport.scss";
 
-$inuit-enable-input--tiny       : true;
-$inuit-enable-text-input--bare  : true;
+$inuit-enable-input--tiny: true;
+$inuit-enable-text-input--bare: true;
 
 @import "px-forms-design/_base.forms.scss";
 
-$inuit-enable-table--fixed      : true;
-$inuit-enable-table--small      : true;
-$inuit-enable-table--large      : true;
-$inuit-enable-table--rows       : true;
-$inuit-enable-table--columns    : true;
-$inuit-table-border-color       : $gray5;
+$inuit-enable-table--fixed: true;
+$inuit-enable-table--small: true;
+$inuit-enable-table--large: true;
+$inuit-enable-table--rows: true;
+$inuit-enable-table--columns: true;
+$inuit-table-border-color: $gray5;
 
 @import "px-tables-design/_base.tables.scss";
 
 @import "px-layout-design/_objects.layout.scss";
 
-$inuit-enable-btn--bare         : true;
-$inuit-enable-btn--primary      : true;
-$inuit-enable-btn--icon         : true;
-$inuit-enable-btn--disabled     : true;
+$inuit-enable-btn--bare: true;
+$inuit-enable-btn--primary: true;
+$inuit-enable-btn--icon: true;
+$inuit-enable-btn--disabled: true;
 
 @import "px-buttons-design/_objects.buttons.scss";
 
-.btn--bare__pagination{
+.btn--bare__pagination {
   width: 32px;
 }
 
-.th{
+.th {
   @extend th;
   display: table-cell;
 }
@@ -71,17 +66,17 @@ $inuit-enable-btn--disabled     : true;
   border-right: 0;
 }
 
-.table{
+.table {
   @extend table;
   display: table !important;
 }
 
-.tr{
+.tr {
   @extend tr;
   display: table-row;
 }
 
-.td{
+.td {
   @extend td;
   display: table-cell;
   vertical-align: middle;
@@ -99,7 +94,7 @@ $inuit-enable-btn--disabled     : true;
   -webkit-tap-highlight-color: transparent;
 }
 
-.scroll-body{
+.scroll-body {
   display: block;
   overflow-x: scroll;
   padding-left: 1px; /*firefox border collapse fix*/
@@ -126,25 +121,19 @@ label {
   margin: 0;
 }
 
-.text-input--bare {
-  width: 100%;
-}
-.filter-cell {
-  flex:1;
-  overflow: auto;
-}
 .sorted-text-hover:hover {
-    cursor: pointer;}
+  cursor: pointer;
+}
 
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";
 
-$inuit-enable-margins--none       : true;
-$inuit-enable-margins--small      : true;
-$inuit-enable-margins--tiny       : true;
-$inuit-enable-margins--large      : true;
-$inuit-enable-paddings--none      : true;
-$inuit-enable-paddings--small     : true;
-$inuit-enable-paddings--large     : true;
+$inuit-enable-margins--none: true;
+$inuit-enable-margins--small: true;
+$inuit-enable-margins--tiny: true;
+$inuit-enable-margins--large: true;
+$inuit-enable-paddings--none: true;
+$inuit-enable-paddings--small: true;
+$inuit-enable-paddings--large: true;
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
 @import "px-widths-responsive-design/_trumps.widths-responsive.scss";
