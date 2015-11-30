@@ -18,6 +18,7 @@
   <template>
 
     <div class="scroll-body">
+      
       <div class$="{{_getTableClass(tableRows, tableColumns)}}">
 
         <!-- Header -->
@@ -630,12 +631,6 @@
       this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")")
       this.fire('after-select', row);
 
-    },
-
-    /******** Hover over cell contents and show truncated value ******************/
-
-    _displayFullCellContents: function(internalRow, column) {
-      return this._getInternalDataAt(internalRow, column.name);
     },
 
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
