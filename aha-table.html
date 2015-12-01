@@ -78,6 +78,7 @@
                       <template is="dom-if" if="{{_shouldClipDatumString(internalRow, column)}}">
                         <px-tooltip
                         orientation="top"
+                        smart-orientation
                         delay="1000"
                         tooltip-message="{{_getInternalDataAt(internalRow, column.name)}}">
                       </px-tooltip>
