@@ -20,7 +20,7 @@
       <h3>Data table demos</h3>
 
       <p>A very simple data table.  Just displays data and has sortable columns.</p>
-      <px-data-table table-data="{{minidata}}" id="table1"></px-data-table>
+      <px-data-table id="table1"></px-data-table>
 
       <hr>
 
@@ -789,6 +789,7 @@
           });
       });
 
+
       suite('Spot checks for correct values in table cells and controls', function() {
           test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function() {
             var fixture = document.getElementById('table1');
@@ -803,6 +804,21 @@
             assert.equal(span.innerHTML, '26');
           });
       });
-      </script>
+
+      suite('Spot for correct event firing of specific user controls', function() {
+        var paginationRoot = document.getElementById('pagination');
+        var span3Selector = 'span.paging.style-scope.px-pagination > span > span:nth-child(3)';
+        test('click fires when pagination button is clicked', function(done) {
+          var span3 = paginationRoot.querySelector(span3Selector);
+          span3.addEventListener('click', function(e) {
+            var startCountSelector = 'span.summary.style-scope.px-pagination > span:nth-child(1)';
+            var startCount = paginationRoot.querySelector(startCountSelector);
+            assert.equal(startCount.innerHTML, '21');
+            done();
+          });
+          span3.click();
+        });
+      });
+    </script>
   </body>
 </html>
