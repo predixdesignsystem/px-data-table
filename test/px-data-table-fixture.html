@@ -805,17 +805,25 @@
           });
       });
 
-      suite('Spot for correct event firing of specific user controls', function() {
+      suite('Spot checks for event upon interaction with specific user controls', function() {
+        // The root element for pagination
         var paginationRoot = document.getElementById('pagination');
+        // Selector for page 3 link
         var span3Selector = 'span.paging.style-scope.px-pagination > span > span:nth-child(3)';
-        test('click fires when pagination button is clicked', function(done) {
+        test('Pagination updates when page 3 link is clicked', function(done) {
+          // Page 3 link
           var span3 = paginationRoot.querySelector(span3Selector);
+          
           span3.addEventListener('click', function(e) {
             var startCountSelector = 'span.summary.style-scope.px-pagination > span:nth-child(1)';
+            // Element that shows starting record number in '<start>-<end> of <total> in Pagination'
             var startCount = paginationRoot.querySelector(startCountSelector);
+            // startCount should show '21' when page 3 is clicked
             assert.equal(startCount.innerHTML, '21');
+            // End the test
             done();
           });
+          // Trigger the CLICK event on page 3 link
           span3.click();
         });
       });
