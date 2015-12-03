@@ -789,8 +789,17 @@
           });
       });
 
-
-      suite('Spot checks for correct values in table cells and controls', function() {
+      suite('Spot checks for correct table structure, cell values and control states', function() {
+          test('There should be 17 columns in the table1 fixture', function() {
+            // Select a div corresponding to a data row in the table
+            var divSelector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(4)';
+            var divRow = document.querySelector(divSelector);
+            // Select all <span> children of divRow
+            var childSpanSelector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(4) > span.td.style-scope.aha-table';
+            var columnCount = divRow.querySelectorAll(childSpanSelector).length;
+            // There should be 17 such spans
+            assert.equal(columnCount, 17);
+          });
           test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function() {
             var fixture = document.getElementById('table1');
             var selector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(7) > span.td.aha-name-td.style-scope.aha-table > span > span';
@@ -813,7 +822,7 @@
         test('Pagination updates when page 3 link is clicked', function(done) {
           // Page 3 link
           var span3 = paginationRoot.querySelector(span3Selector);
-          
+
           span3.addEventListener('click', function(e) {
             var startCountSelector = 'span.summary.style-scope.px-pagination > span:nth-child(1)';
             // Element that shows starting record number in '<start>-<end> of <total> in Pagination'
