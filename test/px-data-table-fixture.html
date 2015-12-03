@@ -814,7 +814,7 @@
           });
       });
 
-      suite('Spot checks for event upon interaction with specific user controls', function() {
+      suite('Spot checks for event upon interaction with pagination controls', function() {
         // The root element for pagination
         var paginationRoot = document.getElementById('pagination');
         // Selector for page 3 link
@@ -836,6 +836,46 @@
           span3.click();
         });
       });
+
+      suite('Spot checks for filtering functionality', function(){
+        test('Matching records are returned when filter text is entered', function(done) {
+          var filterableTableRoot = document.querySelector('#table2');
+          var lastNameFilterSelector = 'div > div.tr.tr--filter.style-scope.aha-table > span:nth-child(3) > input';
+          var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
+          lastNameFilter.addEventListener('keyup', function(e){
+            setTimeout(function() {
+              var secondReturnedRowFirstNameSelector =
+              '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(4) > span.td.aha-first-td.style-scope.aha-table > span > span';
+              var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
+              assert.equal(secondReturnedRowFirstName.innerHTML, 'Rita');
+              done(); // end the test
+            }, 1000);
+          });
+          // Trigger filter edit event and provide a filter value
+          lastNameFilter.value = 'wo';
+          lastNameFilter.dispatchEvent(new Event('keyup'));
+        })
+      });
+
+      suite('Spot checks for sorting functionality', function(){
+        test('Records are sorted correctly when a sortable column header is clicked', function(done) {
+          var sortableTableRoot = document.querySelector('#table1');
+          var firstNameHeaderSelector = 'span.th.aha-first-th.sortable.th--no-borders.style-scope.aha-table > span';
+          var firstNameHeader = sortableTableRoot.querySelector(firstNameHeaderSelector);
+          firstNameHeader.addEventListener('click', function(e){
+            setTimeout(function() {
+              var tenthReturnedRowLastNameSelector =
+              '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(12) > span.td.aha-last-td.style-scope.aha-table > span > span';
+              var tenthReturnedRowLastName = sortableTableRoot.querySelector(tenthReturnedRowLastNameSelector);
+              assert.equal(tenthReturnedRowLastName.innerHTML, 'Wooten');
+              done(); // end the test
+            }, 1000);
+          });
+          // Trigger a click on the First Name column header
+          firstNameHeader.click();
+        })
+      });
+
     </script>
   </body>
 </html>
