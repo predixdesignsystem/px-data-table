@@ -1,4 +1,3 @@
-
 <!doctype html>
 
 <html>
@@ -18,19 +17,44 @@
   </head>
 
   <body>
-      
-
      
-      <px-data-table  id="table1"></px-data-table>
 
-      
+      <px-data-table id="table1" >
+      <px-data-table-column name="name"></px-data-table-column>
+        <px-data-table-column
+          name="first"          
+          max-column-character-width="10"
+          ellipsis-clip-position="right">
+        </px-data-table-column>
+        <px-data-table-column name="last"></px-data-table-column>
+        <px-data-table-column name="email"></px-data-table-column>
+        <px-data-table-column name="boolean"></px-data-table-column>
+        <px-data-table-column name="guid"></px-data-table-column>
+        <px-data-table-column name="integer"></px-data-table-column>
+        <px-data-table-column name="date"></px-data-table-column>
+        <px-data-table-column name="address"
+        max-column-character-width="10"
+          ellipsis-clip-position="center"
+        ></px-data-table-column>
+        <px-data-table-column name="city"></px-data-table-column>
+        <px-data-table-column name="state"></px-data-table-column>
+        <px-data-table-column name="zip"></px-data-table-column>
+        <px-data-table-column name="country"></px-data-table-column>
+        <px-data-table-column name="image"        
+          max-column-character-width="20"
+          ellipsis-clip-position="left">
+        </px-data-table-column>
+        <px-data-table-column name="phone"></px-data-table-column>
+        <px-data-table-column name="color"></px-data-table-column>
+        
+      </px-data-table>
       <script>
       var data =
       [
         {
           "index": 0,
-          "name": "Liz Grimes",
-          "first": "Isabel",
+          "name": "Liz Grimes ",
+          "first": "Isabel long name to test left elipse",
           "last": "Conrad",
           "image": "https://s3.amazonaws.com/uifaces/faces/twitter/enda/73.jpg",
           "boolean": true,
@@ -504,7 +528,7 @@
         },
         {
           "index": 25,
-          "name": "Graciela Orrabcdefghijk lakdfjlf",
+          "name": "Graciela Orr",
           "first": "Sharp",
           "last": "Lindsay",
           "image": "https://s3.amazonaws.com/uifaces/faces/twitter/thibaut_re/73.jpg",
@@ -522,14 +546,11 @@
           "color": "rgb(218,74,95)"
         }
       ];
-
       
-      var table1Fixture = document.getElementById('table1');
       
-      table1Fixture.tableData = data;
-
+      var fixture = document.getElementById('table1');
+      fixture.tableData = data;
       
-
       suite('Polymer and px-data-table instances exist', function() {
       
           test('Polymer exists', function() {
@@ -544,31 +565,31 @@
       });
 
       suite('Spot checks for correct values in table cells and controls', function() {
-          test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function() {
-            var fixture = document.getElementById('table1');
-            var selector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(7) > span.td.aha-name-td.style-scope.aha-table > span > span';
-            var span = fixture.querySelector(selector);
-            assert.equal(span.innerHTML, 'Rita Lopez');
-          });
-          test('Row count for first table should be 26', function() {
-            var fixture = document.getElementById('table1');
-            var selector = '#pagination > span.summary.style-scope.px-pagination > span:nth-child(4)';
-            var span = fixture.querySelector(selector);
-            assert.equal(span.innerHTML, '26');
-          });
-          test('First Name only first 15 characters displayed if length of the text is greater than 15 characters', function() {
+          
+          test('First Name displays only first 10 characters  if length of the text is greater than 10 characters and elipse at the right', function() {
           var fixture = document.getElementById('table1');
-            var selector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(7) > span.td.aha-name-td.style-scope.aha-table > span > span';
+            var selector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(3) > span.td.aha-first-td.style-scope.aha-table > span > span';
             var span = fixture.querySelector(selector);
-            assert.equal(span.innerHTML, 'Graciela Orr123...');
-          
-  
-           
-   });       
-          
+            assert.equal(span.innerText, 'Isabel lon…');
+      
+          });    
+           test('Email displays only last 10 characters displayed if length of the text is greater than 10 characters', function() {
+          var fixture = document.getElementById('table1');
+            var selector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(3) > span.td.aha-image-td.style-scope.aha-table > span > span';
+            var span = fixture.querySelector(selector);
+            assert.equal(span.innerText, '…/twitter/enda/73.jpg');
+      
+          });    
+          test('Address displays total 10 characters with ellipse in the center if length of the text is greater than 10 characters', function() {
+          var fixture = document.getElementById('table1');
+            var selector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(3) > span.td.aha-address-td.style-scope.aha-table > span > span';
+            var span = fixture.querySelector(selector);
+            assert.equal(span.innerText, '3 Vis…Place');
+      
+          });   
           
           
       });
-      </script>
+    </script>
   </body>
 </html>
