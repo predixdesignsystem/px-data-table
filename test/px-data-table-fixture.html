@@ -804,7 +804,7 @@
             var fixture = document.getElementById('table1');
             var selector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(7) > span.td.aha-name-td.style-scope.aha-table > span > span';
             var span = fixture.querySelector(selector);
-            assert.equal(span.innerHTML, 'Rita Lopez');
+            assert.equal(span.innerHTML.indexOf('Rita Lopez'), 0);
           });
           test('Row count for first table should be 26', function() {
             var fixture = document.getElementById('table1');
@@ -847,9 +847,9 @@
               var secondReturnedRowFirstNameSelector =
               '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(4) > span.td.aha-first-td.style-scope.aha-table > span > span';
               var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
-              assert.equal(secondReturnedRowFirstName.innerHTML, 'Rita');
+              assert.equal(secondReturnedRowFirstName.innerHTML.indexOf('Rita'), 0);
               done(); // end the test
-            }, 1000);
+            }, 0);
           });
           // Trigger filter edit event and provide a filter value
           lastNameFilter.value = 'wo';
@@ -867,15 +867,14 @@
               var tenthReturnedRowLastNameSelector =
               '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(12) > span.td.aha-last-td.style-scope.aha-table > span > span';
               var tenthReturnedRowLastName = sortableTableRoot.querySelector(tenthReturnedRowLastNameSelector);
-              assert.equal(tenthReturnedRowLastName.innerHTML, 'Wooten');
+              assert.equal(tenthReturnedRowLastName.innerHTML.indexOf('Wooten'), 0);
               done(); // end the test
-            }, 1000);
+            }, 0)
           });
           // Trigger a click on the First Name column header
           firstNameHeader.click();
         })
       });
-
     </script>
   </body>
 </html>
