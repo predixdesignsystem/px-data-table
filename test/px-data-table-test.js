@@ -735,19 +735,19 @@ suite('Spot checks for correct table structure, cell values and control states',
 suite('Spot checks for correct values in table cells and controls', function() {
   test('First Name displays only first 10 characters  if length of the text is greater than 10 characters and elipse at the right', function() {
     var fixture = document.getElementById('myTable');
-    var selector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(3) > span.td.aha-first-td.style-scope.aha-table > span > span';
+    var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-first-td';
     var span = fixture.querySelector(selector);
-    assert.equal(span.innerText, 'Isabel lon…');
+    assert.equal(span.innerText.indexOf('Isabel lon…') >= 0, true);
   });
   test('Email displays only last 10 characters displayed if length of the text is greater than 10 characters', function() {
     var fixture = document.getElementById('myTable');
-    var selector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(3) > span.td.aha-image-td.style-scope.aha-table > span > span';
+    var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-image-td';
     var span = fixture.querySelector(selector);
-    assert.equal(span.innerText, '…/twitter/enda/73.jpg');
+    assert.equal(span.innerText.indexOf('…/twitter/enda/73.jpg') >= 0, true);
   });
   test('Address displays total 10 characters with ellipse in the center if length of the text is greater than 10 characters', function() {
     var fixture = document.getElementById('myTable');
-    var selector = '#dataTable > div.scroll-body.style-scope.aha-table > div > div:nth-child(3) > span.td.aha-address-td.style-scope.aha-table > span > span';
+    var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-address-td';
     var span = fixture.querySelector(selector);
     assert.equal(span.innerText, '3 Vis…Place');
   });
