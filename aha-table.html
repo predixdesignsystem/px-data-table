@@ -11,11 +11,13 @@
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="px-pagination.html">
+<link rel="import" href="../px-tooltip/px-tooltip.html">
 
 <dom-module id="aha-table">
   <link rel="import" type="css" href="css/aha-table.css"/>
   <template>
     <div class="scroll-body">
+
       <div class$="{{_getTableClass(tableRows, tableColumns)}}">
         <!-- Header -->
         <div class="tr">
@@ -69,7 +71,16 @@
 
                   <!-- string content -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
-                    <span>{{_readContent(internalRow, column)}}</span>
+                    <span>{{_readContent(internalRow, column)}}
+                      <template is="dom-if" if="{{_shouldClipDatumString(internalRow, column)}}">
+                        <px-tooltip
+                        orientation="top"
+                        smart-orientation
+                        delay="1000"
+                        tooltip-message="{{_getInternalDataAt(internalRow, column.name)}}">
+                      </px-tooltip>
+                      </template>
+                    </span>
                   </template>
 
                   <!-- html content -->
@@ -621,7 +632,6 @@
 
     },
 
-
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
 
     _getRowClass: function(row, isSelected) {
@@ -647,41 +657,41 @@
     },
     _readContent: function(row, column) {
       var datum = this._getInternalDataAt(row, column.name);
-      if(datum === null || datum === undefined
-        || typeof datum === 'string' && datum.trim().length === 0) {
-        var options = column.options;
-        var blank = column.placeholder;
-        if(datum !== "" && options) {
-          //translate value to labels for select
-          for(var i = options.length - 1; i >= 0; i--) {
-            if(options[i].value === datum) {
-              return options[i].label;
-            }
-          }
-        }
-        datum = datum === undefined || datum === null ? '' : datum;
-        return datum === "" ? blank : datum;
-      } else {
-        if(column['max-column-character-width'] > 0) {
-          datum = this._clipDatumString(datum, column);
-        }
-        return datum;
+      if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+        return ""; // return empty string if no data
       }
+
+      if(this._shouldClipDatumString(row, column)) {
+        return this._clipDatumString(datum, column);
+      }
+
+      return datum;
+    },
+    _shouldClipDatumString: function(row, column) {
+      var datum = this._getInternalDataAt(row, column.name);
+      if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+        return false;
+      }
+      var maxColWidth = column['max-column-character-width'];
+      if(maxColWidth !== undefined && maxColWidth !== null) {
+        return datum.length > maxColWidth;
+      }
+      return false;
     },
     _clipDatumString: function(datum, column) {
-      var colWidth = column['max-column-character-width'];
-      if(datum.length > colWidth) {
-        if(column['ellipsis-clip-position'] === 'left') {
-          datum = '\u2026' + datum.substr(datum.length - colWidth, datum.length);
-        }
-        else if(column['ellipsis-clip-position'] === 'center') {
-          var datumLeftIndex = Math.floor(colWidth / 2),
-            datumRightIndex = colWidth - datumLeftIndex;
-          datum = datum.substr(0, datumLeftIndex) + '\u2026' + datum.substr(datum.length - datumRightIndex, datum.length);
-        }
-        else { //assume right
-          datum = datum.substr(0, colWidth) + '\u2026';
-        }
+      var maxColWidth = column['max-column-character-width'];
+      var ellipsisClipPosition = column['ellipsis-clip-position'];
+
+      if(ellipsisClipPosition === 'left') {
+        datum = '\u2026' + datum.substr(datum.length - maxColWidth, datum.length);
+      }
+      else if(ellipsisClipPosition === 'center') {
+        var datumLeftIndex = Math.floor(maxColWidth / 2),
+            datumRightIndex = maxColWidth - datumLeftIndex;
+        datum = datum.substr(0, datumLeftIndex) + '\u2026' + datum.substr(datum.length - datumRightIndex, datum.length);
+      }
+      else { //assume right
+        datum = datum.substr(0, maxColWidth) + '\u2026';
       }
       return datum;
     },
