@@ -1,3 +1,5 @@
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture;
+
 var data =
 [
   {
@@ -495,7 +497,6 @@ var data =
     "color": "rgb(218,74,95)"
   }
 ];
-
 var minidata =
 [
   {
@@ -670,29 +671,34 @@ var minidata =
   }
 ];
 
-var table1Fixture = document.getElementById('table1');
-table1Fixture.tableData = data;
+document.addEventListener("WebComponentsReady", function() {
+  table1Fixture = document.getElementById('table1');
+  table1Fixture.tableData = data;
+  table2Fixture = document.getElementById('table2');
+  table2Fixture.tableData = minidata;
 
-var table2Fixture = document.getElementById('table2');
-table2Fixture.tableData = minidata;
+  table3Fixture = document.getElementById('table3');
+  table3Fixture.tableData = data;
 
-var table3Fixture = document.getElementById('table3');
-table3Fixture.tableData = data;
+  table4Fixture = document.getElementById('table4');
+  table4Fixture.tableData = data;
 
-var table4Fixture = document.getElementById('table4');
-table4Fixture.tableData = data;
+  table5Fixture = document.getElementById('myTable');
+  table5Fixture.tableData = data;
 
-var table5Fixture = document.getElementById('myTable');
-table5Fixture.tableData = data;
+  runTests();
+});
 
-suite('Polymer and px-data-table instances exist', function() {
+function runTests() {
+  suite('Unit Tests for Data Table', function() {
+
   test('Polymer exists', function() {
     assert.isTrue(Polymer !== null);
   });
   test('table1 fixture is created', function() {
     assert.isTrue(document.getElementById('table1') !== null);
-    console.log(Polymer);
   });
+
   test('table2 fixture is created', function() {
     assert.isTrue(document.getElementById('table2') !== null);
   });
@@ -705,9 +711,9 @@ suite('Polymer and px-data-table instances exist', function() {
   test('myTable fixture is created', function() {
     assert.isTrue(document.getElementById('myTable') !== null);
   });
-});
 
-suite('Spot checks for correct table structure, cell values and control states', function() {
+  // Spot checks for correct table structure, cell values and control states
+
   test('There should be 17 columns in the table1 fixture', function() {
     // Select a div corresponding to a data row in the table
     var divSelector = '#dataTable > .scroll-body.style-scope.aha-table > div > :nth-child(4)';
@@ -730,30 +736,27 @@ suite('Spot checks for correct table structure, cell values and control states',
     var span = fixture.querySelector(selector);
     assert.equal(span.innerHTML, '26');
   });
-});
-
-suite('Spot checks for correct values in table cells and controls', function() {
+  // Spot checks for correct values in table cells and controls'
   test('First Name displays only first 10 characters  if length of the text is greater than 10 characters and elipse at the right', function() {
     var fixture = document.getElementById('myTable');
     var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-first-td';
     var span = fixture.querySelector(selector);
-    assert.equal(span.innerText.indexOf('Isabel lon…') >= 0, true);
+    assert.equal(span.innerHTML.indexOf('Isabel lon…') >= 0, true);
   });
   test('Email displays only last 10 characters displayed if length of the text is greater than 10 characters', function() {
     var fixture = document.getElementById('myTable');
     var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-image-td';
     var span = fixture.querySelector(selector);
-    assert.equal(span.innerText.indexOf('…/twitter/enda/73.jpg') >= 0, true);
+    assert.equal(span.innerHTML.indexOf('…/twitter/enda/73.jpg') >= 0, true);
   });
   test('Address displays total 10 characters with ellipse in the center if length of the text is greater than 10 characters', function() {
     var fixture = document.getElementById('myTable');
     var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-address-td';
     var span = fixture.querySelector(selector);
-    assert.equal(span.innerText, '3 Vis…Place');
+    assert.equal(span.innerHTML.indexOf('3 Vis…Place') >= 0, true);
   });
-});
 
-suite('Spot checks for event upon interaction with pagination controls', function() {
+  // Spot checks for event upon interaction with pagination controls
   // The root element for pagination
   var paginationRoot = document.getElementById('pagination');
   // Selector for page 3 link
@@ -773,9 +776,8 @@ suite('Spot checks for event upon interaction with pagination controls', functio
     // Trigger the CLICK event on page 3 link
     span3.click();
   });
-});
 
-suite('Spot checks for filtering functionality', function(){
+  // Spot checks for filtering functionality
   test('Matching records are returned when filter text is entered', function(done) {
     var filterableTableRoot = document.querySelector('#table2');
     var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(3) > input';
@@ -792,9 +794,8 @@ suite('Spot checks for filtering functionality', function(){
     lastNameFilter.value = 'wo';
     lastNameFilter.dispatchEvent(new Event('keyup'));
   })
-});
 
-suite('Spot checks for sorting functionality', function(){
+  // Spot checks for sorting functionality
   test('Records are sorted correctly when a sortable column header is clicked', function(done) {
     var sortableTableRoot = document.querySelector('#table1');
     var firstNameHeaderSelector = '.aha-first-th > span';
@@ -810,4 +811,5 @@ suite('Spot checks for sorting functionality', function(){
     // Trigger a click on the First Name column header
     firstNameHeader.click();
   })
-});
+  });
+};
