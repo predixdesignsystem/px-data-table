@@ -69,6 +69,7 @@ $inuit-enable-btn--disabled: true;
 .table {
   @extend table;
   display: table !important;
+  margin-bottom: 0rem;
 }
 
 .tr {
@@ -97,6 +98,7 @@ $inuit-enable-btn--disabled: true;
 .scroll-body {
   display: block;
   overflow-x: scroll;
+  margin-bottom: 1rem;
   padding-left: 1px; /*firefox border collapse fix*/
 }
 
@@ -125,6 +127,11 @@ label {
   cursor: pointer;
 }
 
+.no-results {
+  color: $gray6;
+  height: 2rem;
+  align-items: center;
+}
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";
 

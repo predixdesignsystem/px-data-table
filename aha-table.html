@@ -16,11 +16,9 @@
 <dom-module id="aha-table">
   <link rel="import" type="css" href="css/aha-table.css"/>
   <template>
-
     <div class="scroll-body">
       
       <div class$="{{_getTableClass(tableRows, tableColumns)}}">
-
         <!-- Header -->
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
@@ -53,7 +51,6 @@
             </span>
           </template>
         </div>
-
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
@@ -97,11 +94,12 @@
 
           </div>
         </template>
-
       </div>
 
+      <template is="dom-if" if="{{!displayedRows.length}}">
+          <div class="flex flex--center no-results">No Results</div>
+      </template>
     </div>
-
     <!-- Pagination controls -->
     <div class="pagination">
       <px-pagination id="pagination" number-of-items="{{numberOfItems}}" page-size="{{pageSize}}"
