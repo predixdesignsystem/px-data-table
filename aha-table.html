@@ -17,7 +17,7 @@
   <link rel="import" type="css" href="css/aha-table.css"/>
   <template>
     <div class="scroll-body">
-      
+
       <div class$="{{_getTableClass(tableRows, tableColumns)}}">
         <!-- Header -->
         <div class="tr">
@@ -58,7 +58,9 @@
 
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
-              <span class$="{{_getCellClass(column.name)}}">
+
+
+              <span on-click="_click" class$="{{_getCellClass(column.name)}}">
                 <span class$="{{_getReaderClass(internalRow, column.name)}}">
 
                   <!-- selected column checkbox -->
@@ -68,6 +70,22 @@
                              checked="{{internalRow._selected::change}}"/>
                     </span>
                   </template>
+
+                  <!-- in place editing template -->
+                  <div hidden>
+                    <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
+                      <input type="text"
+                        required$="{{column.required}}"
+                        on-blur="_save"
+                        value="{{_getInternalDataAt(internalRow, column.name)}}"/>
+                    </template>
+                    <template is="dom-if" if="{{_isEqual(column.type, 'text')}}">
+                      <textarea
+                        required?="{{column.required}}"
+                        on-blur="_save">{{getValue(row,column.name)}}</textarea>
+                    </template>
+                  </div>
+                  <!-- in place editing template -->
 
                   <!-- string content -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
@@ -560,14 +578,70 @@
 
 
     /********** Selecting ************/
+    _click:function(evt){
+      var column = evt.model.column;
+      var row = evt.model.internalRow;
+      var detail = {"row": row, "column": column};
+      // this.fire('px-row-click', detail); // fire the event after it is marked selected
+      if (true) {
+      // if (column.editable) {
+				this._edit(evt);
+			}
+    },
+    _edit: function(e) {
+			var row = e.model.internalRow;
+			this.set('_editing', true, row);
+			if (this.editingRow && this.editingRow !== row) {
+				this.set('_editing', false, this.editingRow);
+			}
+			this.set('editingRow', row);
+			e.target.setAttribute('hidden', true);
+			e.target.previousElementSibling.removeAttribute('hidden');
+			Polymer.dom(e.target.previousElementSibling).querySelector('input,select,textarea').focus();
+		},
+    _save: function(e) {
+			var row    = e.model.internalRow;
+			var column = e.model.column;
+			if(row){
+				this.fire('before-save', {"event": e, "row" : row, "column" : column});
+				this._setInternalDataAt(row, column.name, e.target.value);
 
-    _clickRow: function(e) {
-      var column = e.model.column;
-      var row = e.model.internalRow;
+				// if (this.modified.indexOf(row) === -1) {
+				// 	this.set('_modified', true, row);
+				// 	this.push('modified', row);
+				// }
+
+				if (!e.relatedTarget || !e.relatedTarget.templateInstance || e.relatedmodel.row !== e.model.row) {
+					this.set('_editing', false, row);
+
+					var editor = e.target.parentElement;
+					var reader = editor.nextElementSibling;
+					editor.setAttribute('hidden', true);
+					reader.removeAttribute('hidden');
+					reader.innerText = this._readContent(row, column);
+					if (row[column.name] !== undefined && row[column.name] !== '') {
+						reader.classList.remove('empty');
+					} else {
+						reader.classList.add('empty');
+					}
+				}
+
+				if (column.required && !e.target.validity.valid) {
+					this.fire('after-invalid', {"event": e, "row" : row, "column" : column});
+				}
+				this.fire('after-save', {"event": e, "row" : row, "column" : column});
+			}
+		},
+    _clickRow: function(evt) {
+      var column = evt.model.column;
+      var row = evt.model.internalRow;
       var detail = {"row": row, "column": column};
       this.fire('px-row-click', detail); // fire the event after it is marked selected
+      // if (column.editable) {
+			// 	this.edit(evt);
+			// }
       if(this.selectable) {
-        this._selectRow(row, e.model.index);
+        this._selectRow(row, evt.model.index);
 
         // always just make sure selectAll checkbox is unchecked when 1 row is clicked
         var selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
@@ -597,7 +671,7 @@
       }
 
       // notify viewing rows of change
-      for(var i = 0; i < this.displayedRows.length; i++) {
+      for(i = 0; i < this.displayedRows.length; i++) {
         this.notifyPath('displayedRows.' + i + '._selected', this.displayedRows[i]._selected);
       }
 
@@ -610,7 +684,7 @@
         }
       }
 
-      this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")")
+      this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")");
       this.fire('px-select-all-click', this.selectedRows);
 
     },
@@ -627,7 +701,7 @@
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
         this.push('selectedRows', row);
       }
-      this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")")
+      this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")");
       this.fire('after-select', row);
 
     },
@@ -649,8 +723,7 @@
     _getReaderClass: function(internalRow, columnName) {
       var datum = this._getInternalDataAt(internalRow, columnName);
       var classList = ['viewing'];
-      if(datum === null || datum === undefined
-        || typeof datum === 'string' && datum.trim().length === 0) {
+      if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
         classList.push('empty');
       }
       return classList.join(' ');
