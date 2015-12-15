@@ -583,8 +583,7 @@
       var row = evt.model.internalRow;
       var detail = {"row": row, "column": column};
       // this.fire('px-row-click', detail); // fire the event after it is marked selected
-      if (true) {
-      // if (column.editable) {
+      if (column.editable) {
 				this._edit(evt);
 			}
     },

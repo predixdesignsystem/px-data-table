@@ -20,6 +20,7 @@ Advanced:
       <px-data-table-column
         name="first"
     		sortable
+        editable
         filter-function-name="mytableCustomFunctions.filterWholeWord"
         sort-function-name="mytableCustomFunctions.sortByEmailDomain">
       </px-data-table-column>
@@ -226,7 +227,7 @@ Events:
           for(var j = 0; j < children[i].attributes.length; j++) {
             var attribute = children[i].attributes[j];
 
-            if(['sortable', 'filterable'].indexOf(attribute.name) >= 0) {
+            if(['sortable', 'filterable', 'editable'].indexOf(attribute.name) >= 0) {
               column[attribute.nodeName] = true;
             }
             else {
