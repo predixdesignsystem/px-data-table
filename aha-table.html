@@ -267,13 +267,18 @@
     /********** Filter/Sort main function *************/
 
     _filterSortAndUpdateDisplayedTable: function() {
+      var i,
+          index,
+          count= 0,
+          self = this,
+          len;
 
       // start at original data source (shadow fields, _selected and _filtered are still set)
       this.filteredSortedData = this.internalData;
 
       // reset back to unfiltered
       // leave _selected as is since selected rows should stay selected
-      for(var i = 0; i < this.internalData.length; i++) {
+      for(i = 0, len = this.internalData.length; i < len; i++) {
         this._setInternalDataAt(this.internalData[i], '_filtered', false);
       }
 
@@ -283,14 +288,13 @@
       }
 
       // filter
-      for(var index in this.filteredColumns) {
+      for(index in this.filteredColumns) {
         this.filteredSortedData = this._filterByColumn(this.filteredColumns[index].name,
           this.filteredColumns[index].userEntry, this.filteredSortedData);
       }
 
       // count total number of rows
-      var count = 0;
-      var self = this;
+      self = this;
       this.internalData.forEach(function(row) {
         if(!self._getInternalDataAt(row, '_filtered')) {
           count++;
@@ -308,8 +312,10 @@
 
     _initializeInternalData: function() {
       // make internal data structure with shadow fields
-      var internalData = [];
-      for(var i = 0; i < this.data.length; i++) {
+      var internalData = [],
+          i,
+          len;
+      for(i = 0, len = this.data.length; i < len; i++) {
         internalData.push({
           row: this.data[i],
           _filtered: false,
@@ -346,15 +352,16 @@
     /******* Update Displayed rows when major changes ****/
 
     _updateDisplayedRows: function() {
-
+      var fromPage,
+          to;
       if(this.firstItemIndex !== null && this.firstItemIndex !== undefined &&
         this.pageSize !== null && this.pageSize !== undefined &&
         this.filteredSortedData !== undefined && this.filteredSortedData !== null) {
 
-        var from = this.firstItemIndex - 1; // pagination is 1-based
-        var to = from + this.pageSize;
+        fromPage = this.firstItemIndex - 1; // pagination is 1-based
+        to = fromPage + this.pageSize;
 
-        this.set('displayedRows', this.filteredSortedData.slice(from, to));
+        this.set('displayedRows', this.filteredSortedData.slice(fromPage, to));
 
       }
     },
@@ -363,9 +370,10 @@
 
     // sort by header click handler
     _sort: function(e, p) {
-      var column = e.model.column;
+      var column = e.model.column,
+          sortingColumn;
       if(column && column.sortable) {
-        var sortingColumn = column.name;
+        sortingColumn = column.name;
         if(sortingColumn === this.sortedColumn) {
           this.set('descending', !this.descending);
         } else {
@@ -378,10 +386,10 @@
 
     _sortByColumn: function(rowsToSort) {
 
-      var sortFunction = this._getSortFunction();
-
+      var sortFunction = this._getSortFunction(),
+          sortedRows;
       // sorting map: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Sorting_maps
-      var sortedRows =
+      sortedRows =
         rowsToSort
           .map(function(e, i) {
             var v = this._getInternalDataAt(e, this.sortedColumn);
@@ -424,15 +432,17 @@
     },
 
     _resolveFunctionOnWindow: function(columnAttributeName, customFunctionPeriodSeperatedPath) {
-      var customFunction = window;
+      var customFunction = window,
+          customFunctionFullPath,
+          i;
 
       if(customFunctionPeriodSeperatedPath[columnAttributeName] === null || customFunctionPeriodSeperatedPath[columnAttributeName] === undefined) {
         return null;
       }
 
-      var customFunctionFullPath = customFunctionPeriodSeperatedPath[columnAttributeName].split(".");
+      customFunctionFullPath = customFunctionPeriodSeperatedPath[columnAttributeName].split(".");
 
-      for(var i in customFunctionFullPath) {
+      for(i in customFunctionFullPath) {
         customFunction = customFunction[customFunctionFullPath[i]];
         if(customFunction === undefined) {
           console.warn("px-data-table: Custom function was used, but was not found on window. Is the path correct?");
@@ -486,16 +496,20 @@
     _filter: function(e) {
 
       // have to do modelForElement because dom-if cancels out dom-repeat model (https://github.com/Polymer/polymer/issues/1865)
-      var column = this.$.filterRepeat.modelForElement(e.target).column;
+      var column = this.$.filterRepeat.modelForElement(e.target).column,
+        userEntry,
+        isNotInFilteredColumnsList,
+        index,
+        filteredColumn;
 
       if(column && column.filterable) {
 
-        var userEntry = e.target.value;
+        userEntry = e.target.value;
 
-        var isNotInFilteredColumnsList = true;
+        isNotInFilteredColumnsList = true;
 
-        for(var index in this.filteredColumns) {
-          var filteredColumn = this.filteredColumns[index];
+        for(index in this.filteredColumns) {
+          filteredColumn = this.filteredColumns[index];
 
           if(filteredColumn.name === column.name) {
             isNotInFilteredColumnsList = false;
@@ -524,14 +538,19 @@
 
     _filterByColumn: function(columnName, userEntry, rowsToFilter) {
 
-      var filterFunction = this._getFilterFunction(columnName);
+      var filterFunction = this._getFilterFunction(columnName),
+          i,
+          len,
+          matched,
+          self = this,
+          filteredRows;
 
-      for(var i = 0, len = rowsToFilter.length; i < len; i++) {
+      for(i = 0, len = rowsToFilter.length; i < len; i++) {
 
         // if it's not filtered already
         if(rowsToFilter[i]._filtered === false) {
 
-          var matched = filterFunction(userEntry, this._getInternalDataAt(rowsToFilter[i], columnName));
+          matched = filterFunction(userEntry, this._getInternalDataAt(rowsToFilter[i], columnName));
 
           if(!matched) {
             this._setInternalDataAt(rowsToFilter[i], '_filtered', true);
@@ -541,12 +560,12 @@
 
       }
 
-      var self = this;
+
       this.filtered = rowsToFilter.some(function(row) {
         return self._getInternalDataAt(row, '_filtered');
       });
 
-      var filteredRows = rowsToFilter.filter(function(r) {
+      filteredRows = rowsToFilter.filter(function(r) {
         return !self._getInternalDataAt(r, '_filtered');
       });
 
@@ -580,29 +599,32 @@
 
     /********** Selecting ************/
     _click:function(evt){
-      var column = evt.model.column;
-      var row = evt.model.internalRow;
-      var detail = {"row": row, "column": column};
+      var column = evt.model.column,
+          row = evt.model.internalRow,
+          detail = {"row": row, "column": column};
       // this.fire('px-row-click', detail); // fire the event after it is marked selected
       if (column.editable) {
 				this._edit(evt);
 			}
     },
     _edit: function(e) {
-			var row = e.model.internalRow;
+			var row = e.model.internalRow,
+          targetEle;
 			this.set('_editing', true, row);
 			if (this.editingRow && this.editingRow !== row) {
 				this.set('_editing', false, this.editingRow);
 			}
 			this.set('editingRow', row);
 			this.toggleClass('visuallyhidden', true, Polymer.dom(e.currentTarget).querySelector('.cell--value'));
-      var targetEle = Polymer.dom(e.currentTarget).querySelector('.cell--edit');
+      targetEle = Polymer.dom(e.currentTarget).querySelector('.cell--edit');
 			this.toggleClass('visuallyhidden', false, targetEle);
 			Polymer.dom(targetEle).querySelector('input,select,textarea').focus();
 		},
     _save: function(e) {
-			var row    = e.model.internalRow;
-			var column = e.model.column;
+      var row = e.model.internalRow,
+          column = e.model.column,
+          editor,
+          reader;
 			if(row){
 				this.fire('before-save', {"event": e, "row" : row, "column" : column});
 				this._setInternalDataAt(row, column.name, e.currentTarget.value);
@@ -610,8 +632,8 @@
 				if (!e.relatedTarget || !e.relatedTarget.templateInstance || e.relatedmodel.row !== e.model.row) {
 					this.set('_editing', false, row);
 
-					var editor = e.currentTarget.parentElement;
-					var reader = editor.nextElementSibling;
+					editor = e.currentTarget.parentElement;
+					reader = editor.nextElementSibling;
 					this.toggleClass('visuallyhidden', true, editor);
 					this.toggleClass('visuallyhidden', false, reader);
 					reader.innerText = this._readContent(row, column);
@@ -629,9 +651,10 @@
 			}
 		},
     _clickRow: function(evt) {
-      var column = evt.model.column;
-      var row = evt.model.internalRow;
-      var detail = {"row": row, "column": column};
+      var column = evt.model.column,
+          row = evt.model.internalRow,
+          detail = {"row": row, "column": column},
+          selectAllCheckbox;
       this.fire('px-row-click', detail); // fire the event after it is marked selected
       // if (column.editable) {
 			// 	this.edit(evt);
@@ -640,7 +663,7 @@
         this._selectRow(row, evt.model.index);
 
         // always just make sure selectAll checkbox is unchecked when 1 row is clicked
-        var selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+        selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
         selectAllCheckbox.checked = false;
 
         // if sorted row is selected, then it is no longer selected
@@ -660,14 +683,15 @@
     },
 
     _setAllRows: function(isSelected) {
-
+      var i,
+          len;
       // set all rows selected/unselected
-      for(var i = 0; i < this.internalData.length; i++) {
+      for(i = 0, len = this.internalData.length; i < len; i++) {
         this._setInternalDataAt(this.internalData[i], '_selected', isSelected);
       }
 
       // notify viewing rows of change
-      for(i = 0; i < this.displayedRows.length; i++) {
+      for(i = 0, len = this.displayedRows.length; i < len; i++) {
         this.notifyPath('displayedRows.' + i + '._selected', this.displayedRows[i]._selected);
       }
 
@@ -675,7 +699,7 @@
       this.splice('selectedRows', 0, this.selectedRows.length);
       if(isSelected) {
         // add everything to selectedRows property
-        for(i = 0; i < this.internalData.length; i++) {
+        for(i = 0, len = this.internalData.length; i < len; i++) {
           this.push('selectedRows', this.internalData[i]);
         }
       }
@@ -717,8 +741,8 @@
       return !column.selectAll && column.filterable;
     },
     _getReaderClass: function(internalRow, columnName) {
-      var datum = this._getInternalDataAt(internalRow, columnName);
-      var classList = ['viewing'];
+      var datum = this._getInternalDataAt(internalRow, columnName),
+          classList = ['viewing'];
       if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
         classList.push('empty');
       }
@@ -737,26 +761,29 @@
       return datum;
     },
     _shouldClipDatumString: function(row, column) {
-      var datum = this._getInternalDataAt(row, column.name);
+      var datum = this._getInternalDataAt(row, column.name),
+          maxColWidth;
       if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
         return false;
       }
-      var maxColWidth = column['max-column-character-width'];
+      maxColWidth = column['max-column-character-width'];
       if(maxColWidth !== undefined && maxColWidth !== null) {
         return datum.length > maxColWidth;
       }
       return false;
     },
     _clipDatumString: function(datum, column) {
-      var maxColWidth = column['max-column-character-width'];
-      var ellipsisClipPosition = column['ellipsis-clip-position'];
+      var maxColWidth = column['max-column-character-width'],
+          ellipsisClipPosition = column['ellipsis-clip-position'],
+          datumLeftIndex,
+          datumRightIndex;
 
       if(ellipsisClipPosition === 'left') {
         datum = '\u2026' + datum.substr(datum.length - maxColWidth, datum.length);
       }
       else if(ellipsisClipPosition === 'center') {
-        var datumLeftIndex = Math.floor(maxColWidth / 2),
-            datumRightIndex = maxColWidth - datumLeftIndex;
+        datumLeftIndex = Math.floor(maxColWidth / 2);
+        datumRightIndex = maxColWidth - datumLeftIndex;
         datum = datum.substr(0, datumLeftIndex) + '\u2026' + datum.substr(datum.length - datumRightIndex, datum.length);
       }
       else { //assume right
