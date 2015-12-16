@@ -62,3 +62,11 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   color: $select-blue-hover;
   cursor: pointer;
 }
+
+.cell--edit {
+  &  input, textarea {
+    outline: none;
+    background-color: transparent;
+    box-shadow: none;
+  }
+}

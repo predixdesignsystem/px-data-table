@@ -75,6 +75,7 @@
                   <div class="cell--edit visuallyhidden">
                     <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
                       <input type="text"
+                        class="u-p0 text-input text-input--bare"
                         required$="{{column.required}}"
                         on-blur="_save"
                         value="{{_getInternalDataAt(internalRow, column.name)}}"/>

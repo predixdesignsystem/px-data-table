@@ -132,6 +132,14 @@ label {
   height: 2rem;
   align-items: center;
 }
+
+.cell--edit {
+  &  input {
+    max-height: 18px;
+  }
+}
+
+
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";
 
