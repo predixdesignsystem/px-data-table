@@ -60,7 +60,7 @@
             <template is="dom-repeat" items="{{meta}}" as="column">
 
 
-              <span on-click="_click" class$="{{_getCellClass(column.name)}}">
+              <span on-tap="_click" class$="{{_getCellClass(column.name)}}">
                 <span class$="{{_getReaderClass(internalRow, column.name)}}">
 
                   <!-- selected column checkbox -->
@@ -72,7 +72,7 @@
                   </template>
 
                   <!-- in place editing template -->
-                  <div hidden>
+                  <div class="cell--edit visuallyhidden">
                     <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
                       <input type="text"
                         required$="{{column.required}}"
@@ -89,7 +89,7 @@
 
                   <!-- string content -->
                   <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
-                    <span>{{_readContent(internalRow, column)}}
+                    <span class="cell--value">{{_readContent(internalRow, column)}}
                       <template is="dom-if" if="{{_shouldClipDatumString(internalRow, column)}}">
                         <px-tooltip
                         orientation="top"
@@ -594,29 +594,25 @@
 				this.set('_editing', false, this.editingRow);
 			}
 			this.set('editingRow', row);
-			e.target.setAttribute('hidden', true);
-			e.target.previousElementSibling.removeAttribute('hidden');
-			Polymer.dom(e.target.previousElementSibling).querySelector('input,select,textarea').focus();
+			this.toggleClass('visuallyhidden', true, Polymer.dom(e.currentTarget).querySelector('.cell--value'));
+      var targetEle = Polymer.dom(e.currentTarget).querySelector('.cell--edit');
+			this.toggleClass('visuallyhidden', false, targetEle);
+			Polymer.dom(targetEle).querySelector('input,select,textarea').focus();
 		},
     _save: function(e) {
 			var row    = e.model.internalRow;
 			var column = e.model.column;
 			if(row){
 				this.fire('before-save', {"event": e, "row" : row, "column" : column});
-				this._setInternalDataAt(row, column.name, e.target.value);
-
-				// if (this.modified.indexOf(row) === -1) {
-				// 	this.set('_modified', true, row);
-				// 	this.push('modified', row);
-				// }
+				this._setInternalDataAt(row, column.name, e.currentTarget.value);
 
 				if (!e.relatedTarget || !e.relatedTarget.templateInstance || e.relatedmodel.row !== e.model.row) {
 					this.set('_editing', false, row);
 
-					var editor = e.target.parentElement;
+					var editor = e.currentTarget.parentElement;
 					var reader = editor.nextElementSibling;
-					editor.setAttribute('hidden', true);
-					reader.removeAttribute('hidden');
+					this.toggleClass('visuallyhidden', true, editor);
+					this.toggleClass('visuallyhidden', false, reader);
 					reader.innerText = this._readContent(row, column);
 					if (row[column.name] !== undefined && row[column.name] !== '') {
 						reader.classList.remove('empty');
