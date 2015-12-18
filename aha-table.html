@@ -12,6 +12,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="../px-tooltip/px-tooltip.html">
+<link rel="import" href="px-edit-cell.html">
 
 <dom-module id="aha-table">
   <link rel="import" type="css" href="css/aha-table.css"/>
@@ -72,7 +73,7 @@
                   </template>
 
                   <!-- in place editing template -->
-                  <div class="cell--edit visuallyhidden">
+                  <px-edit-cell class="cell--edit visuallyhidden">
                     <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
                       <input type="text"
                         class="u-p0 text-input text-input--bare"
@@ -85,7 +86,7 @@
                         required?="{{column.required}}"
                         on-blur="_save">{{getValue(row,column.name)}}</textarea>
                     </template>
-                  </div>
+                  </px-edit-cell>
                   <!-- in place editing template -->
 
                   <!-- string content -->
@@ -116,7 +117,7 @@
       </div>
 
       <template is="dom-if" if="{{!displayedRows.length}}">
-          <div class="flex flex--center no-results">No Results</div>
+        <div class="flex flex--center no-results">No Results</div>
       </template>
     </div>
     <!-- Pagination controls -->
@@ -212,6 +213,12 @@
       '_updateDisplayedRows(pageSize)' // when the size of the page changes
     ],
 
+    ready: function() {
+      document.body.addEventListener('exit-edit-mode', this._exitEditMode.bind(this));
+    },
+    _exitEditMode: function(){
+      document.activeElement.blur();
+    },
     _dataChanged: function() {
 
       if(this.data === undefined || this.data === null) {
