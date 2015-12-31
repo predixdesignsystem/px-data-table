@@ -29,6 +29,7 @@ Predix branding rules go in px-data-table-predix.scss, not in this file.
 
 $inuit-enable-input--tiny: true;
 $inuit-enable-text-input--bare: true;
+$inuit-enable-validation-states : true;
 
 @import "px-forms-design/_base.forms.scss";
 

@@ -762,6 +762,30 @@ textarea {
 .text-input--bare {
   border: 0 !important; }
 
+/**
+   * Styles for validation states
+   */
+.validation-warning {
+  color: #dd6b1f; }
+
+.validation-error {
+  color: #e53838; }
+
+.validation-success {
+  color: #46ad00; }
+
+.text-input.validation-warning {
+  border-color: #dd6b1f;
+  color: inherit; }
+
+.text-input.validation-error {
+  border-color: #e53838;
+  color: inherit; }
+
+.text-input.validation-success {
+  border-color: #46ad00;
+  color: inherit; }
+
 .table {
   width: 100%;
   border-collapse: collapse;
