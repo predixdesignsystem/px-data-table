@@ -17,7 +17,8 @@
     "polymer": "~v1.2.3",
     "px-tooltip": "https://github.com/PredixDev/px-tooltip.git#~v0.2.0",
     "px-theme": "https://github.com/PredixDev/px-theme.git#~0.4.0",
-    "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#~1.1.0"
+    "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#~1.1.0",
+    "px-validation": "https://github.com/PredixDev/px-validation.git"
   },
   "devDependencies": {
     "px-tables-design": "https://github.com/PredixDev/px-tables-design.git#~0.3.9",

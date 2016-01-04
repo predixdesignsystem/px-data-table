@@ -17,6 +17,7 @@
 <dom-module id="aha-table">
   <link rel="import" type="css" href="css/aha-table.css"/>
   <template>
+    <content></content>
     <div class="scroll-body">
 
       <div class$="{{_getTableClass(tableRows, tableColumns)}}">
@@ -627,19 +628,29 @@
 			this.toggleClass('visuallyhidden', false, targetEle);
 			Polymer.dom(targetEle).querySelector('input,select,textarea').focus();
 		},
-    _save: function(e) {
-      var row = e.model.internalRow,
-          column = e.model.column,
-          editor,
-          reader;
-			if(row){
-				this.fire('before-save', {"event": e, "row" : row, "column" : column});
-				this._setInternalDataAt(row, column.name, e.currentTarget.value);
+    _save: function(evt) {
 
-				if (!e.relatedTarget || !e.relatedTarget.templateInstance || e.relatedmodel.row !== e.model.row) {
+      var row = evt.model.internalRow,
+          column = evt.model.column,
+          editor,
+          reader,
+          newValue = evt.currentTarget.value;
+			if(row){
+				this.fire('before-save', {"event": evt, "row" : row, "column" : column});
+
+        //FIXME: need a more graceful to run validation on px-validation element.
+        if(!column._validate.validate(newValue).passedValidation){
+          this.toggleClass('validation-error', true, evt.currentTarget.parentElement.parentElement);
+        }else {
+          this.toggleClass('validation-success', true, evt.currentTarget.parentElement.parentElement);
+        }
+
+        this._setInternalDataAt(row, column.name, newValue);
+
+				if (!evt.relatedTarget || !evt.relatedTarget.templateInstance || evt.relatedmodel.row !== evt.model.row) {
 					this.set('_editing', false, row);
 
-					editor = e.currentTarget.parentElement;
+					editor = evt.currentTarget.parentElement;
 					reader = editor.nextElementSibling;
 					this.toggleClass('visuallyhidden', true, editor);
 					this.toggleClass('visuallyhidden', false, reader);
@@ -651,10 +662,10 @@
 					}
 				}
 
-				if (column.required && !e.target.validity.valid) {
-					this.fire('after-invalid', {"event": e, "row" : row, "column" : column});
+				if (column.required && !evt.target.validity.valid) {
+					this.fire('after-invalid', {"event": evt, "row" : row, "column" : column});
 				}
-				this.fire('after-save', {"event": e, "row" : row, "column" : column});
+				this.fire('after-save', {"event": evt, "row" : row, "column" : column});
 			}
 		},
     _clickRow: function(evt) {

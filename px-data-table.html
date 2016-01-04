@@ -1,7 +1,8 @@
 <link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="aha-table.html">
-<link rel="import"
-      href="px-data-table-column.html"> <!-- don't want users to have to import table-column as well as table -->
+<link rel="import" href="px-data-table-column.html">
+<link rel="import" href="../px-validation/px-validation.html">
+
 
 <!--
 Element that defines a data table, optionally using a sub-element for advanced column settings.
@@ -80,6 +81,7 @@ Events:
                  selected-rows="{{selectedRows}}"
                  meta="{{meta}}"
                  id="dataTable">
+                 <content></content>
       </aha-table>
     </div>
   </template>
@@ -209,8 +211,7 @@ Events:
      * px-row-click : fired when table row is clicked (selected or unselected)
      *
      */
-
-    ready: function() {
+    attached: function(){
       var children = Polymer.dom(this).querySelectorAll('px-data-table-column');
 
       if(children.length > 0) {
@@ -244,6 +245,7 @@ Events:
             if(!column['type']) {
               column['type'] = 'string';
             }
+            column._validate = Polymer.dom(children[i]).querySelector('px-validation')
           }
           meta.push(column);
         }
