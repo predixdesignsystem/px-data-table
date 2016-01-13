@@ -50,12 +50,18 @@ Element to define and configure highlighting behaviour for a given column (and h
         type: String,
         value: ''
       },
-      type: String,
-      value: ''
+      highlightColor: {
+        type: String,
+        value: 'green'
+      },
+      highlightOpacity: {
+        type: Number,
+        value: 0.6
+      },
     },
 
     /**
-     * Loads the imported validators specificed in the 'import' property.
+     * Loads the imported highlight function.
      *
      * @method ready
      */

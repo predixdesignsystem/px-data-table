@@ -17,7 +17,7 @@
 <dom-module id="aha-table">
   <link rel="import" type="css" href="css/aha-table.css"/>
   <template>
-    <content></content>
+    <content id="columndefs"></content>
     <div class="scroll-body">
 
       <div class$="{{_getTableClass(tableRows, tableColumns)}}">
@@ -216,12 +216,14 @@
 
     ready: function() {
       document.body.addEventListener('exit-edit-mode', this._exitEditMode.bind(this));
+      this._observer = Polymer.dom(this.$.columndefs).observeNodes(function(info) {
+          console.log(info);
+      });
     },
     _exitEditMode: function(){
       document.activeElement.blur();
     },
     _dataChanged: function() {
-
       if(this.data === undefined || this.data === null) {
         return;
       }
@@ -626,7 +628,7 @@
 			this.toggleClass('visuallyhidden', true, Polymer.dom(e.currentTarget).querySelector('.cell--value'));
       targetEle = Polymer.dom(e.currentTarget).querySelector('.cell--edit');
 			this.toggleClass('visuallyhidden', false, targetEle);
-			Polymer.dom(targetEle).querySelector('input,select,textarea').focus();
+      Polymer.dom(targetEle).querySelector('input,select,textarea').focus();
 		},
     _save: function(evt) {
 
@@ -638,12 +640,7 @@
 			if(row){
 				this.fire('before-save', {"event": evt, "row" : row, "column" : column});
 
-        //FIXME: need a more graceful to run validation on px-validation element.
-        if(!column._validate.validate(newValue).passedValidation){
-          this.toggleClass('validation-error', true, evt.currentTarget.parentElement.parentElement);
-        }else {
-          this.toggleClass('validation-success', true, evt.currentTarget.parentElement.parentElement);
-        }
+        this._validateCell(evt, column);
 
         this._setInternalDataAt(row, column.name, newValue);
 
@@ -668,6 +665,15 @@
 				this.fire('after-save', {"event": evt, "row" : row, "column" : column});
 			}
 		},
+    _validateCell(evt, column){
+      var editCellEl = evt.path.find(function(el) {
+        return el.classList.contains('td') ? true : false;
+      });
+
+      var passed = column.validate(evt.currentTarget.value).passedValidation;
+      this.toggleClass('cell--validation-failed', !passed, editCellEl);
+      this.toggleClass('cell--validation-passed', passed, editCellEl);
+    },
     _clickRow: function(evt) {
       var column = evt.model.column,
           row = evt.model.internalRow,
@@ -775,6 +781,13 @@
       if(this._shouldClipDatumString(row, column)) {
         return this._clipDatumString(datum, column);
       }
+
+      // if(typeof column.highlight === "function"){
+      //   if(column.highlight(datum)){
+      //
+      //   }
+      //
+      // }
 
       return datum;
     },

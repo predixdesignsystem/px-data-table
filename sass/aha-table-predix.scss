@@ -70,3 +70,13 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
     box-shadow: none;
   }
 }
+
+.cell--validation{
+  $opacity: 0.2;
+  &-failed {
+    background-color: rgba($alert-red, $opacity);
+  }
+  &-passed {
+    background-color: rgba($alert-blue, $opacity);
+  }
+}

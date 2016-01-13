@@ -1842,3 +1842,9 @@ label {
   outline: none;
   background-color: transparent;
   box-shadow: none; }
+
+.cell--validation-failed {
+  background-color: rgba(229, 56, 56, 0.2); }
+
+.cell--validation-passed {
+  background-color: rgba(67, 100, 221, 0.2); }
