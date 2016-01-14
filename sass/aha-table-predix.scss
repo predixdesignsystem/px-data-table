@@ -72,7 +72,7 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 .cell--validation{
-  $opacity: 0.2;
+  $opacity: 0.25;
   &-failed {
     background-color: rgba($alert-red, $opacity);
   }
