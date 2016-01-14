@@ -216,11 +216,16 @@
 
     ready: function() {
       document.body.addEventListener('exit-edit-mode', this._exitEditMode.bind(this));
+      document.body.addEventListener('undo-edit-mode', this._undoEditMode.bind(this));
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(function(info) {
           console.log(info);
       });
     },
     _exitEditMode: function(){
+      document.activeElement.blur();
+    },
+    _undoEditMode: function(evt){
+      this.set('cancelSave', true);
       document.activeElement.blur();
     },
     _dataChanged: function() {
@@ -612,21 +617,16 @@
       var column = evt.model.column,
           row = evt.model.internalRow,
           detail = {"row": row, "column": column};
-      // this.fire('px-row-click', detail); // fire the event after it is marked selected
       if (column.editable) {
 				this._edit(evt);
 			}
     },
-    _edit: function(e) {
-			var row = e.model.internalRow,
+    _edit: function(evt) {
+			var row = evt.model.internalRow,
           targetEle;
-			this.set('_editing', true, row);
-			if (this.editingRow && this.editingRow !== row) {
-				this.set('_editing', false, this.editingRow);
-			}
-			this.set('editingRow', row);
-			this.toggleClass('visuallyhidden', true, Polymer.dom(e.currentTarget).querySelector('.cell--value'));
-      targetEle = Polymer.dom(e.currentTarget).querySelector('.cell--edit');
+			this.set('_undoValue', this._getInternalDataAt(evt.model.internalRow, evt.model.column.name));
+			this.toggleClass('visuallyhidden', true, Polymer.dom(evt.currentTarget).querySelector('.cell--value'));
+      targetEle = Polymer.dom(evt.currentTarget).querySelector('.cell--edit');
 			this.toggleClass('visuallyhidden', false, targetEle);
       Polymer.dom(targetEle).querySelector('input,select,textarea').focus();
 		},
@@ -637,15 +637,24 @@
           editor,
           reader,
           newValue = evt.currentTarget.value;
-			if(row){
-				this.fire('before-save', {"event": evt, "row" : row, "column" : column});
 
-        this._validateCell(evt, column);
+      if(this.cancelSave){
+        //user hit escape, restore previous cell value and cancel update/save.
+        this._setInternalDataAt(row, column.name, this._undoValue);
+        evt.currentTarget.value = this._undoValue;
+        this.set('cancelSave', false);
+      }
+      else{
+        if(row){
+          this.fire('before-save', {"event": evt, "row" : row, "column" : column});
 
-        this._setInternalDataAt(row, column.name, newValue);
+          this._validateCell(evt, column);
+          this._setInternalDataAt(row, column.name, newValue);
+        }
+      }
 
 				if (!evt.relatedTarget || !evt.relatedTarget.templateInstance || evt.relatedmodel.row !== evt.model.row) {
-					this.set('_editing', false, row);
+					this.set('_undoValue', undefined);
 
 					editor = evt.currentTarget.parentElement;
 					reader = editor.nextElementSibling;
@@ -663,9 +672,9 @@
 					this.fire('after-invalid', {"event": evt, "row" : row, "column" : column});
 				}
 				this.fire('after-save', {"event": evt, "row" : row, "column" : column});
-			}
+
 		},
-    _validateCell(evt, column){
+    _validateCell: function(evt, column){
       var editCellEl = evt.path.find(function(el) {
         return el.classList.contains('td') ? true : false;
       });
@@ -680,9 +689,7 @@
           detail = {"row": row, "column": column},
           selectAllCheckbox;
       this.fire('px-row-click', detail); // fire the event after it is marked selected
-      // if (column.editable) {
-			// 	this.edit(evt);
-			// }
+
       if(this.selectable) {
         this._selectRow(row, evt.model.index);
 
