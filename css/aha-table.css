@@ -1083,12 +1083,6 @@ button.btn {
   padding-left: 1px;
   /*firefox border collapse fix*/ }
 
-td .viewing, .td .viewing {
-  min-height: 1em;
-  max-height: 30px;
-  overflow: hidden;
-  white-space: nowrap; }
-
 th, .th {
   text-align: left; }
 
@@ -1107,9 +1101,6 @@ label {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center; }
-
-.cell--edit input {
-  max-height: 18px; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
@@ -1843,8 +1834,16 @@ label {
   background-color: transparent;
   box-shadow: none; }
 
-.cell--validation-failed {
-  background-color: rgba(229, 56, 56, 0.25); }
+.cell--validation-failed::after {
+  display: inline-block;
+  margin-right: .5em;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0); }
 
 .cell--validation-passed {
   background-color: rgba(67, 100, 221, 0.25); }

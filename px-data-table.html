@@ -225,30 +225,17 @@ Events:
         }
 
         for(var i = 0; i < children.length; i++) {
-          var column = {};
-          for(var j = 0; j < children[i].attributes.length; j++) {
-            var attribute = children[i].attributes[j];
 
-            if(['sortable', 'filterable', 'editable'].indexOf(attribute.name) >= 0) {
-              column[attribute.nodeName] = true;
-            }
-            else {
-              column[attribute.nodeName] = attribute.value;
-            }
-
-            // default the label of the columns to the capitalized name
-            if(!column['label']) {
-              var name = column['name'] || '';
-              column['label'] = name.charAt(0).toUpperCase() + name.slice(1);
-            }
-
-            // default the type of the column to a string
-            if(!column['type']) {
-              column['type'] = 'string';
-            }
-            column._validate = Polymer.dom(children[i]).querySelector('px-validation')
+          // default the type of the column to a string
+          if(!children[i].type) {
+            children[i].type = 'string';
           }
-          meta.push(column);
+
+          if(!children[i]['label']) {
+            var name = children[i]['name'] || '';
+            children[i].label = name.charAt(0).toUpperCase() + name.slice(1);
+          }
+          meta.push(children[i]);
         }
 
         this.set('meta', meta);

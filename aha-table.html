@@ -11,8 +11,8 @@
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="px-pagination.html">
-<link rel="import" href="../px-tooltip/px-tooltip.html">
-<link rel="import" href="px-edit-cell.html">
+<link rel="import" href="px-data-table-cell.html">
+
 
 <dom-module id="aha-table">
   <link rel="import" type="css" href="css/aha-table.css"/>
@@ -57,62 +57,17 @@
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
           <div class$="{{_getRowClass(internalRow, internalRow._selected)}}" on-click="_clickRow">
-
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
-
-
-              <span on-tap="_click" class$="{{_getCellClass(column.name)}}">
-                <span class$="{{_getReaderClass(internalRow, column.name)}}">
-
-                  <!-- selected column checkbox -->
-                  <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                    <span class="flex flex--center flex--middle">
-                      <input type="checkbox"
-                             checked="{{internalRow._selected::change}}"/>
-                    </span>
-                  </template>
-
-                  <!-- in place editing template -->
-                  <px-edit-cell class="cell--edit visuallyhidden">
-                    <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
-                      <input type="text"
-                        class="u-p0 text-input text-input--bare"
-                        required$="{{column.required}}"
-                        on-blur="_save"
-                        value="{{_getInternalDataAt(internalRow, column.name)}}"/>
-                    </template>
-                    <template is="dom-if" if="{{_isEqual(column.type, 'text')}}">
-                      <textarea
-                        required?="{{column.required}}"
-                        on-blur="_save">{{getValue(row,column.name)}}</textarea>
-                    </template>
-                  </px-edit-cell>
-                  <!-- in place editing template -->
-
-                  <!-- string content -->
-                  <template is="dom-if" if="{{_isEqual(column.type, 'string')}}">
-                    <span class="cell--value">{{_readContent(internalRow, column)}}
-                      <template is="dom-if" if="{{_shouldClipDatumString(internalRow, column)}}">
-                        <px-tooltip
-                        orientation="top"
-                        smart-orientation
-                        delay="1000"
-                        tooltip-message="{{_getInternalDataAt(internalRow, column.name)}}">
-                      </px-tooltip>
-                      </template>
-                    </span>
-                  </template>
-
-                  <!-- html content -->
-                  <template is="dom-if" if="{{_isEqual(column.type, 'html')}}">
-                    <aha-html-echo html="{{_readContent(internalRow, column)}}"></aha-html-echo>
-                  </template>
-
-                </span>
-              </span>
+              <px-data-table-cell on-tap="_click"
+                                  on-save="_save"
+                                  cell-type="{{column.type}}"
+                                  cell-display-value="{{_readContent(internalRow, column)}}"
+                                  cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
+                                  cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
+                                  column-name="{{colmn.name}}">
+              </px-data-table-cell>
             </template>
-
           </div>
         </template>
       </div>
@@ -215,18 +170,9 @@
     ],
 
     ready: function() {
-      document.body.addEventListener('exit-edit-mode', this._exitEditMode.bind(this));
-      document.body.addEventListener('undo-edit-mode', this._undoEditMode.bind(this));
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(function(info) {
           console.log(info);
       });
-    },
-    _exitEditMode: function(){
-      document.activeElement.blur();
-    },
-    _undoEditMode: function(evt){
-      this.set('cancelSave', true);
-      document.activeElement.blur();
     },
     _dataChanged: function() {
       if(this.data === undefined || this.data === null) {
@@ -622,66 +568,35 @@
 			}
     },
     _edit: function(evt) {
-			var row = evt.model.internalRow,
-          targetEle;
-			this.set('_undoValue', this._getInternalDataAt(evt.model.internalRow, evt.model.column.name));
-			this.toggleClass('visuallyhidden', true, Polymer.dom(evt.currentTarget).querySelector('.cell--value'));
-      targetEle = Polymer.dom(evt.currentTarget).querySelector('.cell--edit');
-			this.toggleClass('visuallyhidden', false, targetEle);
-      Polymer.dom(targetEle).querySelector('input,select,textarea').focus();
+			var row = evt.model.internalRow;
+      evt.currentTarget.editCell();
 		},
     _save: function(evt) {
 
       var row = evt.model.internalRow,
           column = evt.model.column,
-          editor,
-          reader,
-          newValue = evt.currentTarget.value;
+          newValue = evt.detail.newValue;
 
-      if(this.cancelSave){
-        //user hit escape, restore previous cell value and cancel update/save.
-        this._setInternalDataAt(row, column.name, this._undoValue);
-        evt.currentTarget.value = this._undoValue;
-        this.set('cancelSave', false);
-      }
-      else{
-        if(row){
-          this.fire('before-save', {"event": evt, "row" : row, "column" : column});
+      if(row){
+        this.fire('before-save', {"event": evt, "row" : row, "column" : column});
 
-          this._validateCell(evt, column);
-          this._setInternalDataAt(row, column.name, newValue);
-        }
+        // this._validateCell(evt, column);
+        this._setInternalDataAt(row, column.name, newValue);
       }
 
-				if (!evt.relatedTarget || !evt.relatedTarget.templateInstance || evt.relatedmodel.row !== evt.model.row) {
-					this.set('_undoValue', undefined);
+			if (!evt.relatedTarget || !evt.relatedTarget.templateInstance || evt.relatedmodel.row !== evt.model.row) {
+        evt.currentTarget.cellValue = this._getInternalDataAt(row, column);
+        evt.currentTarget.cellDisplayValue = this._readContent(row, column);
+			}
 
-					editor = evt.currentTarget.parentElement;
-					reader = editor.nextElementSibling;
-					this.toggleClass('visuallyhidden', true, editor);
-					this.toggleClass('visuallyhidden', false, reader);
-					reader.innerText = this._readContent(row, column);
-					if (row[column.name] !== undefined && row[column.name] !== '') {
-						reader.classList.remove('empty');
-					} else {
-						reader.classList.add('empty');
-					}
-				}
-
-				if (column.required && !evt.target.validity.valid) {
-					this.fire('after-invalid', {"event": evt, "row" : row, "column" : column});
-				}
-				this.fire('after-save', {"event": evt, "row" : row, "column" : column});
+			if (column.required && !evt.target.validity.valid) {
+				this.fire('after-invalid', {"event": evt, "row" : row, "column" : column});
+			}
+			this.fire('after-save', {"event": evt, "row" : row, "column" : column});
 
 		},
     _validateCell: function(evt, column){
-      var editCellEl = evt.path.find(function(el) {
-        return el.classList.contains('td') ? true : false;
-      });
-
-      var passed = column.validate(evt.currentTarget.value).passedValidation;
-      this.toggleClass('cell--validation-failed', !passed, editCellEl);
-      this.toggleClass('cell--validation-passed', passed, editCellEl);
+      evt.currentTarget.cellValidation = column.validate(evt.currentTarget.value);
     },
     _clickRow: function(evt) {
       var column = evt.model.column,
@@ -771,14 +686,6 @@
     _isFilterableColumn: function(column) {
       return !column.selectAll && column.filterable;
     },
-    _getReaderClass: function(internalRow, columnName) {
-      var datum = this._getInternalDataAt(internalRow, columnName),
-          classList = ['viewing'];
-      if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
-        classList.push('empty');
-      }
-      return classList.join(' ');
-    },
     _readContent: function(row, column) {
       var datum = this._getInternalDataAt(row, column.name);
       if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
@@ -866,9 +773,6 @@
       }
       return classList.join(' ');
     },
-    _getCellClass: function(name) {
-      return ['td ', 'aha-', name, '-td'].join('');
-    },
     _getTableClass: function(tableRows, tableColumns) {
       var classList = ['table', 'table--small'];
       if(tableRows) {
@@ -878,45 +782,6 @@
         classList.push('table--columns');
       }
       return classList.join(' ');
-    }
-  });
-</script>
-
-<!--
-/**
- * @module aha-html-echo
- *
- *
- * Generates html elements dynamically, inspired by sortable-table
- * https://github.com/stevenrskelton/sortable-table
- *
- * WARNING! Potential XSS vulnerability if `html` comes from an untrusted source
- *
- *    <aha-html-echo
- *         html="html">
- *    </aha-html-echo>
- *
- * @class aha-html-echo
- * @author Michael Heinrichs<michael.heinrichs@canoo.com>
- *
- */
--->
-<script>
-  Polymer({
-    is: "aha-html-echo",
-    properties: {
-      //column name
-      html: {
-        type: String,
-        value: "",
-        observer: "onHtmlChanged"
-      }
-    },
-    onHtmlChanged: function() {
-      if(!this.html) {
-        this.html = "";
-      }
-      this.innerHTML = this.html;
     }
   });
 </script>

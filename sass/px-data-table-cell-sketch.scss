@@ -44,85 +44,31 @@ $inuit-table-border-color: $gray5;
 
 @import "px-layout-design/_objects.layout.scss";
 
-$inuit-enable-btn--bare: true;
-$inuit-enable-btn--primary: true;
-$inuit-enable-btn--icon: true;
-$inuit-enable-btn--disabled: true;
 
-@import "px-buttons-design/_objects.buttons.scss";
-
-.btn--bare__pagination {
-  width: 32px;
-}
-
-.th {
-  @extend th;
-  display: table-cell;
-}
-
-// making th--no-borders class specific enough to override other table.table.aha-table, etc. selectors
-.th--no-borders.th--no-borders.th--no-borders {
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-}
-
-.table {
-  @extend table;
-  display: table !important;
-  margin-bottom: 0rem;
-}
-
-.tr {
-  @extend tr;
-  display: table-row;
-}
-
-.td {
+:host {
   @extend td;
   display: table-cell;
   vertical-align: middle;
 }
 
 :host {
-  display: block;
-  overflow-x: hidden;
-  width: 100%;
+  & .viewing {
+    min-height: 1em;
+    max-height: 30px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 }
 
-.pagination {
-  float: right;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
+.cell--edit {
+  &  input {
+    max-height: 18px;
+  }
 }
 
-.scroll-body {
-  display: block;
-  overflow-x: scroll;
-  margin-bottom: 1rem;
-  padding-left: 1px; /*firefox border collapse fix*/
-}
-
-th {
-  text-align: left;
-}
-
-.column-head {
-  white-space: nowrap;
-}
-
-label {
-  margin: 0;
-}
-
-.sorted-text-hover:hover {
-  cursor: pointer;
-}
-
-.no-results {
-  color: $gray6;
-  height: 2rem;
-  align-items: center;
+.cell--value {
+  // @extend .flex;
+  display: inline;
 }
 
 // Trumps

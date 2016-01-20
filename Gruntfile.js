@@ -32,6 +32,12 @@ module.exports = function (grunt) {
                 'css/noprefix/px-data-table-sketch.css': 'sass/px-data-table-sketch.scss',
                 'css/noprefix/px-data-table.css': 'sass/px-data-table-predix.scss'
               }
+            },
+            pxDataTableCell: {
+              files: {
+                'css/noprefix/px-data-table-cell-sketch.css': 'sass/px-data-table-cell-sketch.scss',
+                'css/noprefix/px-data-table-cell.css': 'sass/px-data-table-cell-predix.scss'
+              }
             }
         },
 
