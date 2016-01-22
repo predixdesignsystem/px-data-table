@@ -1834,6 +1834,9 @@ label {
   background-color: transparent;
   box-shadow: none; }
 
+.cell__edit {
+  background-color: #efeff4; }
+
 .cell--validation-failed::after {
   display: inline-block;
   margin-right: .5em;

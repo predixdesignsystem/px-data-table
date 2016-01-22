@@ -71,6 +71,11 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   }
 }
 
+.cell__edit{
+  background-color: $inuit-forms-background;
+  // border : 1px solid $select-blue-default !important;
+}
+
 .cell--validation{
   $opacity: 0.25;
   &-failed::after {

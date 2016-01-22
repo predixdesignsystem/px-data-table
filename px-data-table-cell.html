@@ -5,7 +5,7 @@
 <dom-module id="px-data-table-cell">
   <link rel="import" type="css" href="css/px-data-table-cell.css"/>
   <template>
-    <span class$="{{_getReaderClass()}}">
+    <span class$="{{_getReaderClass(_editing)}}">
       <!-- selected column checkbox -->
       <template is="dom-if" if="{{_isEqual(cellType, 'selected')}}">
         <span class="flex flex--center flex--middle">
@@ -15,7 +15,8 @@
       </template>
 
       <!-- in place editing template -->
-      <px-edit-cell id="celledit" class="cell--edit visuallyhidden">
+      <!-- <px-edit-cell id="celledit" class="cell--edit visuallyhidden"> -->
+      <px-edit-cell id="celledit" class$="{{_getEditCellClass(_editing)}}">
         <template is="dom-if" if="{{_isEqual(cellType, 'string')}}">
           <input type="text" class="u-p0 text-input text-input--bare" required$="{{column.required}}" on-blur="saveCell" value="{{cellValue}}" />
         </template>
@@ -26,7 +27,7 @@
       <!-- in place editing template -->
 
       <template is="dom-if" if="{{_isEqual(cellType,'string')}}">
-        <span id="cellvalue" class="cell--value">{{cellDisplayValue}}
+        <span id="cellvalue" class$="{{_getValueCellClass(_editing)}}">{{cellDisplayValue}}
           <template is="dom-if" if="{{cellDisplayTooltip}}">
             <px-tooltip
               orientation="top"
@@ -76,6 +77,11 @@
           type: String,
           value: ''
         },
+        _editing: {
+          type: Boolean,
+          value: false,
+          notify: true
+        }
 
       },
       _cellDisplayValueChanged: function(newValue){
@@ -85,6 +91,7 @@
           } else {
             this.$$('.cell--value').classList.add('empty');
           }
+
         }
       },
       _isEqual: function(source, target) {
@@ -117,25 +124,28 @@
       editCell: function(){
         var editCell = this.$$(".cell--edit"),
             valueCell = this.$$(".cell--value");
-        this.toggleClass('visuallyhidden', true, valueCell);
-  			this.toggleClass('visuallyhidden', false, editCell);
+
+        this._editing = true;
+        this.toggleClass('cell__edit', this._editing);
+
         this.set('_undoValue', this.$$(".cell--value").innerText);
 
         Polymer.dom(editCell).querySelector('input,select,textarea').focus();
       },
       saveCell: function(evt){
+        this._editing = false;
+        this.toggleClass('cell__edit', this._editing);
         var value;
         if(this._cancelSave === true){
           this.set('_cancelSave', false);
           value = this._undoValue;
+          Polymer.dom(this.$$('.cell--edit')).querySelector('input,select,textarea').value = value;
         }
         else {
           value = evt.target.value;
         }
 
         this.fire('save', {newValue: value});
-				this.toggleClass('visuallyhidden', true, this.$$(".cell--edit"));
-				this.toggleClass('visuallyhidden', false, this.$$(".cell--value"));
       },
       _cellValidityChanged: function(){
         // var editCellEl = evt.path.find(function(el) {
@@ -151,6 +161,20 @@
         // this.toggleClass('fa', !passed, editCellEl);
         // this.toggleClass('fa-exclamation-circle', !passed, editCellEl);
 
+      },
+      _getEditCellClass: function(editing){
+        var classList = ['cell--edit'];
+        if(!editing){
+          classList.push('visuallyhidden');
+        }
+        return classList.join(' ');
+      },
+      _getValueCellClass: function(editing){
+        var classList = ['cell--value'];
+        if(editing){
+          classList.push('visuallyhidden');
+        }
+        return classList.join(' ');
       }
     });
   </script>

@@ -582,12 +582,9 @@
 
         // this._validateCell(evt, column);
         this._setInternalDataAt(row, column.name, newValue);
-      }
-
-			if (!evt.relatedTarget || !evt.relatedTarget.templateInstance || evt.relatedmodel.row !== evt.model.row) {
-        evt.currentTarget.cellValue = this._getInternalDataAt(row, column);
+        evt.currentTarget.cellValue = this._getInternalDataAt(row, column.name);
         evt.currentTarget.cellDisplayValue = this._readContent(row, column);
-			}
+      }
 
 			if (column.required && !evt.target.validity.valid) {
 				this.fire('after-invalid', {"event": evt, "row" : row, "column" : column});
@@ -707,19 +704,19 @@
     },
     _shouldClipDatumString: function(row, column) {
       var datum = this._getInternalDataAt(row, column.name),
-          maxColWidth;
-      if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+          maxColWidth = column.maxColumnCharacterWidth;
+
+      if(maxColWidth === 0 || datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
         return false;
       }
-      maxColWidth = column['max-column-character-width'];
       if(maxColWidth !== undefined && maxColWidth !== null) {
         return datum.length > maxColWidth;
       }
       return false;
     },
     _clipDatumString: function(datum, column) {
-      var maxColWidth = column['max-column-character-width'],
-          ellipsisClipPosition = column['ellipsis-clip-position'],
+      var maxColWidth = column.maxColumnCharacterWidth,
+          ellipsisClipPosition = column.ellipsisClipPosition,
           datumLeftIndex,
           datumRightIndex;
 
