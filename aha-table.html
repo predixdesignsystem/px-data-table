@@ -65,7 +65,8 @@
                                   cell-display-value="{{_readContent(internalRow, column)}}"
                                   cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
                                   cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
-                                  column-name="{{colmn.name}}">
+                                  cell-editable="{{column.editable}}"
+                                  column-name="{{column.name}}">
               </px-data-table-cell>
             </template>
           </div>
@@ -580,7 +581,7 @@
       if(row){
         this.fire('before-save', {"event": evt, "row" : row, "column" : column});
 
-        // this._validateCell(evt, column);
+        this._validateCell(evt, column);
         this._setInternalDataAt(row, column.name, newValue);
         evt.currentTarget.cellValue = this._getInternalDataAt(row, column.name);
         evt.currentTarget.cellDisplayValue = this._readContent(row, column);

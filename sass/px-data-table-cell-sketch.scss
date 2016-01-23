@@ -67,8 +67,8 @@ $inuit-table-border-color: $gray5;
 }
 
 .cell--value {
-  // @extend .flex;
-  display: inline;
+  @extend .flex;
+
 }
 
 // Trumps

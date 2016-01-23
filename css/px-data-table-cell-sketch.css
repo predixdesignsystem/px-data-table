@@ -427,7 +427,8 @@ a {
 .invisible {
   visibility: hidden !important; }
 
-.flex {
+.flex,
+.cell--value {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex; }
@@ -918,9 +919,6 @@ textarea {
 
 .cell--edit input {
   max-height: 18px; }
-
-.cell--value {
-  display: inline; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/

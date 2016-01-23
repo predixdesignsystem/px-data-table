@@ -15,7 +15,6 @@
       </template>
 
       <!-- in place editing template -->
-      <!-- <px-edit-cell id="celledit" class="cell--edit visuallyhidden"> -->
       <px-edit-cell id="celledit" class$="{{_getEditCellClass(_editing)}}">
         <template is="dom-if" if="{{_isEqual(cellType, 'string')}}">
           <input type="text" class="u-p0 text-input text-input--bare" required$="{{column.required}}" on-blur="saveCell" value="{{cellValue}}" />
@@ -27,17 +26,19 @@
       <!-- in place editing template -->
 
       <template is="dom-if" if="{{_isEqual(cellType,'string')}}">
-        <span id="cellvalue" class$="{{_getValueCellClass(_editing)}}">{{cellDisplayValue}}
-          <template is="dom-if" if="{{cellDisplayTooltip}}">
-            <px-tooltip
-              orientation="top"
-              smart-orientation
-              delay="1000"
-              tooltip-message="{{cellValue}}">
-            </px-tooltip>
-          </template>
-          <!-- <span><i class="fa-pull-right fa fa-exclamation-circle"></i></span> -->
-        </span>
+        <div class="flex" on-mouseover='onCellHovered' on-mouseout='onCellUnHovered'>
+          <span id="cellvalue" class$="{{_getValueCellClass(_editing)}}">{{cellDisplayValue}}
+            <template is="dom-if" if="{{cellDisplayTooltip}}">
+              <px-tooltip
+                orientation="top"
+                smart-orientation
+                delay="1000"
+                tooltip-message="{{cellValue}}">
+              </px-tooltip>
+            </template>
+          </span>
+          <i style="margin-left: auto;" class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"></i>
+        </div>
       </template>
     </span>
     <!-- html content -->
@@ -69,7 +70,7 @@
         cellValidation: {
           type: Object,
           value: function(){
-            return {};
+            return {passedValidation: true};
           },
           observer: '_cellValidityChanged'
         },
@@ -81,8 +82,15 @@
           type: Boolean,
           value: false,
           notify: true
+        },
+        cellEditable:{
+          type: Boolean,
+          value: false
+        },
+        _showEditIcon:{
+          type: Boolean,
+          value: false
         }
-
       },
       _cellDisplayValueChanged: function(newValue){
         if(this.$$('.cell--value') !== undefined){
@@ -93,6 +101,12 @@
           }
 
         }
+      },
+      onCellHovered: function(evt){
+        this.set('_showEditIcon', this.cellEditable);
+      },
+      onCellUnHovered: function(evt){
+        this.set('_showEditIcon',false);
       },
       _isEqual: function(source, target) {
         return source === target;
@@ -147,7 +161,8 @@
 
         this.fire('save', {newValue: value});
       },
-      _cellValidityChanged: function(){
+      _cellValidityChanged: function(newValue){
+
         // var editCellEl = evt.path.find(function(el) {
         //   return el.classList.contains('td') ? true : false;
         // });
@@ -174,6 +189,21 @@
         if(editing){
           classList.push('visuallyhidden');
         }
+        return classList.join(' ');
+      },
+      _getCellIconClass: function(showEditIcon, editing, valid){
+        var classList= ['fa'];
+
+        if (valid){
+          classList.push('fa-pencil');
+          if (editing || !showEditIcon){
+            classList.push('visuallyhidden');
+          }
+        }
+        else {
+          classList.push('fa-exclamation-circle');
+        }
+
         return classList.join(' ');
       }
     });
