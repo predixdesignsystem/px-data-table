@@ -202,6 +202,9 @@
         }
         else {
           classList.push('fa-exclamation-circle');
+          if (editing){
+            classList.push('visuallyhidden');
+          }
         }
 
         return classList.join(' ');
