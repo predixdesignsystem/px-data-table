@@ -99,7 +99,7 @@
           } else {
             this.$$('.cell--value').classList.add('empty');
           }
-
+          this.set('cellValidation.passedValidation', true);
         }
       },
       onCellHovered: function(evt){
@@ -162,20 +162,9 @@
         this.fire('save', {newValue: value});
       },
       _cellValidityChanged: function(newValue){
-
-        // var editCellEl = evt.path.find(function(el) {
-        //   return el.classList.contains('td') ? true : false;
-        // });
-
-        // this.toggleClass('cell--validation-failed', !passed, editCellEl);
-        // this.toggleClass('cell--validation-failed', !passed, editCellEl);
-        // this.toggleClass('icon', !passed, Polymer.dom(editCellEl).querySelector(".px-edit-cell-icon"));
-        // this.toggleClass('fa', !passed, Polymer.dom(editCellEl).querySelector(".px-edit-cell-icon"));
-        // this.toggleClass('fa-exclamation-circle', !passed, Polymer.dom(editCellEl).querySelector(".px-edit-cell-icon"));
-        // px-edit-cell-icon
-        // this.toggleClass('fa', !passed, editCellEl);
-        // this.toggleClass('fa-exclamation-circle', !passed, editCellEl);
-
+        if (newValue === undefined){
+          this.cellValidation = {passedValidation: true};
+        }
       },
       _getEditCellClass: function(editing){
         var classList = ['cell--edit'];
@@ -195,9 +184,10 @@
         var classList= ['fa'];
 
         if (valid){
-          classList.push('fa-pencil');
           if (editing || !showEditIcon){
-            classList.push('visuallyhidden');
+            classList.push('fa-fw');
+          }else {
+            classList.push('fa-pencil');
           }
         }
         else {
@@ -206,7 +196,6 @@
             classList.push('visuallyhidden');
           }
         }
-
         return classList.join(' ');
       }
     });

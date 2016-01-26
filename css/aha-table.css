@@ -1834,8 +1834,13 @@ label {
   background-color: transparent;
   box-shadow: none; }
 
+.td {
+  border: 1px inset #b1b1bc !important; }
+
 .cell__edit {
-  background-color: #efeff4; }
+  background-color: #efeff4;
+  border: 1px solid #3e87e8 !important;
+  box-shadow: inset 0 0 0 1px #e4e4ea; }
 
 .cell--validation-failed::after {
   display: inline-block;
