@@ -147,7 +147,10 @@ Element that defines a columns in a data table.
       }
     },
     validate: function(value){
-      return Polymer.dom(this).querySelector('px-validation').validate(value);
+      var validationEl = Polymer.dom(this).querySelector('px-validation');
+      if(validationEl){
+        return validationEl.validate(value);
+      }
     },
     highlight: function(value){
       return Polymer.dom(this).querySelector('px-data-table-highlight').highlight(value);
