@@ -594,7 +594,7 @@
 
 		},
     _validateCell: function(evt, column){
-      evt.currentTarget.cellValidation = column.validate(evt.currentTarget.value);
+      evt.currentTarget.cellValidation = column.validate(evt.detail.newValue);
     },
     _clickRow: function(evt) {
       var column = evt.model.column,
