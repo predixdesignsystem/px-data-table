@@ -6,13 +6,7 @@
   <link rel="import" type="css" href="css/px-data-table-cell.css"/>
   <template>
     <span class$="{{_getReaderClass(_editing)}}">
-      <!-- selected column checkbox -->
-      <template is="dom-if" if="{{_isEqual(cellType, 'selected')}}">
-        <span class="flex flex--center flex--middle">
-          <input type="checkbox"
-                 checked="{{internalRow._selected::change}}"/>
-        </span>
-      </template>
+
 
       <!-- in place editing template -->
       <px-edit-cell id="celledit" class$="{{_getEditCellClass(_editing)}}">

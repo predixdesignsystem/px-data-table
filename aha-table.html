@@ -56,18 +56,29 @@
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
-          <div class$="{{_getRowClass(internalRow, internalRow._selected)}}" on-click="_clickRow">
+          <div class$="{{_getRowClass(internalRow, internalRow._selected)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
-              <px-data-table-cell on-tap="_click"
-                                  on-save="_save"
-                                  cell-type="{{column.type}}"
-                                  cell-display-value="{{_readContent(internalRow, column)}}"
-                                  cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
-                                  cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
-                                  cell-editable="{{column.editable}}"
-                                  column-name="{{column.name}}">
-              </px-data-table-cell>
+              <!-- selected column checkbox -->
+              <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
+                <span class="td" on-click="_clickRow">
+                  <span class="flex flex--center flex--middle">
+                    <input type="checkbox"
+                    checked="{{internalRow._selected::change}}"/>
+                  </span>
+                </span>
+              </template>
+              <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
+                <px-data-table-cell on-tap="_click"
+                                    on-save="_save"
+                                    cell-type="{{column.type}}"
+                                    cell-display-value="{{_readContent(internalRow, column)}}"
+                                    cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
+                                    cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
+                                    cell-editable="{{column.editable}}"
+                                    column-name="{{column.name}}">
+                </px-data-table-cell>
+              </template>
             </template>
           </div>
         </template>
