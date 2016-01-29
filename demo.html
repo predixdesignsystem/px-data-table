@@ -90,6 +90,10 @@
           sortable
           editable
           filter-function-name="myTableCustomFunctions.filterWholeWord">
+          <px-validation>
+            <px-validator validation-method="isNumber" import="../px-validation/px-example-validator.html"></px-validator>
+          </px-validation>
+          <px-data-table-highlight type="row" highlight-method="isLongString" import="px-example-highlight.html"></px-data-table-highlight>
         </px-data-table-column>
         <px-data-table-column
           name="last"
