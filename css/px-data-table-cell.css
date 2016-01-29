@@ -1624,16 +1624,5 @@ textarea {
   background-color: transparent;
   box-shadow: none; }
 
-.cell--validation-failed::after {
-  display: inline-block;
-  margin-right: .5em;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-transform: translate(0, 0);
-          transform: translate(0, 0); }
-
-.cell--validation-passed {
-  background-color: rgba(67, 100, 221, 0.25); }
+.cell--value--icon__validation-failed {
+  color: #e53838; }

@@ -21,8 +21,8 @@
         Polymer.IronA11yKeysBehavior
       ],
       keyBindings: {
-        'tab enter': '_cellExitKeyPress',
-        'esc'      : '_cellUndoKeyPress'
+        'enter' : '_cellExitKeyPress',
+        'esc' : '_cellUndoKeyPress'
       },
       _cellExitKeyPress: function(){
         this.fire('exit-edit-mode');

@@ -20,8 +20,8 @@
       <!-- in place editing template -->
 
       <template is="dom-if" if="{{_isEqual(cellType,'string')}}">
-        <div class="flex" on-mouseover='onCellHovered' on-mouseout='onCellUnHovered'>
-          <span id="cellvalue" class$="{{_getValueCellClass(_editing)}}">{{cellDisplayValue}}
+        <div class="flex cell--container" on-mouseover='onCellHovered' on-mouseout='onCellUnHovered' >
+          <span id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation)}}">{{cellDisplayValue}}
             <template is="dom-if" if="{{cellDisplayTooltip}}">
               <px-tooltip
                 orientation="top"
@@ -93,7 +93,7 @@
           } else {
             this.$$('.cell--value').classList.add('empty');
           }
-          this.set('cellValidation.passedValidation', true);
+          // this.set('cellValidation.passedValidation', true);
         }
       },
       onCellHovered: function(evt){
@@ -167,11 +167,14 @@
         }
         return classList.join(' ');
       },
-      _getValueCellClass: function(editing){
+      _getValueCellClass: function(editing, valid){
         var classList = ['cell--value'];
         if(editing){
           classList.push('visuallyhidden');
         }
+
+        this.toggleClass('cell--value__validation-failed', !valid);
+
         return classList.join(' ');
       },
       _getCellIconClass: function(showEditIcon, editing, valid){
@@ -185,7 +188,7 @@
           }
         }
         else {
-          classList.push('fa-exclamation-circle');
+          classList.push('fa-exclamation-circle', 'cell--value--icon__validation-failed');
           if (editing){
             classList.push('visuallyhidden');
           }

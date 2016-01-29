@@ -1812,16 +1812,5 @@ label {
   border: 1px solid #3e87e8 !important;
   box-shadow: inset 0 0 0 1px #e4e4ea; }
 
-.cell--validation-failed::after {
-  display: inline-block;
-  margin-right: .5em;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-transform: translate(0, 0);
-          transform: translate(0, 0); }
-
-.cell--validation-passed {
-  background-color: rgba(67, 100, 221, 0.25); }
+.cell--value__validation-failed {
+  border: 1px solid #e53838 !important; }
