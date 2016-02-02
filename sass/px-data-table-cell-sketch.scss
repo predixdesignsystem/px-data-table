@@ -60,15 +60,22 @@ $inuit-table-border-color: $gray5;
   }
 }
 
+$px-data-table-cell-inner-height : 18px;
+
 .cell--edit {
   &  input {
-    max-height: 18px;
+    max-height: $px-data-table-cell-inner-height;
   }
 }
 
 .cell--value {
   @extend .flex;
 
+}
+
+.cell--value__empty {
+  height: $px-data-table-cell-inner-height;
+  width: 1px;
 }
 
 // Trumps

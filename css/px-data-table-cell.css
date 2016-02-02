@@ -943,6 +943,10 @@ textarea {
 .cell--edit input {
   max-height: 18px; }
 
+.cell--value__empty {
+  height: 18px;
+  width: 1px; }
+
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
 /**

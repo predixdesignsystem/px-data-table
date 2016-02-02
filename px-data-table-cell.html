@@ -21,7 +21,7 @@
 
       <template is="dom-if" if="{{_isEqual(cellType,'string')}}">
         <div class="flex cell--container" on-mouseover='onCellHovered' on-mouseout='onCellUnHovered' >
-          <span id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation)}}">{{cellDisplayValue}}
+          <span id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation, cellDisplayValue)}}">{{cellDisplayValue}}
             <template is="dom-if" if="{{cellDisplayTooltip}}">
               <px-tooltip
                 orientation="top"
@@ -167,10 +167,13 @@
         }
         return classList.join(' ');
       },
-      _getValueCellClass: function(editing, valid){
+      _getValueCellClass: function(editing, valid, cellDisplayValue){
         var classList = ['cell--value'];
         if(editing){
           classList.push('visuallyhidden');
+        }
+        if (!cellDisplayValue){
+          classList.push('cell--value__empty');
         }
 
         this.toggleClass('cell--value__validation-failed', !valid);
