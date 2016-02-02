@@ -592,7 +592,10 @@
       if(row){
         this.fire('before-save', {"event": evt, "row" : row, "column" : column});
 
-        this._validateCell(evt, column);
+        // only run validation if user has updated cell.
+        if(this._cellChanged(this._readContent(row, column), newValue)){
+          this._validateCell(evt, column);
+        }
         this._setInternalDataAt(row, column.name, newValue);
         evt.currentTarget.cellValue = this._getInternalDataAt(row, column.name);
         evt.currentTarget.cellDisplayValue = this._readContent(row, column);
@@ -604,6 +607,9 @@
 			this.fire('after-save', {"event": evt, "row" : row, "column" : column});
 
 		},
+    _cellChanged(oldValue, newValue){
+      return (oldValue !== newValue);
+    },
     _validateCell: function(evt, column){
       evt.currentTarget.cellValidation = column.validate(evt.detail.newValue);
     },
