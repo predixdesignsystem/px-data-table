@@ -29,7 +29,7 @@
     "px-card": "https://github.com/PredixDev/px-card.git#~0.2.0",
     "px-spacing-design": "https://github.com/PredixDev/px-spacing-design.git#~0.3.4",
     "px-buttons-design": "https://github.com/PredixDev/px-buttons-design.git#~0.4.13",
-    "px-forms-design": "https://github.com/PredixDev/px-forms-design.git#~0.3.12",
+    "px-forms-design": "https://github.com/PredixDev/px-forms-design.git#~0.3.13",
     "px-button-group-design": "https://github.com/PredixDev/px-button-group-design.git#~0.3.8"
   }
 }
