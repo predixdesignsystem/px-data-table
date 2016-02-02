@@ -87,7 +87,7 @@
         }
       },
       _cellDisplayValueChanged: function(newValue){
-        if(this.$$('.cell--value') !== undefined){
+        if(this.$$('.cell--value') !== undefined && this.$$('.cell--value') !== null){
           if (newValue !== undefined && newValue !== '') {
             this.$$('.cell--value').classList.remove('empty');
           } else {
