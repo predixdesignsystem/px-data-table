@@ -1,5 +1,7 @@
 var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture;
-
+var getStyle = function (el, style){
+  return window.getComputedStyle( el, null ).getPropertyValue( style );
+};
 var data =
 [
   {
@@ -810,7 +812,7 @@ function runTests() {
   });
 
   test('Table font is GE Inspira Sans', function(done){
-    var tableFontFam = window.getComputedStyle( table1Fixture, null ).getPropertyValue( 'font-family' );
+    var tableFontFam = getStyle(table1Fixture, 'font-family');
     assert.isTrue(tableFontFam.includes('GE Inspira Sans'));
     done();
   });
@@ -834,8 +836,10 @@ function runTests() {
         cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
 
     cell.addEventListener('click', function(){
-      var editCell = Polymer.dom(this.root).querySelector('px-edit-cell');
-      //window.getComputedStyle( editCell, null ).getPropertyValue( 'background-color' );
+      assert.equal(getStyle(this, 'background-color'), 'rgb(239, 239, 244)');
+      assert.equal(getStyle(this, 'border'), '1px solid rgb(62, 135, 232)');
+      assert.equal(getStyle(this, 'box-shadow'), 'rgb(228, 228, 234) 0px 0px 0px 1px inset');
+
       done();
     });
     cell.click();
