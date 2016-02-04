@@ -120,7 +120,7 @@
         this.addEventListener('exit-edit-mode', this._exitEditMode.bind(this));
         this.addEventListener('undo-edit-mode', this._undoEditMode.bind(this));
         this.toggleClass('td', true);
-        this.toggleClass('aha-' + this.columnName + 'td', true);
+        this.toggleClass('aha-' + this.columnName + '-td', true);
       },
       _exitEditMode: function(){
         document.activeElement.blur();
