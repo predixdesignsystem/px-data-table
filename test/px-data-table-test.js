@@ -725,10 +725,9 @@ function runTests() {
     assert.equal(columnCount, 17);
   });
   test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function() {
-    var fixture = document.getElementById('table1');
-    var selector = '#dataTable :nth-child(7) .aha-name-td';
-    var span = fixture.querySelector(selector);
-    assert.equal(span.innerHTML.indexOf('Rita Lopez') >= 0, true);
+    var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
+        cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[4];
+    assert.isTrue(cell.innerText.includes('Rita Lopez'));
   });
   test('Row count for first table should be 26', function() {
     var fixture = document.getElementById('table1');
@@ -738,21 +737,18 @@ function runTests() {
   });
   // Spot checks for correct values in table cells and controls'
   test('First Name displays only first 10 characters  if length of the text is greater than 10 characters and elipse at the right', function() {
-    var fixture = document.getElementById('myTable');
-    var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-first-td';
-    var span = fixture.querySelector(selector);
-    assert.equal(span.innerHTML.indexOf('Isabel lon…') >= 0, true);
+    var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+        cell = Polymer.dom(tb.root).querySelectorAll('.aha-first-td')[0];
+    assert.isTrue(cell.innerText.includes('Isabel lon…'));
   });
   test('Email displays only last 10 characters displayed if length of the text is greater than 10 characters', function() {
-    var fixture = document.getElementById('myTable');
     var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-image-td';
-    var span = fixture.querySelector(selector);
+    var span = table5Fixture.querySelector(selector);
     assert.equal(span.innerHTML.indexOf('…/twitter/enda/73.jpg') >= 0, true);
   });
   test('Address displays total 10 characters with ellipse in the center if length of the text is greater than 10 characters', function() {
-    var fixture = document.getElementById('myTable');
     var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-address-td';
-    var span = fixture.querySelector(selector);
+    var span = table5Fixture.querySelector(selector);
     assert.equal(span.innerHTML.indexOf('3 Vis…Place') >= 0, true);
   });
 
@@ -793,7 +789,7 @@ function runTests() {
     // Trigger filter edit event and provide a filter value
     lastNameFilter.value = 'wo';
     lastNameFilter.dispatchEvent(new Event('keyup'));
-  })
+  });
 
   // Spot checks for sorting functionality
   test('Records are sorted correctly when a sortable column header is clicked', function(done) {
@@ -802,14 +798,48 @@ function runTests() {
     var firstNameHeader = sortableTableRoot.querySelector(firstNameHeaderSelector);
     firstNameHeader.addEventListener('click', function(e){
       setTimeout(function() {
-        var tenthReturnedRowLastNameSelector = ':nth-child(12) > .aha-last-td > span > span';
-        var tenthReturnedRowLastName = sortableTableRoot.querySelector(tenthReturnedRowLastNameSelector);
-        assert.equal(tenthReturnedRowLastName.innerHTML.indexOf('Wooten') >= 0, true);
+        var tb = Polymer.dom(sortableTableRoot.root).querySelector('aha-table'),
+            lastNameRow = Polymer.dom(tb.root).querySelectorAll('.aha-last-td');
+
+        assert.isTrue(lastNameRow[9].innerText.includes('Wooten'));
         done(); // end the test
-      }, 0)
+      }, 0);
     });
     // Trigger a click on the First Name column header
     firstNameHeader.click();
-  })
   });
-};
+
+  test('Table font is GE Inspira Sans', function(done){
+    var tableFontFam = window.getComputedStyle( table1Fixture, null ).getPropertyValue( 'font-family' );
+    assert.isTrue(tableFontFam.includes('GE Inspira Sans'));
+    done();
+  });
+
+  test('Clicking on an editable cell switches to edit mode', function(done){
+    var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+        cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
+
+    cell.addEventListener('click', function(){
+      var editCell = Polymer.dom(this.root).querySelector('px-edit-cell'),
+          editCellToTheLeft = Polymer.dom(this.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
+      assert.isFalse(editCell.classList.contains('visuallyhidden'));
+      assert.isTrue(editCellToTheLeft.classList.contains('visuallyhidden'));
+      done();
+    });
+    cell.click();
+  });
+
+  test('Clicking on an editable cell has the correct style', function(done){
+    var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+        cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
+
+    cell.addEventListener('click', function(){
+      var editCell = Polymer.dom(this.root).querySelector('px-edit-cell');
+      //window.getComputedStyle( editCell, null ).getPropertyValue( 'background-color' );
+      done();
+    });
+    cell.click();
+  });
+
+  });
+}
