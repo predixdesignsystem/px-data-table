@@ -821,14 +821,15 @@ function runTests() {
     var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
         cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
 
-    cell.addEventListener('click', function(){
-      var editCell = Polymer.dom(this.root).querySelector('px-edit-cell'),
-          editCellToTheLeft = Polymer.dom(this.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
+    cell.click();
+
+    flush(function(){
+      var editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
+          editCellToTheLeft = Polymer.dom(cell.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
       assert.isFalse(editCell.classList.contains('visuallyhidden'));
       assert.isTrue(editCellToTheLeft.classList.contains('visuallyhidden'));
       done();
     });
-    cell.click();
   });
 
   test('Clicking on an editable cell has the correct style', function(done){
