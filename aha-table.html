@@ -290,7 +290,7 @@
           len;
       for(i = 0, len = this.data.length; i < len; i++) {
         internalData.push({
-          row: this.data[i],
+          row: {value: this.data[i], _highlight: {}, _validation: {}},
           _filtered: false,
           _selected: false
         });
@@ -306,7 +306,7 @@
       }
       else {
         // the user's data is in the row column of internal data
-        row.row[columnName] = value;
+        row.row.value[columnName] = value;
       }
     },
 
@@ -318,9 +318,11 @@
       }
       else {
         // the user's data is in the row column of internal data
-        return row.row[columnName];
+        return row.row.value[columnName];
       }
     },
+
+    // _getInternalCellStateAt: function(row, columnName)
 
     /******* Update Displayed rows when major changes ****/
 
