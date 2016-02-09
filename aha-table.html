@@ -289,8 +289,19 @@
           i,
           len;
       for(i = 0, len = this.data.length; i < len; i++) {
+        var thisObj = this.data[i],
+            cellDataObj = {};
+        for ( var key in thisObj ) {
+          if ( Object.prototype.hasOwnProperty.call( thisObj, key ) ) {
+            cellDataObj[key] = {};
+            cellDataObj[key].value = thisObj[key];
+            cellDataObj[key]._validation = {passedValidation: true};
+            cellDataObj[key]._highlight = {};
+          }
+        }
+
         internalData.push({
-          row: {value: this.data[i], _highlight: {}, _validation: {}},
+          row: cellDataObj,
           _filtered: false,
           _selected: false
         });
@@ -306,23 +317,25 @@
       }
       else {
         // the user's data is in the row column of internal data
-        row.row.value[columnName] = value;
+        row.row[columnName].value = value;
       }
     },
 
     // get helper method so we don't have to sprinkle logic of this internal data structure throughout
     _getInternalDataAt: function(row, columnName) {
+      return this._getInternalCellStateAt(row, columnName).value;
+    },
+
+    _getInternalCellStateAt: function(row, columnName) {
       if(columnName === '_selected' || columnName === '_filtered') {
         // shadow fields are in root of row in internal data
         return row[columnName];
       }
       else {
         // the user's data is in the row column of internal data
-        return row.row.value[columnName];
+        return row.row[columnName];
       }
     },
-
-    // _getInternalCellStateAt: function(row, columnName)
 
     /******* Update Displayed rows when major changes ****/
 
