@@ -270,7 +270,7 @@
       // count total number of rows
       self = this;
       this.internalData.forEach(function(row) {
-        if(!self._getInternalDataAt(row, '_filtered')) {
+        if(!self._getInternalCellStateAt(row, '_filtered')) {
           count++;
         }
       });
@@ -278,7 +278,6 @@
 
       // with filtering/sorting, it's best just to go back to the first page
       this.$.pagination.goToPageNumber(1);
-
       this._updateDisplayedRows();
     },
 
@@ -559,11 +558,11 @@
 
 
       this.filtered = rowsToFilter.some(function(row) {
-        return self._getInternalDataAt(row, '_filtered');
+        return self._getInternalCellStateAt(row, '_filtered');
       });
 
       filteredRows = rowsToFilter.filter(function(r) {
-        return !self._getInternalDataAt(r, '_filtered');
+        return !self._getInternalCellStateAt(r, '_filtered');
       });
 
       return filteredRows;
