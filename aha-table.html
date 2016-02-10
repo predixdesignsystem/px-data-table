@@ -76,6 +76,7 @@
                                     cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
                                     cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
                                     cell-editable="{{column.editable}}"
+                                    cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
                                     column-name="{{column.name}}">
                 </px-data-table-cell>
               </template>
@@ -324,6 +325,14 @@
     // get helper method so we don't have to sprinkle logic of this internal data structure throughout
     _getInternalDataAt: function(row, columnName) {
       return this._getInternalCellStateAt(row, columnName).value;
+    },
+
+    _getInternalCellValidationStateAt: function(row, columnName) {
+      return this._getInternalCellStateAt(row, columnName)._validation;
+    },
+
+    _setInternalCellValidationStateAt: function(row, columnName, value) {
+      row.row[columnName]._validation = value;
     },
 
     _getInternalCellStateAt: function(row, columnName) {
@@ -587,15 +596,15 @@
 
     /********** Selecting ************/
     _click:function(evt){
-      var column = evt.model.column,
-          row = evt.model.internalRow,
-          detail = {"row": row, "column": column};
+      var column = evt.model.column;
+      //     row = evt.model.internalRow,
+      //     detail = {"row": row, "column": column};
       if (column.editable) {
 				this._edit(evt);
 			}
     },
     _edit: function(evt) {
-			var row = evt.model.internalRow;
+			// var row = evt.model.internalRow;
       evt.currentTarget.editCell();
 		},
     _save: function(evt) {
@@ -626,7 +635,9 @@
       return (oldValue !== newValue);
     },
     _validateCell: function(evt, column){
-      evt.currentTarget.cellValidation = column.validate(evt.detail.newValue);
+      var validationObj = column.validate(evt.detail.newValue);
+      evt.currentTarget.cellValidation = validationObj;
+      this._setInternalCellValidationStateAt(evt.model.internalRow, column.name, validationObj);
     },
     _clickRow: function(evt) {
       var column = evt.model.column,

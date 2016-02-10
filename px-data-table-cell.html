@@ -64,7 +64,7 @@
         cellValidation: {
           type: Object,
           value: function(){
-            return {passedValidation: true};
+            return {};
           },
           observer: '_cellValidityChanged',
           notify: true
@@ -157,9 +157,10 @@
         this.fire('save', {newValue: value});
       },
       _cellValidityChanged: function(newValue){
-        if (newValue === undefined){
-          this.cellValidation = {passedValidation: true};
-        }
+        // if (newValue === undefined){
+        //   this.cellValidation = {passedValidation: true};
+        // }
+        // console.log(newValue);
       },
       _getEditCellClass: function(editing){
         var classList = ['cell--edit'];
