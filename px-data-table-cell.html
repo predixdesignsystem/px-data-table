@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../px-tooltip/px-tooltip.html">
+<link rel="import" href="../polymer-fontawesome/polymer-fontawesome.html">
 <link rel="import" href="px-edit-cell.html">
 
 <dom-module id="px-data-table-cell">
@@ -31,7 +32,19 @@
               </px-tooltip>
             </template>
           </span>
-          <i style="margin-left: auto;" class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"></i>
+          <iron-icon style="width: 14px; height: 14px; margin-left: auto;"
+                     class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
+                     icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
+             <template is="dom-if" if="{{!cellValidation.passedValidation}}">
+               <px-tooltip
+               class="tooltip-font"
+               smart-orientation
+               orientation="top"
+               tooltip-message="{{cellValidation.failedValidationErrorMessage}}">
+             </px-tooltip>
+           </template>
+          </iron-icon>
+
         </div>
       </template>
     </span>
@@ -66,7 +79,6 @@
           value: function(){
             return {};
           },
-          observer: '_cellValidityChanged',
           notify: true
         },
         columnName: {
@@ -94,7 +106,6 @@
           } else {
             this.$$('.cell--value').classList.add('empty');
           }
-          // this.set('cellValidation.passedValidation', true);
         }
       },
       onCellHovered: function(evt){
@@ -134,7 +145,7 @@
         var editCell = this.$$(".cell--edit"),
             valueCell = this.$$(".cell--value");
 
-        this._editing = true;
+        this.set('_editing', true);
         this.toggleClass('cell__edit', this._editing);
 
         this.set('_undoValue', this.$$(".cell--value").innerText);
@@ -156,12 +167,6 @@
 
         this.fire('save', {newValue: value});
       },
-      _cellValidityChanged: function(newValue){
-        // if (newValue === undefined){
-        //   this.cellValidation = {passedValidation: true};
-        // }
-        // console.log(newValue);
-      },
       _getEditCellClass: function(editing){
         var classList = ['cell--edit'];
         if(!editing){
@@ -182,19 +187,24 @@
 
         return classList.join(' ');
       },
-      _getCellIconClass: function(showEditIcon, editing, valid){
-        var classList= ['fa'];
-
-        if (valid){
-          if (editing || !showEditIcon){
-            classList.push('fa-fw');
-          }else {
-            classList.push('fa-pencil');
+      _getCellIcon: function(showEditIcon, editing, valid){
+        if(valid) {
+          if(showEditIcon) {
+            return 'polymer-fontawesome:fa-pencil';
           }
         }
         else {
-          classList.push('fa-exclamation-circle', 'cell--value--icon__validation-failed');
-          if (editing){
+          return 'polymer-fontawesome:fa-warning';
+        }
+      },
+      _getCellIconClass: function(showEditIcon, editing, valid){
+        var classList= ['fa', 'fa-fw'];
+
+        if(!valid && !editing) {
+          classList.push('cell--value--icon__validation-failed');
+        }
+        else {
+          if (editing || !showEditIcon) {
             classList.push('visuallyhidden');
           }
         }

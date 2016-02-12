@@ -865,6 +865,17 @@ textarea {
   .btn:active {
     outline: none; }
 
+/** Hack for FF since it does not support calc().
+  * Other buttons appear ok with the height declaration, but round buttons
+  * can fail with text, such as in the px-data-table.
+  * This hack appears to work for circular icon buttons, but break smaller size
+  * rectangular buttons, hence placing it here even though line-height: calc() is
+  * declared in the base btn declaration.
+**/
+@-moz-document url-prefix() {
+  .btn:not(button) {
+    line-height: 1.8em; } }
+
 button.btn {
   -webkit-appearance: button; }
 

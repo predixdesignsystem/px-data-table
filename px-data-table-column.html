@@ -151,6 +151,10 @@ Element that defines a columns in a data table.
       if(validationEl){
         return validationEl.validate(value);
       }
+      else{
+        // no validation specified - always return 'passedValidation : true'
+        return {passedValidation: true};
+      }
     },
     highlight: function(value){
       return Polymer.dom(this).querySelector('px-data-table-highlight').highlight(value);

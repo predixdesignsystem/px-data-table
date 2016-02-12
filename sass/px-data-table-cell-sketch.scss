@@ -29,7 +29,6 @@ Predix branding rules go in px-data-table-predix.scss, not in this file.
 
 $inuit-enable-input--tiny: true;
 $inuit-enable-text-input--bare: true;
-$inuit-enable-validation-states : true;
 
 @import "px-forms-design/_base.forms.scss";
 
@@ -63,7 +62,7 @@ $inuit-table-border-color: $gray5;
 $px-data-table-cell-inner-height : 18px;
 
 .cell--edit {
-  &  input {
+  & input {
     max-height: $px-data-table-cell-inner-height;
   }
 }
