@@ -899,16 +899,25 @@ textarea {
 
 :host .viewing {
   min-height: 1em;
-  max-height: 30px;
+  max-height: 2rem;
   overflow: hidden;
   white-space: nowrap; }
 
 .cell--edit input {
-  max-height: 18px; }
+  max-height: 1.2rem; }
 
 .cell--value__empty {
-  height: 18px;
-  width: 1px; }
+  height: 1.2rem;
+  width: 0.0666666667rem; }
+
+.cell--icon {
+  width: 0.9333333333rem;
+  height: 0.9333333333rem;
+  margin-left: auto; }
+
+input:focus {
+  outline: none !important;
+  outline-style: hidden; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/

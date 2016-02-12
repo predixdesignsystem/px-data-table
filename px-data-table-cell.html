@@ -32,8 +32,7 @@
               </px-tooltip>
             </template>
           </span>
-          <iron-icon style="width: 14px; height: 14px; margin-left: auto;"
-                     class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
+          <iron-icon class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
                      icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
              <template is="dom-if" if="{{!cellValidation.passedValidation}}">
                <px-tooltip
@@ -198,7 +197,7 @@
         }
       },
       _getCellIconClass: function(showEditIcon, editing, valid){
-        var classList= ['fa', 'fa-fw'];
+        var classList= ['cell--icon', 'fa', 'fa-fw'];
 
         if(!valid && !editing) {
           classList.push('cell--value--icon__validation-failed');

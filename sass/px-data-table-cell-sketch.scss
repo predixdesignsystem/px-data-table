@@ -53,13 +53,13 @@ $inuit-table-border-color: $gray5;
 :host {
   & .viewing {
     min-height: 1em;
-    max-height: 30px;
+    max-height: calculateRem(30px);
     overflow: hidden;
     white-space: nowrap;
   }
 }
 
-$px-data-table-cell-inner-height : 18px;
+$px-data-table-cell-inner-height : calculateRem(18px);
 
 .cell--edit {
   & input {
@@ -74,7 +74,18 @@ $px-data-table-cell-inner-height : 18px;
 
 .cell--value__empty {
   height: $px-data-table-cell-inner-height;
-  width: 1px;
+  width: calculateRem(1px);
+}
+
+.cell--icon {
+  width: calculateRem(14px);
+  height: calculateRem(14px);
+  margin-left: auto;
+}
+
+input:focus{
+  outline: none !important;
+  outline-style: hidden;
 }
 
 // Trumps
