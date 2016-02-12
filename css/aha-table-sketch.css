@@ -922,7 +922,7 @@ textarea {
   padding: 0 1em;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   font: inherit;
-  line-height: calc(2em - 2px);
+  line-height: calc($inuit-btn-height - 2px);
   -webkit-font-smoothing: antialiased;
   cursor: pointer;
   text-align: center;
@@ -942,6 +942,13 @@ textarea {
     background-color: #9999a3; }
   .btn:active {
     outline: none; }
+
+/** Workaround for FF since it does not support calc().
+  * Other buttons appear ok with the height declaration, but non-button elements do not.
+**/
+@-moz-document url-prefix() {
+  .btn:not(button) {
+    line-height: 1.8em; } }
 
 button.btn {
   -webkit-appearance: button; }
@@ -1007,6 +1014,12 @@ button.btn {
   width: 2em;
   border-radius: 6.6666666667em;
   padding: 1px 0 0 1px; }
+
+/** Workaround for FF since it does not support calc().
+  **/
+@-moz-document url-prefix() {
+  .btn--icon {
+    line-height: 1.8em; } }
 
 .btn--bare__pagination {
   width: 32px; }
