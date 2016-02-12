@@ -12,6 +12,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
+<link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
 
 
 <dom-module id="aha-table">
@@ -27,7 +28,7 @@
             <span class$="{{_getHeaderClass(column)}}">
               <span
                 class$="{{_getTextSortingClass(column, sortedColumn)}}"
-                on-click="_sort">{{column.label}}<i class$="{{_getSortingClass(column, sortedColumn, descending)}}"></i>
+                on-click="_sort">{{column.label}}<iron-icon icon="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
               </span>
             </span>
           </template>
@@ -796,12 +797,19 @@
       }
       return classList.join(' ');
     },
-    _getSortingClass: function(column, sortingColumn, descending) {
-      var classList = ['u-ml-', 'sorting', 'fa'];
+    _getSortingIcon: function(column, sortingColumn, descending) {
+      var sortingIcon = ' ';
       if(sortingColumn === column.name) {
-        classList.push(descending ? 'fa-caret-down' : 'fa-caret-up');
+        sortingIcon = descending ? 'polymer-font-awesome:fa-caret-down' : 'polymer-font-awesome:fa-caret-up';
       }
-      return classList.join(' ');
+      return sortingIcon;
+    },
+    _getSortingClass: function(column, sortingColumn, descending) {
+      var classList = 'sorting fa';
+      if(sortingColumn !== column.name) {
+        classList = classList + ' visuallyhidden';
+      }
+      return classList;
     },
     _getTextSortingClass: function(column, sortingColumn) {
       var classList = ['column-head'];

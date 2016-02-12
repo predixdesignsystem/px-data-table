@@ -19,7 +19,7 @@
     "px-theme": "https://github.com/PredixDev/px-theme.git#~0.4.0",
     "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#~1.1.0",
     "px-validation": "https://github.com/PredixDev/px-validation.git",
-    "polymer-fontawesome": "polymer-font-awesome#^0.0.1"
+    "polymer-font-awesome": "polymer-font-awesome#~v0.0.3"
   },
   "devDependencies": {
     "px-tables-design": "https://github.com/PredixDev/px-tables-design.git#~0.3.9",

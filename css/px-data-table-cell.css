@@ -386,9 +386,7 @@ html {
   /*! Comment to prevent cssmin munging this rule with html above and borking Safari */
   box-sizing: border-box; }
 
-*,
-*:before,
-*:after {
+*, *:before, *:after {
   box-sizing: inherit; }
 
 /**
@@ -413,15 +411,13 @@ a {
   /**
  * Improve readability when focused and also mouse hovered in all browsers.
  */ }
-  a:link,
-  a:visited {
+  a:link, a:visited {
     color: #3e87e8; }
   a:hover {
     color: #3573c5; }
   a:active {
     color: #2b5ea2; }
-  a:active,
-  a:hover {
+  a:active, a:hover {
     outline: 0; }
 
 /**
@@ -504,9 +500,9 @@ a {
   padding: 0 !important;
   clip: rect(0 0 0 0) !important; }
 
-.a11y.focusable:active,
-.a11y.focusable:focus,
-.visuallyhidden.focusable:active, .visuallyhidden.focusable:focus {
+.a11y.focusable:active, .a11y.focusable:focus,
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
   position: static;
   overflow: visible;
   width: auto;
@@ -592,8 +588,7 @@ a {
 .invisible {
   visibility: hidden !important; }
 
-.flex,
-.cell--value {
+.flex, .cell--value {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex; }
@@ -793,9 +788,9 @@ textarea {
   box-shadow: inset 0 0 0 1px #e4e4ea;
   background-color: #efeff4;
   color: black; }
-  .text-input[readonly],
-  .text-input[disabled],
-  textarea[readonly], textarea[disabled] {
+  .text-input[readonly], .text-input[disabled],
+  textarea[readonly],
+  textarea[disabled] {
     box-shadow: none; }
   .text-input[readonly],
   textarea[readonly] {
@@ -866,8 +861,7 @@ select::-ms-expand {
 .text-input {
   height: 2em;
   line-height: 1; }
-  .text-input + [type=checkbox],
-  .text-input + [type=radio] {
+  .text-input + [type=checkbox], .text-input + [type=radio] {
     margin-left: 1.3333333333rem; }
   .text-input + .label--inline {
     margin-left: 0.6666666667rem; }
@@ -879,8 +873,7 @@ select::-ms-expand {
   .text-input:-moz-placeholder {
     padding-top: 1px; }
 
-.text-input + [type=submit],
-.text-input [type=cancel],
+.text-input + [type=submit], .text-input [type=cancel],
 .label--inline + [type=submit],
 .label--inline [type=cancel] {
   margin-left: 1.3333333333rem; }
@@ -898,8 +891,7 @@ textarea {
   cursor: pointer; }
   [type=checkbox][disabled], [type=radio][disabled] {
     cursor: not-allowed; }
-    [type=checkbox][disabled] + .label--inline,
-    [type=radio][disabled] + .label--inline {
+    [type=checkbox][disabled] + .label--inline, [type=radio][disabled] + .label--inline {
       cursor: not-allowed; }
 
 [type=checkbox] + .label--inline {

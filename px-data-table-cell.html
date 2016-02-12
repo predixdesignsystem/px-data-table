@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../px-tooltip/px-tooltip.html">
-<link rel="import" href="../polymer-fontawesome/polymer-fontawesome.html">
+<link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
 <link rel="import" href="px-edit-cell.html">
 
 <dom-module id="px-data-table-cell">
@@ -189,11 +189,11 @@
       _getCellIcon: function(showEditIcon, editing, valid){
         if(valid) {
           if(showEditIcon) {
-            return 'polymer-fontawesome:fa-pencil';
+            return 'polymer-font-awesome:fa-pencil';
           }
         }
         else {
-          return 'polymer-fontawesome:fa-warning';
+          return 'polymer-font-awesome:fa-warning';
         }
       },
       _getCellIconClass: function(showEditIcon, editing, valid){
