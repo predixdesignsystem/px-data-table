@@ -12,7 +12,7 @@
       <!-- in place editing template -->
       <px-edit-cell id="celledit" class$="{{_getEditCellClass(_editing)}}">
         <template is="dom-if" if="{{_isEqual(cellType, 'string')}}">
-          <input type="text" class="u-p0 text-input text-input--bare" required$="{{column.required}}" on-blur="saveCell" value="{{cellValue}}" />
+          <input type="text" class="u-p0 text-input text-input--bare" required$="{{column.required}}" on-input="_cellValueChanged" on-blur="saveCell" value="{{cellValue}}" />
         </template>
         <template is="dom-if" if="{{_isEqual(cellType, 'text')}}">
           <textarea required$="{{column.required}}" on-blur="saveCell">{{cellValue}}</textarea>
@@ -106,6 +106,9 @@
             this.$$('.cell--value').classList.add('empty');
           }
         }
+      },
+      _cellValueChanged: function(evt){
+        
       },
       onCellHovered: function(evt){
         this.set('_showEditIcon', this.cellEditable);
