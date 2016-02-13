@@ -104,6 +104,15 @@ module.exports = function (grunt) {
                     logConcurrentOutput: true
                 }
             }
+        },
+
+        bump: {
+          options:{
+            files: ['bower.json', 'package.json'],
+            updateConfigs: [],
+            commitFiles: ['-a'],
+            push: false
+          }
         }
     });
 
@@ -115,6 +124,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-dep-serve');
     grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks('grunt-bump');
 
 
     // Default task.
