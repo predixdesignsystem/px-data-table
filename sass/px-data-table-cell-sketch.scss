@@ -50,13 +50,10 @@ $inuit-table-border-color: $gray5;
   vertical-align: middle;
 }
 
-:host {
-  & .viewing {
-    min-height: 1em;
-    max-height: calculateRem(30px);
-    overflow: hidden;
-    white-space: nowrap;
-  }
+.viewing {
+  max-height: calculateRem(30px);
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 $px-data-table-cell-inner-height : calculateRem(18px);

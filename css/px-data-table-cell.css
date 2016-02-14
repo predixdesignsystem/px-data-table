@@ -1062,8 +1062,7 @@ textarea {
   display: table-cell;
   vertical-align: middle; }
 
-:host .viewing {
-  min-height: 1em;
+.viewing {
   max-height: 2rem;
   overflow: hidden;
   white-space: nowrap; }

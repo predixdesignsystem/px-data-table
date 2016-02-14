@@ -141,7 +141,7 @@
       },
       _getReaderClass: function() {
         var datum = this.cellValue,
-            classList = ['flex'];
+            classList = ['flex', 'viewing'];
         if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
           classList.push('empty');
         }
