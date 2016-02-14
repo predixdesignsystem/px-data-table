@@ -6,7 +6,7 @@
 <dom-module id="px-data-table-cell">
   <link rel="import" type="css" href="css/px-data-table-cell.css"/>
   <template>
-    <span class$="{{_getReaderClass(_editing)}}">
+    <span class$="{{_getReaderClass(_editing)}}" on-mouseover='onCellHovered' on-mouseout='onCellUnHovered'>
 
       <!-- in place editing template -->
       <px-edit-cell id="celledit" class$="{{_getEditCellClass(_editing)}}">
@@ -26,7 +26,7 @@
       <!-- in place editing template -->
 
       <template is="dom-if" if="{{_isEqual(cellType,'string')}}">
-        <div class="flex cell--container" on-mouseover='onCellHovered' on-mouseout='onCellUnHovered' >
+        <div class="flex cell--container">
           <span id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation, cellDisplayValue)}}">{{cellDisplayValue}}
             <template is="dom-if" if="{{cellDisplayTooltip}}">
               <px-tooltip
@@ -37,22 +37,23 @@
               </px-tooltip>
             </template>
           </span>
-          <div class="fa fa-fw cell-status--container">
-            <iron-icon class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
-              icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
-            </iron-icon>
-            <template is="dom-if" if="{{!cellValidation.passedValidation}}">
-              <px-tooltip
-                class="tooltip-font"
-                smart-orientation
-                orientation="top"
-                tooltip-message="{{cellValidation.failedValidationErrorMessage}}">
-              </px-tooltip>
-            </template>
-          </div>
-
         </div>
       </template>
+      <!-- icon template -->
+      <div class="fa fa-fw cell-status--container">
+        <iron-icon class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
+          icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
+        </iron-icon>
+        <template is="dom-if" if="{{!cellValidation.passedValidation}}">
+          <px-tooltip
+            class="tooltip-font"
+            smart-orientation
+            orientation="top"
+            tooltip-message="{{cellValidation.failedValidationErrorMessage}}">
+          </px-tooltip>
+        </template>
+      </div>
+      <!-- icon template -->
     </span>
     <!-- html content -->
     <template is="dom-if" if="{{_isEqual(cellType,'html')}}">
@@ -140,7 +141,7 @@
       },
       _getReaderClass: function() {
         var datum = this.cellValue,
-            classList = ['viewing'];
+            classList = ['flex'];
         if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
           classList.push('empty');
         }
@@ -217,7 +218,7 @@
       _getCellIconClass: function(showEditIcon, editing, valid){
         var classList= ['cell--status--container--icon'];
 
-        if(!valid && !editing) {
+        if(!valid) {
           classList.push('cell--value--icon__validation-failed');
         }
         else {
