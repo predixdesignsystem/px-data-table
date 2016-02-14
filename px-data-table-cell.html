@@ -8,11 +8,16 @@
   <template>
     <span class$="{{_getReaderClass(_editing)}}">
 
-
       <!-- in place editing template -->
       <px-edit-cell id="celledit" class$="{{_getEditCellClass(_editing)}}">
         <template is="dom-if" if="{{_isEqual(cellType, 'string')}}">
-          <input type="text" class="u-p0 text-input text-input--bare" required$="{{column.required}}" on-input="_cellValueChanged" on-blur="saveCell" value="{{cellValue}}" />
+          <input id="celleditinput"
+                 type="text"
+                 class="u-p0 text-input text-input--bare"
+                 required$="{{column.required}}"
+                 on-input="_cellValueChanged"
+                 on-blur="saveCell"
+                 value="{{cellValue}}" />
         </template>
         <template is="dom-if" if="{{_isEqual(cellType, 'text')}}">
           <textarea required$="{{column.required}}" on-blur="saveCell">{{cellValue}}</textarea>
@@ -98,6 +103,12 @@
         _showEditIcon:{
           type: Boolean,
           value: false
+        },
+        _editTimeout:{
+          type: Object,
+          value: function(){
+            return {};
+          }
         }
       },
       _cellDisplayValueChanged: function(newValue){
@@ -110,7 +121,10 @@
         }
       },
       _cellValueChanged: function(evt){
-
+        clearTimeout(this._editTimeout);
+        this._editTimeout = setTimeout(function(){
+          this.fire('validate', {newValue: this.$$('#celleditinput').value});
+        }.bind(this), 300);
       },
       onCellHovered: function(evt){
         this.set('_showEditIcon', this.cellEditable);
@@ -168,7 +182,6 @@
         else {
           value = evt.target.value;
         }
-
         this.fire('save', {newValue: value});
       },
       _getEditCellClass: function(editing){
