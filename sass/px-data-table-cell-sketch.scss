@@ -77,16 +77,19 @@ $px-data-table-cell-inner-height : calculateRem(18px);
   width: calculateRem(1px);
 }
 
-.cell--icon {
-  width: calculateRem(14px);
-  height: calculateRem(14px);
+.cell-status--container {
   margin-left: auto;
 }
 
-input:focus{
-  outline: none !important;
-  outline-style: hidden;
+.cell--status--container--icon {
+  width: calculateRem(14px);
+  height: calculateRem(14px);
 }
+
+// input:focus{
+//   outline: none !important;
+//   outline-style: hidden;
+// }
 
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";

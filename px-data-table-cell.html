@@ -32,17 +32,19 @@
               </px-tooltip>
             </template>
           </span>
-          <iron-icon class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
-                     icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
-             <template is="dom-if" if="{{!cellValidation.passedValidation}}">
-               <px-tooltip
-               class="tooltip-font"
-               smart-orientation
-               orientation="top"
-               tooltip-message="{{cellValidation.failedValidationErrorMessage}}">
-             </px-tooltip>
-           </template>
-          </iron-icon>
+          <div class="fa fa-fw cell-status--container">
+            <iron-icon class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
+              icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
+            </iron-icon>
+            <template is="dom-if" if="{{!cellValidation.passedValidation}}">
+              <px-tooltip
+                class="tooltip-font"
+                smart-orientation
+                orientation="top"
+                tooltip-message="{{cellValidation.failedValidationErrorMessage}}">
+              </px-tooltip>
+            </template>
+          </div>
 
         </div>
       </template>
@@ -108,7 +110,7 @@
         }
       },
       _cellValueChanged: function(evt){
-        
+
       },
       onCellHovered: function(evt){
         this.set('_showEditIcon', this.cellEditable);
@@ -200,7 +202,7 @@
         }
       },
       _getCellIconClass: function(showEditIcon, editing, valid){
-        var classList= ['cell--icon', 'fa', 'fa-fw'];
+        var classList= ['cell--status--container--icon'];
 
         if(!valid && !editing) {
           classList.push('cell--value--icon__validation-failed');
