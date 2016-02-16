@@ -101,6 +101,11 @@
           type: Boolean,
           value: false
         },
+        cellHighlightClass:{
+          type: String,
+          value: '',
+          observer: '_cellHighlightClassChanged'
+        },
         _showEditIcon:{
           type: Boolean,
           value: false
@@ -119,6 +124,11 @@
           } else {
             this.$$('.cell--value').classList.add('empty');
           }
+        }
+      },
+      _cellHighlightClassChanged: function(newValue){
+        if (newValue){
+          this.toggleClass(newValue, true);
         }
       },
       _cellValueChanged: function(evt){

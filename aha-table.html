@@ -69,8 +69,9 @@
                   </span>
                 </span>
               </template>
-              <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-                <px-data-table-cell on-tap="_click"
+              <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
+                <px-data-table-cell cell-highlight-class="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
+                                    on-tap="_click"
                                     on-save="_save"
                                     on-validate="_validateCell"
                                     cell-type="{{column.type}}"
@@ -185,9 +186,29 @@
     ],
 
     ready: function() {
-      this._observer = Polymer.dom(this.$.columndefs).observeNodes(function(info) {
+    //   this._observer = Polymer.dom(this.$.columndefs).observeNodes(function(info) {
+    //     var a = info.addedNodes.filter(function(node) {
+    //       return (node.nodeType === node.ELEMENT_NODE);
+    //     });
+    //   });
 
+    this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
+
+    },
+    _highlightLoaded: function(evt){
+      var column = evt.path.find(function(node) {
+        return (node.nodeName === "PX-DATA-TABLE-COLUMN");
       });
+      var columnIndex = this.meta.findIndex (
+        function(item){
+          if(item === column){
+            return true;
+          }
+        }
+      );
+
+      this.set('meta.' + columnIndex + '.highlightdefined', true);
+      console.log(this.meta[columnIndex].highlightdefined);
     },
     _dataChanged: function() {
       if(this.data === undefined || this.data === null) {
@@ -722,6 +743,11 @@
         this.striped ? 'striped' : '',
         row._selected ? 'selected' : ''
       ].join(' ');
+    },
+    _getCellClass: function(row, column, highlightdefined) {
+      if ( column.highlight(this._getInternalDataAt(row, column.name))) {
+        return 'cell--value__highlight';
+      }
     },
     _isSelectAllColumn: function(column) {
       return column.selectAll;
