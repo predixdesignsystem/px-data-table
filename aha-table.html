@@ -196,6 +196,7 @@
 
     },
     _highlightLoaded: function(evt){
+      evt = Polymer.dom(evt);
       var column = evt.path.find(function(node) {
         return (node.nodeName === "PX-DATA-TABLE-COLUMN");
       });
