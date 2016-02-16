@@ -69,8 +69,8 @@ Element to define and configure highlighting behaviour for a given column (and h
       this.importHref(this.import, function(e) {
         if (this.highlightMethod && window.PxHighlight[this.highlightMethod]){
           this.highlight = window.PxHighlight[this.highlightMethod];
+          this.fire('px-data-table-highlight-loaded');
         }
-
       }, function(e) {
         // loading error
       });
