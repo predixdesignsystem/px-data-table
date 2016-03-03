@@ -740,13 +740,6 @@
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
 
     _getRowClass: function(row, isSelected) {
-      var a = ['tr', 'rows',
-        this.striped ? 'striped' : '',
-        row._selected ? 'selected' : '',
-        row._highlight ? 'cell--value__highlight' : ''
-      ].join(' ');
-
-      console.log(a);
       return ['tr', 'rows',
         this.striped ? 'striped' : '',
         row._selected ? 'selected' : '',
@@ -760,9 +753,9 @@
           this._setInternalDataAt(row, '_highlight', true);
         }
       }
-      if (column.highlight(this._getInternalDataAt(row, column.name))) {
-        return 'cell--value__highlight';
-      }
+      // if (column.highlight(this._getInternalDataAt(row, column.name))) {
+      //   return 'cell--value__highlight';
+      // }
     },
     _isSelectAllColumn: function(column) {
       return column.selectAll;
