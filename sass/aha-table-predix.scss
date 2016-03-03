@@ -70,10 +70,6 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   }
 }
 
-.td {
-  border: $inuit-table-border-width solid $inuit-table-border-color !important;
-}
-
 .cell__edit{
   background-color: $inuit-forms-background;
   border: $inuit-table-border-width double $primary-blue !important;
