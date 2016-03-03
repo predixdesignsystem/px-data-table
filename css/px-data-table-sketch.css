@@ -827,7 +827,7 @@ textarea {
   padding: 0 1em;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   font: inherit;
-  line-height: calc($inuit-btn-height - 2px);
+  line-height: calc(2em - 2px);
   -webkit-font-smoothing: antialiased;
   cursor: pointer;
   text-align: center;

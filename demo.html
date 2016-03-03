@@ -18,7 +18,7 @@
       <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
       <iron-ajax url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
 
-      <!-- <h3>Data table demos</h3>
+      <h3>Data table demos</h3>
 
       <p>A very simple data table.  Just displays data and has sortable columns.</p>
       <px-data-table table-data="{{minidata}}"></px-data-table>
@@ -81,7 +81,7 @@
           <li>you can <button onclick="logSelectedRows()">console.log the selected rows</button></li>
           <li>listen for px-row-click events from the table, which can be used by taking action on the row</li>
         </ul>
-      </div> -->
+      </div>
 
       <px-data-table id="mytable" selected-rows="{{mySelectedRows}}" filterable selectable striped table-data="{{minidata}}">
         <px-data-table-column
@@ -93,7 +93,7 @@
           <px-validation>
             <px-validator validation-method="isNumber" import="../px-validation/px-example-validator.html"></px-validator>
           </px-validation>
-          <px-data-table-highlight type="row" highlight-method="isLongString" import="px-example-highlight.html"></px-data-table-highlight>
+          <!-- <px-data-table-highlight type="cell" highlight-method="isLongString" import="px-example-highlight.html"></px-data-table-highlight> -->
         </px-data-table-column>
         <px-data-table-column
           name="last"

@@ -948,7 +948,7 @@ textarea {
   padding: 0 1em;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   font: inherit;
-  line-height: calc($inuit-btn-height - 2px);
+  line-height: calc(2em - 2px);
   -webkit-font-smoothing: antialiased;
   cursor: pointer;
   text-align: center;
@@ -1858,15 +1858,15 @@ label {
   box-shadow: none; }
 
 .td {
-  border: 1px inset #b1b1bc !important; }
+  border: 1px solid #b1b1bc !important; }
 
 .cell__edit {
   background-color: #efeff4;
-  border: 1px solid #3e87e8 !important;
+  border: 1px double #3e87e8 !important;
   box-shadow: inset 0 0 0 1px #e4e4ea; }
 
 .cell--value__validation-failed {
-  border: 1px solid #e53838 !important; }
+  border: 1px double #e53838 !important; }
 
 .cell--value__highlight {
   background-color: rgba(227, 37, 51, 0.5); }

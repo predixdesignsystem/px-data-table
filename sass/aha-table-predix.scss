@@ -53,7 +53,6 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   background-color: $select-blue-default !important;
   color: $white !important;
 }
-
 .th {
   font-weight: bold;
 }
@@ -72,17 +71,17 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 .td {
-  border: $inuit-table-border-width inset $inuit-table-border-color !important;
+  border: $inuit-table-border-width solid $inuit-table-border-color !important;
 }
 
 .cell__edit{
   background-color: $inuit-forms-background;
-  border: 1px solid $primary-blue !important;
+  border: $inuit-table-border-width double $primary-blue !important;
   box-shadow: $inuit-forms-border--inner;
 }
 
 .cell--value__validation-failed{
-  border: 1px solid $alert-red !important;
+  border: $inuit-table-border-width double $alert-red !important;
 }
 
 .cell--value__highlight{
