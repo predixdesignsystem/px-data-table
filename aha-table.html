@@ -57,7 +57,7 @@
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
-          <div class$="{{_getRowClass(internalRow, internalRow._selected)}}">
+          <div class$="{{_getRowClass(internalRow, internalRow._selected, internalRow._highlight)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <!-- selected column checkbox -->
@@ -209,7 +209,6 @@
       );
 
       this.set('meta.' + columnIndex + '.highlightdefined', true);
-      console.log(this.meta[columnIndex].highlightdefined);
     },
     _dataChanged: function() {
       if(this.data === undefined || this.data === null) {
@@ -320,14 +319,15 @@
             cellDataObj[key] = {};
             cellDataObj[key].value = thisObj[key];
             cellDataObj[key]._validation = {passedValidation: true};
-            cellDataObj[key]._highlight = {};
+            // cellDataObj[key]._highlight = {};
           }
         }
 
         internalData.push({
           row: cellDataObj,
           _filtered: false,
-          _selected: false
+          _selected: false,
+          _highlight: false
         });
       }
       return internalData;
@@ -335,7 +335,7 @@
 
     // set helper method so we don't have to sprinkle logic of this internal data structure throughout
     _setInternalDataAt: function(row, columnName, value) {
-      if(columnName === '_selected' || columnName === '_filtered') {
+      if(columnName === '_selected' || columnName === '_filtered' || columnName === '_highlight') {
         // shadow fields are in root of row in internal data
         row[columnName] = value;
       }
@@ -740,13 +740,27 @@
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
 
     _getRowClass: function(row, isSelected) {
+      var a = ['tr', 'rows',
+        this.striped ? 'striped' : '',
+        row._selected ? 'selected' : '',
+        row._highlight ? 'cell--value__highlight' : ''
+      ].join(' ');
+
+      console.log(a);
       return ['tr', 'rows',
         this.striped ? 'striped' : '',
-        row._selected ? 'selected' : ''
+        row._selected ? 'selected' : '',
+        row._highlight ? 'cell--value__highlight' : ''
       ].join(' ');
     },
     _getCellClass: function(row, column, highlightdefined) {
-      if ( column.highlight(this._getInternalDataAt(row, column.name))) {
+      var highlightEl = column.$$("px-data-table-highlight");
+      if (highlightEl) {
+        if (highlightEl.highlightType === 'row') {
+          this._setInternalDataAt(row, '_highlight', true);
+        }
+      }
+      if (column.highlight(this._getInternalDataAt(row, column.name))) {
         return 'cell--value__highlight';
       }
     },
