@@ -80,6 +80,6 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   border: $inuit-table-border-width double $alert-red !important;
 }
 
-.cell--value__highlight{
+.cell--value__highlight.cell--value__highlight{
   background-color: rgba($red, 0.5);
 }

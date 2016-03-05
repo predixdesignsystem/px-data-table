@@ -337,7 +337,7 @@
     _setInternalDataAt: function(row, columnName, value) {
       if(columnName === '_selected' || columnName === '_filtered' || columnName === '_highlight') {
         // shadow fields are in root of row in internal data
-        row[columnName] = value;
+        this.set('displayedRows.' + this.displayedRows.indexOf(row) + '.' + columnName, value);
       }
       else {
         // the user's data is in the row column of internal data
@@ -746,16 +746,17 @@
         row._highlight ? 'cell--value__highlight' : ''
       ].join(' ');
     },
-    _getCellClass: function(row, column, highlightdefined) {
-      var highlightEl = column.$$("px-data-table-highlight");
+    _getCellClass: function(row, column) {
+      var highlightEl = column.$$("px-data-table-highlight"),
+          doHighlight = column.highlight(this._getInternalDataAt(row, column.name));
       if (highlightEl) {
         if (highlightEl.highlightType === 'row') {
-          this._setInternalDataAt(row, '_highlight', true);
+          this._setInternalDataAt(row, '_highlight', doHighlight);
+        }
+        if (highlightEl.highlightType === 'cell' && doHighlight) {
+          return 'cell--value__highlight';
         }
       }
-      // if (column.highlight(this._getInternalDataAt(row, column.name))) {
-      //   return 'cell--value__highlight';
-      // }
     },
     _isSelectAllColumn: function(column) {
       return column.selectAll;

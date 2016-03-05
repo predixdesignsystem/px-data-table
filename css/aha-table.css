@@ -1865,5 +1865,5 @@ label {
 .cell--value__validation-failed {
   border: 1px double #e53838 !important; }
 
-.cell--value__highlight {
+.cell--value__highlight.cell--value__highlight {
   background-color: rgba(227, 37, 51, 0.5); }
