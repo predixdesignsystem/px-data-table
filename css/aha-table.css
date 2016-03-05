@@ -1865,5 +1865,11 @@ label {
 .cell--value__validation-failed {
   border: 1px double #e53838 !important; }
 
-.cell--value__highlight.cell--value__highlight {
-  background-color: rgba(227, 37, 51, 0.5); }
+.cell--value__highlight--high.cell--value__highlight--high {
+  background-color: rgba(229, 56, 56, 0.25); }
+
+.cell--value__highlight--medium.cell--value__highlight--medium {
+  background-color: rgba(232, 167, 54, 0.25); }
+
+.cell--value__highlight--low.cell--value__highlight--low {
+  background-color: rgba(67, 100, 221, 0.25); }
