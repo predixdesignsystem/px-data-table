@@ -319,7 +319,6 @@
             cellDataObj[key] = {};
             cellDataObj[key].value = thisObj[key];
             cellDataObj[key]._validation = {passedValidation: true};
-            // cellDataObj[key]._highlight = {};
           }
         }
 
@@ -338,6 +337,8 @@
       if(columnName === '_selected' || columnName === '_filtered' || columnName === '_highlight') {
         // shadow fields are in root of row in internal data
         this.set('displayedRows.' + this.displayedRows.indexOf(row) + '.' + columnName, value);
+        row[columnName] = value;
+
       }
       else {
         // the user's data is in the row column of internal data
@@ -412,7 +413,14 @@
       sortedRows =
         rowsToSort
           .map(function(e, i) {
-            var v = this._getInternalDataAt(e, this.sortedColumn);
+            var v;
+            if(this.sortedColumn === '_selected'){
+              v = this._getInternalCellStateAt(e, this.sortedColumn);
+            } else{
+              v = this._getInternalDataAt(e, this.sortedColumn);
+            }
+
+            // call internal state function...
             if(undefined === v || null === v) {
               v = '';
             }
@@ -432,13 +440,14 @@
     _getSortFunction: function() {
       var sortFunction;
 
-      // use custom sort function if there is one
-      this.meta.forEach(function(obj) {
-        if(this.sortedColumn === obj.name) {
-          sortFunction = this._resolveFunctionOnWindow("sort-function-name", obj);
-        }
-      }, this);
-
+      if (this.sortedColumn !== '_selected'){
+        // use custom sort function if there is one
+        this.meta.forEach(function(obj) {
+          if(this.sortedColumn === obj.name) {
+            sortFunction = this._resolveFunctionOnWindow("sort-function-name", obj);
+          }
+        }, this);
+      }
       if(!sortFunction) {
         if(this.sortedColumn === "_selected") {
           sortFunction = this._defaultSortSelected;
@@ -451,16 +460,17 @@
       return sortFunction;
     },
 
-    _resolveFunctionOnWindow: function(columnAttributeName, customFunctionPeriodSeperatedPath) {
+    _resolveFunctionOnWindow: function(columnAttributeName, columnObj) {
       var customFunction = window,
           customFunctionFullPath,
-          i;
+          i,
+          customFunctionRef = columnObj.attributes[columnAttributeName];
 
-      if(customFunctionPeriodSeperatedPath[columnAttributeName] === null || customFunctionPeriodSeperatedPath[columnAttributeName] === undefined) {
+      if(customFunctionRef === null || customFunctionRef === undefined) {
         return null;
       }
 
-      customFunctionFullPath = customFunctionPeriodSeperatedPath[columnAttributeName].split(".");
+      customFunctionFullPath = customFunctionRef.value.split(".");
 
       for(i in customFunctionFullPath) {
         customFunction = customFunction[customFunctionFullPath[i]];
