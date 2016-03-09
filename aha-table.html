@@ -464,10 +464,16 @@
       var customFunction = window,
           customFunctionFullPath,
           i,
-          customFunctionRef = columnObj.attributes[columnAttributeName];
+          customFunctionRef = columnObj[columnAttributeName];
 
       if(customFunctionRef === null || customFunctionRef === undefined) {
-        return null;
+        console.log(columnObj instanceof HTMLElement);
+        if (columnObj instanceof HTMLElement){
+          customFunctionRef = columnObj.attributes[columnAttributeName];
+        }
+        if (customFunctionRef === null || customFunctionRef === undefined){
+          return null;
+        }
       }
 
       customFunctionFullPath = customFunctionRef.value.split(".");
