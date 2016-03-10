@@ -849,6 +849,25 @@ function runTests() {
     });
   });
 
+  test('Test that the presence of the hide-pagination-control property hide these controls', function(done){
+    var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
+        paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
+
+    assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
+    done();
+  });
+
+  test('Test that the hide-pagination-control property can be programmatically controlled', function(done){
+    var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
+        paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
+
+    tb.hidePaginationControl = false;
+    assert.isFalse(paginationControl.classList.contains('visuallyhidden'));
+    tb.hidePaginationControl = true;
+    assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
+    done();
+  });
+
 
   // FIXME: test only completes on Chrome - doesn't work reliably on FF...
   // test('Check edit updates model data', function(done){
