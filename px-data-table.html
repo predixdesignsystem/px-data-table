@@ -81,6 +81,7 @@ Events:
                  selectable="{{selectable}}"
                  selected-rows="{{selectedRows}}"
                  meta="{{meta}}"
+                 hide-pagination-control="{{hidePaginationControl}}"
                  id="dataTable">
                  <content></content>
       </aha-table>
@@ -185,6 +186,18 @@ Events:
        * @default false
        */
       selectable: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Property to set the visibility of the table pagination controls.
+       *
+       *      <px-data-table hide-pagination-control="true" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      hidePaginationControl: {
         type: Boolean,
         value: false
       },

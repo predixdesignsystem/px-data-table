@@ -94,10 +94,13 @@
     </div>
     <!-- Pagination controls -->
     <div class="pagination">
-      <px-pagination id="pagination" number-of-items="{{numberOfItems}}" page-size="{{pageSize}}"
-                     first-item-index-to-display="{{firstItemIndex}}"></px-pagination>
+      <px-pagination class$="{{_getPaginationVisibility(hidePaginationControl)}}"
+                     id="pagination"
+                     number-of-items="{{numberOfItems}}"
+                     page-size="{{pageSize}}"
+                     first-item-index-to-display="{{firstItemIndex}}">
+      </px-pagination>
     </div>
-
   </template>
 </dom-module>
 <script>
@@ -175,6 +178,17 @@
       },
       //descending: current sorting order
       descending: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * Property to set the visibility of the table pagination controls.
+       *
+       *      <px-data-table hide-pagination-control="false" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      hidePaginationControl: {
         type: Boolean,
         value: false
       }
@@ -883,6 +897,9 @@
         classList.push('table--columns');
       }
       return classList.join(' ');
+    },
+    _getPaginationVisibility: function(hidePaginationControl){
+      return (hidePaginationControl ? "visuallyhidden" : "");
     }
   });
 </script>
