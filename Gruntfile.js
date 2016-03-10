@@ -110,7 +110,7 @@ module.exports = function (grunt) {
           options:{
             files: ['bower.json', 'package.json'],
             updateConfigs: [],
-            commitFiles: ['-a'],
+            commitFiles: ['package.json', 'bower.json'],
             push: false
           }
         }
