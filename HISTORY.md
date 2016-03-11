@@ -1,3 +1,17 @@
+v1.1.1
+=================
+* Updated README with preventing auto-synching your info.
+
+v1.1.0
+=================
+* Add hide-pagination-control property to allow user to control if the data table pagination controls are available or not to the user.
+
+v1.0.5
+=================
+* Fixes for table borders disappearing in Safari
+* Fixes for column only and row only cell borders.
+* Removal of '5' row option in pagination control to match data table design.
+
 v1.0.3
 =================
 * Updated License
@@ -18,4 +32,3 @@ v1.0.0
  v0.0.1
 ==================
 * Initial release
-

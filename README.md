@@ -74,6 +74,7 @@ $scope.doSomethingWithSelectedRows = function() {
 };
 ```
 
+You may also want to prevent your data from auto-synching with your model. If so, we've written up a [little explanation] to help you with that.
 <br />
 <hr />
 
