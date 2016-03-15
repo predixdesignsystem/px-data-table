@@ -840,10 +840,10 @@ function runTests() {
 
     flush(function(){
       assert.equal(getStyle(cell, 'background-color'), 'rgb(239, 239, 244)');
-      assert.equal(getStyle(cell, 'border-right-width'), '1px');
+      assert.oneOf(getStyle(cell, 'border-right-width'), ['1px', '0.5px']);
       assert.equal(getStyle(cell, 'border-right-style'), 'double');
       assert.equal(getStyle(cell, 'border-right-color'), 'rgb(62, 135, 232)');
-      assert.equal(getStyle(cell, 'box-shadow'), 'rgb(228, 228, 234) 0px 0px 0px 1px inset');
+      assert.oneOf(getStyle(cell, 'box-shadow'), ['rgb(228, 228, 234) 0px 0px 0px 1px inset', 'rgb(228, 228, 234) 0px 0px 0px 0.5px inset']);
 
       done();
     });
