@@ -1,6 +1,6 @@
 {
   "name": "px-data-table",
-  "version": "1.1.1",
+  "version": "1.1.3",
   "main": [
     "px-data-table.html"
   ],
@@ -15,23 +15,23 @@
   ],
   "dependencies": {
     "polymer": "~v1.2.3",
-    "px-tooltip": "https://github.com/PredixDev/px-tooltip.git#~v0.2.0",
-    "px-theme": "https://github.com/PredixDev/px-theme.git#~0.4.0",
+    "px-tooltip": "~v0.2.0",
+    "px-theme": "~0.4.0",
     "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#~1.1.0",
-    "px-validation": "https://github.com/PredixDev/px-validation.git",
-    "polymer-font-awesome": "polymer-font-awesome#~v0.0.3"
+    "polymer-font-awesome": "polymer-font-awesome#~v0.0.3",
+    "px-validation": "~0.0.3"
   },
   "devDependencies": {
-    "px-tables-design": "https://github.com/PredixDev/px-tables-design.git#~0.3.9",
+    "px-tables-design": "~0.3.9",
     "iron-component-page": "PolymerElements/iron-component-page#~v1.1.0",
-    "px-starter-kit-design": "https://github.com/PredixDev/px-starter-kit-design.git#~0.4.6",
+    "px-starter-kit-design": "~0.4.6",
     "iron-ajax": "PolymerElements/iron-ajax#~1.1.1",
-    "px-layout-design": "https://github.com/PredixDev/px-layout-design.git#~0.3.8",
-    "px-card": "https://github.com/PredixDev/px-card.git#~0.2.0",
-    "px-spacing-design": "https://github.com/PredixDev/px-spacing-design.git#~0.3.4",
-    "px-buttons-design": "https://github.com/PredixDev/px-buttons-design.git#~0.4.13",
-    "px-forms-design": "https://github.com/PredixDev/px-forms-design.git#~0.3.13",
-    "px-button-group-design": "https://github.com/PredixDev/px-button-group-design.git#~0.3.8",
-    "px-typography-design": "https://github.com/predixDev/px-typography-design.git#~0.3.2"
+    "px-layout-design": "~0.3.8",
+    "px-card": "~0.2.0",
+    "px-spacing-design": "~0.3.4",
+    "px-buttons-design": "~0.4.13",
+    "px-forms-design": "~0.3.13",
+    "px-button-group-design": "~0.3.8",
+    "px-typography-design": "~0.3.2"
   }
 }

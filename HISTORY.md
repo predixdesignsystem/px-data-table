@@ -1,3 +1,7 @@
+v1.1.3
+=================
+* Move bower components to use registered component names.
+
 v1.1.2
 =================
 * Fix 1px border-collapse padding bug.
