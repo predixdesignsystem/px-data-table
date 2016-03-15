@@ -843,7 +843,7 @@ function runTests() {
       assert.oneOf(getStyle(cell, 'border-right-width'), ['1px', '0.5px']);
       assert.equal(getStyle(cell, 'border-right-style'), 'double');
       assert.equal(getStyle(cell, 'border-right-color'), 'rgb(62, 135, 232)');
-      assert.oneOf(getStyle(cell, 'box-shadow'), ['rgb(228, 228, 234) 0px 0px 0px 1px inset', 'rgb(228, 228, 234) 0px 0px 0px 0.5px inset']);
+      assert.equal(getStyle(cell, 'box-shadow'), 'rgb(228, 228, 234) 0px 0px 0px 1px inset');
 
       done();
     });
