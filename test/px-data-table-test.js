@@ -729,7 +729,7 @@ function runTests() {
   test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function() {
     var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
         cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[4];
-    assert.isTrue(cell.textContent.includes('Rita Lopez'));
+    assert.include(cell.textContent, 'Rita Lopez');
   });
   test('Row count for first table should be 26', function() {
     var fixture = document.getElementById('table1');
@@ -741,7 +741,7 @@ function runTests() {
   test('First Name displays only first 10 characters  if length of the text is greater than 10 characters and elipse at the right', function() {
     var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
         cell = Polymer.dom(tb.root).querySelectorAll('.aha-first-td')[0];
-    assert.isTrue(cell.textContent.includes('Isabel lon…'));
+    assert.include(cell.textContent, 'Isabel lon…');
   });
   test('Email displays only last 10 characters displayed if length of the text is greater than 10 characters', function() {
     var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-image-td';
@@ -803,7 +803,7 @@ function runTests() {
         var tb = Polymer.dom(sortableTableRoot.root).querySelector('aha-table'),
             lastNameRow = Polymer.dom(tb.root).querySelectorAll('.aha-last-td');
 
-        assert.isTrue(lastNameRow[9].textContent.includes('Wooten'));
+        assert.include(lastNameRow[9].textContent, 'Wooten');
         done(); // end the test
       }, 0);
     });
@@ -813,7 +813,7 @@ function runTests() {
 
   test('Table font is GE Inspira Sans', function(done){
     var tableFontFam = getStyle(table1Fixture, 'font-family');
-    assert.isTrue(tableFontFam.includes('GE Inspira Sans'));
+    assert.include(tableFontFam, 'GE Inspira Sans');
     done();
   });
 
