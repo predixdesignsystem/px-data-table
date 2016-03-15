@@ -1,6 +1,9 @@
 language: node_js
 sudo: false
 node_js: stable
+branches:
+  except:
+  - gh-pages
 addons:
   firefox: latest
   apt:
@@ -15,6 +18,7 @@ before_script:
 - bower install
 script:
 - xvfb-run wct --skip-plugin sauce
+- wct --skip-plugin local
 env:
   global:
   - secure: HqhnZMd53k+XnWh6FqFwEnb5CBzIj0Rw96ea2uSPTDxa71GNDaMEpwFrBXm/oEJ8d9eH2dHz7nNXWK0Tuvf4TweX0KsN26WKMHdfoU8vDaD9PgljdvJAfpWXrpqaJUhqO3d5al/ZpGPIdISOl2DTObkjf93QVS6evbVfzc1pS3A8zcoUvouuCUkS+kdmWM57JIAXp2AuWzi9l8LyvH3F8bGosJOi1k76/+Z+IjYF5qC8DhKQ65BUjwu0+LxeAtf3pNhwMXEC3UDxdP2BdONIJSfvQ8oykhFmQGW0RupKOdzJwWz3IFSMXlHd9VKYWU2vxKiMCFdabDIdLnIQ+D23cVt2C/VBs+jKZ5CE0PRmZ/eHQvRkNXaLEL4M+zpNtWG7/LCgIolVU0mdk1r5JHn2xRXAf+KuJPVfPhkz+sfQ8KpKdH7SsmdNU0MQw0iYEZEPN0dU0k0UxO4zAwEDr8vvzaqMLuAq+3TcT2tDO1M9X04GU3oiGp0jlcy/dH3nVTF5yNj3rcKC/ImBOzveTKbCP7dMMjWb5K0ndaWnLyPCRUC/lHP6eSzdR6Hnjqa/NQJKLeZLRIS9l6wIGSN4167O5VetNWXNLIf23Ft3ZO4XLgJgw79TXOQFGImz5aUTsIeHdUNnnTpbPqIfYEZYrng7HVugAfKH83fCYvbcT2SE8O4=
