@@ -868,6 +868,14 @@ function runTests() {
     done();
   });
 
+  test('Check consistent border-collapse fixing 1px padding on each side of table', function(done){
+    var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
+        tableScrollBody = Polymer.dom(tb.root).querySelector('.scroll-body');
+    assert.equal(getStyle(tableScrollBody, 'padding-right'), '1px');
+    assert.equal(getStyle(tableScrollBody, 'padding-left'), '1px');
+    done();
+  });
+
 
   // FIXME: test only completes on Chrome - doesn't work reliably on FF...
   // test('Check edit updates model data', function(done){

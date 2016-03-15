@@ -101,6 +101,7 @@ $inuit-enable-btn--disabled: true;
   overflow-x: scroll;
   margin-bottom: 1rem;
   padding-left: 1px; /*firefox border collapse fix*/
+  padding-right: 1px; /*firefox border collapse fix*/
 }
 
 th {
