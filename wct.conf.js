@@ -15,7 +15,6 @@ module.exports = {
           "platform": "Windows 8.1",
           "version": "11"
         },
-
         {
           "browserName": "safari",
           "platform": "OS X 10.11",

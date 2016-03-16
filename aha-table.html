@@ -14,7 +14,6 @@
 <link rel="import" href="px-data-table-cell.html">
 <link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
 
-
 <dom-module id="aha-table">
   <link rel="import" type="css" href="css/aha-table.css"/>
   <template>
@@ -200,14 +199,7 @@
     ],
 
     ready: function() {
-    //   this._observer = Polymer.dom(this.$.columndefs).observeNodes(function(info) {
-    //     var a = info.addedNodes.filter(function(node) {
-    //       return (node.nodeType === node.ELEMENT_NODE);
-    //     });
-    //   });
-
-    this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
-
+      this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
     },
     _highlightLoaded: function(evt){
       evt = Polymer.dom(evt);
@@ -481,7 +473,6 @@
           customFunctionRef = columnObj[columnAttributeName];
 
       if(customFunctionRef === null || customFunctionRef === undefined) {
-        console.log(columnObj instanceof HTMLElement);
         if (columnObj instanceof HTMLElement){
           customFunctionRef = columnObj.attributes[columnAttributeName];
         }
@@ -544,7 +535,6 @@
 
     // filter on typed content in header handler
     _filter: function(e) {
-
       // have to do modelForElement because dom-if cancels out dom-repeat model (https://github.com/Polymer/polymer/issues/1865)
       var column = this.$.filterRepeat.modelForElement(e.target).column,
         userEntry,
@@ -553,17 +543,13 @@
         filteredColumn;
 
       if(column && column.filterable) {
-
         userEntry = e.target.value;
-
         isNotInFilteredColumnsList = true;
 
         for(index in this.filteredColumns) {
           filteredColumn = this.filteredColumns[index];
-
           if(filteredColumn.name === column.name) {
             isNotInFilteredColumnsList = false;
-
             if(userEntry === "" || userEntry === undefined || userEntry === null) {
               // don't filter on this column anymore
               this.filteredColumns.splice(index, 1);
@@ -575,19 +561,15 @@
 
           }
         }
-
         if(isNotInFilteredColumnsList) {
           // add the new column to the filtered list
           this.filteredColumns.push({"name": column.name, "userEntry": userEntry});
         }
-
         this._filterSortAndUpdateDisplayedTable();
-
       }
     },
 
     _filterByColumn: function(columnName, userEntry, rowsToFilter) {
-
       var filterFunction = this._getFilterFunction(columnName),
           i,
           len,
@@ -596,20 +578,14 @@
           filteredRows;
 
       for(i = 0, len = rowsToFilter.length; i < len; i++) {
-
         // if it's not filtered already
         if(rowsToFilter[i]._filtered === false) {
-
           matched = filterFunction(userEntry, this._getInternalDataAt(rowsToFilter[i], columnName));
-
           if(!matched) {
             this._setInternalDataAt(rowsToFilter[i], '_filtered', true);
           }
-
         }
-
       }
-
 
       this.filtered = rowsToFilter.some(function(row) {
         return self._getInternalCellStateAt(row, '_filtered');
@@ -618,7 +594,6 @@
       filteredRows = rowsToFilter.filter(function(r) {
         return !self._getInternalCellStateAt(r, '_filtered');
       });
-
       return filteredRows;
     },
 
@@ -650,14 +625,11 @@
     /********** Selecting ************/
     _click:function(evt){
       var column = evt.model.column;
-      //     row = evt.model.internalRow,
-      //     detail = {"row": row, "column": column};
       if (column.editable) {
 				this._edit(evt);
 			}
     },
     _edit: function(evt) {
-			// var row = evt.model.internalRow;
       evt.currentTarget.editCell();
 		},
     _save: function(evt) {
@@ -773,20 +745,22 @@
       return ['tr', 'rows',
         this.striped ? 'striped' : '',
         row._selected ? 'selected' : '',
-        row._highlight ? 'cell--value__highlight' : ''
+        row._highlight ? 'cell--value__highlight--high' : ''
       ].join(' ');
     },
     _getCellClass: function(row, column) {
       var highlightEl = column.$$("px-data-table-highlight"),
-          doHighlight = column.highlight(this._getInternalDataAt(row, column.name));
+          doHighlight = column.highlight(this._getInternalDataAt(row, column.name)),
+          classList = "";
       if (highlightEl) {
         if (highlightEl.highlightType === 'row') {
           this._setInternalDataAt(row, '_highlight', doHighlight);
         }
         if (highlightEl.highlightType === 'cell' && doHighlight) {
-          return 'cell--value__highlight';
+          classList = 'cell--value__highlight--high';
         }
       }
+      return classList;
     },
     _isSelectAllColumn: function(column) {
       return column.selectAll;
@@ -803,14 +777,6 @@
       if(this._shouldClipDatumString(row, column)) {
         return this._clipDatumString(datum, column);
       }
-
-      // if(typeof column.highlight === "function"){
-      //   if(column.highlight(datum)){
-      //
-      //   }
-      //
-      // }
-
       return datum;
     },
     _shouldClipDatumString: function(row, column) {
