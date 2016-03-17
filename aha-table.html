@@ -757,7 +757,9 @@
           this._setInternalDataAt(row, '_highlight', doHighlight);
         }
         if (highlightEl.highlightType === 'cell' && doHighlight) {
-          classList = 'cell--value__highlight--high';
+          classList = 'cell--value__highlight--color';
+          this.customStyle['--cell--value__highlight--color'] = highlightEl.calculateHighlightColor();
+          this.updateStyles()
         }
       }
       return classList;

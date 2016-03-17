@@ -11,7 +11,7 @@ Element to define and configure highlighting behaviour for a given column (and h
 
 ##### Usage
 
-  <px-data-table-highlight type-"row" method="isDave" import="px-data-table-highlight-example.html"></px-data-table-highlight>
+  <px-data-table-highlight type="row" method="isLongString" import="px-data-table-highlight-example.html"></px-data-table-highlight>
 
 
 @element px-data-table-highlight
@@ -20,7 +20,9 @@ Element to define and configure highlighting behaviour for a given column (and h
 @demo demo.html
 -->
 <dom-module id="px-data-table-highlight">
+  <link rel="import" type="css" href="css/px-data-table-highlight.css"/>
   <template>
+    <span></span>
     <content></content>
   </template>
 </dom-module>
@@ -30,7 +32,7 @@ Element to define and configure highlighting behaviour for a given column (and h
     is: 'px-data-table-highlight',
 
     /**
-     * Properties block, expose attribute values to the DOM via 'reflect'
+     * Properties block, expose attribute values to the DOM via 'notify'
      *
      * @property properties
      * @type Object
@@ -50,17 +52,31 @@ Element to define and configure highlighting behaviour for a given column (and h
         type: String,
         value: ''
       },
+      /**
+       * Property to set the custom highlight colour style - supports any CSS color value e.g. 'rgb(67,100,221,0.25)', 'lightblue', '#0000FF' etc.
+       *
+       *      <px-data-table-highlight highlight-color="rgb(67,100,221,0.25)" type="row" method="isLongString" import="px-data-table-highlight-example.html"></px-data-table-highlight>
+       *
+       * @default ""
+       */
       highlightColor: {
         type: String,
-        value: 'green'
-      },
-      highlightOpacity: {
-        type: Number,
-        value: 0.6
+        value: ''
       },
       highlightType: {
         type: String,
         value: 'cell'
+      },
+      /**
+       * Property to set the pre-defined style of a highlight based on severity. One of 'high', 'medium' or 'low'
+       *
+       *      <px-data-table-highlight highlight-value="low" type="row" method="isLongString" import="px-data-table-highlight-example.html"></px-data-table-highlight>
+       *
+       * @default "low"
+       */
+      highlightValue: {
+        type: String,
+        value: 'low'
       }
     },
 
@@ -78,6 +94,22 @@ Element to define and configure highlighting behaviour for a given column (and h
       }, function(e) {
         // loading error
       });
+    },
+    /**
+     * Returns the appropriate highlight color according to what is configured via highlight-color or highlight-value.
+     *
+     * @method calculateHighLightColor
+     */
+    calculateHighlightColor: function(){
+      var highlightColorValue;
+      this.updateStyles();
+      if(this.highlightColor){
+        highlightColorValue = this.highlightColor;
+      } else {
+        var cssVarName = '--cell--value__highlight--' + this.highlightValue + '--color';
+        highlightColorValue = this.getComputedStyleValue(cssVarName);
+      }
+      return highlightColorValue;
     }
 
   });

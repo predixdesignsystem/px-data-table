@@ -1791,54 +1791,10 @@ label {
         -ms-flex: none !important;
             flex: none !important; } }
 
-.striped:nth-child(even) {
-  background-color: #efeff4; }
-
-.sorted-text {
-  color: #0a9ec1; }
-
-.btn--pagination--number {
-  background-color: #0a9ec1;
-  color: white; }
-  .btn--pagination--number:hover {
-    background-color: #0a9ec1;
-    color: white; }
-
-.btn--pagination:focus {
-  outline: 0; }
-
-.text-input--filter {
-  background-color: white; }
-
-.tr--filter {
-  background-color: #d1d0d8; }
-
-.selected {
-  background-color: #0a9ec1 !important;
-  color: white !important; }
-
-.th {
-  font-weight: bold; }
-
-.sorted-text-hover:hover {
-  color: #0986a4;
-  cursor: pointer; }
-
-.cell--edit input, .cell--edit textarea {
-  outline: none;
-  background-color: transparent;
-  box-shadow: none; }
-
-.cell__edit {
-  background-color: #efeff4;
-  border: 1px double #3e87e8 !important;
-  box-shadow: inset 0 0 0 1px #e4e4ea; }
-
-.cell--value__validation-failed {
-  border: 1px double #e53838 !important; }
-
 :host {
-  --cell--value__highlight--color: rgba(67, 100, 221, 0.25); }
+  --cell--value__highlight--high--color: rgba(229, 56, 56, 0.25);
+  --cell--value__highlight--medium--color: rgba(232, 167, 54, 0.25);
+  --cell--value__highlight--low--color: rgba(67, 100, 221, 0.25); }
 
-.cell--value__highlight--color.cell--value__highlight--color {
+.use-the-var-in-something {
   background-color: var(--cell--value__highlight--color); }
