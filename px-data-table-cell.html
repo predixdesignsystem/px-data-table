@@ -2,6 +2,8 @@
 <link rel="import" href="../px-tooltip/px-tooltip.html">
 <link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
 <link rel="import" href="px-edit-cell.html">
+<link rel="import" href="../px-dropdown/px-dropdown-content">
+
 
 <dom-module id="px-data-table-cell">
   <link rel="import" type="css" href="css/px-data-table-cell.css"/>
@@ -21,6 +23,9 @@
         </template>
         <template is="dom-if" if="{{_isEqual(cellType, 'text')}}">
           <textarea required$="{{column.required}}" on-blur="saveCell">{{cellValue}}</textarea>
+        </template>
+        <template is="dom-if" if="{{_isEqual(cellType, 'dropdown')}}">
+          <px-dropdown-content on-tap="{{open()}}" selected-value="{{cellValue}}" items="{{dropdownItems}}">{{cellValue}}</px-dropdown-content>
         </template>
       </px-edit-cell>
       <!-- in place editing template -->
@@ -60,6 +65,7 @@
       <aha-html-echo html="{{cellDisplayValue}}"></aha-html-echo>
     </template>
   </template>
+</template>
   <script>
     Polymer({
       is: 'px-data-table-cell',
@@ -106,6 +112,12 @@
           value: '',
           observer: '_cellHighlightClassChanged'
         },
+        dropdownItems:{
+          type: Array,
+          value: function(){return [];},
+          notify: true
+        },
+
         _showEditIcon:{
           type: Boolean,
           value: false

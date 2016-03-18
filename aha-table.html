@@ -74,6 +74,7 @@
                                     on-save="_save"
                                     on-validate="_validateCell"
                                     cell-type="{{column.type}}"
+                                    dropdown-items="{{column.dropdownItems}}"
                                     cell-display-value="{{_readContent(internalRow, column)}}"
                                     cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
                                     cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
