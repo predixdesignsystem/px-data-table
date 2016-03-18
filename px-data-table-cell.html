@@ -30,7 +30,7 @@
       </px-edit-cell>
       <!-- in place editing template -->
 
-      <template is="dom-if" if="{{_isEqual(cellType,'string')}}">
+      <template is="dom-if" if="{{_isEqual(cellType,['string','dropdown'])}}">
         <div class="flex cell--container">
           <span id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation, cellDisplayValue)}}">{{cellDisplayValue}}
             <template is="dom-if" if="{{cellDisplayTooltip}}">
@@ -156,7 +156,20 @@
         this.set('_showEditIcon',false);
       },
       _isEqual: function(source, target) {
-        return source === target;
+        if (typeof target === 'object') {
+          var flag = false,
+              i=0,
+              len = target.length;
+          for (; i < len; i++) {
+            if (source !== flag) {
+              return false;
+            }
+          }
+          return true;
+        } else if (typeof target === 'string') {
+          return source === target;
+        }
+
       },
       _getReaderClass: function() {
         var datum = this.cellValue,
