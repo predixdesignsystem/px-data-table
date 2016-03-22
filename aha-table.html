@@ -69,7 +69,7 @@
                 </span>
               </template>
               <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-                <px-data-table-cell cell-highlight-class="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
+                <px-data-table-cell class$="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
                                     on-tap="_click"
                                     on-save="_save"
                                     on-validate="_validateCell"
@@ -206,6 +206,9 @@
       var column = evt.path.find(function(node) {
         return (node.nodeName === "PX-DATA-TABLE-COLUMN");
       });
+
+      // wait for all highlighs for given column to be loaded...
+
       var columnIndex = this.meta.findIndex (
         function(item){
           if(item === column){
@@ -749,19 +752,21 @@
       ].join(' ');
     },
     _getCellClass: function(row, column) {
-      var highlightEl = column.$$("px-data-table-highlight"),
-          doHighlight = column.highlight(this._getInternalDataAt(row, column.name)),
-          classList = "";
-      if (highlightEl) {
+      var highlightElements = Polymer.dom(column).querySelectorAll("px-data-table-highlight"),
+          classList = 'td ' + 'aha-' + column.name + '-td',
+          doHighlight = false;
+
+      highlightElements.forEach(function(highlightEl){
+        doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
+        this.customStyle['--cell--value__highlight--color'] = highlightEl.calculateHighlightColor();
+        this.updateStyles();
         if (highlightEl.highlightType === 'row') {
           this._setInternalDataAt(row, '_highlight', doHighlight);
         }
         if (highlightEl.highlightType === 'cell' && doHighlight) {
-          classList = 'cell--value__highlight--color';
-          this.customStyle['--cell--value__highlight--color'] = highlightEl.calculateHighlightColor();
-          this.updateStyles()
+          classList += ' cell--value__highlight--color';
         }
-      }
+      }.bind(this));
       return classList;
     },
     _isSelectAllColumn: function(column) {
