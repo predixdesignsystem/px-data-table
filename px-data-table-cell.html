@@ -2,7 +2,7 @@
 <link rel="import" href="../px-tooltip/px-tooltip.html">
 <link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
 <link rel="import" href="px-edit-cell.html">
-<link rel="import" href="../px-dropdown/px-dropdown-content">
+<link rel="import" href="../px-dropdown/px-dropdown.html">
 
 
 <dom-module id="px-data-table-cell">
@@ -24,13 +24,18 @@
         <template is="dom-if" if="{{_isEqual(cellType, 'text')}}">
           <textarea required$="{{column.required}}" on-blur="saveCell">{{cellValue}}</textarea>
         </template>
-        <template is="dom-if" if="{{_isEqual(cellType, 'dropdown')}}">
-          <px-dropdown-content on-tap="{{open()}}" selected-value="{{cellValue}}" items="{{dropdownItems}}">{{cellValue}}</px-dropdown-content>
-        </template>
       </px-edit-cell>
+      <!--dropdown template  -->
+      <template is="dom-if" if="{{_isEqual(cellType, 'dropdown')}}">
+        <div class="flex cell--container">
+          <span><px-dropdown selected-value="{{cellValue}}">
+            <px-dropdown-text class="px-dropdown-text">{{cellValue}}</px-dropdown-text>
+            <px-dropdown-content class="px-dropdown-content" extend-dropdown="true" extend-dropdown-by="10" max-cont-character-width="10" items="{{dropdownItems}}">
+        </px-dropdown-content></px-dropdown></span>
+        </div>
+      </template>
       <!-- in place editing template -->
-
-      <template is="dom-if" if="{{_isEqual(cellType,['string','dropdown'])}}">
+      <template is="dom-if" if="{{_isEqual(cellType,'string')}}">
         <div class="flex cell--container">
           <span id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation, cellDisplayValue)}}">{{cellDisplayValue}}
             <template is="dom-if" if="{{cellDisplayTooltip}}">
@@ -115,7 +120,8 @@
         dropdownItems:{
           type: Array,
           value: function(){return [];},
-          notify: true
+          notify: true,
+          observer: '_isDropdownItem'
         },
 
         _showEditIcon:{
@@ -127,7 +133,16 @@
           value: function(){
             return {};
           }
+        },
+        _dropdownItem: {
+          type: Boolean,
+          value: false,
+          //computed: '_isDropdownItem(dropdownItems)'
         }
+      },
+      _isDropdownItem: function() {
+        //return (this.dropdownItems && this.dropdownItems.length > 0);
+        this.set('_dropdownItem', true);
       },
       _cellDisplayValueChanged: function(newValue){
         if(this.$$('.cell--value') !== undefined && this.$$('.cell--value') !== null){
@@ -155,19 +170,42 @@
       onCellUnHovered: function(evt){
         this.set('_showEditIcon',false);
       },
+      /*
+      * This method checks whether the two parameters passed in are equal.
+      * Please note you should use _areAnyEqual for passing in multiple options in an array.
+      *
+      * @method _isEqual
+      * @param source String / Number
+      * @param target String / Number
+      */
       _isEqual: function(source, target) {
-        if (typeof target === 'object') {
+        if (!Array.isArray(target) || typeof target !== 'object') {
+          return source === target;
+        }
+        return;
+      },
+      /*
+      * This method checks whether the first parameter and ANY parameter passed in
+      * the array are equal.
+      *
+      * @method _areAnyEqual
+      * @param source String / Number
+      * @param arr Array
+      */
+      _areAnyEqual: function(source, arr) {
+        if (Array.isArray(arr)) {
           var flag = false,
               i=0,
-              len = target.length;
+              len = arr.length;
           for (; i < len; i++) {
-            if (source !== flag) {
-              return false;
+            if (source === arr[i]) {
+              return true;
             }
           }
-          return true;
-        } else if (typeof target === 'string') {
-          return source === target;
+          return false;
+        } else {
+          console.log('You must pass an array into this function');
+          return false;
         }
 
       },
@@ -182,8 +220,13 @@
       ready: function(){
         this.addEventListener('exit-edit-mode', this._exitEditMode.bind(this));
         this.addEventListener('undo-edit-mode', this._undoEditMode.bind(this));
+        this.addEventListener('setDropdownItem', this._setDropdownItem);
         this.toggleClass('td', true);
         this.toggleClass('aha-' + this.columnName + '-td', true);
+      },
+      _setDropdownItem: function() {
+        console.log('set dropdown mode');
+        this.set('_dropdownItem', true);
       },
       _exitEditMode: function(){
         document.activeElement.blur();
@@ -195,13 +238,12 @@
       editCell: function(){
         var editCell = this.$$(".cell--edit"),
             valueCell = this.$$(".cell--value");
-
-        this.set('_editing', true);
-        this.toggleClass('cell__edit', this._editing);
-
-        this.set('_undoValue', this.$$(".cell--value").innerText);
-
-        Polymer.dom(editCell).querySelector('input,select,textarea').focus();
+        if (this.editable && !this._dropdownItem) {
+          this.set('_editing', true);
+          this.toggleClass('cell__edit', this._editing);
+          this.set('_undoValue', this.$$(".cell--value").innerText);
+          Polymer.dom(editCell).querySelector('input,select,textarea').focus();
+        }
       },
       saveCell: function(evt){
         this._editing = false;

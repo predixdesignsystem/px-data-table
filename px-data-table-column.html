@@ -145,9 +145,10 @@ Element that defines a columns in a data table.
         type: String,
         value: "right"
       },
-      dropdownItems: {
+      dropdownItems:{
         type: Array,
-        value: function() {return [];}
+        value: function() {return [];},
+        notify: true
       }
     },
     validate: function(value){
