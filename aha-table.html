@@ -208,16 +208,17 @@
       });
 
       // wait for all highlighs for given column to be loaded...
-
-      var columnIndex = this.meta.findIndex (
-        function(item){
-          if(item === column){
-            return true;
+      column._highLightElLoadedCount += 1;
+      if (column._highLightElLoadedCount === Polymer.dom(column.root).querySelectorAll('px-data-table-highlight').length) {
+        var columnIndex = this.meta.findIndex (
+          function(item){
+            if(item === column){
+              return true;
+            }
           }
-        }
-      );
-
-      this.set('meta.' + columnIndex + '.highlightdefined', true);
+        );
+        this.set('meta.' + columnIndex + '.highlightdefined', true);
+      }
     },
     _dataChanged: function() {
       if(this.data === undefined || this.data === null) {
