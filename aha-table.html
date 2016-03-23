@@ -201,13 +201,13 @@
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
     },
+
     _highlightLoaded: function(evt){
       evt = Polymer.dom(evt);
       var column = evt.path.find(function(node) {
         return (node.nodeName === "PX-DATA-TABLE-COLUMN");
       });
 
-      // wait for all highlighs for given column to be loaded...
       column._highLightElLoadedCount += 1;
       if (column._highLightElLoadedCount === Polymer.dom(column.root).querySelectorAll('px-data-table-highlight').length) {
         var columnIndex = this.meta.findIndex (
@@ -220,6 +220,7 @@
         this.set('meta.' + columnIndex + '.highlightdefined', true);
       }
     },
+
     _dataChanged: function() {
       if(this.data === undefined || this.data === null) {
         return;
@@ -757,15 +758,15 @@
           classList = 'td ' + 'aha-' + column.name + '-td',
           doHighlight = false;
 
-      highlightElements.forEach(function(highlightEl){
+      highlightElements.forEach(function(highlightEl) {
         doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
-        this.customStyle['--cell--value__highlight--color'] = highlightEl.calculateHighlightColor();
-        this.updateStyles();
+        // this.customStyle['--cell--value__highlight--color'] = highlightEl.calculateHighlightColor();
+        // this.updateStyles();
         if (highlightEl.highlightType === 'row') {
           this._setInternalDataAt(row, '_highlight', doHighlight);
         }
         if (highlightEl.highlightType === 'cell' && doHighlight) {
-          classList += ' cell--value__highlight--color';
+          classList += ' cell--value__highlight--color__' + highlightEl.highlightValue;
         }
       }.bind(this));
       return classList;
