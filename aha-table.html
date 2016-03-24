@@ -337,7 +337,7 @@
           row: cellDataObj,
           _filtered: false,
           _selected: false,
-          _highlight: false
+          _highlight: {value:false, highlightColor: ''}
         });
       }
       return internalData;
@@ -750,7 +750,7 @@
       return ['tr', 'rows',
         this.striped ? 'striped' : '',
         row._selected ? 'selected' : '',
-        row._highlight ? 'cell--value__highlight--color' : ''
+        row._highlight.value ? row._highlight.highlightClass : ''
       ].join(' ');
     },
     _getCellClass: function(row, column) {
@@ -762,8 +762,10 @@
         doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
         // this.customStyle['--cell--value__highlight--color'] = highlightEl.calculateHighlightColor();
         // this.updateStyles();
-        if (highlightEl.highlightType === 'row') {
-          this._setInternalDataAt(row, '_highlight', doHighlight);
+        if (highlightEl.highlightType === 'row' && doHighlight) {
+          this._setInternalDataAt(row, '_highlight',
+            {value: doHighlight,
+             highlightClass: 'cell--value__highlight--color__' + highlightEl.highlightValue});
         }
         if (highlightEl.highlightType === 'cell' && doHighlight) {
           classList += ' cell--value__highlight--color__' + highlightEl.highlightValue;
