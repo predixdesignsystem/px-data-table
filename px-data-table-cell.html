@@ -27,11 +27,21 @@
       </px-edit-cell>
       <!--dropdown template  -->
       <template is="dom-if" if="{{_isEqual(cellType, 'dropdown')}}">
-        <div class="flex cell--container">
-          <span><px-dropdown selected-value="{{cellValue}}">
-            <px-dropdown-text class="px-dropdown-text">{{cellValue}}</px-dropdown-text>
-            <px-dropdown-content class="px-dropdown-content" extend-dropdown="true" extend-dropdown-by="10" max-cont-character-width="10" items="{{dropdownItems}}">
-        </px-dropdown-content></px-dropdown></span>
+        <div class="flex__item cell--container">
+          <span>
+            <px-dropdown
+              selected-value="{{cellValue}}">
+              <px-dropdown-text
+                class="px-dropdown-text">{{cellValue}}</px-dropdown-text>
+              <px-dropdown-content
+                class="px-dropdown-content"
+                extend-dropdown="true"
+                extend-dropdown-by="25"
+                max-cont-character-width="10"
+                items="{{dropdownItems}}">
+              </px-dropdown-content>
+            </px-dropdown>
+          </span>
         </div>
       </template>
       <!-- in place editing template -->
@@ -50,19 +60,21 @@
         </div>
       </template>
       <!-- icon template -->
-      <div class="fa fa-fw cell-status--container">
-        <iron-icon class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
-          icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
-        </iron-icon>
-        <template is="dom-if" if="{{!cellValidation.passedValidation}}">
-          <px-tooltip
-            class="tooltip-font"
-            smart-orientation
-            orientation="top"
-            tooltip-message="{{cellValidation.failedValidationErrorMessage}}">
-          </px-tooltip>
-        </template>
-      </div>
+      <template is="dom-if" if="{{isNotEqual(cellType, 'dropdown')}}">
+        <div class="fa fa-fw cell-status--container">
+          <iron-icon class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
+            icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
+          </iron-icon>
+          <template is="dom-if" if="{{!cellValidation.passedValidation}}">
+            <px-tooltip
+              class="tooltip-font"
+              smart-orientation
+              orientation="top"
+              tooltip-message="{{cellValidation.failedValidationErrorMessage}}">
+            </px-tooltip>
+          </template>
+        </div>
+      </template>
       <!-- icon template -->
     </span>
     <!-- html content -->
@@ -121,7 +133,7 @@
           type: Array,
           value: function(){return [];},
           notify: true,
-          observer: '_isDropdownItem'
+          observer: '_setDropdownItem'
         },
 
         _showEditIcon:{
@@ -137,12 +149,7 @@
         _dropdownItem: {
           type: Boolean,
           value: false,
-          //computed: '_isDropdownItem(dropdownItems)'
         }
-      },
-      _isDropdownItem: function() {
-        //return (this.dropdownItems && this.dropdownItems.length > 0);
-        this.set('_dropdownItem', true);
       },
       _cellDisplayValueChanged: function(newValue){
         if(this.$$('.cell--value') !== undefined && this.$$('.cell--value') !== null){
@@ -184,6 +191,12 @@
         }
         return;
       },
+      isNotEqual: function(source, target) {
+        if (!Array.isArray(target) || typeof target !== 'object') {
+          return source !== target;
+        }
+        return;
+      },
       /*
       * This method checks whether the first parameter and ANY parameter passed in
       * the array are equal.
@@ -211,7 +224,12 @@
       },
       _getReaderClass: function() {
         var datum = this.cellValue,
-            classList = ['flex', 'viewing'];
+            classList = [];
+
+        classList = (this.cellType ==='dropdown') ?
+          ['flex', 'ddviewing'] :
+          ['flex', 'viewing'];
+
         if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
           classList.push('empty');
         }
@@ -223,9 +241,10 @@
         this.addEventListener('setDropdownItem', this._setDropdownItem);
         this.toggleClass('td', true);
         this.toggleClass('aha-' + this.columnName + '-td', true);
+        this.toggleClass('td__dropdown', this._dropdownItem);
       },
       _setDropdownItem: function() {
-        console.log('set dropdown mode');
+        //this only gets called if the dropdownItems are updated, and if they are updated, this is a dropdown
         this.set('_dropdownItem', true);
       },
       _exitEditMode: function(){
@@ -238,7 +257,7 @@
       editCell: function(){
         var editCell = this.$$(".cell--edit"),
             valueCell = this.$$(".cell--value");
-        if (this.editable && !this._dropdownItem) {
+        if (this.cellEditable && this.cellType !=='dropdown') {
           this.set('_editing', true);
           this.toggleClass('cell__edit', this._editing);
           this.set('_undoValue', this.$$(".cell--value").innerText);

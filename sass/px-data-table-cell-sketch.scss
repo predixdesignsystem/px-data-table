@@ -48,14 +48,24 @@ $inuit-table-border-color: $gray5;
   @extend td;
   display: table-cell;
   vertical-align: middle;
+  dropdown_bg_default: $green;
+  dropdown_bg_hover: $orange;
+  dropdown_bg_opened: $purple;
 }
 
+:host.td__dropdown {
+  padding: 0 !important;
+}
 .viewing {
   max-height: calculateRem(30px);
   overflow: hidden;
   white-space: nowrap;
 }
 
+.ddviewing {
+  max-height: calculateRem(30px);
+  white-space: nowrap;
+}
 $px-data-table-cell-inner-height : calculateRem(18px);
 
 .cell--edit {

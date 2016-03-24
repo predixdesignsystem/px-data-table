@@ -1052,11 +1052,21 @@ textarea {
 
 :host {
   display: table-cell;
-  vertical-align: middle; }
+  vertical-align: middle;
+  dropdown_bg_default: #46ad00;
+  dropdown_bg_hover: #ff9821;
+  dropdown_bg_opened: #8669ff; }
+
+:host.td__dropdown {
+  padding: 0 !important; }
 
 .viewing {
   max-height: 2rem;
   overflow: hidden;
+  white-space: nowrap; }
+
+.ddviewing {
+  max-height: 2rem;
   white-space: nowrap; }
 
 .cell--edit input {
