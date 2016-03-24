@@ -888,9 +888,9 @@ textarea {
 :host {
   display: table-cell;
   vertical-align: middle;
-  dropdown_bg_default: #46ad00;
-  dropdown_bg_hover: #ff9821;
-  dropdown_bg_opened: #8669ff; }
+  --dropdown_bg_default: #46ad00;
+  --dropdown_bg_hover: #ff9821;
+  --dropdown_bg_opened: #8669ff; }
 
 :host.td__dropdown {
   padding: 0 !important; }
