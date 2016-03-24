@@ -48,6 +48,9 @@ $inuit-table-border-color: $gray5;
   @extend td;
   display: table-cell;
   vertical-align: middle;
+  ::-ms-clear {
+   display: none;
+  }
 }
 
 .viewing {

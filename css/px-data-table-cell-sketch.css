@@ -888,6 +888,8 @@ textarea {
 :host {
   display: table-cell;
   vertical-align: middle; }
+  :host ::-ms-clear {
+    display: none; }
 
 .viewing {
   max-height: 2rem;
