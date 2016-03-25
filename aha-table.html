@@ -204,8 +204,14 @@
 
     _highlightLoaded: function(evt){
       evt = Polymer.dom(evt);
-      var column = evt.path.find(function(node) {
-        return (node.nodeName === "PX-DATA-TABLE-COLUMN");
+
+      var column;
+      evt.path.some(function(node){
+        console.log(node);
+        if (node.nodeName === "PX-DATA-TABLE-COLUMN") {
+          column = node;
+          return true;
+        }
       });
 
       column._highLightElLoadedCount += 1;
