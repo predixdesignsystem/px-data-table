@@ -201,6 +201,33 @@
 
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
+      this.addEventListener('dropdownOpen', this._checkIfDropdownIsOverlay);
+    },
+    /**
+     * This function checks to see if the dropdown elemment - when expanded -
+     * shows up below the bottom of the table, and if it does, calls the setTopPosition method.
+     *
+     * @method _checkIfDropdownIsOverlay
+     * @param evt Object
+     */
+    _checkIfDropdownIsOverlay: function(evt) {
+      evt.stopPropagation();
+      console.log(Polymer.dom(evt));
+      var px_dropdown = evt.target,
+          content = Polymer.dom(px_dropdown).querySelector('px-dropdown-content'),
+          dropdown = content.$.dropdown,
+          dropdownBottom = dropdown.getBoundingClientRect().bottom,
+          scrollBody = Polymer.dom(this.root).querySelector('.scroll-body'),
+          scrollBodyBottom = scrollBody.getBoundingClientRect().bottom;
+
+
+          console.log('dropdownBottom = ' + dropdownBottom);
+          console.log('scrollBodyBottom = ' + scrollBodyBottom);
+
+
+      if (dropdownBottom > scrollBodyBottom) {
+        px_dropdown.setTopPosition();
+      }
     },
     _highlightLoaded: function(evt){
       evt = Polymer.dom(evt);
