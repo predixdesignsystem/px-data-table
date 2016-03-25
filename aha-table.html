@@ -215,9 +215,11 @@
 
       column._highLightElLoadedCount += 1;
       if (column._highLightElLoadedCount === Polymer.dom(column.root).querySelectorAll('px-data-table-highlight').length) {
-        var columnIndex = this.meta.findIndex (
-          function(item){
+        var columnIndex;
+        this.meta.some (
+          function(item, idx){
             if(item === column){
+              columnIndex = idx;
               return true;
             }
           }
