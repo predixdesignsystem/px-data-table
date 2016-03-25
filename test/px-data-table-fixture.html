@@ -79,5 +79,16 @@
         <px-data-table-column name="phone"></px-data-table-column>
         <px-data-table-column name="color"></px-data-table-column>
       </px-data-table>
+
+      <px-data-table id="highlightTestTable">
+        <px-data-table-column
+          name="first">
+            <px-data-table-highlight highlight-type="cell"
+                                     highlight-value="high"
+                                     highlight-method="wordBeginsWithLetterJ"
+                                     import="../px-example-highlight.html">
+            </px-data-table-highlight>
+        </px-data-table-column>
+      </px-data-table>
   </body>
 </html>
