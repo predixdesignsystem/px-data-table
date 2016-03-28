@@ -877,6 +877,13 @@ function runTests() {
       done();
     });
 
+    test('_findMetaIndexFromColumnElement function returns 4 for email column', function(done){
+      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+          emailColumn = tb.children[3];
+      assert.equal(tb._findMetaIndexFromColumnElement(emailColumn), 4);
+      done();
+    });
+
     // FIXME: test only completes on Chrome - doesn't work reliably on FF...
     // test('Check edit updates model data', function(done){
     //   var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),

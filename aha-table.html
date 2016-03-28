@@ -204,28 +204,39 @@
 
     _highlightLoaded: function(evt){
       evt = Polymer.dom(evt);
-
-      var column;
-      evt.path.some(function(node){
-        if (node.nodeName === "PX-DATA-TABLE-COLUMN") {
-          column = node;
-          return true;
-        }
-      });
+      var column = this._findFirstMatchingElementNameFromEventPath(evt, "PX-DATA-TABLE-COLUMN");
 
       column._highLightElLoadedCount += 1;
       if (column._highLightElLoadedCount === Polymer.dom(column.root).querySelectorAll('px-data-table-highlight').length) {
-        var columnIndex;
-        this.meta.some (
-          function(item, idx){
-            if(item === column){
-              columnIndex = idx;
-              return true;
-            }
-          }
-        );
-        this.set('meta.' + columnIndex + '.highlightdefined', true);
+        var columnIndex = this._findMetaIndexFromColumnElement(column);
+        if (columnIndex > 0){
+          this.set('meta.' + columnIndex + '.highlightdefined', true);
+        }
       }
+    },
+    
+    _findMetaIndexFromColumnElement: function(columnElement){
+      var columnIndex = -1;
+      this.meta.some (
+        function(item, idx){
+          if(item === columnElement){
+            columnIndex = idx;
+            return true;
+          }
+        }
+      );
+      return columnIndex;
+    },
+
+    _findFirstMatchingElementNameFromEventPath: function(evt, nodeName){
+      var el;
+      evt.path.some(function(node){
+        if (node.nodeName === nodeName) {
+          el = node;
+          return true;
+        }
+      });
+      return el;
     },
 
     _dataChanged: function() {
