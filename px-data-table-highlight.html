@@ -45,7 +45,7 @@ Element to define and configure highlighting behaviour for a given column (and h
       highlight: {
         type: Object,
         value: function(){
-          return {};
+          return new Function();
         }
       },
       highlightMethod: {
@@ -93,7 +93,7 @@ Element to define and configure highlighting behaviour for a given column (and h
         }
       }, function(e) {
         // loading error
-      });
+      }, false);
     },
     /**
      * Returns the appropriate highlight color according to what is configured via highlight-color or highlight-value.

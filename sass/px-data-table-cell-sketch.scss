@@ -51,6 +51,9 @@ $inuit-table-border-color: $gray5;
   --dropdown_bg_default: $green;
   --dropdown_bg_hover: $orange;
   --dropdown_bg_opened: $purple;
+  ::-ms-clear {
+   display: none;
+  }
 }
 
 :host.td__dropdown {

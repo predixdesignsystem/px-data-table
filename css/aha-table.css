@@ -1838,8 +1838,11 @@ label {
 .cell--value__validation-failed {
   border: 1px double #e53838 !important; }
 
-:host {
-  --cell--value__highlight--color: rgba(67, 100, 221, 0.25); }
+.cell--value__highlight--color__high.cell--value__highlight--color__high.cell--value__highlight--color__high {
+  background-color: var(--cell--value__highlight--color__high, rgba(229, 56, 56, 0.25)); }
 
-.cell--value__highlight--color.cell--value__highlight--color {
-  background-color: var(--cell--value__highlight--color); }
+.cell--value__highlight--color__medium.cell--value__highlight--color__medium {
+  background-color: var(--cell--value__highlight--color__medium, rgba(232, 167, 54, 0.25)); }
+
+.cell--value__highlight--color__low {
+  background-color: var(--cell--value__highlight--color__low, rgba(67, 100, 221, 0.25)); }

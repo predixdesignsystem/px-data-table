@@ -691,216 +691,222 @@ document.addEventListener("WebComponentsReady", function() {
   runTests();
 });
 
+
+
 function runTests() {
   suite('Unit Tests for Data Table', function() {
+    test('Polymer exists', function() {
+      assert.isTrue(Polymer !== null);
+    });
+    test('table1 fixture is created', function() {
+      assert.isTrue(document.getElementById('table1') !== null);
+    });
 
-  test('Polymer exists', function() {
-    assert.isTrue(Polymer !== null);
-  });
-  test('table1 fixture is created', function() {
-    assert.isTrue(document.getElementById('table1') !== null);
-  });
+    test('table2 fixture is created', function() {
+      assert.isTrue(document.getElementById('table2') !== null);
+    });
+    test('table3 fixture is created', function() {
+      assert.isTrue(document.getElementById('table3') !== null);
+    });
+    test('table4 fixture is created', function() {
+      assert.isTrue(document.getElementById('table4') !== null);
+    });
+    test('myTable fixture is created', function() {
+      assert.isTrue(document.getElementById('myTable') !== null);
+    });
 
-  test('table2 fixture is created', function() {
-    assert.isTrue(document.getElementById('table2') !== null);
-  });
-  test('table3 fixture is created', function() {
-    assert.isTrue(document.getElementById('table3') !== null);
-  });
-  test('table4 fixture is created', function() {
-    assert.isTrue(document.getElementById('table4') !== null);
-  });
-  test('myTable fixture is created', function() {
-    assert.isTrue(document.getElementById('myTable') !== null);
-  });
+    // Spot checks for correct table structure, cell values and control states
 
-  // Spot checks for correct table structure, cell values and control states
+    test('There should be 17 columns in the table1 fixture', function() {
+      // Select a div corresponding to a data row in the table
+      var divSelector = '#dataTable > .scroll-body.style-scope.aha-table > div > :nth-child(4)';
+      var divRow = document.querySelector(divSelector);
+      // Select all <span> children of divRow
+      var childSpanSelector = ':nth-child(4) > .td.style-scope.aha-table';
+      var columnCount = divRow.querySelectorAll(childSpanSelector).length;
+      // There should be 17 such spans
+      assert.equal(columnCount, 17);
+    });
+    test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function() {
+      var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
+          cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[4];
+      assert.include(cell.textContent, 'Rita Lopez');
+    });
+    test('Row count for first table should be 26', function() {
+      var fixture = document.getElementById('table1');
+      var selector = '.summary.style-scope.px-pagination :nth-child(4)';
+      var span = fixture.querySelector(selector);
+      assert.equal(span.innerHTML, '26');
+    });
+    // Spot checks for correct values in table cells and controls'
+    test('First Name displays only first 10 characters  if length of the text is greater than 10 characters and elipse at the right', function() {
+      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+          cell = Polymer.dom(tb.root).querySelectorAll('.aha-first-td')[0];
+      assert.include(cell.textContent, 'Isabel lon…');
+    });
+    test('Email displays only last 10 characters displayed if length of the text is greater than 10 characters', function() {
+      var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-image-td';
+      var span = table5Fixture.querySelector(selector);
+      assert.equal(span.innerHTML.indexOf('…/twitter/enda/73.jpg') >= 0, true);
+    });
+    test('Address displays total 10 characters with ellipse in the center if length of the text is greater than 10 characters', function() {
+      var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-address-td';
+      var span = table5Fixture.querySelector(selector);
+      assert.equal(span.innerHTML.indexOf('3 Vis…Place') >= 0, true);
+    });
 
-  test('There should be 17 columns in the table1 fixture', function() {
-    // Select a div corresponding to a data row in the table
-    var divSelector = '#dataTable > .scroll-body.style-scope.aha-table > div > :nth-child(4)';
-    var divRow = document.querySelector(divSelector);
-    // Select all <span> children of divRow
-    var childSpanSelector = ':nth-child(4) > .td.style-scope.aha-table';
-    var columnCount = divRow.querySelectorAll(childSpanSelector).length;
-    // There should be 17 such spans
-    assert.equal(columnCount, 17);
-  });
-  test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function() {
-    var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
-        cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[4];
-    assert.include(cell.textContent, 'Rita Lopez');
-  });
-  test('Row count for first table should be 26', function() {
-    var fixture = document.getElementById('table1');
-    var selector = '.summary.style-scope.px-pagination :nth-child(4)';
-    var span = fixture.querySelector(selector);
-    assert.equal(span.innerHTML, '26');
-  });
-  // Spot checks for correct values in table cells and controls'
-  test('First Name displays only first 10 characters  if length of the text is greater than 10 characters and elipse at the right', function() {
-    var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-        cell = Polymer.dom(tb.root).querySelectorAll('.aha-first-td')[0];
-    assert.include(cell.textContent, 'Isabel lon…');
-  });
-  test('Email displays only last 10 characters displayed if length of the text is greater than 10 characters', function() {
-    var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-image-td';
-    var span = table5Fixture.querySelector(selector);
-    assert.equal(span.innerHTML.indexOf('…/twitter/enda/73.jpg') >= 0, true);
-  });
-  test('Address displays total 10 characters with ellipse in the center if length of the text is greater than 10 characters', function() {
-    var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-address-td';
-    var span = table5Fixture.querySelector(selector);
-    assert.equal(span.innerHTML.indexOf('3 Vis…Place') >= 0, true);
-  });
+    // Spot checks for event upon interaction with pagination controls
+    // The root element for pagination
+    var paginationRoot = document.getElementById('pagination');
+    // Selector for page 3 link
+    var span3Selector = '.paging.style-scope.px-pagination > span > :nth-child(3)';
+    test('Pagination updates when page 3 link is clicked', function(done) {
+      // Page 3 link
+      var span3 = paginationRoot.querySelector(span3Selector);
+      span3.addEventListener('click', function(e) {
+        var startCountSelector = 'span.summary.style-scope.px-pagination > :nth-child(1)';
+        // Element that shows starting record number in '<start>-<end> of <total> in Pagination'
+        var startCount = paginationRoot.querySelector(startCountSelector);
+        // startCount should show '21' when page 3 is clicked
+        assert.equal(startCount.innerHTML, '21');
+        // End the test
+        done();
+      });
+      // Trigger the CLICK event on page 3 link
+      span3.click();
+    });
 
-  // Spot checks for event upon interaction with pagination controls
-  // The root element for pagination
-  var paginationRoot = document.getElementById('pagination');
-  // Selector for page 3 link
-  var span3Selector = '.paging.style-scope.px-pagination > span > :nth-child(3)';
-  test('Pagination updates when page 3 link is clicked', function(done) {
-    // Page 3 link
-    var span3 = paginationRoot.querySelector(span3Selector);
-    span3.addEventListener('click', function(e) {
-      var startCountSelector = 'span.summary.style-scope.px-pagination > :nth-child(1)';
-      // Element that shows starting record number in '<start>-<end> of <total> in Pagination'
-      var startCount = paginationRoot.querySelector(startCountSelector);
-      // startCount should show '21' when page 3 is clicked
-      assert.equal(startCount.innerHTML, '21');
-      // End the test
+    // Spot checks for filtering functionality
+    test('Matching records are returned when filter text is entered', function(done) {
+      var filterableTableRoot = document.querySelector('#table2');
+      var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(3) > input';
+      var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
+      lastNameFilter.addEventListener('keyup', function(e){
+        setTimeout(function() {
+          var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
+          var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
+          assert.equal(secondReturnedRowFirstName.innerHTML.indexOf('Rita') >= 0, true);
+          done(); // end the test
+        }, 0);
+      });
+      // Trigger filter edit event and provide a filter value
+      lastNameFilter.value = 'wo';
+      lastNameFilter.dispatchEvent(new Event('keyup'));
+    });
+
+    // Spot checks for sorting functionality
+    test('Records are sorted correctly when a sortable column header is clicked', function(done) {
+      var sortableTableRoot = document.querySelector('#table1');
+      var firstNameHeaderSelector = '.aha-first-th > span';
+      var firstNameHeader = sortableTableRoot.querySelector(firstNameHeaderSelector);
+      firstNameHeader.addEventListener('click', function(e){
+        setTimeout(function() {
+          var tb = Polymer.dom(sortableTableRoot.root).querySelector('aha-table'),
+              lastNameRow = Polymer.dom(tb.root).querySelectorAll('.aha-last-td');
+
+          assert.include(lastNameRow[9].textContent, 'Wooten');
+          done(); // end the test
+        }, 0);
+      });
+      // Trigger a click on the First Name column header
+      firstNameHeader.click();
+    });
+
+    test('Table font is GE Inspira Sans', function(done){
+      var tableFontFam = getStyle(table1Fixture, 'font-family');
+      assert.include(tableFontFam, 'GE Inspira Sans');
       done();
     });
-    // Trigger the CLICK event on page 3 link
-    span3.click();
-  });
 
-  // Spot checks for filtering functionality
-  test('Matching records are returned when filter text is entered', function(done) {
-    var filterableTableRoot = document.querySelector('#table2');
-    var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(3) > input';
-    var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
-    lastNameFilter.addEventListener('keyup', function(e){
-      setTimeout(function() {
-        var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
-        var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
-        assert.equal(secondReturnedRowFirstName.innerHTML.indexOf('Rita') >= 0, true);
-        done(); // end the test
-      }, 0);
+    test('Clicking on an editable cell switches to edit mode', function(done){
+      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+          cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
+
+      cell.click();
+
+      flush(function(){
+        var editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
+            editCellToTheLeft = Polymer.dom(cell.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
+        assert.isFalse(editCell.classList.contains('visuallyhidden'));
+        assert.isTrue(editCellToTheLeft.classList.contains('visuallyhidden'));
+        done();
+      });
     });
-    // Trigger filter edit event and provide a filter value
-    lastNameFilter.value = 'wo';
-    lastNameFilter.dispatchEvent(new Event('keyup'));
-  });
 
-  // Spot checks for sorting functionality
-  test('Records are sorted correctly when a sortable column header is clicked', function(done) {
-    var sortableTableRoot = document.querySelector('#table1');
-    var firstNameHeaderSelector = '.aha-first-th > span';
-    var firstNameHeader = sortableTableRoot.querySelector(firstNameHeaderSelector);
-    firstNameHeader.addEventListener('click', function(e){
-      setTimeout(function() {
-        var tb = Polymer.dom(sortableTableRoot.root).querySelector('aha-table'),
-            lastNameRow = Polymer.dom(tb.root).querySelectorAll('.aha-last-td');
+    test('Clicking on an editable cell has the correct style', function(done){
+      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+          cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
 
-        assert.include(lastNameRow[9].textContent, 'Wooten');
-        done(); // end the test
-      }, 0);
+      cell.click();
+
+      flush(function(){
+        assert.equal(getStyle(cell, 'background-color'), 'rgb(239, 239, 244)');
+        assert.oneOf(getStyle(cell, 'border-right-width'), ['1px', '0.5px']);
+        assert.equal(getStyle(cell, 'border-right-style'), 'double');
+        assert.equal(getStyle(cell, 'border-right-color'), 'rgb(62, 135, 232)');
+        assert.oneOf(getStyle(cell, 'box-shadow'), ['rgb(228, 228, 234) 0px 0px 0px 1px inset', 'inset 0px 0px 0px 1px #e4e4ea']);
+
+        done();
+      });
     });
-    // Trigger a click on the First Name column header
-    firstNameHeader.click();
-  });
 
-  test('Table font is GE Inspira Sans', function(done){
-    var tableFontFam = getStyle(table1Fixture, 'font-family');
-    assert.include(tableFontFam, 'GE Inspira Sans');
-    done();
-  });
+    test('Test that the presence of the hide-pagination-control property hide these controls', function(done){
+      var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
+          paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
 
-  test('Clicking on an editable cell switches to edit mode', function(done){
-    var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-        cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
-
-    cell.click();
-
-    flush(function(){
-      var editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
-          editCellToTheLeft = Polymer.dom(cell.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
-      assert.isFalse(editCell.classList.contains('visuallyhidden'));
-      assert.isTrue(editCellToTheLeft.classList.contains('visuallyhidden'));
+      assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
       done();
     });
-  });
 
-  test('Clicking on an editable cell has the correct style', function(done){
-    var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-        cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
+    test('Test that the hide-pagination-control property can be programmatically controlled', function(done){
+      var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
+          paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
 
-    cell.click();
-
-    flush(function(){
-      assert.equal(getStyle(cell, 'background-color'), 'rgb(239, 239, 244)');
-      assert.oneOf(getStyle(cell, 'border-right-width'), ['1px', '0.5px']);
-      assert.equal(getStyle(cell, 'border-right-style'), 'double');
-      assert.equal(getStyle(cell, 'border-right-color'), 'rgb(62, 135, 232)');
-      assert.oneOf(getStyle(cell, 'box-shadow'), ['rgb(228, 228, 234) 0px 0px 0px 1px inset', 'inset 0px 0px 0px 1px #e4e4ea']);
-
+      tb.hidePaginationControl = false;
+      assert.isFalse(paginationControl.classList.contains('visuallyhidden'));
+      tb.hidePaginationControl = true;
+      assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
       done();
     });
-  });
 
-  test('Test that the presence of the hide-pagination-control property hide these controls', function(done){
-    var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
-        paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
+    test('Check consistent border-collapse fixing 1px padding on each side of table', function(done){
+      var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
+          tableScrollBody = Polymer.dom(tb.root).querySelector('.scroll-body');
+      assert.equal(getStyle(tableScrollBody, 'padding-right'), '1px');
+      assert.equal(getStyle(tableScrollBody, 'padding-left'), '1px');
+      done();
+    });
 
-    assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
-    done();
-  });
+    test('_findMetaIndexFromColumnElement function returns 4 for email column', function(done){
+      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+          emailColumn = tb.children[3];
+      assert.equal(tb._findMetaIndexFromColumnElement(emailColumn), 4);
+      done();
+    });
 
-  test('Test that the hide-pagination-control property can be programmatically controlled', function(done){
-    var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
-        paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
-
-    tb.hidePaginationControl = false;
-    assert.isFalse(paginationControl.classList.contains('visuallyhidden'));
-    tb.hidePaginationControl = true;
-    assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
-    done();
-  });
-
-  test('Check consistent border-collapse fixing 1px padding on each side of table', function(done){
-    var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
-        tableScrollBody = Polymer.dom(tb.root).querySelector('.scroll-body');
-    assert.equal(getStyle(tableScrollBody, 'padding-right'), '1px');
-    assert.equal(getStyle(tableScrollBody, 'padding-left'), '1px');
-    done();
-  });
-
-
-  // FIXME: test only completes on Chrome - doesn't work reliably on FF...
-  // test('Check edit updates model data', function(done){
-  //   var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-  //       cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0],
-  //       editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
-  //       inputEl = Polymer.dom(editCell).querySelector('input'),
-  //       editCellToTheLeft = Polymer.dom(cell.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
-  //
-  //   table5Fixture.addEventListener('after-save', function(){
-  //     assert.equal(data[0].last, 'xxxx');
-  //     console.log('fin');
-  //     done();
-  //   });
-  //
-  //   cell.click();
-  //   flush(function(){
-  //     inputEl.value = 'xxxx';
-  //     flush(function(){
-  //       editCellToTheLeft.click();
-  //       inputEl.blur();
-  //     });
-  //     console.log('exit');
-  //   });
-  // });
-
+    // FIXME: test only completes on Chrome - doesn't work reliably on FF...
+    // test('Check edit updates model data', function(done){
+    //   var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+    //       cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0],
+    //       editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
+    //       inputEl = Polymer.dom(editCell).querySelector('input'),
+    //       editCellToTheLeft = Polymer.dom(cell.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
+    //
+    //   table5Fixture.addEventListener('after-save', function(){
+    //     assert.equal(data[0].last, 'xxxx');
+    //     console.log('fin');
+    //     done();
+    //   });
+    //
+    //   cell.click();
+    //   flush(function(){
+    //     inputEl.value = 'xxxx';
+    //     flush(function(){
+    //       editCellToTheLeft.click();
+    //       inputEl.blur();
+    //     });
+    //     console.log('exit');
+    //   });
+    // });
   });
 }

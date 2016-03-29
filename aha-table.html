@@ -69,7 +69,7 @@
                 </span>
               </template>
               <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-                <px-data-table-cell cell-highlight-class="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
+                <px-data-table-cell class$="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
                                     on-tap="_click"
                                     on-save="_save"
                                     on-validate="_validateCell"
@@ -229,21 +229,44 @@
         px_dropdown.setTopPosition();
       }
     },
+
     _highlightLoaded: function(evt){
       evt = Polymer.dom(evt);
-      var column = evt.path.find(function(node) {
-        return (node.nodeName === "PX-DATA-TABLE-COLUMN");
-      });
-      var columnIndex = this.meta.findIndex (
-        function(item){
-          if(item === column){
+      var column = this._findFirstMatchingElementNameFromEventPath(evt, "PX-DATA-TABLE-COLUMN");
+
+      column._highLightElLoadedCount += 1;
+      if (column._highLightElLoadedCount === Polymer.dom(column.root).querySelectorAll('px-data-table-highlight').length) {
+        var columnIndex = this._findMetaIndexFromColumnElement(column);
+        if (columnIndex > 0){
+          this.set('meta.' + columnIndex + '.highlightdefined', true);
+        }
+      }
+    },
+
+    _findMetaIndexFromColumnElement: function(columnElement){
+      var columnIndex = -1;
+      this.meta.some (
+        function(item, idx){
+          if(item === columnElement){
+            columnIndex = idx;
             return true;
           }
         }
       );
-
-      this.set('meta.' + columnIndex + '.highlightdefined', true);
+      return columnIndex;
     },
+
+    _findFirstMatchingElementNameFromEventPath: function(evt, nodeName){
+      var el;
+      evt.path.some(function(node){
+        if (node.nodeName === nodeName) {
+          el = node;
+          return true;
+        }
+      });
+      return el;
+    },
+
     _dataChanged: function() {
       if(this.data === undefined || this.data === null) {
         return;
@@ -360,7 +383,7 @@
           row: cellDataObj,
           _filtered: false,
           _selected: false,
-          _highlight: false
+          _highlight: {value:false, highlightColor: ''}
         });
       }
       return internalData;
@@ -764,7 +787,6 @@
       }
       this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")");
       this.fire('after-select', row);
-
     },
 
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
@@ -773,23 +795,27 @@
       return ['tr', 'rows',
         this.striped ? 'striped' : '',
         row._selected ? 'selected' : '',
-        row._highlight ? 'cell--value__highlight--high' : ''
+        row._highlight.value ? row._highlight.highlightClass : ''
       ].join(' ');
     },
     _getCellClass: function(row, column) {
-      var highlightEl = column.$$("px-data-table-highlight"),
-          doHighlight = column.highlight(this._getInternalDataAt(row, column.name)),
-          classList = "";
-      if (highlightEl) {
-        if (highlightEl.highlightType === 'row') {
-          this._setInternalDataAt(row, '_highlight', doHighlight);
+      var highlightElements = Polymer.dom(column).querySelectorAll("px-data-table-highlight"),
+          classList = 'td ' + 'aha-' + column.name + '-td',
+          doHighlight = false;
+
+      highlightElements.forEach(function(highlightEl) {
+        doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
+        // this.customStyle['--cell--value__highlight--color'] = highlightEl.calculateHighlightColor();
+        // this.updateStyles();
+        if (highlightEl.highlightType === 'row' && doHighlight) {
+          this._setInternalDataAt(row, '_highlight',
+            {value: doHighlight,
+             highlightClass: 'cell--value__highlight--color__' + highlightEl.highlightValue});
         }
         if (highlightEl.highlightType === 'cell' && doHighlight) {
-          classList = 'cell--value__highlight--color';
-          this.customStyle['--cell--value__highlight--color'] = highlightEl.calculateHighlightColor();
-          this.updateStyles()
+          classList += ' cell--value__highlight--color__' + highlightEl.highlightValue;
         }
-      }
+      }.bind(this));
       return classList;
     },
     _isSelectAllColumn: function(column) {
