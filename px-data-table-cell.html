@@ -30,7 +30,8 @@
         <div class="flex__item cell--container">
           <span>
             <px-dropdown
-              selected-value="{{cellValue}}">
+              selected-value="{{cellValue}}"
+              bound-target="{{dropdownBounds}}">
               <px-dropdown-text
                 class="px-dropdown-text" display-value="{{cellValue}}"></px-dropdown-text>
               <px-dropdown-content
@@ -129,6 +130,11 @@
           value: function(){return [];},
           notify: true,
           observer: '_setDropdownItem'
+        },
+        dropdownBounds:{
+          type: HTMLElement,
+          value: null,
+          observer: '_setDropdownBounds'
         },
         _showEditIcon:{
           type: Boolean,
@@ -235,6 +241,10 @@
       _setDropdownItem: function() {
         //this only gets called if the dropdownItems are updated, and if they are updated, this is a dropdown
         this.set('_dropdownItem', true);
+      },
+      _setDropdownBounds: function() {
+        //this only gets called if the dropdownItems are updated, and if they are updated, this is a dropdown
+        //this.set('_dropdownItem', true);
       },
       _exitEditMode: function(){
         document.activeElement.blur();

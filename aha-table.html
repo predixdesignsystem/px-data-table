@@ -20,7 +20,7 @@
     <content id="columndefs"></content>
     <div class="scroll-body">
 
-      <div class$="{{_getTableClass(tableRows, tableColumns)}}">
+      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}">
         <!-- Header -->
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
@@ -75,6 +75,7 @@
                                     on-validate="_validateCell"
                                     cell-type="{{column.type}}"
                                     dropdown-items="{{column.dropdownItems}}"
+                                    dropdown-bounds="{{scrollBody}}"
                                     cell-display-value="{{_readContent(internalRow, column)}}"
                                     cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
                                     cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
@@ -191,7 +192,14 @@
       hidePaginationControl: {
         type: Boolean,
         value: false
-      }
+      },
+      //scroll body html element
+      scrollBody: {
+        type: HTMLElement,
+        value: function() {
+          Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
+        }
+      },
     },
 
     observers: [
@@ -201,27 +209,7 @@
 
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
-      this.addEventListener('dropdownOpen', this._checkIfDropdownIsOverlay);
-    },
-    /**
-     * This function checks to see if the dropdown elemment - when expanded -
-     * shows up below the bottom of the table, and if it does, calls the setTopPosition method.
-     *
-     * @method _checkIfDropdownIsOverlay
-     * @param evt Object
-     */
-    _checkIfDropdownIsOverlay: function(evt) {
-      evt.stopPropagation();
-      var px_dropdown = evt.target,
-          content = Polymer.dom(px_dropdown).querySelector('px-dropdown-content'),
-          dropdown = content.$.dropdown,
-          dropdownBottom = dropdown.getBoundingClientRect().bottom,
-          scrollBody = Polymer.dom(this.root).querySelector('.scroll-body'),
-          scrollBodyBottom = scrollBody.getBoundingClientRect().bottom;
-
-      if (dropdownBottom > scrollBodyBottom) {
-        px_dropdown.setTopPosition();
-      }
+      this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
     },
 
     _highlightLoaded: function(evt){
