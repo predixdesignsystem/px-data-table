@@ -200,6 +200,52 @@
 
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
+
+      var boundHandler = this._columnChanged.bind(this);
+      this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
+    },
+    _columnChanged: function(info){
+      var addedColumns = info.addedNodes.filter(function(node) {
+        return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
+      });
+      var removedColumns = info.removedNodes.filter(function(node) {
+        return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
+      });
+
+      if(addedColumns.length > 0) {
+        // need the Selected column if the table is selectable
+        if(this.selectable && !this._selectedColumnExists()) {
+          // add a selected column if selectable
+          this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
+        }
+
+        for(var i = 0; i < addedColumns.length; i++) {
+
+          // default the type of the column to a string
+          if(!addedColumns[i].type) {
+            addedColumns[i].type = 'string';
+          }
+
+          if(!addedColumns[i]['label']) {
+            var name = addedColumns[i]['name'] || '';
+            addedColumns[i].label = name.charAt(0).toUpperCase() + name.slice(1);
+          }
+          this.push('meta', addedColumns[i]);
+        }
+
+      }
+
+      removedColumns.forEach(function(columnToRemove){
+        this.meta.forEach(function(column, idx){
+          if (columnToRemove === column){
+            this.splice('meta', idx, 1);
+          }
+        }.bind(this));
+      }.bind(this));
+    },
+
+    _selectedColumnExists: function(){
+      return this.meta[0] && this.meta[0].name === '_selected';
     },
 
     _highlightLoaded: function(evt){
@@ -207,14 +253,14 @@
       var column = this._findFirstMatchingElementNameFromEventPath(evt, "PX-DATA-TABLE-COLUMN");
 
       column._highLightElLoadedCount += 1;
-      if (column._highLightElLoadedCount === Polymer.dom(column.root).querySelectorAll('px-data-table-highlight').length) {
+      if (column._highLightElLoadedCount === Polymer.dom(column).querySelectorAll('px-data-table-highlight').length) {
         var columnIndex = this._findMetaIndexFromColumnElement(column);
         if (columnIndex > 0){
           this.set('meta.' + columnIndex + '.highlightdefined', true);
         }
       }
     },
-    
+
     _findMetaIndexFromColumnElement: function(columnElement){
       var columnIndex = -1;
       this.meta.some (
@@ -772,7 +818,7 @@
       ].join(' ');
     },
     _getCellClass: function(row, column) {
-      var highlightElements = Polymer.dom(column).querySelectorAll("px-data-table-highlight"),
+      var highlightElements = Polymer.dom(column).querySelectorAll('px-data-table-highlight'),
           classList = 'td ' + 'aha-' + column.name + '-td',
           doHighlight = false;
 

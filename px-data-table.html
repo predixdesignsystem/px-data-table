@@ -225,35 +225,6 @@ Events:
      * px-row-click : fired when table row is clicked (selected or unselected)
      *
      */
-    attached: function(){
-      var children = Polymer.dom(this).querySelectorAll('px-data-table-column');
-
-      if(children.length > 0) {
-        var meta = [];
-
-        // need the Selected column if the table is selectable
-        if(this.selectable) {
-          // add a selected column if selectable
-          meta.push(this.$.dataTable._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
-        }
-
-        for(var i = 0; i < children.length; i++) {
-
-          // default the type of the column to a string
-          if(!children[i].type) {
-            children[i].type = 'string';
-          }
-
-          if(!children[i]['label']) {
-            var name = children[i]['name'] || '';
-            children[i].label = name.charAt(0).toUpperCase() + name.slice(1);
-          }
-          meta.push(children[i]);
-        }
-
-        this.set('meta', meta);
-      }
-    }
 
   });
 </script>

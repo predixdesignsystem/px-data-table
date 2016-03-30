@@ -7,6 +7,13 @@ Element that defines a columns in a data table.
 
 @demo demo.html
 -->
+
+<dom-module id="px-data-table-column">
+  <template>
+    <content id="contentNode"></content>
+  </template>
+</dom-module>
+
 <script>
   Polymer({
     is: "px-data-table-column",
@@ -159,9 +166,6 @@ Element that defines a columns in a data table.
         // no validation specified - always return 'passedValidation : true'
         return {passedValidation: true};
       }
-    },
-    highlight: function(value){
-      return Polymer.dom(this).querySelector('px-data-table-highlight').highlight(value);
     }
   });
 </script>

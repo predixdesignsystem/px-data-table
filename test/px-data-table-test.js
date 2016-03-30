@@ -695,6 +695,7 @@ document.addEventListener("WebComponentsReady", function() {
 
 function runTests() {
   suite('Unit Tests for Data Table', function() {
+
     test('Polymer exists', function() {
       assert.isTrue(Polymer !== null);
     });
@@ -874,6 +875,13 @@ function runTests() {
           tableScrollBody = Polymer.dom(tb.root).querySelector('.scroll-body');
       assert.equal(getStyle(tableScrollBody, 'padding-right'), '1px');
       assert.equal(getStyle(tableScrollBody, 'padding-left'), '1px');
+      done();
+    });
+
+    test('_findMetaIndexFromColumnElement function returns 4 for email column', function(done){
+      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+          emailColumn = tb.children[3];
+      assert.equal(tb._findMetaIndexFromColumnElement(emailColumn), 4);
       done();
     });
 

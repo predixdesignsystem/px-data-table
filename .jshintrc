@@ -34,6 +34,7 @@
         "suite": false,
         "test": false,
         "assert": false,
-        "flush": false
+        "flush": false,
+        "suiteSetup" : false
     }
 }
