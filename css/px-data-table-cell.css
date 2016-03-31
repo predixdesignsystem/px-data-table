@@ -1053,15 +1053,14 @@ textarea {
 :host {
   display: table-cell;
   vertical-align: middle;
-  --dropdown_bg_default: #46ad00;
-  --dropdown_bg_hover: #ff9821;
-  --dropdown_bg_opened: #8669ff; }
+  --dropdown_bg_default: transparent;
+  --dropdown_bg_hover: transparent;
+  --dropdown_bg_opened: transparent; }
+  :host ::-ms-clear {
+    display: none; }
 
 :host.td__dropdown {
   padding: 0 !important; }
-:host ::-ms-clear {
-  display: none; }
-
 
 .viewing {
   max-height: 2rem;

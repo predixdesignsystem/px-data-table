@@ -48,9 +48,9 @@ $inuit-table-border-color: $gray5;
   @extend td;
   display: table-cell;
   vertical-align: middle;
-  --dropdown_bg_default: $green;
-  --dropdown_bg_hover: $orange;
-  --dropdown_bg_opened: $purple;
+  --dropdown_bg_default: transparent;
+  --dropdown_bg_hover: transparent;
+  --dropdown_bg_opened: transparent;
   ::-ms-clear {
    display: none;
   }
