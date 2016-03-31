@@ -1,3 +1,13 @@
+v1.2.0
+=================
+* Initial support for cell and row highlighting. See demo.html for an example.
+* Support for 'high'/'medium'/'low' highlight styles on given cell or row.
+* Light DOM observation of addition and removal of px-data-table-columns elements. Table now dynamically reacts to these changes.
+* Remove 'x' from input elements on IE and Edge.
+* Fix for making highlight and selected rows consistent when filtering or ordering of columns.
+* Fixes for IE when using column and cell highlight.
+* More tests.
+
 v1.1.3
 =================
 * Move bower components to use registered component names.
