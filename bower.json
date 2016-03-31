@@ -15,12 +15,12 @@
   ],
   "dependencies": {
     "polymer": "~v1.2.3",
-    "px-tooltip": "~v0.2.0",
+    "px-tooltip": "~v0.4.0",
     "px-theme": "~0.4.0",
     "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#~1.1.0",
     "polymer-font-awesome": "polymer-font-awesome#~v0.0.3",
     "px-validation": "~0.0.3",
-    "px-dropdown": "~0.2.0"
+    "px-dropdown": "~0.3.0"
   },
   "devDependencies": {
     "px-tables-design": "~0.3.9",
