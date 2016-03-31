@@ -99,6 +99,7 @@ $inuit-enable-btn--disabled: true;
 .scroll-body {
   display: block;
   overflow-x: scroll;
+  overflow-y: hidden;
   margin-bottom: 1rem;
   padding-left: 1px; /*firefox border collapse fix*/
   padding-right: 1px; /*firefox border collapse fix*/

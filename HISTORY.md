@@ -1,3 +1,7 @@
+v1.2.0
+=================
+* Added Dropdown functionality
+
 v1.1.3
 =================
 * Move bower components to use registered component names.

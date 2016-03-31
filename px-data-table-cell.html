@@ -2,6 +2,8 @@
 <link rel="import" href="../px-tooltip/px-tooltip.html">
 <link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
 <link rel="import" href="px-edit-cell.html">
+<link rel="import" href="../px-dropdown/px-dropdown.html">
+
 
 <dom-module id="px-data-table-cell">
   <link rel="import" type="css" href="css/px-data-table-cell.css"/>
@@ -23,8 +25,27 @@
           <textarea required$="{{column.required}}" on-blur="saveCell">{{cellValue}}</textarea>
         </template>
       </px-edit-cell>
+      <!--dropdown template  -->
+      <template is="dom-if" if="{{_isEqual(cellType, 'dropdown')}}">
+        <div class="flex__item cell--container">
+          <span>
+            <px-dropdown
+              selected-value="{{cellValue}}"
+              bound-target="{{dropdownBounds}}">
+              <px-dropdown-text
+                class="px-dropdown-text" display-value="{{cellValue}}"></px-dropdown-text>
+              <px-dropdown-content
+                class="px-dropdown-content"
+                extend-dropdown="true"
+                extend-dropdown-by="25"
+                max-cont-character-width="10"
+                items="{{dropdownItems}}">
+              </px-dropdown-content>
+            </px-dropdown>
+          </span>
+        </div>
+      </template>
       <!-- in place editing template -->
-
       <template is="dom-if" if="{{_isEqual(cellType,'string')}}">
         <div class="flex cell--container">
           <span id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation, cellDisplayValue)}}">{{cellDisplayValue}}
@@ -40,19 +61,21 @@
         </div>
       </template>
       <!-- icon template -->
-      <div class="fa fa-fw cell-status--container">
-        <iron-icon class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
-          icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
-        </iron-icon>
-        <template is="dom-if" if="{{!cellValidation.passedValidation}}">
-          <px-tooltip
-            class="tooltip-font"
-            smart-orientation
-            orientation="top"
-            tooltip-message="{{cellValidation.failedValidationErrorMessage}}">
-          </px-tooltip>
-        </template>
-      </div>
+      <template is="dom-if" if="{{isNotEqual(cellType, 'dropdown')}}">
+        <div class="fa fa-fw cell-status--container">
+          <iron-icon class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
+            icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
+          </iron-icon>
+          <template is="dom-if" if="{{!cellValidation.passedValidation}}">
+            <px-tooltip
+              class="tooltip-font"
+              smart-orientation
+              orientation="top"
+              tooltip-message="{{cellValidation.failedValidationErrorMessage}}">
+            </px-tooltip>
+          </template>
+        </div>
+      </template>
       <!-- icon template -->
     </span>
     <!-- html content -->
@@ -60,6 +83,7 @@
       <aha-html-echo html="{{cellDisplayValue}}"></aha-html-echo>
     </template>
   </template>
+</template>
   <script>
     Polymer({
       is: 'px-data-table-cell',
@@ -101,6 +125,16 @@
           type: Boolean,
           value: false
         },
+        dropdownItems:{
+          type: Array,
+          value: function(){return [];},
+          notify: true,
+          observer: '_setDropdownItem'
+        },
+        dropdownBounds:{
+          type: HTMLElement,
+          value: null
+        },
         _showEditIcon:{
           type: Boolean,
           value: false
@@ -110,6 +144,10 @@
           value: function(){
             return {};
           }
+        },
+        _dropdownItem: {
+          type: Boolean,
+          value: false,
         }
       },
       _cellDisplayValueChanged: function(newValue){
@@ -133,12 +171,59 @@
       onCellUnHovered: function(evt){
         this.set('_showEditIcon',false);
       },
+      /*
+      * This method checks whether the two parameters passed in are equal.
+      * Please note you should use _areAnyEqual for passing in multiple options in an array.
+      *
+      * @method _isEqual
+      * @param source String / Number
+      * @param target String / Number
+      */
       _isEqual: function(source, target) {
-        return source === target;
+        if (!Array.isArray(target) || typeof target !== 'object') {
+          return source === target;
+        }
+        return;
+      },
+      isNotEqual: function(source, target) {
+        if (!Array.isArray(target) || typeof target !== 'object') {
+          return source !== target;
+        }
+        return;
+      },
+      /*
+      * This method checks whether the first parameter and ANY parameter passed in
+      * the array are equal.
+      *
+      * @method _areAnyEqual
+      * @param source String / Number
+      * @param arr Array
+      */
+      _areAnyEqual: function(source, arr) {
+        if (Array.isArray(arr)) {
+          var flag = false,
+              i=0,
+              len = arr.length;
+          for (; i < len; i++) {
+            if (source === arr[i]) {
+              return true;
+            }
+          }
+          return false;
+        } else {
+          console.log('You must pass an array into this function');
+          return false;
+        }
+
       },
       _getReaderClass: function() {
         var datum = this.cellValue,
-            classList = ['flex', 'viewing'];
+            classList = [];
+
+        classList = (this.cellType ==='dropdown') ?
+          ['flex', 'ddviewing'] :
+          ['flex', 'viewing'];
+
         if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
           classList.push('empty');
         }
@@ -147,8 +232,16 @@
       ready: function(){
         this.addEventListener('exit-edit-mode', this._exitEditMode.bind(this));
         this.addEventListener('undo-edit-mode', this._undoEditMode.bind(this));
+        this.addEventListener('setDropdownItem', this._setDropdownItem),
         this.toggleClass('td', true);
         this.toggleClass('aha-' + this.columnName + '-td', true);
+      },
+      attached: function() {
+        this.toggleClass('td__dropdown', this._dropdownItem);
+      },
+      _setDropdownItem: function() {
+        //we check if there are any items in dropdownItems, and if there are, this is a dropdown cell.
+        this.set('_dropdownItem', (this.dropdownItems.length > 0));
       },
       _exitEditMode: function(){
         document.activeElement.blur();
@@ -160,13 +253,12 @@
       editCell: function(){
         var editCell = this.$$(".cell--edit"),
             valueCell = this.$$(".cell--value");
-
-        this.set('_editing', true);
-        this.toggleClass('cell__edit', this._editing);
-
-        this.set('_undoValue', this.$$(".cell--value").innerText);
-
-        Polymer.dom(editCell).querySelector('input,select,textarea').focus();
+        if (this.cellEditable && this.cellType !=='dropdown') {
+          this.set('_editing', true);
+          this.toggleClass('cell__edit', this._editing);
+          this.set('_undoValue', this.$$(".cell--value").innerText);
+          Polymer.dom(editCell).querySelector('input,select,textarea').focus();
+        }
       },
       saveCell: function(evt){
         this._editing = false;

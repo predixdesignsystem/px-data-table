@@ -20,7 +20,7 @@
     <content id="columndefs"></content>
     <div class="scroll-body">
 
-      <div class$="{{_getTableClass(tableRows, tableColumns)}}">
+      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}">
         <!-- Header -->
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
@@ -74,6 +74,8 @@
                                     on-save="_save"
                                     on-validate="_validateCell"
                                     cell-type="{{column.type}}"
+                                    dropdown-items="{{column.dropdownItems}}"
+                                    dropdown-bounds="{{scrollBody}}"
                                     cell-display-value="{{_readContent(internalRow, column)}}"
                                     cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
                                     cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
@@ -190,7 +192,14 @@
       hidePaginationControl: {
         type: Boolean,
         value: false
-      }
+      },
+      //scroll body html element
+      scrollBody: {
+        type: HTMLElement,
+        value: function() {
+          Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
+        }
+      },
     },
 
     observers: [
@@ -203,6 +212,7 @@
 
       var boundHandler = this._columnChanged.bind(this);
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
+      this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
     },
     _columnChanged: function(info){
       var addedColumns = info.addedNodes.filter(function(node) {
@@ -805,7 +815,6 @@
       }
       this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")");
       this.fire('after-select', row);
-
     },
 
     /******** Display table helpers (classes, dom-if functions, etc.) *************/

@@ -152,6 +152,11 @@ Element that defines a columns in a data table.
         type: String,
         value: "right"
       },
+      dropdownItems:{
+        type: Array,
+        value: function() {return [];},
+        notify: true
+      },
       _highLightElLoadedCount: {
         type: Number,
         value: 0

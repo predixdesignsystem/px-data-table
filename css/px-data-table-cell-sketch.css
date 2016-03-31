@@ -887,13 +887,23 @@ textarea {
 
 :host {
   display: table-cell;
-  vertical-align: middle; }
+  vertical-align: middle;
+  --dropdown_bg_default: transparent;
+  --dropdown_bg_hover: transparent;
+  --dropdown_bg_opened: transparent; }
   :host ::-ms-clear {
     display: none; }
+
+:host.td__dropdown {
+  padding: 0 !important; }
 
 .viewing {
   max-height: 2rem;
   overflow: hidden;
+  white-space: nowrap; }
+
+.ddviewing {
+  max-height: 2rem;
   white-space: nowrap; }
 
 .cell--edit input {
