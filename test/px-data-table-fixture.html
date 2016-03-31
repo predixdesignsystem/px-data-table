@@ -18,6 +18,7 @@
   </head>
 
   <body>
+
       <h3>Data table demos</h3>
 
       <p>A very simple data table.  Just displays data and has sortable columns.</p>
@@ -99,5 +100,17 @@
         <px-data-table-column name="phone"></px-data-table-column>
         <px-data-table-column name="color"></px-data-table-column>
       </px-data-table>
+
+      <template is="dom-bind" id="app">
+        <px-data-table id="domrepeat" table-data="{{minidata}}">
+          <template is="dom-repeat" items="{{meta}}"> -->
+            <px-data-table-column name="{{item.name}}"></px-data-table-column>
+          </template>
+        </px-data-table>
+      </template>
+      <script>
+        var app = document.querySelector('#app');
+        app.meta = [{name: 'first'}, {name: 'last'}, {name: 'email'}];
+      </script>
   </body>
 </html>

@@ -961,4 +961,26 @@ function runTests() {
     //   });
     // });
   });
+
+  suite('Data table column manipulation tests', function() {
+    // var tableWithColumnRepeat = document.getElementById('domrepeat');
+    var tableWithColumnRepeat = document.getElementById('domrepeat');
+    test('px-data-table-column elements added dynamically force the table to update and add the new column', function(done){
+      var tb = Polymer.dom(tableWithColumnRepeat.root).querySelector('aha-table');
+
+      assert.equal(tableWithColumnRepeat.nodeName, "PX-DATA-TABLE");
+      var noCols = tableWithColumnRepeat.getEffectiveChildren().length;
+      var noHeaderElements = Polymer.dom(tb.root).querySelectorAll(".th").length;
+      var newEl = Polymer.Base.create('px-data-table-column', {'name': 'boolean', 'filterable': true});
+
+      Polymer.dom(tableWithColumnRepeat).appendChild(newEl);
+      flush(function(){
+        assert.equal(tableWithColumnRepeat.getEffectiveChildren().length, noCols + 1);
+        assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements + 1);
+        done();
+      });
+
+    });
+
+  });
 }

@@ -451,7 +451,7 @@
       }
       else {
         // the user's data is in the row column of internal data
-        return row.row[columnName];
+        return (row.row[columnName]? row.row[columnName] : {});
       }
     },
 
