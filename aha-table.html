@@ -70,7 +70,6 @@
               </template>
               <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                 <px-data-table-cell class$="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
-                                    on-tap="_click"
                                     on-save="_save"
                                     on-validate="_validateCell"
                                     cell-type="{{column.type}}"
@@ -700,17 +699,6 @@
       return (cellValue.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
     },
 
-
-    /********** Selecting ************/
-    _click:function(evt){
-      var column = evt.model.column;
-      if (column.editable) {
-				this._edit(evt);
-			}
-    },
-    _edit: function(evt) {
-      evt.currentTarget.editCell();
-		},
     _save: function(evt) {
       var row = evt.model.internalRow,
           column = evt.model.column,

@@ -108,7 +108,7 @@
         cellValidation: {
           type: Object,
           value: function(){
-            return {};
+            return {passedValidation: true};
           },
           notify: true
         },
@@ -149,6 +149,9 @@
           type: Boolean,
           value: false,
         }
+      },
+      listeners: {
+        'tap': 'editCell',
       },
       _cellDisplayValueChanged: function(newValue){
         if(this.$$('.cell--value') !== undefined && this.$$('.cell--value') !== null){
