@@ -1,3 +1,7 @@
+v1.3.1
+=================
+* Updated dropdown to latest version
+
 v1.3.0
 =================
 * Added Dropdown functionality
