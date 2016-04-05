@@ -28,6 +28,7 @@ module.exports = {
     }
   },
   suites: [
-    'test/px-data-table-fixture.html'
+    'test/px-data-table-fixture.html',
+    'test/px-data-table-cell-fixture.html'
   ]
 };
