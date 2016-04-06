@@ -1055,7 +1055,7 @@ button.btn {
 .tr {
   display: table-row; }
 
-.td {
+.td.td {
   display: table-cell;
   vertical-align: middle; }
 

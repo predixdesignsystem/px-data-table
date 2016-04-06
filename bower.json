@@ -20,7 +20,7 @@
     "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#~1.1.0",
     "polymer-font-awesome": "polymer-font-awesome#~v0.0.5",
     "px-validation": "~0.0.3",
-    "px-dropdown": "~0.4.1"
+    "px-dropdown": "~0.6.0"
   },
   "devDependencies": {
     "px-tables-design": "~0.3.9",
