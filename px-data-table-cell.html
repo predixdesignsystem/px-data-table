@@ -32,7 +32,8 @@
             <px-dropdown
               selected-value="{{cellValue}}"
               bound-target="{{dropdownBounds}}"
-              display-value="{{cellValue}}">
+              display-value="{{cellValue}}"
+              content-anchor="{{_cellAnchor}}">
               <px-dropdown-content
                 class="px-dropdown-content"
                 extend-dropdown="true"
@@ -147,6 +148,10 @@
         _dropdownItem: {
           type: Boolean,
           value: false,
+        },
+        _cellAnchor: {
+          type: HTMLElement,
+          value: function() { return null;}
         }
       },
       _cellDisplayValueChanged: function(newValue){
@@ -237,6 +242,7 @@
       },
       attached: function() {
         this.toggleClass('td__dropdown', this._dropdownItem);
+        this._cellAnchor = this;
       },
       _setDropdownItem: function() {
         //we check if there are any items in dropdownItems, and if there are, this is a dropdown cell.

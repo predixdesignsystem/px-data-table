@@ -30,6 +30,9 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
  * Monochromatic (gray10 is darkest, gray1 is lightest)
  */
 /**
+ * Define grey = gray to avoid dev typos
+ */
+/**
  * Buttons
  */
 /**
@@ -1052,7 +1055,7 @@ button.btn {
 .tr {
   display: table-row; }
 
-.td {
+.td.td {
   display: table-cell;
   vertical-align: middle; }
 
