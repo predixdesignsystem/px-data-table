@@ -1057,7 +1057,11 @@ button.btn {
 
 .td.td {
   display: table-cell;
-  vertical-align: middle; }
+  vertical-align: middle;
+  padding-top: var(--px-data-table-padding-top);
+  padding-bottom: var(--px-data-table-padding-bottom);
+  padding-left: var(--px-data-table-padding-left);
+  padding-right: var(--px-data-table-padding-right); }
 
 :host {
   display: block;
