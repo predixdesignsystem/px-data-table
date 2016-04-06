@@ -1,0 +1,33 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>px-data-table Demo</title>
+
+    <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <!-- web-component-tester automatically provides local copy of brower.js below
+         for any URL ending with "/web-component-tester/browser.js"
+         when wct is run from the command line -->
+    <script src="../web-component-tester/browser.js"></script>
+    <link rel="import" href="../px-data-table-cell.html" />
+    <link rel="import" href="../../px-theme/px-theme.html"/>
+    <script src="px-data-table-cell-test.js"></script>
+  </head>
+
+  <body>
+    <input class="otherinput">Hello</input>
+    <div style="width:200px; height: 20px;">
+      <px-data-table-cell
+        cell-type="string"
+        cell-display-value="hello"
+        cell-value="hello"
+        cell-display-tooltip
+        cell-editable>
+      </px-data-table-cell>
+    </div>
+
+  </body>
+</html>

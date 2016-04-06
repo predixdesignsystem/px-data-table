@@ -936,30 +936,7 @@ function runTests() {
       expect(undefinedTooltip).to.be.null;
       done();
     });
-    // FIXME: test only completes on Chrome - doesn't work reliably on FF...
-    // test('Check edit updates model data', function(done){
-    //   var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-    //       cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0],
-    //       editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
-    //       inputEl = Polymer.dom(editCell).querySelector('input'),
-    //       editCellToTheLeft = Polymer.dom(cell.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
-    //
-    //   table5Fixture.addEventListener('after-save', function(){
-    //     assert.equal(data[0].last, 'xxxx');
-    //     console.log('fin');
-    //     done();
-    //   });
-    //
-    //   cell.click();
-    //   flush(function(){
-    //     inputEl.value = 'xxxx';
-    //     flush(function(){
-    //       editCellToTheLeft.click();
-    //       inputEl.blur();
-    //     });
-    //     console.log('exit');
-    //   });
-    // });
+
   });
 
   suite('Data table column manipulation tests', function() {

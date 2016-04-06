@@ -138,9 +138,7 @@
           sortByEmailDomain: function(a, b) {
             var aDomain = a.value.substring(a.value.indexOf("@")+1, a.value.indexOf("."));
             var bDomain = b.value.substring(b.value.indexOf("@")+1, b.value.indexOf("."));
-            return this.descending
-              ? (aDomain < bDomain ? 1 : -1)
-              : (aDomain > bDomain ? 1 : -1);
+            return this.descending ? (aDomain < bDomain ? 1 : -1) : (aDomain > bDomain ? 1 : -1);
           },
           filterMarkupVal: function(searchString, cellValue) {
             var lhs = cellValue.slice(cellValue.indexOf('>') + 1);
