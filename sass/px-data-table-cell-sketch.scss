@@ -48,9 +48,6 @@ $inuit-table-border-color: $gray5;
   @extend td;
   display: table-cell;
   vertical-align: middle;
-  --dropdown_bg_default: transparent;
-  --dropdown_bg_hover: transparent;
-  --dropdown_bg_opened: transparent;
   ::-ms-clear {
    display: none;
   }
@@ -59,6 +56,7 @@ $inuit-table-border-color: $gray5;
 :host.td__dropdown {
   padding: 0 !important;
 }
+
 .viewing {
   max-height: calculateRem(30px);
   overflow: hidden;
@@ -69,17 +67,26 @@ $inuit-table-border-color: $gray5;
   max-height: calculateRem(30px);
   white-space: nowrap;
 }
+
 $px-data-table-cell-inner-height : calculateRem(18px);
 
 .cell--edit {
   & input {
     max-height: $px-data-table-cell-inner-height;
   }
+  &  input, textarea {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    box-shadow: 0 0 0 0;
+  }
+  & input[type=text]:focus, textarea:focus {
+    box-shadow: 0 0 0 0;
+  }
 }
 
 .cell--value {
   @extend .flex;
-
 }
 
 .cell--value__empty {
@@ -95,11 +102,6 @@ $px-data-table-cell-inner-height : calculateRem(18px);
   width: calculateRem(14px);
   height: calculateRem(14px);
 }
-
-// input:focus{
-//   outline: none !important;
-//   outline-style: hidden;
-// }
 
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";

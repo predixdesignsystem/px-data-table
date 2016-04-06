@@ -213,6 +213,9 @@ html {
  * Monochromatic (gray10 is darkest, gray1 is lightest)
  */
 /**
+ * Define grey = gray to avoid dev typos
+ */
+/**
  * Buttons
  */
 /**
@@ -887,10 +890,7 @@ textarea {
 
 :host {
   display: table-cell;
-  vertical-align: middle;
-  --dropdown_bg_default: transparent;
-  --dropdown_bg_hover: transparent;
-  --dropdown_bg_opened: transparent; }
+  vertical-align: middle; }
   :host ::-ms-clear {
     display: none; }
 
@@ -908,6 +908,15 @@ textarea {
 
 .cell--edit input {
   max-height: 1.2rem; }
+
+.cell--edit input, .cell--edit textarea {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  box-shadow: 0 0 0 0; }
+
+.cell--edit input[type=text]:focus, .cell--edit textarea:focus {
+  box-shadow: 0 0 0 0; }
 
 .cell--value__empty {
   height: 1.2rem;
