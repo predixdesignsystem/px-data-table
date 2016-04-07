@@ -1059,8 +1059,8 @@ textarea {
   :host ::-ms-clear {
     display: none; }
 
-:host(.td__dropdown.td__dropdown.td__dropdown.td__dropdown) {
-  padding: 0; }
+:host(.td__dropdown) {
+  padding: 0 !important; }
 
 .viewing {
   max-height: 2rem;
