@@ -53,8 +53,8 @@ $inuit-table-border-color: $gray5;
   }
 }
 
-:host.td__dropdown {
-  padding: 0 !important;
+:host(.td__dropdown.td__dropdown.td__dropdown.td__dropdown) {
+  padding: 0;
 }
 
 .viewing {
