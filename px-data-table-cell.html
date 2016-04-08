@@ -32,8 +32,9 @@
             <px-dropdown
               selected-value="{{cellValue}}"
               bound-target="{{dropdownBounds}}"
-              display-value="{{cellValue}}"
-              content-anchor="{{_cellAnchor}}">
+              display-value="{{cellDisplayValue}}"
+              content-anchor="{{_cellAnchor}}"
+              on-change="saveCell">
               <px-dropdown-content
                 class="px-dropdown-content"
                 extend-dropdown="true"
@@ -241,30 +242,12 @@
         this.addEventListener('exit-edit-mode', this._exitEditMode.bind(this));
         this.addEventListener('undo-edit-mode', this._undoEditMode.bind(this));
         this.addEventListener('setDropdownItem', this._setDropdownItem),
-        this.addEventListener('px-dropdown-lock-width', this._lockWidth.bind(this));
         this.toggleClass('td', true);
         this.toggleClass('aha-' + this.columnName + '-td', true);
       },
       attached: function() {
         this.toggleClass('td__dropdown', this._dropdownItem);
         this._cellAnchor = this;
-      },
-      _lockWidth: function(evt) {
-
-        var computedStyle = window.getComputedStyle(this, null),
-            width;
-        if(evt.detail.currentWidth) {
-          //take the dropdown width and add padding
-          width = parseFloat(evt.detail.currentWidth);
-          width += parseFloat(computedStyle.getPropertyValue('padding-left').replace('px',''));
-          width += parseFloat(computedStyle.getPropertyValue('padding-right').replace('px',''));
-        }
-        else {
-          //just use the cell current width
-          width = computedStyle.getPropertyValue('width').replace('px','');;
-        }
-
-        this.lockCellWidth(width);
       },
       _setDropdownItem: function() {
         //we check if there are any items in dropdownItems, and if there are, this is a dropdown cell.
@@ -276,15 +259,6 @@
       _undoEditMode: function(evt){
         this.set('_cancelSave', true);
         document.activeElement.blur();
-      },
-      /*
-      * This lock the cell width, hence locking the width for the whole column as well
-      *
-      * @method lockCellWidth
-      * @param width (Number)
-      */
-      lockCellWidth: function(width) {
-        Polymer.dom(this).setAttribute('style', 'width:' + width + 'px');
       },
       editCell: function(){
         var editCell = this.$$(".cell--edit"),
