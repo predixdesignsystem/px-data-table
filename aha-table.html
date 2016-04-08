@@ -192,6 +192,10 @@
         type: Boolean,
         value: false
       },
+      _internalData: {
+        type: Array,
+        value: function(){return [];}
+      },
       //scroll body html element
       scrollBody: {
         type: HTMLElement,
@@ -305,27 +309,27 @@
         this.set('meta', meta);
       }
 
-      this.internalData = this._initializeInternalData();
+      if(typeof this._internalData !== "undefined" && this._internalData.length === 0){
+        this._internalData = this._initializeInternalData();
+        this._filterSortAndUpdateDisplayedTable();
+      }
 
-      this._filterSortAndUpdateDisplayedTable();
+      var pathNumber = new RegExp('([#])([0-9])+');
 
-      // var pathNumber = new RegExp('([#])([0-9])+');
-      //
-      // if (pathNumber.test(changeRec.path)) {
-      //   var index = pathNumber.exec(changeRec.path)[0].slice(1);
-      //   var pathPieces = changeRec.path.split('.'),
-      //       columnName = pathPieces[pathPieces.length-1],
-      //       column;
-      //   this.meta.some(function(columnEl){
-      //     if (columnEl.name === columnName) {
-      //       column = columnEl;
-      //       return true;
-      //     }
-      //   });
-      //   var validationObj = column.validate(changeRec.newValue);
-      //   // evt.currentTarget.cellValidation = validationObj;
-      //   this._setInternalCellValidationStateAt(this.internalData[index], column.name, validationObj);
-      // }
+      if (pathNumber.test(changeRec.path)) {
+        var index = pathNumber.exec(changeRec.path)[0].slice(1);
+        var pathPieces = changeRec.path.split('.'),
+            columnName = pathPieces[pathPieces.length-1],
+            column;
+        this.meta.some(function(columnEl){
+          if (columnEl.name === columnName) {
+            column = columnEl;
+            return true;
+          }
+        });
+        var validationObj = column.validate(changeRec.newValue);
+        this._setInternalCellValidationStateAt(this._internalData[index], column.name, validationObj);
+      }
 
     },
 
@@ -361,7 +365,8 @@
         filterable: true,
         editable: false,
         required: false,
-        selectAll: isSelectAll
+        selectAll: isSelectAll,
+        validate: function(){ return {'passedValidation': true};}
       };
     },
 
@@ -375,12 +380,12 @@
           len;
 
       // start at original data source (shadow fields, _selected and _filtered are still set)
-      this.filteredSortedData = this.internalData;
+      this.filteredSortedData = this._internalData;
 
       // reset back to unfiltered
       // leave _selected as is since selected rows should stay selected
-      for(i = 0, len = this.internalData.length; i < len; i++) {
-        this._setInternalDataAt(this.internalData[i], '_filtered', false);
+      for(i = 0, len = this._internalData.length; i < len; i++) {
+        this._setInternalDataAt(this._internalData[i], '_filtered', false);
       }
 
       // sort
@@ -396,7 +401,7 @@
 
       // count total number of rows
       self = this;
-      this.internalData.forEach(function(row) {
+      this._internalData.forEach(function(row) {
         if(!self._getInternalCellStateAt(row, '_filtered')) {
           count++;
         }
@@ -412,7 +417,7 @@
 
     _initializeInternalData: function() {
       // make internal data structure with shadow fields
-      var internalData = [],
+      var _internalData = [],
           i,
           len;
       for(i = 0, len = this.data.length; i < len; i++) {
@@ -422,28 +427,18 @@
           if ( Object.prototype.hasOwnProperty.call( thisObj, key ) ) {
             cellDataObj[key] = {};
             cellDataObj[key].value = thisObj[key];
-            cellDataObj[key]._validation = this._checkForExistingValidation(i);
+            cellDataObj[key]._validation = {passedValidation: true};
           }
         }
 
-        internalData.push({
+        _internalData.push({
           row: cellDataObj,
           _filtered: false,
           _selected: false,
           _highlight: {value:false, highlightColor: ''}
         });
       }
-      return internalData;
-    },
-
-    _checkForExistingValidation: function(index) {
-      // var currInternalObject = this.internalData[index];
-      // if(this.internalData[index]) {
-      //   return currInternalObject._validation;
-      // }
-      // else {
-        return {passedValidation: true};
-      // }
+      return _internalData;
     },
 
     // set helper method so we don't have to sprinkle logic of this internal data structure throughout
@@ -799,8 +794,8 @@
       var i,
           len;
       // set all rows selected/unselected
-      for(i = 0, len = this.internalData.length; i < len; i++) {
-        this._setInternalDataAt(this.internalData[i], '_selected', isSelected);
+      for(i = 0, len = this._internalData.length; i < len; i++) {
+        this._setInternalDataAt(this._internalData[i], '_selected', isSelected);
       }
 
       // notify viewing rows of change
@@ -812,8 +807,8 @@
       this.splice('selectedRows', 0, this.selectedRows.length);
       if(isSelected) {
         // add everything to selectedRows property
-        for(i = 0, len = this.internalData.length; i < len; i++) {
-          this.push('selectedRows', this.internalData[i]);
+        for(i = 0, len = this._internalData.length; i < len; i++) {
+          this.push('selectedRows', this._internalData[i]);
         }
       }
 
