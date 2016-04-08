@@ -71,7 +71,7 @@
               <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                 <px-data-table-cell class$="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
                                     on-save="_save"
-                                    on-validate="_validateCell"
+                                    on-validate="_handleValidateEvent"
                                     cell-type="{{column.type}}"
                                     dropdown-items="{{column.dropdownItems}}"
                                     dropdown-bounds="{{scrollBody}}"
@@ -111,10 +111,10 @@
       //data: instance of the model data
       data: {
         type: Array,
+        notify: true,
         value: function() {
           return [];
-        },
-        observer: '_dataChanged'
+        }
       },
       //meta: instance of the model meta
       meta: {
@@ -203,7 +203,8 @@
 
     observers: [
       '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
-      '_updateDisplayedRows(pageSize)' // when the size of the page changes
+      '_updateDisplayedRows(pageSize)', // when the size of the page changes
+      '_dataChanged(data.*)'
     ],
 
     ready: function() {
@@ -294,7 +295,7 @@
       return el;
     },
 
-    _dataChanged: function() {
+    _dataChanged: function(changeRec) {
       if(this.data === undefined || this.data === null) {
         return;
       }
@@ -307,6 +308,25 @@
       this.internalData = this._initializeInternalData();
 
       this._filterSortAndUpdateDisplayedTable();
+
+      // var pathNumber = new RegExp('([#])([0-9])+');
+      //
+      // if (pathNumber.test(changeRec.path)) {
+      //   var index = pathNumber.exec(changeRec.path)[0].slice(1);
+      //   var pathPieces = changeRec.path.split('.'),
+      //       columnName = pathPieces[pathPieces.length-1],
+      //       column;
+      //   this.meta.some(function(columnEl){
+      //     if (columnEl.name === columnName) {
+      //       column = columnEl;
+      //       return true;
+      //     }
+      //   });
+      //   var validationObj = column.validate(changeRec.newValue);
+      //   // evt.currentTarget.cellValidation = validationObj;
+      //   this._setInternalCellValidationStateAt(this.internalData[index], column.name, validationObj);
+      // }
+
     },
 
     _selectableChanged: function(newSelectable) {
@@ -397,12 +417,12 @@
           len;
       for(i = 0, len = this.data.length; i < len; i++) {
         var thisObj = this.data[i],
-            cellDataObj = {};
+            cellDataObj = {dataIndex: i };
         for ( var key in thisObj ) {
           if ( Object.prototype.hasOwnProperty.call( thisObj, key ) ) {
             cellDataObj[key] = {};
             cellDataObj[key].value = thisObj[key];
-            cellDataObj[key]._validation = {passedValidation: true};
+            cellDataObj[key]._validation = this._checkForExistingValidation(i);
           }
         }
 
@@ -414,6 +434,16 @@
         });
       }
       return internalData;
+    },
+
+    _checkForExistingValidation: function(index) {
+      // var currInternalObject = this.internalData[index];
+      // if(this.internalData[index]) {
+      //   return currInternalObject._validation;
+      // }
+      // else {
+        return {passedValidation: true};
+      // }
     },
 
     // set helper method so we don't have to sprinkle logic of this internal data structure throughout
@@ -709,11 +739,14 @@
 
         // only run validation if user has updated cell.
         if(this._cellChanged(this._readContent(row, column), newValue)){
-          this._validateCell(evt);
+          this._handleValidateEvent(evt);
         }
         this._setInternalDataAt(row, column.name, newValue);
         evt.currentTarget.cellValue = this._getInternalDataAt(row, column.name);
         evt.currentTarget.cellDisplayValue = this._readContent(row, column);
+        this.data[row.row.dataIndex][column.name] = newValue;
+        this.notifyPath('data.' + row.row.dataIndex + '.' + column.name, newValue);
+
       }
 
 			if (column.required && !evt.target.validity.valid) {
@@ -725,7 +758,7 @@
     _cellChanged: function(oldValue, newValue){
       return (oldValue !== newValue);
     },
-    _validateCell: function(evt){
+    _handleValidateEvent: function(evt){
       var column = evt.model.column,
           validationObj = column.validate(evt.detail.newValue);
 
