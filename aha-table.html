@@ -486,13 +486,15 @@
           to;
       if(this.firstItemIndex !== null && this.firstItemIndex !== undefined &&
         this.pageSize !== null && this.pageSize !== undefined &&
-        this.filteredSortedData !== undefined && this.filteredSortedData !== null) {
+        this.filteredSortedData !== undefined && this.filteredSortedData !== null && !this.hidePaginationControl) {
 
         fromPage = this.firstItemIndex - 1; // pagination is 1-based
         to = fromPage + this.pageSize;
 
         this.set('displayedRows', this.filteredSortedData.slice(fromPage, to));
 
+      } else if (this.filteredSortedData !== undefined && this.filteredSortedData !== null && this.hidePaginationControl) {
+        this.set('displayedRows', this.filteredSortedData);
       }
     },
 
