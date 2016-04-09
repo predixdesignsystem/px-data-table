@@ -1,3 +1,10 @@
+v1.5.0
+=================
+* Fixes to correctly notify table-data attribute when changes happen to the table data and propagate them out of the component.
+* Fixes to make table react correctly when the underlying model (table-data) changes.
+* Fixes to dropdown width and to make the cell text (character) width consistent with other column definitions.
+* Sass fixes for shadow DOM.
+
 v1.4.0
 =================
 * Added css variable to support custom cell padding: --px-data-table-padding-top, --px-data-table-padding-bottom, --px-data-table-padding-left, --px-data-table-padding-right
