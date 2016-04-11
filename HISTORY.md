@@ -1,6 +1,13 @@
-v1.4.1
+v1.5.1
 =================
 * fixed an issue with dropdown tooltips within data table
+
+v1.5.0
+=================
+* Fixes to correctly notify table-data attribute when changes happen to the table data and propagate them out of the component.
+* Fixes to make table react correctly when the underlying model (table-data) changes.
+* Fixes to dropdown width and to make the cell text (character) width consistent with other column definitions.
+* Sass fixes for shadow DOM.
 
 v1.4.0
 =================
