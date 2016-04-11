@@ -1,3 +1,7 @@
+v1.5.2
+=================
+* added a css variable for dropdown border.
+
 v1.5.1
 =================
 * fixed an issue with dropdown tooltips within data table

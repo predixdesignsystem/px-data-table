@@ -1791,7 +1791,8 @@ textarea {
 :host {
   --dropdown_bg_default: transparent;
   --dropdown_bg_hover: transparent;
-  --dropdown_bg_opened: transparent; }
+  --dropdown_bg_opened: transparent;
+  --dropdown_border_color: 0; }
   :host.cell__edit {
     background-color: #efeff4;
     border: 1px double #3e87e8 !important;
