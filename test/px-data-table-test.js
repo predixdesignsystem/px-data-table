@@ -1,4 +1,4 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, table6Fixture;
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, table6Fixture, dropdownFixture;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
@@ -688,7 +688,10 @@ document.addEventListener("WebComponentsReady", function() {
   table5Fixture = document.getElementById('myTable');
   table5Fixture.tableData = data;
 
-  table6Fixture = document.getElementById('myDropdownTable');
+  dropdownFixture = document.getElementById('myDropdownTable');
+  dropdownFixture.tableData = data;
+
+  table6Fixture = document.getElementById('table6');
   table6Fixture.tableData = data;
 
   runTests();
@@ -896,7 +899,7 @@ function runTests() {
     });
 
     test('dropdown opens on click', function(done){
-      var tb = Polymer.dom(table6Fixture.root).querySelector('aha-table'),
+      var tb = Polymer.dom(dropdownFixture.root).querySelector('aha-table'),
           px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
           px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
           dropcell = px_dropdown.$.dropcell,
@@ -908,7 +911,7 @@ function runTests() {
       done();
     });
     test('items passed into dropdown are the ones shown', function(done){
-      var tb = Polymer.dom(table6Fixture.root).querySelector('aha-table'),
+      var tb = Polymer.dom(dropdownFixture.root).querySelector('aha-table'),
           px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
           px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
           dropcell = px_dropdown.$.dropcell,
@@ -920,7 +923,7 @@ function runTests() {
     });
 
     test('Tooltip dom-if sees the text is too long, and is included in the dom', function(done){
-      var tb = Polymer.dom(table6Fixture.root).querySelector('aha-table'),
+      var tb = Polymer.dom(dropdownFixture.root).querySelector('aha-table'),
           px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
           px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
           dropcell = px_dropdown.$.dropcell,
@@ -957,6 +960,25 @@ function runTests() {
         done();
       });
 
+    });
+
+  });
+
+  suite('Additional unit tests for when hide-pagination-control is used.', function(){
+
+    test('Pagination controls are not displayed.', function(done){
+        debugger;
+        var fixture = document.querySelector('#table6 #pagination');
+        assert.isTrue(fixture.classList.contains('visuallyhidden'));
+        done();
+    });
+
+    test('Table shows all data (26 rows) instead of 10.', function(done){
+        var fixture = document.getElementById('table6');
+        var selector = '.summary.style-scope.px-pagination :nth-child(4)';
+        var span = fixture.querySelector(selector);
+        assert.equal(span.innerHTML, '26');
+        done();
     });
 
   });

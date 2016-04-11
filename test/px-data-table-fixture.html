@@ -100,6 +100,10 @@
         <px-data-table-column name="phone"></px-data-table-column>
         <px-data-table-column name="color"></px-data-table-column>
       </px-data-table>
+      <hr>
+
+      <p>Hide pagination controls and show all data instead of first 10.</p>
+      <px-data-table hide-pagination-control id="table6"></px-data-table>
 
       <template is="dom-bind" id="app">
         <px-data-table id="domrepeat" table-data="{{minidata}}">
@@ -112,5 +116,6 @@
         var app = document.querySelector('#app');
         app.meta = [{name: 'first'}, {name: 'last'}, {name: 'email'}];
       </script>
+
   </body>
 </html>
