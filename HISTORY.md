@@ -1,3 +1,7 @@
+v1.4.1
+=================
+* fixed an issue with dropdown tooltips within data table
+
 v1.4.0
 =================
 * Added css variable to support custom cell padding: --px-data-table-padding-top, --px-data-table-padding-bottom, --px-data-table-padding-left, --px-data-table-padding-right

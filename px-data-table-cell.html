@@ -30,7 +30,7 @@
         <div class="flex__item cell--container">
           <span>
             <px-dropdown
-              selected-value="{{cellValue}}"
+              value="{{cellValue}}"
               bound-target="{{dropdownBounds}}"
               display-value="{{cellDisplayValue}}"
               content-anchor="{{_cellAnchor}}"
@@ -39,7 +39,7 @@
                 class="px-dropdown-content"
                 extend-dropdown="true"
                 extend-dropdown-by="25"
-                max-cont-character-width="10"
+                max-cont-character-width="{{dropdownMaxCharacterWidth}}"
                 allow-outside-scroll="true"
                 items="{{dropdownItems}}">
               </px-dropdown-content>
@@ -136,6 +136,18 @@
         dropdownBounds:{
           type: HTMLElement,
           value: null
+        },
+        /**
+        * the maximum character width the dropdown will be using to determine
+        * when to show tooltips
+        *
+        * @param dropdownMaxCharacterWidth
+        * @type Number
+        * @default 0
+        */
+        dropdownMaxCharacterWidth: {
+          type: Number,
+          value:0
         },
         _showEditIcon:{
           type: Boolean,
