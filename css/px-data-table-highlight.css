@@ -1105,6 +1105,12 @@ label {
       -ms-flex-align: center;
           align-items: center; }
 
+.columnChooser {
+  -webkit-flex-direction: row-reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+  margin-right: 2px; }
+
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
 /**

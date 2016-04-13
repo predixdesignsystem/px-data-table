@@ -131,6 +131,11 @@ label {
   align-items: center;
 }
 
+.columnChooser {
+  flex-direction: row-reverse;
+  margin-right: 2px;
+}
+
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";
 

@@ -82,6 +82,7 @@ Events:
                  selected-rows="{{selectedRows}}"
                  meta="{{meta}}"
                  hide-pagination-control="{{hidePaginationControl}}"
+                 hide-column-chooser="{{hideColumnChooser}}"
                  id="dataTable">
                  <content></content>
       </aha-table>
@@ -216,6 +217,18 @@ Events:
           return [];
         },
         notify: true
+      },
+
+      /**
+       * Property to set the visibility of the table column chooser (used
+       * to show and hide columns)
+       *
+       *
+       *
+       */
+      hideColumnChooser: {
+        type: Boolean,
+        value: false
       }
     },
 
