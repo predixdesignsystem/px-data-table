@@ -19,10 +19,10 @@
   <template>
     <content id="columndefs"></content>
 
-    <template is="dom-if" if="{{!hideColumnChooser}}">
+    <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser">
         <px-dropdown display-value="Show/Hide column">
-          <px-dropdown-content class="px-dropdown-content" check-mode="true" max-cont-character-width="10" items='{{_columnOrder}}'>
+          <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" max-cont-character-width="10" items='{{_columnOrder}}'>
           </px-dropdown-content>
         </px-dropdown>
       </div>
@@ -206,8 +206,9 @@
        * Property to set the visibility of the table column chooser (used
        * to show and hide columns)
        *
+       * @default false
        */
-      hideColumnChooser: {
+      showColumnChooser: {
         type: Boolean,
         value: false
       },
@@ -215,6 +216,10 @@
         type: Array,
         value: function(){return [];}
       },
+      /**
+       * Array holding the column names in their displayed order
+       *
+       */
       _columnOrder: {
         type: Array,
         value: function() { return []; }
@@ -277,45 +282,7 @@
             addedColumns[i].label = name.charAt(0).toUpperCase() + name.slice(1);
           }
 
-
-          //record column order
-          var existsAlready = this._columnOrder.filter(function(item) {
-            return item.val === addedColumns[i].name;
-          })[0];
-          if(!existsAlready) {
-            this.push('_columnOrder', {'val': addedColumns[i].name, 'checked': 'true'});
-            this.push('meta', addedColumns[i]);
-          }
-          else {
-            //used to be shown, insert it at the right point
-            //find out the insertion point in the sorted array
-            var insertAt = this.selectable ? 1 : 0,
-                currentColumnIndex = this.selectable ? 1 : 0,
-                currentColumns = this.meta,
-                hasVisibleColumns = (this.selectable && currentColumns.length>1) ||
-                                    (!this.selectable && currentColumns.length>0)
-
-            if(hasVisibleColumns) {
-              //find out where we should reinsert it from the ordered list of columns
-              this._columnOrder.every(function(item, index) {
-
-                  if(item.val === addedColumns[i].name) {
-                    //found it
-                    insertAt = currentColumnIndex;
-                    //break
-                    return false;
-                  }
-
-                  //is this column visible, otherwise ignore
-                  if(currentColumnIndex < currentColumns.length && item.val === currentColumns[currentColumnIndex].name) {
-                    currentColumnIndex++;
-                  }
-                  return true;
-              });
-            }
-
-            this.splice('meta', insertAt, 0, addedColumns[i]);
-          }
+          this._addColumn(addedColumns[i]);
         }
       }
 
@@ -326,8 +293,8 @@
           }
         }.bind(this));
 
-        //keep track of column order
         //make sure this is a genuine remove and not a hideColumn
+        //before we update our column order array
         var isHidden = this._hiddenColumns.filter(function(savedItem) {
             return savedItem.name == columnToRemove.name;
         })[0];
@@ -335,7 +302,7 @@
         if(!isHidden) {
           //ok remove it
           this._columnOrder.forEach(function(column, idx){
-            if (columnToRemove.name === column.val){
+            if (columnToRemove.name === column.name){
               this.splice('_columnOrder', idx, 1);
             }
           }.bind(this));
@@ -344,15 +311,64 @@
       }.bind(this));
     },
 
-    _shownColumnChanged: function(dropdownItem, daksjhdka) {
+    /**
+     *  Used for adding a px-data-column. If the column has been added before
+     *  try to reinsert it where it was
+     *
+     */
+    _addColumn: function(addedColumn) {
 
-      //watch for checked changed
+      //has it been added before
+      var existsAlready = this._columnOrder.filter(function(item) {
+        return item.name === addedColumn.name;
+      })[0];
+
+      if(!existsAlready) {
+        //just push it to the end
+        this.push('_columnOrder', {name: addedColumn.name,  val: addedColumn.label, checked: 'true'});
+        this.push('meta', addedColumn);
+      }
+      else {
+        //used to be shown, insert it at the right point
+        //find out the insertion point in the sorted array
+        var insertAt = this.selectable ? 1 : 0,
+            currentColumnIndex = this.selectable ? 1 : 0,
+            currentColumns = this.meta,
+            hasVisibleColumns = (this.selectable && currentColumns.length>1) ||
+                                (!this.selectable && currentColumns.length>0)
+
+        if(hasVisibleColumns) {
+          //find out where we should reinsert it from the ordered list of columns
+          this._columnOrder.every(function(item, index) {
+
+              if(item.name === addedColumn.name) {
+                //found it
+                insertAt = currentColumnIndex;
+                //break
+                return false;
+              }
+
+              //is this column visible, otherwise ignore
+              if(currentColumnIndex < currentColumns.length && item.name === currentColumns[currentColumnIndex].name) {
+                currentColumnIndex++;
+              }
+              return true;
+          });
+        }
+
+        this.splice('meta', insertAt, 0, addedColumn);
+      }
+    },
+
+    _shownColumnChanged: function(dropdownItem) {
+
+      //watch for checked changed only
       if(dropdownItem.path.indexOf('checked') !== -1) {
 
         //parse index of item that has changed
         var index = dropdownItem.path.match(/\.#(\d+)./)[1];
         if(index) {
-          var columnName = dropdownItem.base[index].val,
+          var columnName = dropdownItem.base[index].name,
               checked = dropdownItem.value;
 
           if(checked) {
@@ -387,7 +403,6 @@
           //now actually hide it by removing it from the dom. Our observer will
           //take care of the reset
           Polymer.dom(column.parentElement).removeChild(column);
-          //TODO: some kind of break? every?
         }
       }, this);
 
@@ -403,29 +418,9 @@
 
       this._hiddenColumns.forEach(function(savedItem, index) {
         if(savedItem.name === columnName) {
-
+          //reappend item, observers will deal wih the rest
           savedItem.parent.appendChild(savedItem.column);
-          // //find out the insertion point in the sorted array
-          // var insertBefore,
-          //     currentColumnIndex = 0,
-          //     currentColumns = this.getContentChildren();
-          // this._columnOrder.forEach(function(item, index) {
-          //
-          //   if(item.val === savedItem.name) {
-          //     //found it
-          //     insertBefore = currentColumns[currentColumnIndex];
-          //   }
-          //
-          //   //is this column visible, otherwise ignore
-          //   if(item.val === currentColumns[currentColumnIndex].name) {
-          //     currentColumnIndex++;
-          //   }
-          // });
-          //
-          // if(insertBefore) {
-          //   //insert back our column, observers will deal with the rest
-          //   savedItem.parent.insertBefore(savedItem.column, insertBefore);
-          // }
+          this.splice('_hiddenColumns', index, 1);
         }
       }, this);
     },
