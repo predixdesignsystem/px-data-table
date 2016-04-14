@@ -1057,5 +1057,19 @@ function runTests() {
         });
       });
 
+      test('Column chooser registers new columns', function(done){
+        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+            chooserContent = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown-content'),
+            ddItems = Polymer.dom(chooserContent.root).querySelectorAll('li');
+
+        var noItems = ddItems.length;
+        var newEl = Polymer.Base.create('px-data-table-column', {'name': 'whatevs', 'filterable': true});
+
+        Polymer.dom(table5Fixture).appendChild(newEl);
+        flush(function(){
+          assert.equal(Polymer.dom(chooserContent.root).querySelectorAll('li').length, noItems + 1);
+          done();
+        });
+      });
     });
 }
