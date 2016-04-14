@@ -6,7 +6,6 @@ branches:
   - gh-pages
 addons:
   firefox: latest
-  currentl broken? https://github.com/GoogleChrome/sw-toolbox/compare/3004f0bc1efe...78ad6bc0fc2f
   apt:
     sources:
     - google-chrome
