@@ -394,7 +394,7 @@
 
           //save appropriate info for when we want to show it again
           var savedItem = {};
-          savedItem.parent = column.parentElement;
+          savedItem.parent = Polymer.dom(column).parentNode;
           savedItem.column = column;
           savedItem.name = columnName;
 
@@ -402,7 +402,7 @@
 
           //now actually hide it by removing it from the dom. Our observer will
           //take care of the reset
-          Polymer.dom(column.parentElement).removeChild(column);
+          Polymer.dom(savedItem.parent).removeChild(column);
         }
       }, this);
 
@@ -419,7 +419,7 @@
       this._hiddenColumns.forEach(function(savedItem, index) {
         if(savedItem.name === columnName) {
           //reappend item, observers will deal wih the rest
-          savedItem.parent.appendChild(savedItem.column);
+          Polymer.dom(savedItem.parent).appendChild(savedItem.column);
           this.splice('_hiddenColumns', index, 1);
         }
       }, this);

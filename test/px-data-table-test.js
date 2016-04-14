@@ -982,4 +982,80 @@ function runTests() {
     });
 
   });
+
+  suite('Column show/hide tests', function(){
+
+      test('show column already shown', function(done){
+        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table');
+
+        assert.equal(table5Fixture.nodeName, "PX-DATA-TABLE");
+        var noCols = table5Fixture.getEffectiveChildren().length;
+        var noHeaderElements = Polymer.dom(tb.root).querySelectorAll(".th").length;
+
+        //should already be shown so no diff
+        tb.showColumn('email');
+        flush(function(){
+          assert.equal(table5Fixture.getEffectiveChildren().length, noCols);
+          assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements);
+          done();
+        });
+      });
+
+      test('hide then show column already shown', function(done){
+        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table');
+
+        assert.equal(table5Fixture.nodeName, "PX-DATA-TABLE");
+        var noCols = table5Fixture.getEffectiveChildren().length;
+        var noHeaderElements = Polymer.dom(tb.root).querySelectorAll(".th").length;
+
+        //hide
+        tb.hideColumn('email');
+        flush(function(){
+          assert.equal(table5Fixture.getEffectiveChildren().length, noCols - 1);
+          assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements - 1);
+
+          //show
+          tb.showColumn('email');
+          flush(function(){
+            assert.equal(table5Fixture.getEffectiveChildren().length, noCols);
+            assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements);
+            done();
+          });
+        });
+      });
+
+      test('hide column through column chooser', function(done){
+        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
+            chooserContent = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown-content'),
+            ddItems = Polymer.dom(chooserContent.root).querySelectorAll('li');
+
+        //column chooser should exists
+        assert.isDefined(chooserContent);
+
+        //third column is shown
+        assert.equal(chooserContent.items[3].checked, 'true');
+        var columnLabel = chooserContent.items[3].val;
+        var noCols = table5Fixture.getEffectiveChildren().length;
+        var noHeaderElements = Polymer.dom(tb.root).querySelectorAll(".th").length;
+
+        //change the state of the dropdown item
+        ddItems[0].click();
+        flush(function(){
+          assert.equal(table5Fixture.getEffectiveChildren().length, noCols - 1);
+          assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements - 1);
+
+          //cick again
+          ddItems[0].click();
+          flush(function(){
+            assert.equal(table5Fixture.getEffectiveChildren().length, noCols);
+            assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements);
+            //double check we've been reinserted at the same place, check header 3 + 1 to account for "select" column
+            assert.equal(columnLabel, Polymer.dom(tb.root).querySelectorAll(".th > span")[4].textContent.trim())
+
+            done();
+          });
+        });
+      });
+
+    });
 }
