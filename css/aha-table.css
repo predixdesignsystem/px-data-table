@@ -1825,17 +1825,20 @@ label {
   background-color: #0986a4;
   border: none;
   max-width: 4px;
+  min-width: 4px;
   padding: 0; }
 
 .aha-insertion-indicator-th.aha-insertion-indicator-th.aha-insertion-indicator-th {
   border: none;
   max-width: 4px;
+  min-width: 4px;
   padding: 0; }
 
 .insertion-indicator.insertion-indicator.insertion-indicator {
   background-color: #0986a4;
   border: none;
   max-width: 4px;
+  min-width: 4px;
   padding: 0; }
 
 .btn--pagination:focus {
