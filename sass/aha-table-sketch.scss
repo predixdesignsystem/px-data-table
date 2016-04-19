@@ -136,6 +136,10 @@ label {
   margin-right: 2px;
 }
 
+.moveable {
+  cursor: move;
+}
+
 // Trumps
 @import "inuit-clearfix/_trumps.clearfix.scss";
 

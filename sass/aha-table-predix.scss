@@ -37,6 +37,28 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   }
 }
 
+.table .aha-insertion-indicator-td {
+  background-color: $select-blue-hover;
+  border: none;
+  max-width:4px;
+  padding: 0;
+
+}
+
+.aha-insertion-indicator-th.aha-insertion-indicator-th.aha-insertion-indicator-th{
+  border: none;
+  max-width:4px;
+  padding: 0;
+}
+
+.insertion-indicator.insertion-indicator.insertion-indicator {
+  background-color: $select-blue-hover;
+  border:none;
+  max-width:4px;
+  padding: 0;
+
+}
+
 .btn--pagination:focus {
   outline: 0;
 }

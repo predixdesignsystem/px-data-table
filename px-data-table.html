@@ -83,6 +83,7 @@ Events:
                  meta="{{meta}}"
                  hide-pagination-control="{{hidePaginationControl}}"
                  show-column-chooser="{{showColumnChooser}}"
+                 enable-column-reorder="{{enableColumnReorder}}"
                  id="dataTable">
                  <content></content>
       </aha-table>
@@ -228,7 +229,17 @@ Events:
       showColumnChooser: {
         type: Boolean,
         value: false
-      }
+      },
+      /**
+       * Property to enable draggability of column headers for reordering
+       * columns
+       *
+       * @default false
+       */
+      enableColumnReorder: {
+        type: Boolean,
+        value:false
+      },
     },
 
     /**

@@ -21,8 +21,8 @@
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser">
-        <px-dropdown display-value="Show/Hide column">
-          <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" max-cont-character-width="10" items='{{_columnOrder}}'>
+        <px-dropdown display-value="Show/Hide Column">
+          <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" max-cont-character-width="10" items='{{_columnChooserItems}}'>
           </px-dropdown-content>
         </px-dropdown>
       </div>
@@ -33,33 +33,37 @@
         <!-- Header -->
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
-            <span class$="{{_getHeaderClass(column)}}">
-              <span
-                class$="{{_getTextSortingClass(column, sortedColumn)}}"
-                on-click="_sort">{{column.label}}<iron-icon icon="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
+            <template is="dom-if" if="{{_isFalse(column.isHidden)}}">
+              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_allowColumnDrop" on-drop="_dropColumnHeader">
+                <span
+                  class$="{{_getTextSortingClass(column, sortedColumn)}}"
+                  on-click="_sort">{{column.label}}<iron-icon icon="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
+                </span>
               </span>
-            </span>
+            </template>
           </template>
         </div>
 
         <!-- Second Header (filter/select all) -->
         <div class$="{{_getSecondHeaderClass(filterable)}}">
           <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
-            <span class="td">
-              <!-- select all checkbox -->
-              <template is="dom-if" if="{{_isSelectAllColumn(column)}}">
-                <span class="flex flex--center">
-                  <input id="selectAllCheckbox" type="checkbox"
-                         on-change="_clickSelectAll"/>
-                </span>
-              </template>
+            <template is="dom-if" if="{{_isFalse(column.isHidden)}}">
+              <span class$="{{_getFilterHeaderClass(column)}}">
+                <!-- select all checkbox -->
+                <template is="dom-if" if="{{_isSelectAllColumn(column)}}">
+                  <span class="flex flex--center">
+                    <input id="selectAllCheckbox" type="checkbox"
+                           on-change="_clickSelectAll"/>
+                  </span>
+                </template>
 
-              <!-- filter entry -->
-              <template is="dom-if" if="{{_isFilterableColumn(column)}}">
-                <input placeholder="Filter" class="text-input text-input--filter" type="text" on-keyup="_filter"/>
-              </template>
+                <!-- filter entry -->
+                <template is="dom-if" if="{{_isFilterableColumn(column)}}">
+                  <input placeholder="Filter" class="text-input text-input--filter" type="text" on-keyup="_filter"/>
+                </template>
 
-            </span>
+              </span>
+            </template>
           </template>
         </div>
         <!-- Data rows -->
@@ -68,30 +72,32 @@
           <div class$="{{_getRowClass(internalRow, internalRow._selected, internalRow._highlight)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
-              <!-- selected column checkbox -->
-              <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                <span class="td" on-click="_clickRow">
-                  <span class="flex flex--center flex--middle">
-                    <input type="checkbox"
-                    checked="{{internalRow._selected::change}}"/>
+              <template is="dom-if" if="{{_isFalse(column.isHidden)}}">
+                <!-- selected column checkbox -->
+                <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
+                  <span class="td" on-click="_clickRow">
+                    <span class="flex flex--center flex--middle">
+                      <input type="checkbox"
+                      checked="{{internalRow._selected::change}}"/>
+                    </span>
                   </span>
-                </span>
-              </template>
-              <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-                <px-data-table-cell class$="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
-                                    on-save="_save"
-                                    on-validate="_handleValidateEvent"
-                                    cell-type="{{column.type}}"
-                                    dropdown-items="{{column.dropdownItems}}"
-                                    dropdown-bounds="{{scrollBody}}"
-                                    cell-display-value="{{_readContent(internalRow, column)}}"
-                                    cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
-                                    cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
-                                    cell-editable="{{column.editable}}"
-                                    cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
-                                    column-name="{{column.name}}"
-                                    dropdown-max-character-width="{{column.maxColumnCharacterWidth}}">
-                </px-data-table-cell>
+                </template>
+                <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
+                  <px-data-table-cell class$="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
+                                      on-save="_save"
+                                      on-validate="_handleValidateEvent"
+                                      cell-type="{{column.type}}"
+                                      dropdown-items="{{column.dropdownItems}}"
+                                      dropdown-bounds="{{scrollBody}}"
+                                      cell-display-value="{{_readContent(internalRow, column)}}"
+                                      cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
+                                      cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
+                                      cell-editable="{{column.editable}}"
+                                      cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
+                                      column-name="{{column.name}}"
+                                      dropdown-max-character-width="{{column.maxColumnCharacterWidth}}">
+                  </px-data-table-cell>
+                </template>
               </template>
             </template>
           </div>
@@ -212,6 +218,16 @@
         type: Boolean,
         value: false
       },
+      /**
+       * Property to enable draggability of column headers for reordering
+       * columns
+       *
+       * @default false
+       */
+      enableColumnReorder: {
+        type: Boolean,
+        value:false
+      },
       _internalData: {
         type: Array,
         value: function(){return [];}
@@ -220,17 +236,21 @@
        * Array holding the column names in their displayed order
        *
        */
-      _columnOrder: {
+      _columnChooserItems: {
         type: Array,
-        value: function() { return []; }
+        computed: '_computeColumnChooserItems(meta, meta.*)'
       },
       /**
-       * Array holding the currently hidden columns
+       * Whether we're currently displaying an insertion column (when dragging columns)
        *
        */
-      _hiddenColumns: {
-        type: Array,
-        value: function () {return[];}
+      _displayingInsertion: {
+        type: Boolean,
+        value: false
+      },
+      _requestRemoval: {
+        type: Boolean,
+        value: false
       },
       //scroll body html element
       scrollBody: {
@@ -245,7 +265,7 @@
       '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
       '_updateDisplayedRows(pageSize)', // when the size of the page changes
       '_dataChanged(data.*)',
-      '_shownColumnChanged(_columnOrder.*)'
+      '_shownColumnChanged(_columnChooserItems.*)'
     ],
 
     ready: function() {
@@ -282,7 +302,7 @@
             addedColumns[i].label = name.charAt(0).toUpperCase() + name.slice(1);
           }
 
-          this._addColumn(addedColumns[i]);
+          this.push('meta', addedColumns[i]);
         }
       }
 
@@ -293,70 +313,125 @@
           }
         }.bind(this));
 
-        //make sure this is a genuine remove and not a hideColumn
-        //before we update our column order array
-        var isHidden = this._hiddenColumns.filter(function(savedItem) {
-            return savedItem.name == columnToRemove.name;
-        })[0];
-
-        if(!isHidden) {
-          //ok remove it
-          this._columnOrder.forEach(function(column, idx){
-            if (columnToRemove.name === column.name){
-              this.splice('_columnOrder', idx, 1);
-            }
-          }.bind(this));
-        }
-
       }.bind(this));
     },
 
-    /**
-     *  Used for adding a px-data-column. If the column has been added before
-     *  try to reinsert it where it was
-     *
-     */
-    _addColumn: function(addedColumn) {
+    _dropColumnHeader: function(evt) {
+      if(this.enableColumnReorder) {
+        var srcLabel = evt.dataTransfer.getData('sourceColumn'),
+            columnIndex,
+            metaColumn,
+            targetName = evt.target.innerText;
 
-      //has it been added before
-      var existsAlready = this._columnOrder.filter(function(item) {
-        return item.name === addedColumn.name;
-      })[0];
+        evt.target.classList.remove('draggedOver');
 
-      if(!existsAlready) {
-        //just push it to the end
-        this.push('_columnOrder', {name: addedColumn.name,  val: addedColumn.label, checked: 'true'});
-        this.push('meta', addedColumn);
+        columnIndex = this.meta.findIndex(function(column) {
+          //how not to base that on text?
+          return column.label === srcLabel;
+        });
+
+        metaColumn = this.splice('meta', columnIndex, 1)[0];
+
+        //reorder the columns: and reinsert wehere it needs to be
+        this.meta.forEach(function(column, index) {
+          if(column.label === targetName) {
+            columnIndex = index;
+          }
+        });
+
+        this.splice('meta', columnIndex + 1, 0, metaColumn);
+        this._removeInsertionDisplay(evt);
       }
-      else {
-        //used to be shown, insert it at the right point
-        //find out the insertion point in the sorted array
-        var insertAt = this.selectable ? 1 : 0,
-            currentColumnIndex = this.selectable ? 1 : 0,
-            currentColumns = this.meta,
-            hasVisibleColumns = (this.selectable && currentColumns.length>1) ||
-                                (!this.selectable && currentColumns.length>0)
+    },
 
-        if(hasVisibleColumns) {
-          //find out where we should reinsert it from the ordered list of columns
-          this._columnOrder.every(function(item, index) {
+    _allowColumnDrop: function(evt) {
+      //if we allow column reordering and we're not actually dragging over the
+      //insertion indicator
+      if(this.enableColumnReorder && !evt.target.classList.contains('aha-insertion-indicator-th')) {
 
-              if(item.name === addedColumn.name) {
-                //found it
-                insertAt = currentColumnIndex;
-                //break
-                return false;
-              }
+        //TODO: verify the dragged column belongs to this table
+        evt.preventDefault();
 
-              //is this column visible, otherwise ignore
-              if(currentColumnIndex < currentColumns.length && item.name === currentColumns[currentColumnIndex].name) {
-                currentColumnIndex++;
-              }
-              return true;
+        //now manage the insertion indicator
+        if(this._requestRemoval && this._displayingInsertion) {
+
+          //the indicator is already shown, and has been requested to be dismissed.
+          //instead move it to the position we want IF it is different from
+          //the current one. Othewr wise just leave it and cancel the dismissal.
+          this.set('_requestRemoval', false);
+          var targetIdx,
+              indicatorIdx;
+          this.meta.forEach(function(column, index) {
+            //how not to base that on text?
+            if(column.label === evt.target.innerText) {
+              targetIdx = index;
+            }
+            else if(column.name === 'insertion-indicator') {
+              indicatorIdx = index;
+            }
           });
-        }
 
-        this.splice('meta', insertAt, 0, addedColumn);
+          if(targetIdx && targetIdx + 1 !== indicatorIdx) {
+
+            //reinsert at the right place
+            var indicator = this.splice('meta', indicatorIdx, 1)[0];
+
+            //if the target idx was bigger than the indicator reduce it by 1 to
+            //account for the removal of the indicator we just did
+            if(targetIdx + 1 > indicatorIdx) {
+              targetIdx--;
+            }
+
+            this.splice('meta', targetIdx + 1, 0, indicator);
+
+          }
+        }
+        else if(!this._displayingInsertion) {
+
+          //the indicator is not displayed, just insert it at the right place
+          var targetIdx = this.meta.findIndex(function(column) {
+            //how not to base that on text?
+            return column.label === evt.target.innerText;
+          });
+
+          //create insertion display column data
+          var insertCol = this._generateMetaForColumn('insertion-indicator', 'string', false, '');
+          insertCol.filterable = false;
+          insertCol.sortable = false;
+
+          this.splice('meta', targetIdx + 1, 0,  insertCol);
+          this.set('_displayingInsertion', true);
+        }
+      }
+    },
+
+    _dragLeave: function(evt) {
+      this._removeInsertionDisplay(evt);
+    },
+
+    _removeInsertionDisplay: function(evt) {
+
+      var _this = this;
+      this.set('_requestRemoval', true);
+      window.setTimeout(function() {
+        if(_this.enableColumnReorder && _this._displayingInsertion && _this._requestRemoval) {
+
+          //actually remove column showing the insertion point\
+          var insertionColIdx = _this.meta.findIndex(function(column) {
+            return column.name === 'insertion-indicator';
+          });
+
+          _this.splice('meta', insertionColIdx, 1);
+          _this.set('_displayingInsertion', false);
+        }
+      }, 100);
+    },
+
+    _dragStartColumnHeader: function(evt) {
+      if(this.enableColumnReorder && evt.target.classList.contains('moveable')) {
+        evt.dataTransfer.setData('sourceColumn', evt.target.innerText);
+      } else {
+        evt.preventDefault();
       }
     },
 
@@ -380,6 +455,17 @@
         }
       }
     },
+    _computeColumnChooserItems: function(meta) {
+
+      var items = [];
+      meta.forEach(function(column, index) {
+        if(column.name !== '_selected' && column.name !== 'insertion-indicator') {
+          items.push({ name: column.name, val: column.label, checked: !column.isHidden});
+        }
+      });
+
+      return items;
+    },
 
     /**
      * Hide the column which name matches columnName
@@ -389,23 +475,13 @@
     hideColumn: function(columnName) {
 
       //find column within content
-      this.getContentChildren().forEach(function(column, index) {
+      this.meta.forEach(function(column, index) {
         if(column.name === columnName) {
 
-          //save appropriate info for when we want to show it again
-          var savedItem = {};
-          savedItem.parent = Polymer.dom(column).parentNode;
-          savedItem.column = column;
-          savedItem.name = columnName;
-
-          this.push('_hiddenColumns', savedItem);
-
-          //now actually hide it by removing it from the dom. Our observer will
-          //take care of the reset
-          Polymer.dom(savedItem.parent).removeChild(column);
+          column.isHidden = true;
+          this.notifyPath('meta.' + index + '.isHidden', true);
         }
       }, this);
-
     },
 
     /**
@@ -416,11 +492,11 @@
      */
     showColumn: function(columnName) {
 
-      this._hiddenColumns.forEach(function(savedItem, index) {
-        if(savedItem.name === columnName) {
-          //reappend item, observers will deal wih the rest
-          Polymer.dom(savedItem.parent).appendChild(savedItem.column);
-          this.splice('_hiddenColumns', index, 1);
+      this.meta.forEach(function(column, index) {
+        if(column.name === columnName) {
+
+          column.isHidden = false;
+          this.notifyPath('meta.' + index + '.isHidden', false);
         }
       }, this);
     },
@@ -526,7 +602,7 @@
     },
 
     _generateMetaForColumn: function(prop, type, isSelectAll, label) {
-      return {
+      return Polymer.Base.create('px-data-table-column', {
         name: prop,
         label: label,
         type: type,
@@ -536,7 +612,7 @@
         required: false,
         selectAll: isSelectAll,
         validate: function(){ return {'passedValidation': true};}
-      };
+      });
     },
 
     /********** Filter/Sort main function *************/
@@ -1037,7 +1113,7 @@
       return column.selectAll;
     },
     _isFilterableColumn: function(column) {
-      return !column.selectAll && column.filterable;
+      return !column.selectAll && column.filterable && !column.isHidden;
     },
     _readContent: function(row, column) {
       var datum = this._getInternalDataAt(row, column.name);
@@ -1084,6 +1160,9 @@
     _isEqual: function(source, target) {
       return source === target;
     },
+    _isFalse: function(source) {
+      return source === false || source === "false";
+    },
     _getHeaderClass: function(item) {
       var classList = ['th ', 'aha-' + item.name + '-th'];
       if(item.sortable) {
@@ -1091,6 +1170,9 @@
       }
       if(!this.tableRows && !this.tableColumns) {
         classList.push('th--no-borders');
+      }
+      if(this.enableColumnReorder && item.type !== 'selected') {
+        classList.push('moveable');
       }
       return classList.join(' ');
     },
@@ -1100,6 +1182,9 @@
         classList.push('hidden');
       }
       return classList.join(' ');
+    },
+    _getFilterHeaderClass: function(column) {
+      return column.name === 'insertion-indicator' ? 'td insertion-indicator' : 'td';
     },
     _getSortingIcon: function(column, sortingColumn, descending) {
       var sortingIcon = ' ';

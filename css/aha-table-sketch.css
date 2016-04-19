@@ -1098,6 +1098,9 @@ label {
           flex-direction: row-reverse;
   margin-right: 2px; }
 
+.moveable {
+  cursor: move; }
+
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
 /**
