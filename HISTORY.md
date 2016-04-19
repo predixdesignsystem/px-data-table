@@ -1,3 +1,8 @@
+v1.6.0
+=================
+* Added columns hiding/showing functionality: hideColumn(columnName) and showColumn(columnName) API functions and show-column-chooser attribute on px-data-table, adding a dropdown allowing to select which column should be hidden.
+* Added column reordering functionality: drag and drop column headers. Enabled through the enable-column-reorder attribute on px-data-table.
+
 v1.5.2
 =================
 * added a css variable for dropdown border.

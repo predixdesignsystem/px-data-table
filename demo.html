@@ -23,7 +23,7 @@
       <p>A very simple data table.  Just displays data and has sortable columns.</p>
       <px-data-table show-column-chooser enable-column-reorder hide-pagination-control table-data="{{minidata}}"></px-data-table>
 
-      <!-- <hr>
+      <hr>
 
       <p>Filterable columns and selectable rows.</p>
       <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
@@ -81,7 +81,7 @@
           <li>you can <button onclick="logSelectedRows()">console.log the selected rows</button></li>
           <li>listen for px-row-click events from the table, which can be used by taking action on the row</li>
         </ul>
-      </div> -->
+      </div>
 
       <px-data-table id="mytable" selected-rows="{{mySelectedRows}}" enable-column-reorder show-column-chooser filterable selectable table-data="{{minidata}}">
         <px-data-table-column
