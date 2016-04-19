@@ -33,7 +33,7 @@
         <!-- Header -->
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
-            <template is="dom-if" if="{{_isFalse(column.isHidden)}}">
+            <template is="dom-if" if="{{_isFalse(column.hide)}}">
               <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_allowColumnDrop" on-drop="_dropColumnHeader">
                 <span
                   class$="{{_getTextSortingClass(column, sortedColumn)}}"
@@ -47,7 +47,7 @@
         <!-- Second Header (filter/select all) -->
         <div class$="{{_getSecondHeaderClass(filterable)}}">
           <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
-            <template is="dom-if" if="{{_isFalse(column.isHidden)}}">
+            <template is="dom-if" if="{{_isFalse(column.hide)}}">
               <span class$="{{_getFilterHeaderClass(column)}}">
                 <!-- select all checkbox -->
                 <template is="dom-if" if="{{_isSelectAllColumn(column)}}">
@@ -72,7 +72,7 @@
           <div class$="{{_getRowClass(internalRow, internalRow._selected, internalRow._highlight)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
-              <template is="dom-if" if="{{_isFalse(column.isHidden)}}">
+              <template is="dom-if" if="{{_isFalse(column.hide)}}">
                 <!-- selected column checkbox -->
                 <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
                   <span class="td" on-click="_clickRow">
@@ -248,7 +248,7 @@
         type: Boolean,
         value: false
       },
-      _requestRemoval: {
+      _requestInsertionIndicatorRemoval: {
         type: Boolean,
         value: false
       },
@@ -265,7 +265,7 @@
       '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
       '_updateDisplayedRows(pageSize)', // when the size of the page changes
       '_dataChanged(data.*)',
-      '_shownColumnChanged(_columnChooserItems.*)'
+      '_columnChooserChanged(_columnChooserItems.*)'
     ],
 
     ready: function() {
@@ -314,191 +314,6 @@
         }.bind(this));
 
       }.bind(this));
-    },
-
-    _dropColumnHeader: function(evt) {
-      if(this.enableColumnReorder) {
-        var srcLabel = evt.dataTransfer.getData('sourceColumn'),
-            columnIndex,
-            metaColumn,
-            targetName = evt.target.innerText;
-
-        evt.target.classList.remove('draggedOver');
-
-        columnIndex = this.meta.findIndex(function(column) {
-          //how not to base that on text?
-          return column.label === srcLabel;
-        });
-
-        metaColumn = this.splice('meta', columnIndex, 1)[0];
-
-        //reorder the columns: and reinsert wehere it needs to be
-        this.meta.forEach(function(column, index) {
-          if(column.label === targetName) {
-            columnIndex = index;
-          }
-        });
-
-        this.splice('meta', columnIndex + 1, 0, metaColumn);
-        this._removeInsertionDisplay(evt);
-      }
-    },
-
-    _allowColumnDrop: function(evt) {
-      //if we allow column reordering and we're not actually dragging over the
-      //insertion indicator
-      if(this.enableColumnReorder && !evt.target.classList.contains('aha-insertion-indicator-th')) {
-
-        //TODO: verify the dragged column belongs to this table
-        evt.preventDefault();
-
-        //now manage the insertion indicator
-        if(this._requestRemoval && this._displayingInsertion) {
-
-          //the indicator is already shown, and has been requested to be dismissed.
-          //instead move it to the position we want IF it is different from
-          //the current one. Othewr wise just leave it and cancel the dismissal.
-          this.set('_requestRemoval', false);
-          var targetIdx,
-              indicatorIdx;
-          this.meta.forEach(function(column, index) {
-            //how not to base that on text?
-            if(column.label === evt.target.innerText) {
-              targetIdx = index;
-            }
-            else if(column.name === 'insertion-indicator') {
-              indicatorIdx = index;
-            }
-          });
-
-          if(targetIdx && targetIdx + 1 !== indicatorIdx) {
-
-            //reinsert at the right place
-            var indicator = this.splice('meta', indicatorIdx, 1)[0];
-
-            //if the target idx was bigger than the indicator reduce it by 1 to
-            //account for the removal of the indicator we just did
-            if(targetIdx + 1 > indicatorIdx) {
-              targetIdx--;
-            }
-
-            this.splice('meta', targetIdx + 1, 0, indicator);
-
-          }
-        }
-        else if(!this._displayingInsertion) {
-
-          //the indicator is not displayed, just insert it at the right place
-          var targetIdx = this.meta.findIndex(function(column) {
-            //how not to base that on text?
-            return column.label === evt.target.innerText;
-          });
-
-          //create insertion display column data
-          var insertCol = this._generateMetaForColumn('insertion-indicator', 'string', false, '');
-          insertCol.filterable = false;
-          insertCol.sortable = false;
-
-          this.splice('meta', targetIdx + 1, 0,  insertCol);
-          this.set('_displayingInsertion', true);
-        }
-      }
-    },
-
-    _dragLeave: function(evt) {
-      this._removeInsertionDisplay(evt);
-    },
-
-    _removeInsertionDisplay: function(evt) {
-
-      var _this = this;
-      this.set('_requestRemoval', true);
-      window.setTimeout(function() {
-        if(_this.enableColumnReorder && _this._displayingInsertion && _this._requestRemoval) {
-
-          //actually remove column showing the insertion point\
-          var insertionColIdx = _this.meta.findIndex(function(column) {
-            return column.name === 'insertion-indicator';
-          });
-
-          _this.splice('meta', insertionColIdx, 1);
-          _this.set('_displayingInsertion', false);
-        }
-      }, 100);
-    },
-
-    _dragStartColumnHeader: function(evt) {
-      if(this.enableColumnReorder && evt.target.classList.contains('moveable')) {
-        evt.dataTransfer.setData('sourceColumn', evt.target.innerText);
-      } else {
-        evt.preventDefault();
-      }
-    },
-
-    _shownColumnChanged: function(dropdownItem) {
-
-      //watch for checked changed only
-      if(dropdownItem.path.indexOf('checked') !== -1) {
-
-        //parse index of item that has changed
-        var index = dropdownItem.path.match(/\.#(\d+)./)[1];
-        if(index) {
-          var columnName = dropdownItem.base[index].name,
-              checked = dropdownItem.value;
-
-          if(checked) {
-            this.showColumn(columnName);
-          }
-          else {
-            this.hideColumn(columnName);
-          }
-        }
-      }
-    },
-    _computeColumnChooserItems: function(meta) {
-
-      var items = [];
-      meta.forEach(function(column, index) {
-        if(column.name !== '_selected' && column.name !== 'insertion-indicator') {
-          items.push({ name: column.name, val: column.label, checked: !column.isHidden});
-        }
-      });
-
-      return items;
-    },
-
-    /**
-     * Hide the column which name matches columnName
-     *
-     *
-     */
-    hideColumn: function(columnName) {
-
-      //find column within content
-      this.meta.forEach(function(column, index) {
-        if(column.name === columnName) {
-
-          column.isHidden = true;
-          this.notifyPath('meta.' + index + '.isHidden', true);
-        }
-      }, this);
-    },
-
-    /**
-     * show the column which name matches columnName if it has been hidden
-     * previously
-     *
-     *
-     */
-    showColumn: function(columnName) {
-
-      this.meta.forEach(function(column, index) {
-        if(column.name === columnName) {
-
-          column.isHidden = false;
-          this.notifyPath('meta.' + index + '.isHidden', false);
-        }
-      }, this);
     },
 
     _selectedColumnExists: function(){
@@ -1080,6 +895,194 @@
       this.fire('after-select', row);
     },
 
+    /******** Drag and drop ********/
+
+    _dropColumnHeader: function(evt) {
+      if(this.enableColumnReorder) {
+        var srcLabel = evt.dataTransfer.getData('sourceColumn'),
+            columnIndex,
+            metaColumn,
+            targetName = evt.target.innerText;
+
+        evt.target.classList.remove('draggedOver');
+
+        columnIndex = this.meta.findIndex(function(column) {
+          //how not to base that on text?
+          return column.label === srcLabel;
+        });
+
+        metaColumn = this.splice('meta', columnIndex, 1)[0];
+
+        //reorder the columns: and reinsert wehere it needs to be
+        this.meta.forEach(function(column, index) {
+          if(column.label === targetName) {
+            columnIndex = index;
+          }
+        });
+
+        this.splice('meta', columnIndex + 1, 0, metaColumn);
+        this._removeInsertionDisplay(evt);
+      }
+    },
+
+    _allowColumnDrop: function(evt) {
+      //if we allow column reordering and we're not actually dragging over the
+      //insertion indicator
+      if(this.enableColumnReorder && !evt.target.classList.contains('aha-insertion-indicator-th')) {
+
+        //TODO: verify the dragged column belongs to this table
+        evt.preventDefault();
+
+        //now manage the insertion indicator
+        if(this._requestInsertionIndicatorRemoval && this._displayingInsertion) {
+
+          //the indicator is already shown, and has been requested to be dismissed.
+          //instead move it to the position we want IF it is different from
+          //the current one. Othewr wise just leave it and cancel the dismissal.
+          this.set('_requestInsertionIndicatorRemoval', false);
+          var targetIdx,
+              indicatorIdx;
+          this.meta.forEach(function(column, index) {
+            //how not to base that on text?
+            if(column.label === evt.target.innerText) {
+              targetIdx = index;
+            }
+            else if(column.name === 'insertion-indicator') {
+              indicatorIdx = index;
+            }
+          });
+
+          //check against undefined cause the value can genuinely be 0
+          if(targetIdx !== undefined && (targetIdx + 1) !== indicatorIdx) {
+
+            //remove
+            var indicator = this.splice('meta', indicatorIdx, 1)[0];
+
+            //if the target idx was bigger than the indicator reduce it by 1 to
+            //account for the removal of the indicator we just did
+            if(targetIdx + 1 > indicatorIdx) {
+              targetIdx--;
+            }
+
+            //reinsert at the right place
+            this.splice('meta', targetIdx + 1, 0, indicator);
+          }
+        }
+        else if(!this._displayingInsertion) {
+
+          //the indicator is not displayed, just insert it at the right place
+          var targetIdx = this.meta.findIndex(function(column) {
+            //how not to base that on text?
+            return column.label === evt.target.innerText;
+          });
+
+          //create insertion display column data
+          var insertCol = this._generateMetaForColumn('insertion-indicator', 'string', false, '');
+          insertCol.filterable = false;
+          insertCol.sortable = false;
+
+          this.splice('meta', targetIdx + 1, 0,  insertCol);
+          this.set('_displayingInsertion', true);
+        }
+      }
+    },
+
+    _dragLeave: function(evt) {
+      this._removeInsertionDisplay(evt);
+    },
+
+    _removeInsertionDisplay: function(evt) {
+
+      var _this = this;
+      this.set('_requestInsertionIndicatorRemoval', true);
+      window.setTimeout(function() {
+        if(_this.enableColumnReorder && _this._displayingInsertion && _this._requestInsertionIndicatorRemoval) {
+
+          //actually remove column showing the insertion point\
+          var insertionColIdx = _this.meta.findIndex(function(column) {
+            return column.name === 'insertion-indicator';
+          });
+
+          _this.splice('meta', insertionColIdx, 1);
+          _this.set('_displayingInsertion', false);
+        }
+      }, 100);
+    },
+
+    _dragStartColumnHeader: function(evt) {
+      if(this.enableColumnReorder && evt.target.classList.contains('moveable')) {
+        evt.dataTransfer.setData('sourceColumn', evt.target.innerText);
+      } else {
+        evt.preventDefault();
+      }
+    },
+
+    /********* Hide/Show columns *********/
+
+    _columnChooserChanged: function(dropdownItem) {
+
+      //watch for checked changed only
+      if(dropdownItem.path.indexOf('checked') !== -1) {
+
+        //parse index of item that has changed
+        var index = dropdownItem.path.match(/\.#(\d+)./)[1];
+        if(index) {
+          var columnName = dropdownItem.base[index].name,
+              checked = dropdownItem.value;
+
+          if(checked) {
+            this.showColumn(columnName);
+          }
+          else {
+            this.hideColumn(columnName);
+          }
+        }
+      }
+    },
+
+    _computeColumnChooserItems: function(meta) {
+
+      var items = [];
+      meta.forEach(function(column, index) {
+        if(column.name !== '_selected' && column.name !== 'insertion-indicator') {
+          items.push({ name: column.name, val: column.label, checked: !column.hide});
+        }
+      });
+
+      return items;
+    },
+
+    /**
+     * Hide the column which name matches columnName
+     */
+    hideColumn: function(columnName) {
+
+      //find column within content
+      this.meta.forEach(function(column, index) {
+        if(column.name === columnName) {
+
+          column.hide = true;
+          this.notifyPath('meta.' + index + '.hide', true);
+        }
+      }, this);
+    },
+
+    /**
+     * show the column which name matches columnName if it has been hidden
+     * previously
+     */
+    showColumn: function(columnName) {
+
+      this.meta.forEach(function(column, index) {
+        if(column.name === columnName) {
+
+          column.hide = false;
+          this.notifyPath('meta.' + index + '.hide', false);
+        }
+      }, this);
+    },
+
+
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
 
     _getRowClass: function(row, isSelected) {
@@ -1113,7 +1116,7 @@
       return column.selectAll;
     },
     _isFilterableColumn: function(column) {
-      return !column.selectAll && column.filterable && !column.isHidden;
+      return !column.selectAll && column.filterable && !column.hide;
     },
     _readContent: function(row, column) {
       var datum = this._getInternalDataAt(row, column.name);

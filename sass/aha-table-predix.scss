@@ -41,13 +41,14 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   background-color: $select-blue-hover;
   border: none;
   max-width:4px;
+  min-width:4px;
   padding: 0;
-
 }
 
 .aha-insertion-indicator-th.aha-insertion-indicator-th.aha-insertion-indicator-th{
   border: none;
   max-width:4px;
+  min-width:4px;
   padding: 0;
 }
 
@@ -55,8 +56,8 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   background-color: $select-blue-hover;
   border:none;
   max-width:4px;
+  min-width:4px;
   padding: 0;
-
 }
 
 .btn--pagination:focus {
