@@ -1111,6 +1111,9 @@ label {
           flex-direction: row-reverse;
   margin-right: 2px; }
 
+.moveable {
+  cursor: move; }
+
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
 /**
@@ -1817,6 +1820,26 @@ label {
   .btn--pagination--number:hover {
     background-color: #0a9ec1;
     color: white; }
+
+.table .aha-insertion-indicator-td {
+  background-color: #3e87e8;
+  border: none;
+  max-width: 4px;
+  min-width: 4px;
+  padding: 0; }
+
+.aha-insertion-indicator-th.aha-insertion-indicator-th.aha-insertion-indicator-th {
+  border: none;
+  max-width: 4px;
+  min-width: 4px;
+  padding: 0; }
+
+.insertion-indicator.insertion-indicator.insertion-indicator {
+  background-color: #3e87e8;
+  border: none;
+  max-width: 4px;
+  min-width: 4px;
+  padding: 0; }
 
 .btn--pagination:focus {
   outline: 0; }
