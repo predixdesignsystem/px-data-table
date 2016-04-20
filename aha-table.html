@@ -369,8 +369,10 @@
 
       if(typeof this._internalData !== "undefined" && this._internalData.length === 0){
         this._internalData = this._initializeInternalData();
-        this._filterSortAndUpdateDisplayedTable();
+      } else{
+        this._internalData = this._refreshInternalData();
       }
+      this._filterSortAndUpdateDisplayedTable();
 
       var pathNumber = new RegExp('([#])([0-9])+');
 
@@ -385,7 +387,7 @@
             return true;
           }
         });
-        var validationObj = column.validate(changeRec.newValue);
+        var validationObj = column.validate(changeRec.value);
         this._setInternalCellValidationStateAt(this._internalData[index], column.name, validationObj);
       }
 
@@ -475,8 +477,7 @@
 
     /********** Internal data structure ***********/
 
-    _initializeInternalData: function() {
-      // make internal data structure with shadow fields
+    _refreshInternalData: function(resetDataState){
       var _internalData = [],
           i,
           len;
@@ -487,18 +488,28 @@
           if ( Object.prototype.hasOwnProperty.call( thisObj, key ) ) {
             cellDataObj[key] = {};
             cellDataObj[key].value = thisObj[key];
-            cellDataObj[key]._validation = {passedValidation: true};
+            if(resetDataState){
+              cellDataObj[key]._validation = {passedValidation: true};
+            }else{
+              cellDataObj[key]._validation = this._internalData[i].row[key]._validation;
+            }
           }
         }
 
         _internalData.push({
           row: cellDataObj,
-          _filtered: false,
-          _selected: false,
-          _highlight: {value:false, highlightColor: ''}
+          _filtered: (resetDataState ? false : this._internalData[i]._filtered),
+          _selected: (resetDataState ? false : this._internalData[i]._selected),
+          _highlight: (resetDataState ? {value:false, highlightColor: ''} : this._internalData[i]._highlight)
         });
       }
       return _internalData;
+
+    },
+
+    _initializeInternalData: function() {
+      // make internal data structure with shadow fields
+      return this._refreshInternalData(true);
     },
 
     // set helper method so we don't have to sprinkle logic of this internal data structure throughout
