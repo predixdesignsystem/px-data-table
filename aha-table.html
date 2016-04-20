@@ -898,24 +898,33 @@
     /******** Drag and drop ********/
 
     _dropColumnHeader: function(evt) {
-      if(this.enableColumnReorder) {
-        var srcLabel = evt.dataTransfer.getData('sourceColumn'),
+
+      var dataType = evt.dataTransfer.getData('px-data-table-column');
+      if(this.enableColumnReorder && dataType === 'px-data-table-column') {
+
+        var srcName = evt.dataTransfer.getData('sourceColumn'),
             columnIndex,
             metaColumn,
-            targetName = evt.target.innerText;
+            target = evt.target,
+            targetName;
 
-        evt.target.classList.remove('draggedOver');
+        //try searching for the actual header
+        if(!target.classList.contains('th')) {
+          target = Polymer.dom(target).parentNode;
+        }
+
+        targetName = target.classList.toString().match(/.*aha-(.*)-th/)[1];
 
         columnIndex = this.meta.findIndex(function(column) {
           //how not to base that on text?
-          return column.label === srcLabel;
+          return column.name === srcName;
         });
 
         metaColumn = this.splice('meta', columnIndex, 1)[0];
 
         //reorder the columns: and reinsert wehere it needs to be
         this.meta.forEach(function(column, index) {
-          if(column.label === targetName) {
+          if(column.name === targetName) {
             columnIndex = index;
           }
         });
@@ -926,11 +935,20 @@
     },
 
     _allowColumnDrop: function(evt) {
-      //if we allow column reordering and we're not actually dragging over the
-      //insertion indicator
-      if(this.enableColumnReorder && !evt.target.classList.contains('aha-insertion-indicator-th')) {
 
-        //TODO: verify the dragged column belongs to this table
+      //we're not allowed to check the data store at this point, we can work around it
+      //by checking if the data stores contains some specific keys but it's an array
+      //in chrome and a DOMStringList in firefox.... keep it if we really need it later
+      /*&&
+      evt.dataTransfer.types.indexOf('px-data-table-column') != -1*/
+
+      //if we allow column reordering and we're not actually dragging over the
+      //insertion indicator.
+      if(this.enableColumnReorder &&
+        !evt.target.classList.contains('aha-insertion-indicator-th')) {
+
+
+        //allow
         evt.preventDefault();
 
         //now manage the insertion indicator
@@ -941,48 +959,59 @@
           //the current one. Othewr wise just leave it and cancel the dismissal.
           this.set('_requestInsertionIndicatorRemoval', false);
           var targetIdx,
-              indicatorIdx;
-          this.meta.forEach(function(column, index) {
-            //how not to base that on text?
-            if(column.label === evt.target.innerText) {
-              targetIdx = index;
+              indicatorIdx,
+              regex = evt.target.classList.toString().match(/.*aha-(.*)-th/),
+              targetName = (regex && regex.length > 1) ? regex[1] : null;
+
+          //don't bother doing more if the target doesn't seem genuine
+          if(targetName != null) {
+            this.meta.forEach(function(column, index) {
+
+              if(column.name === targetName) {
+                targetIdx = index;
+              }
+              else if(column.name === 'insertion-indicator') {
+                indicatorIdx = index;
+              }
+            });
+
+            //check against undefined cause the value can genuinely be 0
+            if(targetIdx !== undefined && (targetIdx + 1) !== indicatorIdx) {
+
+              //remove
+              var indicator = this.splice('meta', indicatorIdx, 1)[0];
+
+              //if the target idx was bigger than the indicator reduce it by 1 to
+              //account for the removal of the indicator we just did
+              if(targetIdx + 1 > indicatorIdx) {
+                targetIdx--;
+              }
+
+              //reinsert at the right place
+              this.splice('meta', targetIdx + 1, 0, indicator);
             }
-            else if(column.name === 'insertion-indicator') {
-              indicatorIdx = index;
-            }
-          });
-
-          //check against undefined cause the value can genuinely be 0
-          if(targetIdx !== undefined && (targetIdx + 1) !== indicatorIdx) {
-
-            //remove
-            var indicator = this.splice('meta', indicatorIdx, 1)[0];
-
-            //if the target idx was bigger than the indicator reduce it by 1 to
-            //account for the removal of the indicator we just did
-            if(targetIdx + 1 > indicatorIdx) {
-              targetIdx--;
-            }
-
-            //reinsert at the right place
-            this.splice('meta', targetIdx + 1, 0, indicator);
           }
         }
         else if(!this._displayingInsertion) {
 
-          //the indicator is not displayed, just insert it at the right place
-          var targetIdx = this.meta.findIndex(function(column) {
-            //how not to base that on text?
-            return column.label === evt.target.innerText;
-          });
+          var regex = evt.target.classList.toString().match(/.*aha-(.*)-th/),
+              targetName = (regex && regex.length > 1) ? regex[1] : null;
 
-          //create insertion display column data
-          var insertCol = this._generateMetaForColumn('insertion-indicator', 'string', false, '');
-          insertCol.filterable = false;
-          insertCol.sortable = false;
+          if(targetName !== null) {
+            //the indicator is not displayed, just insert it at the right place
+            var targetIdx = this.meta.findIndex(function(column) {
 
-          this.splice('meta', targetIdx + 1, 0,  insertCol);
-          this.set('_displayingInsertion', true);
+              return column.name === targetName;
+            });
+
+            //create insertion display column data
+            var insertCol = this._generateMetaForColumn('insertion-indicator', 'string', false, '');
+            insertCol.filterable = false;
+            insertCol.sortable = false;
+
+            this.splice('meta', targetIdx + 1, 0,  insertCol);
+            this.set('_displayingInsertion', true);
+          }
         }
       }
     },
@@ -995,10 +1024,16 @@
 
       var _this = this;
       this.set('_requestInsertionIndicatorRemoval', true);
-      window.setTimeout(function() {
-        if(_this.enableColumnReorder && _this._displayingInsertion && _this._requestInsertionIndicatorRemoval) {
 
-          //actually remove column showing the insertion point\
+      //use a timeout so we can cancel the removal if the indicator needs
+      //to be displayed somewhere else i the enar future (100ms). Makes dragging
+      //smoother
+      window.setTimeout(function() {
+        if(_this.enableColumnReorder &&
+          _this._displayingInsertion &&
+          _this._requestInsertionIndicatorRemoval) {
+
+          //actually remove column showing the insertion point
           var insertionColIdx = _this.meta.findIndex(function(column) {
             return column.name === 'insertion-indicator';
           });
@@ -1011,7 +1046,15 @@
 
     _dragStartColumnHeader: function(evt) {
       if(this.enableColumnReorder && evt.target.classList.contains('moveable')) {
-        evt.dataTransfer.setData('sourceColumn', evt.target.innerText);
+
+        //parse column name
+        var name = evt.target.classList.toString().match(/.*aha-(.*)-th/)[1];
+        evt.dataTransfer.setData('sourceColumn', name);
+        evt.dataTransfer.setData('px-data-table-column', 'px-data-table-column');
+
+        //we need to uniquely identify this table so that we can't drag that
+        //stuff on another table
+
       } else {
         evt.preventDefault();
       }

@@ -1822,7 +1822,7 @@ label {
     color: white; }
 
 .table .aha-insertion-indicator-td {
-  background-color: #0986a4;
+  background-color: #3e87e8;
   border: none;
   max-width: 4px;
   min-width: 4px;
@@ -1835,7 +1835,7 @@ label {
   padding: 0; }
 
 .insertion-indicator.insertion-indicator.insertion-indicator {
-  background-color: #0986a4;
+  background-color: #3e87e8;
   border: none;
   max-width: 4px;
   min-width: 4px;

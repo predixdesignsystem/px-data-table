@@ -38,7 +38,7 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 .table .aha-insertion-indicator-td {
-  background-color: $select-blue-hover;
+  background-color: $primary-blue;
   border: none;
   max-width:4px;
   min-width:4px;
@@ -53,7 +53,7 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 .insertion-indicator.insertion-indicator.insertion-indicator {
-  background-color: $select-blue-hover;
+  background-color: $primary-blue;
   border:none;
   max-width:4px;
   min-width:4px;
