@@ -49,10 +49,10 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   background-color: $gray4;
 }
 
-.selected {
-  background-color: $select-blue-default !important;
-  color: $white !important;
+.selected-cell__selected {
+  background-color: $select-blue-default;
 }
+
 .th {
   font-weight: bold;
 }
@@ -60,6 +60,11 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 .sorted-text-hover:hover {
   color: $select-blue-hover;
   cursor: pointer;
+}
+
+.cell--value__highlight--selected{
+  border-top: 2px double $select-blue-default;
+  border-bottom: 2px double $select-blue-default;
 }
 
 .cell--value__highlight--color__high.cell--value__highlight--color__high.cell--value__highlight--color__high{

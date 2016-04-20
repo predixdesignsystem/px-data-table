@@ -1827,9 +1827,8 @@ label {
 .tr--filter {
   background-color: #d1d0d8; }
 
-.selected {
-  background-color: #0a9ec1 !important;
-  color: white !important; }
+.selected-cell__selected {
+  background-color: #0a9ec1; }
 
 .th {
   font-weight: bold; }
@@ -1837,6 +1836,10 @@ label {
 .sorted-text-hover:hover {
   color: #0986a4;
   cursor: pointer; }
+
+.cell--value__highlight--selected {
+  border-top: 2px double #0a9ec1;
+  border-bottom: 2px double #0a9ec1; }
 
 .cell--value__highlight--color__high.cell--value__highlight--color__high.cell--value__highlight--color__high {
   background-color: var(--cell--value__highlight--color__high, rgba(229, 56, 56, 0.25)); }

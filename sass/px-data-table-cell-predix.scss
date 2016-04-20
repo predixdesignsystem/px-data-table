@@ -26,29 +26,38 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   --dropdown_bg_hover: transparent;
   --dropdown_bg_opened: transparent;
   --dropdown_border_color: 0;
+}
 
-  &.cell__edit{
-    background-color: $inuit-forms-background;
-    border: $inuit-table-border-width double $primary-blue !important;
-    box-shadow: $inuit-forms-border--inner;
-    & input, textarea {
-      outline: none;
-      background-color: transparent;
-      box-shadow: none;
-    }
+:host(.cell__edit) {
+  background-color: $inuit-forms-background;
+  border: $inuit-table-border-width double $primary-blue !important;
+  box-shadow: $inuit-forms-border--inner;
+  & input, textarea {
+    outline: none;
+    background-color: transparent;
+    box-shadow: none;
   }
+}
 
-  &.cell--value__highlight--color__high.cell--value__highlight--color__high.cell--value__highlight--color__high{
-    background-color: var(--cell--value__highlight--color__high, rgba($alert-red, 0.25));
-  }
+:host(.cell--value__highlight--selected){
+  border: 2px double $select-blue-default;
+}
 
-  &.cell--value__highlight--color__medium.cell--value__highlight--color__medium{
-    background-color: var(--cell--value__highlight--color__medium, rgba($alert-yellow, 0.25));
-  }
+:host(.cell--value__highlight--color__high.cell--value__highlight--color__high.cell--value__highlight--color__high){
+  background-color: var(--cell--value__highlight--color__high, rgba($alert-red, 0.25));
+}
 
-  &.cell--value__highlight--color__low{
-    background-color: var(--cell--value__highlight--color__low, rgba($alert-blue, 0.25));
-  }
+:host(.cell--value__highlight--color__medium.cell--value__highlight--color__medium){
+  background-color: var(--cell--value__highlight--color__medium, rgba($alert-yellow, 0.25));
+}
+
+:host(.cell--value__highlight--color__low){
+  background-color: var(--cell--value__highlight--color__low, rgba($alert-blue, 0.25));
+}
+
+:host(.selected) {
+  background-color: $select-blue-default;
+  color: $white;
 }
 
 .cell--value--icon__validation-failed {
