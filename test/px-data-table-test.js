@@ -786,7 +786,7 @@ function runTests() {
     // Spot checks for filtering functionality
     test('Matching records are returned when filter text is entered', function(done) {
       var filterableTableRoot = document.querySelector('#table2');
-      var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(3) > input';
+      var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(5) > input';
       var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
       lastNameFilter.addEventListener('keyup', function(e){
         setTimeout(function() {
@@ -967,7 +967,6 @@ function runTests() {
   suite('Additional unit tests for when hide-pagination-control is used.', function(){
 
     test('Pagination controls are not displayed.', function(done){
-        debugger;
         var fixture = document.querySelector('#table6 #pagination');
         assert.isTrue(fixture.classList.contains('visuallyhidden'));
         done();
@@ -985,18 +984,37 @@ function runTests() {
 
   suite('Column show/hide tests', function(){
 
+      var countHidden = function(headers) {
+        var hiddenNumber = 0;
+        headers.forEach(function(header, index) {
+          if(header.style.display === 'none') {
+            hiddenNumber++;
+          }
+        });
+        return hiddenNumber;
+      };
+
       test('show column already shown', function(done){
         var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table');
 
         assert.equal(table5Fixture.nodeName, "PX-DATA-TABLE");
-        var noCols = tb.meta.length;
-        var noHeaderElements = Polymer.dom(tb.root).querySelectorAll(".th").length;
+        var headers = Polymer.dom(tb.root).querySelectorAll(".th");
+        var hiddenNumber = 0;
+
+        //make sure no headers are hidden
+        assert.equal(countHidden(headers), 0);
+        //and we have as many headers as column defs
+        assert.equal(tb.meta.length, headers.length);
 
         //should already be shown so no diff
         tb.showColumn('email');
         flush(function(){
-          assert.equal(tb.meta.length, noCols);
-          assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements);
+
+          headers = Polymer.dom(tb.root).querySelectorAll(".th");
+
+          //make sure no headers are hidden
+          assert.equal(countHidden(headers), 0);
+          assert.equal(tb.meta.length, headers.length);
           done();
         });
       });
@@ -1005,25 +1023,32 @@ function runTests() {
         var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table');
 
         assert.equal(table5Fixture.nodeName, "PX-DATA-TABLE");
-        var noCols = tb.meta.length;
-        var noHeaderElements = Polymer.dom(tb.root).querySelectorAll(".th").length;
+        var headers = Polymer.dom(tb.root).querySelectorAll(".th");
 
-        //hide
+        //make sure no headers are hidden
+        assert.equal(countHidden(headers), 0);
+        //and we have as many headers as column defs
+        assert.equal(tb.meta.length, headers.length);
+
+        //should already be shown so no diff
         tb.hideColumn('email');
         flush(function(){
-          assert.equal(tb.meta.length, noCols - 1);
-          assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements - 1);
 
-          //show
+          headers = Polymer.dom(tb.root).querySelectorAll(".th");
+          //make sure 1 is hidden
+          assert.equal(countHidden(headers), 1);
+
           tb.showColumn('email');
-          flush(function(){
-            assert.equal(tb.meta.length, noCols);
-            assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements);
+          flush(function() {
+
+            //make sure none are hidden
+            assert.equal(countHidden(headers), 0);
+            assert.equal(tb.meta.length, headers.length);
             done();
           });
         });
       });
-
+      //
       test('hide column through column chooser', function(done){
         var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
             chooserContent = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown-content'),
@@ -1033,22 +1058,22 @@ function runTests() {
         assert.isDefined(chooserContent);
 
         //third column is shown
-        assert.equal(chooserContent.items[3].checked, 'true');
+        assert.isTrue(chooserContent.items[3].checked);
         var columnLabel = chooserContent.items[3].val;
-        var noCols = tb.meta.length;
-        var noHeaderElements = Polymer.dom(tb.root).querySelectorAll(".th").length;
 
         //change the state of the dropdown item
         ddItems[0].click();
         flush(function(){
-          assert.equal(tb.meta.length, noCols - 1);
-          assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements - 1);
+
+          var headers = Polymer.dom(tb.root).querySelectorAll(".th");
+          assert.equal(countHidden(headers), 1);
 
           //cick again
           ddItems[0].click();
           flush(function(){
-            assert.equal(tb.meta.length, noCols);
-            assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements);
+
+            headers = Polymer.dom(tb.root).querySelectorAll(".th");
+            assert.equal(countHidden(headers), 0);
             //double check we've been reinserted at the same place, check header 3 + 1 to account for "select" column
             assert.equal(columnLabel, Polymer.dom(tb.root).querySelectorAll(".th > span")[4].textContent.trim())
 
