@@ -302,7 +302,7 @@
             addedColumns[i].label = name.charAt(0).toUpperCase() + name.slice(1);
           }
 
-          this.push('meta', addedColumns[i]);
+          this._addColumn(addedColumns[i]);
         }
       }
 
@@ -314,6 +314,41 @@
         }.bind(this));
 
       }.bind(this));
+    },
+
+    _addColumn: function(addedColumn) {
+      //meta needs to reflect the order in light dom. Find the node just before
+      //this one
+      var previousNode,
+          notFound = this.getEffectiveChildren().every(function(column, index) {
+            if(column.name === addedColumn.name) {
+              return false;
+            }
+
+            previousNode = column;
+            return true;
+          });
+
+      //if column found
+      if(!notFound) {
+
+        var idx = 0;
+        //make sure we insert in the right place
+        if(previousNode) {
+          this.meta.forEach(function(column, index) {
+            if(column.name === previousNode.name) {
+              idx = index + 1;
+            }
+          });
+        }
+        else {
+          idx = this.selectable ? 1 : 0;
+        }
+        this.splice('meta', idx, 0, addedColumn);
+      }
+      else {
+        this.push('meta', addedColumn);
+      }
     },
 
     _selectedColumnExists: function(){
@@ -364,7 +399,7 @@
       // initialize the meta if there is none
       if(!this.meta || this.meta.length === 0) {
         var meta = this._generateMetaFromData();
-        this.set('meta', meta);
+      //  this.set('meta', meta);
       }
 
       if(typeof this._internalData !== "undefined" && this._internalData.length === 0){
@@ -402,21 +437,34 @@
 
     /********** Generating column metadata *************/
 
+
     _generateMetaFromData: function() {
       var meta = [];
-      if(this.selectable && this.data.length > 0) {
-        // add a selected column if selectable
-        meta.push(this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
-      }
+
       for(var prop in this.data[0]) {
         if(prop.indexOf('_') !== 0) {//skip internal field
-          var colInfo = this._generateMetaForColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1));
-          meta.push(colInfo);
+          var colInfo = this._generateLightDomColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1));
+          Polymer.dom(this).appendChild(colInfo);
         }
       }
 
       return meta;
     },
+
+    _generateLightDomColumn: function(prop, type, isSelectAll, label) {
+      return Polymer.Base.create('px-data-table-column', {
+        name: prop,
+        label: label,
+        type: type,
+        sortable: true,
+        filterable: true,
+        editable: false,
+        required: false,
+        selectAll: isSelectAll
+        //validation?
+      });
+    },
+
 
     _generateMetaForColumn: function(prop, type, isSelectAll, label) {
       return Polymer.Base.create('px-data-table-column', {
@@ -914,10 +962,12 @@
       if(this.enableColumnReorder && dataType === 'px-data-table-column') {
 
         var srcName = evt.dataTransfer.getData('sourceColumn'),
-            columnIndex,
-            metaColumn,
+            toMove,
             target = evt.target,
-            targetName;
+            targetName,
+            targetColumn,
+            columns,
+            parent;
 
         //try searching for the actual header
         if(!target.classList.contains('th')) {
@@ -925,22 +975,35 @@
         }
 
         targetName = target.classList.toString().match(/.*aha-(.*)-th/)[1];
+        columns = this.getEffectiveChildren();
 
-        columnIndex = this.meta.findIndex(function(column) {
+        columns.forEach(function(column) {
           //how not to base that on text?
-          return column.name === srcName;
-        });
-
-        metaColumn = this.splice('meta', columnIndex, 1)[0];
-
-        //reorder the columns: and reinsert wehere it needs to be
-        this.meta.forEach(function(column, index) {
-          if(column.name === targetName) {
-            columnIndex = index;
+          if(column.name === srcName) {
+            toMove = column;
+          }
+          if(column.name == targetName) {
+            targetColumn = column;
           }
         });
 
-        this.splice('meta', columnIndex + 1, 0, metaColumn);
+
+        parent = Polymer.dom(toMove).parentNode;
+        //remove and insert in the right place
+        Polymer.dom(parent).removeChild(toMove);
+        Polymer.dom.flush();
+
+        //if the target is the 'selected' column just add column at the beginning
+        //because 'selected' is not in the light dom
+        if(targetName === '_selected') {
+          Polymer.dom(parent).insertBefore(toMove, columns[0]);
+        }
+        else {
+          Polymer.dom(parent).insertBefore(toMove, targetColumn.nextSibling);
+        }
+
+        Polymer.dom.flush();
+
         this._removeInsertionDisplay(evt);
       }
     },
