@@ -400,21 +400,37 @@
 
     /********** Generating column metadata *************/
 
+
     _generateMetaFromData: function() {
       var meta = [];
       if(this.selectable && this.data.length > 0) {
         // add a selected column if selectable
-        meta.push(this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
+        this.appendChild(this._generateLightDomColumn('_selected', 'selected', true, 'Selected (0)'));
       }
       for(var prop in this.data[0]) {
         if(prop.indexOf('_') !== 0) {//skip internal field
-          var colInfo = this._generateMetaForColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1));
-          meta.push(colInfo);
+          var colInfo = this._generateLightDomColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1));
+          this.appendChild(colInfo);
         }
       }
 
       return meta;
     },
+
+    _generateLightDomColumn: function(prop, type, isSelectAll, label) {
+      Polymer.Base.create('px-data-table-column', {
+        name: prop,
+        label: label,
+        type: type,
+        sortable: true,
+        filterable: true,
+        editable: false,
+        required: false,
+        selectAll: isSelectAll
+        //validation?
+      });
+    },
+
 
     _generateMetaForColumn: function(prop, type, isSelectAll, label) {
       return Polymer.Base.create('px-data-table-column', {
