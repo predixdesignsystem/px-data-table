@@ -1,3 +1,7 @@
+v1.6.1
+=================
+* Columns tracked directly in the light dom: if adding data through the dataTable attribute px-data-table-column will be added in the light dom for each appropriate column. The column order is tracked within the light dom as well.
+
 v1.6.0
 =================
 * Added columns hiding/showing functionality: hideColumn(columnName) and showColumn(columnName) API functions and show-column-chooser attribute on px-data-table, adding a dropdown allowing to select which column should be hidden.
