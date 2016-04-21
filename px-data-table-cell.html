@@ -137,6 +137,11 @@
           type: HTMLElement,
           value: null
         },
+        cellSelected:{
+          type: Boolean,
+          value: false,
+          observer: "_cellSelected"
+        },
         /**
         * the maximum character width the dropdown will be using to determine
         * when to show tooltips
@@ -338,6 +343,9 @@
           }
         }
         return classList.join(' ');
+      },
+      _cellSelected: function(selected){
+        this.toggleClass('selected', selected);
       }
     });
   </script>

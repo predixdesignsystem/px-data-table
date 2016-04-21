@@ -75,7 +75,7 @@
               <template is="dom-if" if="{{_isFalse(column.hide)}}">
                 <!-- selected column checkbox -->
                 <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                  <span class="td" on-click="_clickRow">
+                  <span class$="{{_getSelectedCellClass(internalRow._selected)}}" on-click="_clickRow">
                     <span class="flex flex--center flex--middle">
                       <input type="checkbox"
                       checked="{{internalRow._selected::change}}"/>
@@ -85,6 +85,7 @@
                 <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                   <px-data-table-cell class$="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
                                       on-save="_save"
+                                      cell-selected="{{internalRow._selected}}"
                                       on-validate="_handleValidateEvent"
                                       cell-type="{{column.type}}"
                                       dropdown-items="{{column.dropdownItems}}"
@@ -1347,6 +1348,11 @@
     },
     _getPaginationVisibility: function(hidePaginationControl){
       return (hidePaginationControl ? "visuallyhidden" : "");
+    },
+    _getSelectedCellClass: function(selected){
+      var classList = ['td'];
+      classList.push(selected ? 'selected-cell__selected' : '');
+      return classList.join(' ');
     }
   });
 </script>
