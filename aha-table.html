@@ -979,34 +979,39 @@
         }
 
         targetName = target.classList.toString().match(/.*aha-(.*)-th/)[1];
-        columns = this.getEffectiveChildren();
 
-        columns.forEach(function(column) {
-          //how not to base that on text?
-          if(column.name === srcName) {
-            toMove = column;
+        //Allow drop if target != moving column
+        if(targetName !== srcName) {
+          columns = this.getEffectiveChildren();
+
+          columns.forEach(function(column) {
+            //how not to base that on text?
+            if(column.name === srcName) {
+              toMove = column;
+            }
+            if(column.name == targetName) {
+              targetColumn = column;
+            }
+          });
+
+          //allow drop on selected only if this is not the first (not including
+          //selected) column. Otherwise no need to do anything
+          if(targetName !== '_selected' || toMove !== columns[0]) {
+            parent = Polymer.dom(toMove).parentNode;
+            //remove and insert in the right place
+            Polymer.dom(parent).removeChild(toMove);
+            Polymer.dom.flush();
+
+            //if the target is the 'selected' column just add column at the beginning
+            //because 'selected' is not in the light dom
+            if(targetName === '_selected') {
+              Polymer.dom(parent).insertBefore(toMove, columns[0]);
+            }
+            else {
+              Polymer.dom(parent).insertBefore(toMove, targetColumn.nextSibling);
+            }
           }
-          if(column.name == targetName) {
-            targetColumn = column;
-          }
-        });
-
-
-        parent = Polymer.dom(toMove).parentNode;
-        //remove and insert in the right place
-        Polymer.dom(parent).removeChild(toMove);
-        Polymer.dom.flush();
-
-        //if the target is the 'selected' column just add column at the beginning
-        //because 'selected' is not in the light dom
-        if(targetName === '_selected') {
-          Polymer.dom(parent).insertBefore(toMove, columns[0]);
         }
-        else {
-          Polymer.dom(parent).insertBefore(toMove, targetColumn.nextSibling);
-        }
-
-        Polymer.dom.flush();
 
         this._removeInsertionDisplay(evt);
       }

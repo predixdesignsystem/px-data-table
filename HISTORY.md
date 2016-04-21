@@ -1,3 +1,7 @@
+v1.6.2
+=================
+* fix bug when dropping first user defined column on 'selected' column
+
 v1.6.1
 =================
 * Columns tracked directly in the light dom: if adding data through the dataTable attribute px-data-table-column will be added in the light dom for each appropriate column. The column order is tracked within the light dom as well.
