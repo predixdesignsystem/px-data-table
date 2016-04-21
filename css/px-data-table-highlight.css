@@ -1041,7 +1041,8 @@ button.btn {
   width: 32px; }
 
 .th {
-  display: table-cell; }
+  display: table-cell;
+  resize: horizontal; }
 
 .th--no-borders.th--no-borders.th--no-borders {
   border-top: 0;
@@ -1090,7 +1091,11 @@ th, .th {
   text-align: left; }
 
 .column-head {
-  white-space: nowrap; }
+  white-space: nowrap;
+  -webkit-flex: 12;
+      -ms-flex: 12;
+          flex: 12;
+  padding: 0.3rem; }
 
 label {
   margin: 0; }
@@ -1113,6 +1118,12 @@ label {
 
 .moveable {
   cursor: move; }
+
+.dragHandle {
+  cursor: col-resize;
+  width: 2px;
+  background-color: blue;
+  min-height: 100%; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/

@@ -34,11 +34,13 @@
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <template is="dom-if" if="{{_isFalse(column.hide)}}">
-              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_allowColumnDrop" on-drop="_dropColumnHeader">
-                <span
-                  class$="{{_getTextSortingClass(column, sortedColumn)}}"
-                  on-click="_sort">{{column.label}}<iron-icon icon="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
-                </span>
+              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_allowColumnDrop" on-drop="_dropColumnHeader" on-track="_headerTrack" on-tap="_headerClick">
+
+                  <span
+                    class$="{{_getTextSortingClass(column, sortedColumn)}}"
+                    on-click="_sort">{{column.label}}<iron-icon icon="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
+                  </span>
+                  
               </span>
             </template>
           </template>
@@ -228,6 +230,15 @@
         type: Boolean,
         value:false
       },
+      /**
+       * Property to enable resizing of column headers through click and drag
+       *
+       * @default false
+       */
+      enableColumnResizing: {
+        type: Boolean,
+        value: false
+      },
       _internalData: {
         type: Array,
         value: function(){return [];}
@@ -249,6 +260,10 @@
         value: false
       },
       _requestInsertionIndicatorRemoval: {
+        type: Boolean,
+        value: false
+      },
+      _isResizingHeader: {
         type: Boolean,
         value: false
       },
@@ -1186,6 +1201,22 @@
           this.notifyPath('meta.' + index + '.hide', false);
         }
       }, this);
+    },
+
+    /******** Resize Header **********/
+
+
+    _headerTrack: function(evt) {
+
+      if(!this._isResizingHeader) {
+
+        //HIT TEST
+      }
+    },
+
+    _headerClick: function(evt) {
+
+    //  if(!this._isResizingHeader && )
     },
 
 

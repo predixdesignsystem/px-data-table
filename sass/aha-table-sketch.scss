@@ -58,6 +58,7 @@ $inuit-enable-btn--disabled: true;
 .th {
   @extend th;
   display: table-cell;
+  resize:horizontal;
 }
 
 // making th--no-borders class specific enough to override other table.table.aha-table, etc. selectors
@@ -115,6 +116,8 @@ th {
 
 .column-head {
   white-space: nowrap;
+  flex:12;
+  padding: 0.3rem;
 }
 
 label {
@@ -138,6 +141,13 @@ label {
 
 .moveable {
   cursor: move;
+}
+
+.dragHandle {
+  cursor: col-resize;
+  width: 2px;
+  background-color: blue;
+  min-height: 100%;
 }
 
 // Trumps
