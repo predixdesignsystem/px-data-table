@@ -243,7 +243,10 @@ Events:
       },
       /**
        * Property to enable resizing of column headers through click and drag on
-       * the right border of the header
+       * the right border of the header.
+       * If there is no space available then resizing won't be possible (i.e all
+       * columns already to their minimum size, typically when the table can't
+       * be displayed entirely)
        * @default false
        */
       enableColumnResize: {

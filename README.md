@@ -201,7 +201,7 @@ Use the enable-column-reorder attribute if you want to allow the user to drag an
 
 *Type:* **Boolean** - (*Optional*) - *Default:* false
 
-Use the enable-column-resize attribute if you want to allow the user to resize the column headers by clicking and dragging the right border of a header.
+Use the enable-column-resize attribute if you want to allow the user to resize the column headers by clicking and dragging the right border of a header. If there is no space available then resizing won't be possible (i.e all columns already to their minimum size, typically when the table can't be displayed entirely).
 
 ```html
 <px-data-table enable-column-resize table-data="{{data}}"></px-data-table>
