@@ -1097,4 +1097,42 @@ function runTests() {
         });
       });
     });
+
+  /*  suite('Column reordering', function(){
+
+        var countHidden = function(headers) {
+          var hiddenNumber = 0;
+          headers.forEach(function(header, index) {
+            if(header.style.display === 'none') {
+              hiddenNumber++;
+            }
+          });
+          return hiddenNumber;
+        };
+
+        test('Moving a column', function(done){
+          var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table');
+
+          assert.equal(table5Fixture.nodeName, "PX-DATA-TABLE");
+          var headers = Polymer.dom(tb.root).querySelectorAll(".th");
+          var hiddenNumber = 0;
+
+          //make sure no headers are hidden
+          assert.equal(countHidden(headers), 0);
+          //and we have as many headers as column defs
+          assert.equal(tb.meta.length, headers.length);
+
+          //should already be shown so no diff
+          tb.showColumn('email');
+          flush(function(){
+
+            headers = Polymer.dom(tb.root).querySelectorAll(".th");
+
+            //make sure no headers are hidden
+            assert.equal(countHidden(headers), 0);
+            assert.equal(tb.meta.length, headers.length);
+            done();
+          });
+        });
+      });*/
 }
