@@ -191,11 +191,22 @@ Use the show-column-chooser attribute if you want to display a drodpown above th
 
 *Type:* **Boolean** - (*Optional*) - *Default:* false
 
-Use the enable-column-reorder attribute if wou want to allow the user to drag and drop the column headers to reorder the column headers.
+Use the enable-column-reorder attribute if you want to allow the user to drag and drop the column headers to reorder the column headers.
 
 ```html
 <px-data-table enable-column-reorder table-data="{{data}}"></px-data-table>
 ```
+
+##### enableColumnResize
+
+*Type:* **Boolean** - (*Optional*) - *Default:* false
+
+Use the enable-column-resize attribute if you want to allow the user to resize the column headers by clicking and dragging the right border of a header.
+
+```html
+<px-data-table enable-column-resize table-data="{{data}}"></px-data-table>
+```
+
 
 ### Events
 

@@ -1091,11 +1091,7 @@ th, .th {
   text-align: left; }
 
 .column-head {
-  white-space: nowrap;
-  -webkit-flex: 12;
-      -ms-flex: 12;
-          flex: 12;
-  padding: 0.3rem; }
+  white-space: nowrap; }
 
 label {
   margin: 0; }
@@ -1119,11 +1115,36 @@ label {
 .moveable {
   cursor: move; }
 
-.dragHandle {
+.header--drag-handle {
   cursor: col-resize;
-  width: 2px;
-  background-color: blue;
+  width: 15px;
   min-height: 100%; }
+
+.header--container {
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between; }
+
+.aha-_selected-th {
+  width: 100px; }
+
+.aha-insertion-indicator-th.aha-insertion-indicator-th.aha-insertion-indicator-th {
+  border: none;
+  max-width: 4px;
+  min-width: 4px;
+  padding: 0; }
+
+.table .aha-insertion-indicator-td {
+  border: none;
+  max-width: 4px;
+  min-width: 4px;
+  padding: 0; }
+
+.insertion-indicator.insertion-indicator.insertion-indicator {
+  border: none;
+  max-width: 4px;
+  min-width: 4px;
+  padding: 0; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/

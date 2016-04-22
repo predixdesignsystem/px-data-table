@@ -84,7 +84,7 @@ Events:
                  hide-pagination-control="{{hidePaginationControl}}"
                  show-column-chooser="{{showColumnChooser}}"
                  enable-column-reorder="{{enableColumnReorder}}"
-                 enable-column-resizing="{{enableColumnResizing}}"
+                 enable-column-resize="{{enableColumnResize}}"
                  id="dataTable">
                  <content></content>
       </aha-table>
@@ -242,11 +242,11 @@ Events:
         value:false
       },
       /**
-       * Property to enable resizing of column headers through click and drag
-       *
+       * Property to enable resizing of column headers through click and drag on
+       * the right border of the header
        * @default false
        */
-      enableColumnResizing: {
+      enableColumnResize: {
         type: Boolean,
         value: false
       }

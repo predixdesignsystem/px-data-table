@@ -116,8 +116,6 @@ th {
 
 .column-head {
   white-space: nowrap;
-  flex:12;
-  padding: 0.3rem;
 }
 
 label {
@@ -143,11 +141,39 @@ label {
   cursor: move;
 }
 
-.dragHandle {
+.header--drag-handle {
   cursor: col-resize;
-  width: 2px;
-  background-color: blue;
+  width: 15px;
   min-height: 100%;
+}
+
+.header--container {
+  justify-content: space-between;
+}
+
+.aha-_selected-th {
+  width:100px;
+}
+
+.aha-insertion-indicator-th.aha-insertion-indicator-th.aha-insertion-indicator-th{
+  border: none;
+  max-width:4px;
+  min-width:4px;
+  padding: 0;
+}
+
+.table .aha-insertion-indicator-td {
+  border: none;
+  max-width:4px;
+  min-width:4px;
+  padding: 0;
+}
+
+.insertion-indicator.insertion-indicator.insertion-indicator {
+  border:none;
+  max-width:4px;
+  min-width:4px;
+  padding: 0;
 }
 
 // Trumps
@@ -160,5 +186,6 @@ $inuit-enable-margins--large: true;
 $inuit-enable-paddings--none: true;
 $inuit-enable-paddings--small: true;
 $inuit-enable-paddings--large: true;
+$inuit-enable-paddings--none: true;
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
 @import "px-widths-responsive-design/_trumps.widths-responsive.scss";
