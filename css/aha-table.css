@@ -1041,7 +1041,8 @@ button.btn {
   width: 32px; }
 
 .th {
-  display: table-cell; }
+  display: table-cell;
+  resize: horizontal; }
 
 .th--no-borders.th--no-borders.th--no-borders {
   border-top: 0;
@@ -1113,6 +1114,37 @@ label {
 
 .moveable {
   cursor: move; }
+
+.header--drag-handle {
+  cursor: col-resize;
+  width: 15px;
+  min-height: 100%; }
+
+.header--container {
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between; }
+
+.aha-_selected-th {
+  width: 100px; }
+
+.aha-insertion-indicator-th.aha-insertion-indicator-th.aha-insertion-indicator-th {
+  border: none;
+  max-width: 4px;
+  min-width: 4px;
+  padding: 0; }
+
+.table .aha-insertion-indicator-td {
+  border: none;
+  max-width: 4px;
+  min-width: 4px;
+  padding: 0; }
+
+.insertion-indicator.insertion-indicator.insertion-indicator {
+  border: none;
+  max-width: 4px;
+  min-width: 4px;
+  padding: 0; }
 
 /*------------------------------------*    #CLEARFIX
 \*------------------------------------*/
@@ -1822,24 +1854,10 @@ label {
     color: white; }
 
 .table .aha-insertion-indicator-td {
-  background-color: #3e87e8;
-  border: none;
-  max-width: 4px;
-  min-width: 4px;
-  padding: 0; }
-
-.aha-insertion-indicator-th.aha-insertion-indicator-th.aha-insertion-indicator-th {
-  border: none;
-  max-width: 4px;
-  min-width: 4px;
-  padding: 0; }
+  background-color: #3e87e8; }
 
 .insertion-indicator.insertion-indicator.insertion-indicator {
-  background-color: #3e87e8;
-  border: none;
-  max-width: 4px;
-  min-width: 4px;
-  padding: 0; }
+  background-color: #3e87e8; }
 
 .btn--pagination:focus {
   outline: 0; }

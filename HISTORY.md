@@ -1,3 +1,7 @@
+v1.7.0
+=================
+* Added enable-column-resize attribute on px-data-table, allowing the user to resize columns by clicking and dragging the right border of a header
+
 v1.6.2
 =================
 * fix bug when dropping first user defined column on 'selected' column
