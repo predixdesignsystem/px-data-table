@@ -34,11 +34,17 @@
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <template is="dom-if" if="{{_isFalse(column.hide)}}">
-              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_allowColumnDrop" on-drop="_dropColumnHeader">
-                <span
-                  class$="{{_getTextSortingClass(column, sortedColumn)}}"
-                  on-click="_sort">{{column.label}}<iron-icon icon="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
-                </span>
+              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader">
+                <div class="flex header--container">
+                  <span
+                    class$="{{_getTextSortingClass(column, sortedColumn)}}"
+                    on-tap="_sort">{{column.label}}<iron-icon icon="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
+                  </span>
+                  <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
+                    <div class="header--drag-handle" on-down="_headerResizeMouseDown" on-track="_headerTrack">
+                    </div>
+                  </template>
+                </div>
               </span>
             </template>
           </template>
@@ -231,6 +237,15 @@
         type: Boolean,
         value:false
       },
+      /**
+       * Property to enable resizing of column headers through click and drag
+       *
+       * @default false
+       */
+      enableColumnResize: {
+        type: Boolean,
+        value: false
+      },
       _internalData: {
         type: Array,
         value: function(){return [];}
@@ -254,6 +269,17 @@
       _requestInsertionIndicatorRemoval: {
         type: Boolean,
         value: false
+      },
+      /**
+       * When currently resizing a header
+       */
+      _headerInitialSize: {
+        type: Number,
+        value: 0
+      },
+      _columnDragged: {
+        type: String,
+        value: ''
       },
       //scroll body html element
       scrollBody: {
@@ -959,150 +985,178 @@
 
     /******** Drag and drop ********/
 
-    _dropColumnHeader: function(evt) {
-
-      var dataType = evt.dataTransfer.getData('px-data-table-column');
-      if(this.enableColumnReorder && dataType === 'px-data-table-column') {
-
-        var srcName = evt.dataTransfer.getData('sourceColumn'),
-            toMove,
-            target = evt.target,
-            targetName,
-            targetColumn,
-            columns,
-            parent;
-
-        //try searching for the actual header
-        if(!target.classList.contains('th')) {
-          target = Polymer.dom(target).parentNode;
-        }
-
-        targetName = target.classList.toString().match(/.*aha-(.*)-th/)[1];
-
-        //Allow drop if target != moving column
-        if(targetName !== srcName) {
-          columns = this.getEffectiveChildren();
-
-          columns.forEach(function(column) {
-            //how not to base that on text?
-            if(column.name === srcName) {
-              toMove = column;
-            }
-            if(column.name == targetName) {
-              targetColumn = column;
-            }
-          });
-
-          //allow drop on selected only if this is not the first (not including
-          //selected) column. Otherwise no need to do anything
-          if(targetName !== '_selected' || toMove !== columns[0]) {
-            parent = Polymer.dom(toMove).parentNode;
-            //remove and insert in the right place
-            Polymer.dom(parent).removeChild(toMove);
-            Polymer.dom.flush();
-
-            //if the target is the 'selected' column just add column at the beginning
-            //because 'selected' is not in the light dom
-            if(targetName === '_selected') {
-              Polymer.dom(parent).insertBefore(toMove, columns[0]);
-            }
-            else {
-              Polymer.dom(parent).insertBefore(toMove, targetColumn.nextSibling);
-            }
-          }
-        }
-
-        this._removeInsertionDisplay(evt);
+    _dragDropColumnHeader: function(evt) {
+      if(this.enableColumnReorder) {
+        this._dropColumnHeader(this._findHeaderFromChild(evt.target));
       }
     },
 
-    _allowColumnDrop: function(evt) {
+    _touchDropColumnHeader: function(evt) {
+      if(this.enableColumnReorder) {
+        var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
+        target = this._findHeaderFromChild(target);
 
-      //we're not allowed to check the data store at this point, we can work around it
-      //by checking if the data stores contains some specific keys but it's an array
-      //in chrome and a DOMStringList in firefox.... keep it if we really need it later
-      /*&&
-      evt.dataTransfer.types.indexOf('px-data-table-column') != -1*/
+        this._dropColumnHeader(target);
+      }
+    },
 
-      //if we allow column reordering and we're not actually dragging over the
-      //insertion indicator.
-      if(this.enableColumnReorder &&
-        !evt.target.classList.contains('aha-insertion-indicator-th')) {
+    _dropColumnHeader: function(target) {
 
+      //find the target we're actually interested in: the header
+      var srcName = this._columnDragged,
+          toMove,
+          regex,
+          targetName,
+          targetColumn,
+          columns,
+          parent;
 
-        //allow
-        evt.preventDefault();
+      regex = target.classList.toString().match(/.*aha-(.*)-th/);
+      targetName = (regex && regex.length > 1) ? regex[1] : null;
 
-        //now manage the insertion indicator
-        if(this._requestInsertionIndicatorRemoval && this._displayingInsertion) {
+      //Allow drop if target != moving column
+      if(targetName != null && targetName !== srcName) {
+        columns = this.getEffectiveChildren();
 
-          //the indicator is already shown, and has been requested to be dismissed.
-          //instead move it to the position we want IF it is different from
-          //the current one. Othewr wise just leave it and cancel the dismissal.
-          this.set('_requestInsertionIndicatorRemoval', false);
-          var targetIdx,
-              indicatorIdx,
-              regex = evt.target.classList.toString().match(/.*aha-(.*)-th/),
-              targetName = (regex && regex.length > 1) ? regex[1] : null;
+        columns.forEach(function(column) {
+          //how not to base that on text?
+          if(column.name === srcName) {
+            toMove = column;
+          }
+          if(column.name == targetName) {
+            targetColumn = column;
+          }
+        });
 
-          //don't bother doing more if the target doesn't seem genuine
-          if(targetName != null) {
-            this.meta.forEach(function(column, index) {
+        //allow drop on selected only if this is not the first (not including
+        //selected) column. Otherwise no need to do anything
+        if(toMove && targetName !== '_selected' || toMove !== columns[0]) {
+          parent = Polymer.dom(toMove).parentNode;
+          //remove and insert in the right place
+          Polymer.dom(parent).removeChild(toMove);
+          Polymer.dom.flush();
 
-              if(column.name === targetName) {
-                targetIdx = index;
-              }
-              else if(column.name === 'insertion-indicator') {
-                indicatorIdx = index;
-              }
-            });
-
-            //check against undefined cause the value can genuinely be 0
-            if(targetIdx !== undefined && (targetIdx + 1) !== indicatorIdx) {
-
-              //remove
-              var indicator = this.splice('meta', indicatorIdx, 1)[0];
-
-              //if the target idx was bigger than the indicator reduce it by 1 to
-              //account for the removal of the indicator we just did
-              if(targetIdx + 1 > indicatorIdx) {
-                targetIdx--;
-              }
-
-              //reinsert at the right place
-              this.splice('meta', targetIdx + 1, 0, indicator);
-            }
+          //if the target is the 'selected' column just add column at the beginning
+          //because 'selected' is not in the light dom
+          if(targetName === '_selected') {
+            Polymer.dom(parent).insertBefore(toMove, columns[0]);
+          }
+          else {
+            Polymer.dom(parent).insertBefore(toMove, targetColumn.nextSibling);
           }
         }
-        else if(!this._displayingInsertion) {
+      }
 
-          var regex = evt.target.classList.toString().match(/.*aha-(.*)-th/),
-              targetName = (regex && regex.length > 1) ? regex[1] : null;
+      this._removeInsertionDisplay();
+    },
 
-          if(targetName !== null) {
-            //the indicator is not displayed, just insert it at the right place
-            var targetIdx = this.meta.findIndex(function(column) {
+    _dragOverHeader: function(evt) {
+      if(this.enableColumnReorder) {
 
-              return column.name === targetName;
-            });
+        var target = this._findHeaderFromChild(evt.target);
 
-            //create insertion display column data
-            var insertCol = this._generateMetaForColumn('insertion-indicator', 'string', false, '');
-            insertCol.filterable = false;
-            insertCol.sortable = false;
+        //if we're not actually dragging over the
+        //insertion indicator.
+        if(!target.classList.contains('aha-insertion-indicator-th')) {
 
-            this.splice('meta', targetIdx + 1, 0,  insertCol);
-            this.set('_displayingInsertion', true);
+          //allow
+          evt.preventDefault();
+          this._allowColumnDrop(target, this._requestInsertionIndicatorRemoval && this._displayingInsertion);
+        }
+      }
+    },
+
+    _touchMoveHeader: function(evt) {
+      if(this.enableColumnReorder) {
+
+        var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
+        target = this._findHeaderFromChild(target);
+
+        //if we're not actually dragging over the
+        //insertion indicator.
+        if(!target.classList.contains('aha-insertion-indicator-th')) {
+
+          this._allowColumnDrop(target, target !== this._findHeaderFromChild(evt.target));
+        }
+      }
+    },
+
+
+    _allowColumnDrop: function(target, moveIndicator) {
+
+      //manage the insertion indicator
+      if(moveIndicator) {
+
+        //the indicator is already shown, and has been requested to be dismissed.
+        //instead move it to the position we want IF it is different from
+        //the current one. Othewr wise just leave it and cancel the dismissal.
+        this.set('_requestInsertionIndicatorRemoval', false);
+        var targetIdx,
+            indicatorIdx,
+            regex = target.classList.toString().match(/.*aha-(.*)-th/),
+            targetName = (regex && regex.length > 1) ? regex[1] : null;
+
+        //don't bother doing more if the target doesn't seem genuine
+        if(targetName != null) {
+          this.meta.forEach(function(column, index) {
+
+            if(column.name === targetName) {
+              targetIdx = index;
+            }
+            else if(column.name === 'insertion-indicator') {
+              indicatorIdx = index;
+            }
+          });
+
+          //check against undefined cause the value can genuinely be 0
+          if(targetIdx !== undefined && (targetIdx + 1) !== indicatorIdx) {
+
+            //remove
+            var indicator = this.splice('meta', indicatorIdx, 1)[0];
+
+            //if the target idx was bigger than the indicator reduce it by 1 to
+            //account for the removal of the indicator we just did
+            if(targetIdx + 1 > indicatorIdx) {
+              targetIdx--;
+            }
+
+            //reinsert at the right place
+            this.splice('meta', targetIdx + 1, 0, indicator);
           }
+        }
+      }
+      else if(!this._displayingInsertion) {
+
+        //Just add the indicator
+        var regex = target.classList.toString().match(/.*aha-(.*)-th/),
+            targetName = (regex && regex.length > 1) ? regex[1] : null;
+
+        if(targetName !== null) {
+          //the indicator is not displayed, just insert it at the right place
+          var targetIdx;
+          this.meta.forEach(function(column, index) {
+
+            if(column.name === targetName) {
+              targetIdx = index;
+            }
+          });
+
+          //create insertion display column data
+          var insertCol = this._generateMetaForColumn('insertion-indicator', 'string', false, '');
+          insertCol.filterable = false;
+          insertCol.sortable = false;
+
+          this.splice('meta', targetIdx + 1, 0,  insertCol);
+          this.set('_displayingInsertion', true);
         }
       }
     },
 
     _dragLeave: function(evt) {
-      this._removeInsertionDisplay(evt);
+      this._removeInsertionDisplay();
     },
 
-    _removeInsertionDisplay: function(evt) {
+    _removeInsertionDisplay: function() {
 
       var _this = this;
       this.set('_requestInsertionIndicatorRemoval', true);
@@ -1116,29 +1170,39 @@
           _this._requestInsertionIndicatorRemoval) {
 
           //actually remove column showing the insertion point
-          var insertionColIdx = _this.meta.findIndex(function(column) {
-            return column.name === 'insertion-indicator';
+          var insertionColIdx;
+          _this.meta.forEach(function(column, index) {
+
+            if(column.name === 'insertion-indicator') {
+              insertionColIdx = index;
+            }
           });
 
           _this.splice('meta', insertionColIdx, 1);
           _this.set('_displayingInsertion', false);
+          this._columnDragged = '';
         }
       }, 100);
     },
 
     _dragStartColumnHeader: function(evt) {
-      if(this.enableColumnReorder && evt.target.classList.contains('moveable')) {
+
+      var target = this._findHeaderFromChild(evt.target);
+      if(this.enableColumnReorder && target.classList.contains('moveable')) {
 
         //parse column name
-        var name = evt.target.classList.toString().match(/.*aha-(.*)-th/)[1];
-        evt.dataTransfer.setData('sourceColumn', name);
-        evt.dataTransfer.setData('px-data-table-column', 'px-data-table-column');
+        var name = target.classList.toString().match(/.*aha-(.*)-th/)[1];
+        this._columnDragged = name;
+      }
 
-        //we need to uniquely identify this table so that we can't drag that
-        //stuff on another table
+      //mobile
+      if(evt.changedTouches){
 
-      } else {
+         //prevent default so it won't scroll the table while dragging
         evt.preventDefault();
+
+        //show indicator right now to make it more obvious something is happening
+        this._allowColumnDrop(target, false);
       }
     },
 
@@ -1207,6 +1271,36 @@
       }, this);
     },
 
+    /******** Resize Header **********/
+
+    /**
+     * Called when tracking a header resize
+     */
+    _headerTrack: function(evt) {
+
+      //find header
+      var target = this._findHeaderFromChild(evt.target);
+
+      if(target !== this) {
+        target.style.width = (this._headerInitialSize + evt.detail.dx) + 'px';
+      }
+    },
+
+    /**
+     * Called when initiating a header resize
+     */
+    _headerResizeMouseDown : function(evt) {
+      var target = this._findHeaderFromChild(evt.target),
+          currentSize;
+
+      if(target !== this) {
+        currentSize = target.getBoundingClientRect();
+
+        this._headerInitialSize = currentSize.width;
+        evt.preventDefault();
+        evt.stopPropagation();
+      }
+    },
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
 
     _getRowClass: function(row, isSelected) {
@@ -1301,7 +1395,7 @@
       return source === false || source === "false";
     },
     _getHeaderClass: function(item) {
-      var classList = ['th ', 'aha-' + item.name + '-th'];
+      var classList = ['th ', 'aha-' + item.name + '-th', 'u-p0'];
       if(item.sortable) {
         classList.push('sortable');
       }
@@ -1338,7 +1432,7 @@
       return classList;
     },
     _getTextSortingClass: function(column, sortingColumn) {
-      var classList = ['column-head'];
+      var classList = ['column-head', 'u-m--'];
       if(column.sortable) {
         classList.push('sorted-text-hover');
       }
@@ -1364,6 +1458,20 @@
       var classList = ['td'];
       classList.push(selected ? 'selected-cell__selected' : '');
       return classList.join(' ');
+    },
+    /**
+     * Searching for a .th parent element
+     */
+    _findHeaderFromChild: function(childElem) {
+      var header = childElem;
+
+      //we want to target the actual header to find the column name
+      while(!header.classList.contains('th') && header !== this ){
+
+        header = Polymer.dom(header).parentNode;
+      }
+
+      return header;
     }
   });
 </script>

@@ -21,7 +21,7 @@
       <h3>Data table demos</h3>
 
       <p>A very simple data table.  Just displays data and has sortable columns.</p>
-      <px-data-table show-column-chooser enable-column-reorder hide-pagination-control table-data="{{minidata}}"></px-data-table>
+      <px-data-table show-column-chooser enable-column-resize enable-column-reorder hide-pagination-control table-data="{{minidata}}"></px-data-table>
 
       <hr>
 
@@ -83,7 +83,7 @@
         </ul>
       </div>
 
-      <px-data-table id="mytable" hide-pagination-control selected-rows="{{mySelectedRows}}" enable-column-reorder show-column-chooser filterable selectable table-data="{{minidata}}">
+      <px-data-table id="mytable" hide-pagination-control selected-rows="{{mySelectedRows}}" enable-column-resizing enable-column-reorder show-column-chooser filterable selectable table-data="{{minidata}}">
         <px-data-table-column
           name="first"
           filterable
