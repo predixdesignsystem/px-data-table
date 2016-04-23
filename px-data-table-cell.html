@@ -142,6 +142,16 @@
           value: false,
           observer: "_cellSelected"
         },
+        cellHighlighted:{
+          type: Object,
+          value: false,
+          observer: "_cellHighlighted"
+        },
+        rowHighlighted:{
+          type: Object,
+          value: false,
+          observer: "_rowHighlighted"
+        },
         /**
         * the maximum character width the dropdown will be using to determine
         * when to show tooltips
@@ -346,6 +356,12 @@
       },
       _cellSelected: function(selected){
         this.toggleClass('selected', selected);
+      },
+      _cellHighlighted: function(highlightObject){
+        this.toggleClass(highlightObject.highlightClass, highlightObject.value);
+      },
+      _rowHighlighted: function(highlightObject){
+        this.toggleClass(highlightObject.highlightClass, highlightObject.value);
       }
     });
   </script>
