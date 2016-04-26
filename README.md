@@ -440,4 +440,4 @@ $ grunt devmode
 
 ## Known Issues
 
-Please use [Github Issues](https://github.com/PredixDev/COMPONENT/issues) to submit any bugs you might find.
+Please use [Github Issues](https://github.com/PredixDev/px-data-table/issues) to submit any bugs you might find.
