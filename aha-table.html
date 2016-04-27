@@ -1333,10 +1333,8 @@
 
         if (highlightEl.highlightType === 'row' && doHighlight) {
           this._setInternalDataAt(row, '_highlight', highlightObj);
+          highlightObj = {value: false};
         }
-
-
-
       }.bind(this));
       return highlightObj;
     },

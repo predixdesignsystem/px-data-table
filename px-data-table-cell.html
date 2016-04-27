@@ -358,10 +358,22 @@
         this.toggleClass('selected', selected);
       },
       _cellHighlighted: function(highlightObject){
+        // console.log(highlightObject.value + '   ' + highlightObject.highlightClass + '  ' + this.cellDisplayValue)
+        // this._clearHighlight();
         this.toggleClass(highlightObject.highlightClass, highlightObject.value);
       },
       _rowHighlighted: function(highlightObject){
-        this.toggleClass(highlightObject.highlightClass, highlightObject.value);
+        console.log(this.cellHighlighted.value);
+        // console.log(highlightObject.value + '   ' + highlightObject.highlightClass + '  ' + this.cellDisplayValue)
+        if (!this.cellHighlighted.value){
+          this._clearHighlight();
+          this.toggleClass(highlightObject.highlightClass, highlightObject.value);
+        }
+      },
+      _clearHighlight(){
+        this.toggleClass('cell--value__highlight--color__high', false);
+        this.toggleClass('cell--value__highlight--color__medium', false);
+        this.toggleClass('cell--value__highlight--color__low', false);
       }
     });
   </script>
