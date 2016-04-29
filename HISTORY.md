@@ -1,3 +1,7 @@
+v1.8.0
+=================
+* Upgrade to Polymer 1.4.0
+
 v1.7.1
 =================
 * Added auto github pages rebuilding on tag push

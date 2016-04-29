@@ -1,6 +1,6 @@
 {
   "name": "px-data-table",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "main": [
     "px-data-table.html"
   ],
@@ -14,13 +14,13 @@
     "test"
   ],
   "dependencies": {
-    "polymer": "~v1.2.3",
-    "px-tooltip": "~v0.4.0",
-    "px-theme": "~0.4.0",
+    "polymer": "~v1.4.0",
+    "px-tooltip": "~v0.6.0",
+    "px-theme": "~0.7.0",
     "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#~1.1.0",
     "polymer-font-awesome": "polymer-font-awesome#~v0.0.5",
-    "px-validation": "~0.0.3",
-    "px-dropdown": "~0.8.0"
+    "px-validation": "~0.1.0",
+    "px-dropdown": "~0.9.0"
   },
   "devDependencies": {
     "px-tables-design": "~0.3.9",
@@ -28,7 +28,7 @@
     "px-starter-kit-design": "~0.4.6",
     "iron-ajax": "PolymerElements/iron-ajax#~1.1.1",
     "px-layout-design": "~0.3.8",
-    "px-card": "~0.2.0",
+    "px-card": "~0.3.0",
     "px-spacing-design": "~0.3.4",
     "px-buttons-design": "~0.4.13",
     "px-forms-design": "~0.3.13",
