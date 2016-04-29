@@ -1,3 +1,11 @@
+v1.8.0
+=================
+* Upgrade to Polymer 1.4.0
+
+v1.7.1
+=================
+* Added auto github pages rebuilding on tag push
+
 v1.7.0
 =================
 * Added enable-column-resize attribute on px-data-table, allowing the user to resize columns by clicking and dragging the right border of a header
