@@ -3,12 +3,11 @@
 # Exit with nonzero exit code if anything fails
 set -e
 
-#find our repo name from the directory name
-REPO_NAME=$(git rev-parse --show-toplevel)
 
 #set our source and traget branches
 SOURCE_BRANCH="master"
 TARGET_BRANCH="gh-pages"
+REPO=`git config remote.origin.url`
 
 #pull requests and commits to other branches shouldn't try to deploy
 if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]; then
@@ -20,13 +19,17 @@ fi
 mkdir tmp_bower
 
 #clone this repo, and go into that folder.
-git clone https://github.com/predixdev/${REPO_NAME}.git ghp_tmp
+git clone ${REPO} ghp_tmp
 cd ghp_tmp
+
+#find out our repo name from the bower file
+REPO_NAME=$(grep "name" bower.json | sed 's/"name": "//' | sed 's/",//')
+echo "repo name is ${REPO_NAME}"
 
 #set up our variables and configs
 git config user.name "Travis CI"
-git config user.email "travisCI@ge.com"
-REPO=`git config remote.origin.url`
+git config user.email "PredixtravisCI@ge.com"
+
 SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
 
 #copy the bower.json file out of the directory to a temp one
@@ -42,7 +45,7 @@ bower install ${REPO_NAME} --force
 #do the git stuff
 git add .
 rev=$(git rev-parse --short HEAD)
-git commit -m "rebuild pages at ${rev}"
+git commit -m "rebuild github pages at ${rev}"
 
 #and deploy using the encrypted/unencrypted key.
 ENCRYPTED_KEY_VAR="encrypted_${ENCRYPTION_LABEL}_key"

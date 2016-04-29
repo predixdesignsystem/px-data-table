@@ -21,9 +21,12 @@ before_script:
   - export PATH=$PWD/node_modules/.bin:$PATH
   - bower install
 
-after_sucess:
-  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && bash deploy_ghp.sh
-
+deploy:
+  provider: script
+  script: scripts/deploy_ghp.sh
+  on:
+      branch: master
+      
 script:
   - xvfb-run wct --skip-plugin sauce
   - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct --plugin sauce --skip-plugin local; fi
