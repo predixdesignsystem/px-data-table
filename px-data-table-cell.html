@@ -144,13 +144,11 @@
         },
         cellHighlighted:{
           type: Object,
-          value: false,
-          observer: "_cellHighlighted"
+          value: {value: false}
         },
         rowHighlighted:{
           type: Object,
-          value: false,
-          observer: "_rowHighlighted"
+          value: {value: false}
         },
         /**
         * the maximum character width the dropdown will be using to determine
@@ -186,6 +184,9 @@
       listeners: {
         'tap': 'editCell',
       },
+      observers: [
+        '_updateHighlight(cellHighlighted.value, rowHighlighted.value)'
+      ],
       _cellDisplayValueChanged: function(newValue){
         if(this.$$('.cell--value') !== undefined && this.$$('.cell--value') !== null){
           if (newValue !== undefined && newValue !== '') {
@@ -357,17 +358,13 @@
       _cellSelected: function(selected){
         this.toggleClass('selected', selected);
       },
-      _cellHighlighted: function(highlightObject){
-        // console.log(highlightObject.value + '   ' + highlightObject.highlightClass + '  ' + this.cellDisplayValue)
-        // this._clearHighlight();
-        this.toggleClass(highlightObject.highlightClass, highlightObject.value);
-      },
-      _rowHighlighted: function(highlightObject){
-        console.log(this.cellHighlighted.value);
-        // console.log(highlightObject.value + '   ' + highlightObject.highlightClass + '  ' + this.cellDisplayValue)
-        if (!this.cellHighlighted.value){
-          this._clearHighlight();
-          this.toggleClass(highlightObject.highlightClass, highlightObject.value);
+      _updateHighlight(cellHighlight, rowHighlight){
+        this._clearHighlight();
+        if(rowHighlight) {
+          this.toggleClass(this.rowHighlighted.highlightClass, rowHighlight);
+        }
+        if(cellHighlight){
+          this.toggleClass(this.cellHighlighted.highlightClass, cellHighlight);
         }
       },
       _clearHighlight(){

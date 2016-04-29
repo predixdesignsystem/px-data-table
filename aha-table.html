@@ -91,9 +91,9 @@
                 <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                   <px-data-table-cell
                                       on-save="_save"
-                                      row-highlighted="{{internalRow._highlight}}"
-                                      cell-highlighted="{{_getHighlightValue(internalRow, column, column.highlightdefined)}}"
-                                      cell-selected="{{internalRow._selected}}"
+                                      row-highlighted="[[internalRow._highlight]]"
+                                      cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
+                                      cell-selected="[[internalRow._selected]]"
                                       on-validate="_handleValidateEvent"
                                       cell-type="{{column.type}}"
                                       dropdown-items="{{column.dropdownItems}}"
