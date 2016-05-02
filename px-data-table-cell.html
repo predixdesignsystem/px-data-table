@@ -257,9 +257,7 @@
         var datum = this.cellValue,
             classList = [];
 
-        classList = (this.cellType ==='dropdown') ?
-          ['flex', 'ddviewing'] :
-          ['flex', 'viewing'];
+        classList = (this.cellType ==='dropdown') ? ['flex', 'ddviewing'] : ['flex', 'viewing'];
 
         if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
           classList.push('empty');
