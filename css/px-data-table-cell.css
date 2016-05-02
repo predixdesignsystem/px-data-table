@@ -1803,13 +1803,17 @@ textarea {
     background-color: transparent;
     box-shadow: none; }
 
-:host(.cell--value__highlight--selected) {
-  border: 2px double #0a9ec1; }
+:host(.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected) {
+  border: 1px double #0a9ec1; }
 
-:host(.cell--value__highlight--color__high.cell--value__highlight--color__high.cell--value__highlight--color__high) {
+:host(.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row) {
+  border-top: 1px double #0a9ec1;
+  border-bottom: 1px double #0a9ec1; }
+
+:host(.cell--value__highlight--color__high) {
   background-color: var(--cell--value__highlight--color__high, rgba(229, 56, 56, 0.25)); }
 
-:host(.cell--value__highlight--color__medium.cell--value__highlight--color__medium) {
+:host(.cell--value__highlight--color__medium) {
   background-color: var(--cell--value__highlight--color__medium, rgba(232, 167, 54, 0.25)); }
 
 :host(.cell--value__highlight--color__low) {
@@ -1817,7 +1821,9 @@ textarea {
 
 :host(.selected) {
   background-color: #0a9ec1;
-  color: white; }
+  color: white;
+  border-top: 1px double #0a9ec1 !important;
+  border-bottom: 1px double #0a9ec1 !important; }
 
 .cell--value--icon__validation-failed {
   color: #e53838; }

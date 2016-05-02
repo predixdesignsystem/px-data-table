@@ -39,15 +39,20 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   }
 }
 
-:host(.cell--value__highlight--selected){
-  border: 2px double $select-blue-default;
+:host(.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected){
+  border: 1px double $select-blue-default;
 }
 
-:host(.cell--value__highlight--color__high.cell--value__highlight--color__high.cell--value__highlight--color__high){
+:host(.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row){
+  border-top: 1px double $select-blue-default;
+  border-bottom: 1px double $select-blue-default;
+}
+
+:host(.cell--value__highlight--color__high){
   background-color: var(--cell--value__highlight--color__high, rgba($alert-red, 0.25));
 }
 
-:host(.cell--value__highlight--color__medium.cell--value__highlight--color__medium){
+:host(.cell--value__highlight--color__medium){
   background-color: var(--cell--value__highlight--color__medium, rgba($alert-yellow, 0.25));
 }
 
@@ -58,6 +63,9 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 :host(.selected) {
   background-color: $select-blue-default;
   color: $white;
+  border-top: 1px double $select-blue-default !important;
+  border-bottom: 1px double $select-blue-default !important;
+
 }
 
 .cell--value--icon__validation-failed {

@@ -356,7 +356,15 @@
         return classList.join(' ');
       },
       _cellSelected: function(selected){
-        this.toggleClass('selected', selected);
+        if (this.rowHighlighted && this.rowHighlighted.value){
+          this.toggleClass('cell--value__highlight--selected__row', selected);
+        }
+        else if (this.cellHighlighted && this.cellHighlighted.value){
+          this.toggleClass('cell--value__highlight--selected', selected);
+        }
+        else{
+          this.toggleClass('selected', selected);
+        }
       },
       _updateHighlight(cellHighlight, rowHighlight){
         this._clearHighlight();
