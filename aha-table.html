@@ -22,7 +22,7 @@
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser">
         <px-dropdown display-value="Show/Hide Column">
-          <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" max-cont-character-width="10" items='{{_columnChooserItems}}'>
+          <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" max-cont-character-width="16" items='{{_columnChooserItems}}'>
           </px-dropdown-content>
         </px-dropdown>
       </div>
@@ -34,7 +34,7 @@
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <template is="dom-if" if="{{_isFalse(column.hide)}}">
-              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader">
+              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
                 <div class="flex header--container">
                   <span
                     class$="{{_getTextSortingClass(column, sortedColumn)}}"
@@ -991,6 +991,7 @@
 
     _touchDropColumnHeader: function(evt) {
       if(this.enableColumnReorder) {
+        this._removeDragFromSourceHeader();
         var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
         target = this._findHeaderFromChild(target);
 
@@ -1012,36 +1013,43 @@
       regex = target.classList.toString().match(/.*aha-(.*)-th/);
       targetName = (regex && regex.length > 1) ? regex[1] : null;
 
-      //Allow drop if target != moving column
-      if(targetName != null && targetName !== srcName) {
-        columns = this.getEffectiveChildren();
+      if(targetName != null) {
 
-        columns.forEach(function(column) {
-          //how not to base that on text?
-          if(column.name === srcName) {
-            toMove = column;
-          }
-          if(column.name == targetName) {
-            targetColumn = column;
-          }
-        });
+        //Allow drop if target != moving column
+        if(targetName !== srcName) {
+          columns = this.getEffectiveChildren();
 
-        //allow drop on selected only if this is not the first (not including
-        //selected) column. Otherwise no need to do anything
-        if(toMove && targetName !== '_selected' || toMove !== columns[0]) {
-          parent = Polymer.dom(toMove).parentNode;
-          //remove and insert in the right place
-          Polymer.dom(parent).removeChild(toMove);
-          Polymer.dom.flush();
+          columns.forEach(function(column) {
+            //how not to base that on text?
+            if(column.name === srcName) {
+              toMove = column;
+            }
+            if(column.name == targetName) {
+              targetColumn = column;
+            }
+          });
 
-          //if the target is the 'selected' column just add column at the beginning
-          //because 'selected' is not in the light dom
-          if(targetName === '_selected') {
-            Polymer.dom(parent).insertBefore(toMove, columns[0]);
+          //allow drop on selected only if this is not the first (not including
+          //selected) column. Otherwise no need to do anything
+          if(toMove && targetName !== '_selected' || toMove !== columns[0]) {
+            parent = Polymer.dom(toMove).parentNode;
+            //remove and insert in the right place
+            Polymer.dom(parent).removeChild(toMove);
+            Polymer.dom.flush();
+
+            //if the target is the 'selected' column just add column at the beginning
+            //because 'selected' is not in the light dom
+            if(targetName === '_selected') {
+              Polymer.dom(parent).insertBefore(toMove, columns[0]);
+            }
+            else {
+              Polymer.dom(parent).insertBefore(toMove, targetColumn.nextSibling);
+            }
           }
-          else {
-            Polymer.dom(parent).insertBefore(toMove, targetColumn.nextSibling);
-          }
+        }
+        else {
+          //we're dropping on ourselves
+          target.classList.remove('dragged');
         }
       }
 
@@ -1154,6 +1162,12 @@
       this._removeInsertionDisplay();
     },
 
+    _dragEndColumnHeader: function(evt) {
+
+      //make sure the collumn we were dragging doesn't show as dragged anymore
+      this._removeDragFromSourceHeader();
+    },
+
     _removeInsertionDisplay: function() {
 
       var _this = this;
@@ -1190,9 +1204,9 @@
 
         //parse column name
         var name = target.classList.toString().match(/.*aha-(.*)-th/)[1];
-
         this._columnDragged = name;
 
+        target.classList.add('dragged');
 
         //mobile
         if(evt.changedTouches){
@@ -1206,6 +1220,14 @@
       }
       else {
         evt.preventDefault();
+      }
+    },
+
+    _removeDragFromSourceHeader: function() {
+
+      var src = Polymer.dom(this.root).querySelector('.dragged');
+      if(src) {
+        src.classList.remove('dragged');
       }
     },
 

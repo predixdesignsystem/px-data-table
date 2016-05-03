@@ -1,3 +1,7 @@
+v1.8.2
+================
+* cosmetic enhancements for column reordering
+
 v1.8.1
 =================
 * make sure insertion indicator when moving columns has a consistent size. Make sure 'select' column can't be dragged

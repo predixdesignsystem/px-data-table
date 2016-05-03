@@ -45,6 +45,10 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   background-color: $primary-blue;
 }
 
+.dragged {
+  color: $primary-blue;
+}
+
 .btn--pagination:focus {
   outline: 0;
 }
