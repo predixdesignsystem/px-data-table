@@ -1,3 +1,7 @@
+v1.8.1
+=================
+* make sure insertion indicator when moving columns has a consistent size. Make sure 'select' column can't be dragged
+
 v1.8.0
 =================
 * Upgrade to Polymer 1.4.0

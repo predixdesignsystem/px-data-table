@@ -1189,17 +1189,22 @@
 
         //parse column name
         var name = target.classList.toString().match(/.*aha-(.*)-th/)[1];
+
         this._columnDragged = name;
+
+
+        //mobile
+        if(evt.changedTouches){
+
+           //prevent default so it won't scroll the table while dragging
+          evt.preventDefault();
+
+          //show indicator right now to make it more obvious something is happening
+          this._allowColumnDrop(target, false);
+        }
       }
-
-      //mobile
-      if(evt.changedTouches){
-
-         //prevent default so it won't scroll the table while dragging
+      else {
         evt.preventDefault();
-
-        //show indicator right now to make it more obvious something is happening
-        this._allowColumnDrop(target, false);
       }
     },
 
