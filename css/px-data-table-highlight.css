@@ -1132,18 +1132,21 @@ label {
   border: none;
   max-width: 4px;
   min-width: 4px;
+  width: 4px;
   padding: 0; }
 
 .table .aha-insertion-indicator-td {
   border: none;
   max-width: 4px;
   min-width: 4px;
+  width: 4px;
   padding: 0; }
 
 .insertion-indicator.insertion-indicator.insertion-indicator {
   border: none;
   max-width: 4px;
   min-width: 4px;
+  width: 4px;
   padding: 0; }
 
 /*------------------------------------*    #CLEARFIX
