@@ -29,7 +29,7 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 :host(.cell__edit) {
-  background-color: $inuit-forms-background;
+  background-color: $inuit-forms-background !important;
   border: $inuit-table-border-width double $primary-blue !important;
   box-shadow: $inuit-forms-border--inner;
   & input, textarea {

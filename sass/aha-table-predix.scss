@@ -71,23 +71,6 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   cursor: pointer;
 }
 
-// .cell--value__highlight--selected{
-//   border-top: 2px double $select-blue-default;
-//   border-bottom: 2px double $select-blue-default;
-// }
-
-// .cell--value__highlight--color__high.cell--value__highlight--color__high.cell--value__highlight--color__high{
-//   background-color: var(--cell--value__highlight--color__high, rgba($alert-red, 0.25));
-// }
-//
-// .cell--value__highlight--color__medium.cell--value__highlight--color__medium{
-//   background-color: var(--cell--value__highlight--color__medium, rgba($alert-yellow, 0.25));
-// }
-//
-// .cell--value__highlight--color__low{
-//   background-color: var(--cell--value__highlight--color__low, rgba($alert-blue, 0.25));
-// }
-
 .cell--value__validation-failed{
   border: $inuit-table-border-width double $alert-red !important;
 }
