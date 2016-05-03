@@ -144,11 +144,15 @@
         },
         cellHighlighted:{
           type: Object,
-          value: {value: false}
+          value: function(){
+            return {value: false};
+          }
         },
         rowHighlighted:{
           type: Object,
-          value: {value: false}
+          value: function(){
+            return {value: false};
+          }
         },
         /**
         * the maximum character width the dropdown will be using to determine
