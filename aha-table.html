@@ -75,13 +75,13 @@
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
-          <div class$="{{_getRowClass(internalRow, internalRow._selected, internalRow._highlight)}}">
+          <div class$="{{_getRowClass(internalRow)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <template is="dom-if" if="{{_isFalse(column.hide)}}">
                 <!-- selected column checkbox -->
                 <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                  <span class$="{{_getSelectedCellClass(internalRow._selected)}}" on-click="_clickRow">
+                  <span class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" on-click="_clickRow">
                     <span class="flex flex--center flex--middle">
                       <input type="checkbox"
                       checked="{{internalRow._selected::change}}"/>
@@ -451,8 +451,9 @@
             return true;
           }
         });
-        var validationObj = column.validate(changeRec.value);
-        this._setInternalCellValidationStateAt(this._internalData[index], column.name, validationObj);
+        console.log('_dataChanged')
+        // var validationObj = column.validate(changeRec.value);
+        // this._setInternalCellValidationStateAt(this._internalData[index], column.name, validationObj);
       }
 
     },
@@ -1303,7 +1304,7 @@
     },
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
 
-    _getRowClass: function(row, isSelected) {
+    _getRowClass: function(row) {
       return ['tr', 'rows',
         this.striped ? 'striped' : ''
       ].join(' ');
@@ -1452,9 +1453,11 @@
     _getPaginationVisibility: function(hidePaginationControl){
       return (hidePaginationControl ? "visuallyhidden" : "");
     },
-    _getSelectedCellClass: function(selected){
+    _getSelectedCellClass: function(selected, rowHighlighted){
       var classList = ['td'];
       classList.push(selected ? 'selected-cell__selected' : '');
+      classList.push(rowHighlighted.value? rowHighlighted.highlightClass : '');
+
       return classList.join(' ');
     },
     /**

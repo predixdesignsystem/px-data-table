@@ -40,12 +40,12 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 :host(.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected){
-  border: 1px double $select-blue-default;
+  border: $inuit-table-border-width double $select-blue-default;
 }
 
 :host(.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row){
-  border-top: 1px double $select-blue-default;
-  border-bottom: 1px double $select-blue-default;
+  border-top: $inuit-table-border-width double $select-blue-default;
+  border-bottom: $inuit-table-border-width double $select-blue-default;
 }
 
 :host(.cell--value__highlight--color__high){
@@ -63,8 +63,8 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 :host(.selected) {
   background-color: $select-blue-default;
   color: $white;
-  border-top: 1px double $select-blue-default !important;
-  border-bottom: 1px double $select-blue-default !important;
+  border-top: $inuit-table-border-width double $select-blue-default !important;
+  border-bottom: $inuit-table-border-width double $select-blue-default !important;
 
 }
 
