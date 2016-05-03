@@ -368,7 +368,7 @@
           this.toggleClass('selected', selected);
         }
       },
-      _updateHighlight(cellHighlight, rowHighlight){
+      _updateHighlight: function(cellHighlight, rowHighlight){
         this._clearHighlight();
         if(rowHighlight) {
           this.toggleClass(this.rowHighlighted.highlightClass, rowHighlight);
@@ -377,7 +377,7 @@
           this.toggleClass(this.cellHighlighted.highlightClass, cellHighlight);
         }
       },
-      _clearHighlight(){
+      _clearHighlight: function(){
         this.toggleClass('cell--value__highlight--color__high', false);
         this.toggleClass('cell--value__highlight--color__medium', false);
         this.toggleClass('cell--value__highlight--color__low', false);
