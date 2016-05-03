@@ -1317,7 +1317,7 @@
 
       highlightElements.forEach(function(highlightEl) {
         doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
-        if (highlightObj.value && doHighlight){
+        if (highlightObj.value && doHighlight) {
           if(highlightObj.highlightValue === 'low'){
             highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
           } else if(highlightObj.highlightValue === 'medium'){
@@ -1332,7 +1332,7 @@
           highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
         }
 
-        if (highlightEl.highlightType === 'row' && doHighlight) {
+        if (highlightEl.highlightType === 'row') {
           this._setInternalDataAt(row, '_highlight', highlightObj);
           highlightObj = {value: false};
         }
