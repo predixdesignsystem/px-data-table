@@ -75,13 +75,13 @@
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
-          <div class$="{{_getRowClass(internalRow, internalRow._selected, internalRow._highlight)}}">
+          <div class$="{{_getRowClass(internalRow)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <template is="dom-if" if="{{_isFalse(column.hide)}}">
                 <!-- selected column checkbox -->
                 <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                  <span class$="{{_getSelectedCellClass(internalRow._selected)}}" on-click="_clickRow">
+                  <span class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" on-click="_clickRow">
                     <span class="flex flex--center flex--middle">
                       <input type="checkbox"
                       checked="{{internalRow._selected::change}}"/>
@@ -89,9 +89,11 @@
                   </span>
                 </template>
                 <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-                  <px-data-table-cell class$="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
+                  <px-data-table-cell
                                       on-save="_save"
-                                      cell-selected="{{internalRow._selected}}"
+                                      row-highlighted="[[internalRow._highlight]]"
+                                      cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
+                                      cell-selected="[[internalRow._selected]]"
                                       on-validate="_handleValidateEvent"
                                       cell-type="{{column.type}}"
                                       dropdown-items="{{column.dropdownItems}}"
@@ -468,8 +470,9 @@
             return true;
           }
         });
-        var validationObj = column.validate(changeRec.value);
-        this._setInternalCellValidationStateAt(this._internalData[index], column.name, validationObj);
+        if(this._cellChanged(this._readContent(this._internalData[index], column), changeRec.value)){
+          this._handleValidateEvent(evt);
+        }
       }
 
     },
@@ -898,10 +901,6 @@
       if(row){
         this.fire('before-save', {"event": evt, "row" : row, "column" : column});
 
-        // only run validation if user has updated cell.
-        if(this._cellChanged(this._readContent(row, column), newValue)){
-          this._handleValidateEvent(evt);
-        }
         this._setInternalDataAt(row, column.name, newValue);
         evt.currentTarget.cellValue = this._getInternalDataAt(row, column.name);
         evt.currentTarget.cellDisplayValue = this._readContent(row, column);
@@ -1344,35 +1343,42 @@
         evt.stopPropagation();
       }
     },
-
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
 
-    _getRowClass: function(row, isSelected) {
+    _getRowClass: function(row) {
       return ['tr', 'rows',
-        this.striped ? 'striped' : '',
-        row._selected ? 'selected' : '',
-        row._highlight.value ? row._highlight.highlightClass : ''
+        this.striped ? 'striped' : ''
       ].join(' ');
     },
-    _getCellClass: function(row, column) {
+    _getHighlightValue: function(row, column, high) {
       var highlightElements = Polymer.dom(column).querySelectorAll('px-data-table-highlight'),
-          classList = 'td ' + 'aha-' + column.name + '-td',
-          doHighlight = false;
+          doHighlight = false,
+          highlightObj = {value:false},
+          highlightClass;
 
       highlightElements.forEach(function(highlightEl) {
         doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
-        // this.customStyle['--cell--value__highlight--color'] = highlightEl.calculateHighlightColor();
-        // this.updateStyles();
-        if (highlightEl.highlightType === 'row' && doHighlight) {
-          this._setInternalDataAt(row, '_highlight',
-            {value: doHighlight,
-             highlightClass: 'cell--value__highlight--color__' + highlightEl.highlightValue});
+        if (highlightObj.value && doHighlight) {
+          if(highlightObj.highlightValue === 'low'){
+            highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+          } else if(highlightObj.highlightValue === 'medium'){
+            if (highlightEl.highlightValue === 'high') {
+              highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+            }
+          } else {
+            highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+          }
+        } else if(!highlightObj.value) {
+          highlightObj.value = doHighlight;
+          highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
         }
-        if (highlightEl.highlightType === 'cell' && doHighlight) {
-          classList += ' cell--value__highlight--color__' + highlightEl.highlightValue;
+
+        if (highlightEl.highlightType === 'row') {
+          this._setInternalDataAt(row, '_highlight', highlightObj);
+          highlightObj = {value: false};
         }
       }.bind(this));
-      return classList;
+      return highlightObj;
     },
     _isSelectAllColumn: function(column) {
       return column.selectAll;
@@ -1488,9 +1494,11 @@
     _getPaginationVisibility: function(hidePaginationControl){
       return (hidePaginationControl ? "visuallyhidden" : "");
     },
-    _getSelectedCellClass: function(selected){
+    _getSelectedCellClass: function(selected, rowHighlighted){
       var classList = ['td'];
       classList.push(selected ? 'selected-cell__selected' : '');
+      classList.push(rowHighlighted.value? rowHighlighted.highlightClass : '');
+
       return classList.join(' ');
     },
     /**

@@ -142,6 +142,18 @@
           value: false,
           observer: "_cellSelected"
         },
+        cellHighlighted:{
+          type: Object,
+          value: function(){
+            return {value: false};
+          }
+        },
+        rowHighlighted:{
+          type: Object,
+          value: function(){
+            return {value: false};
+          }
+        },
         /**
         * the maximum character width the dropdown will be using to determine
         * when to show tooltips
@@ -176,6 +188,9 @@
       listeners: {
         'tap': 'editCell',
       },
+      observers: [
+        '_updateHighlight(cellHighlighted.value, rowHighlighted.value)'
+      ],
       _cellDisplayValueChanged: function(newValue){
         if(this.$$('.cell--value') !== undefined && this.$$('.cell--value') !== null){
           if (newValue !== undefined && newValue !== '') {
@@ -246,9 +261,7 @@
         var datum = this.cellValue,
             classList = [];
 
-        classList = (this.cellType ==='dropdown') ?
-          ['flex', 'ddviewing'] :
-          ['flex', 'viewing'];
+        classList = (this.cellType ==='dropdown') ? ['flex', 'ddviewing'] : ['flex', 'viewing'];
 
         if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
           classList.push('empty');
@@ -345,7 +358,29 @@
         return classList.join(' ');
       },
       _cellSelected: function(selected){
-        this.toggleClass('selected', selected);
+        if (this.rowHighlighted && this.rowHighlighted.value){
+          this.toggleClass('cell--value__highlight--selected__row', selected);
+        }
+        else if (this.cellHighlighted && this.cellHighlighted.value){
+          this.toggleClass('cell--value__highlight--selected', selected);
+        }
+        else{
+          this.toggleClass('selected', selected);
+        }
+      },
+      _updateHighlight: function(cellHighlight, rowHighlight){
+        this._clearHighlight();
+        if(rowHighlight) {
+          this.toggleClass(this.rowHighlighted.highlightClass, rowHighlight);
+        }
+        if(cellHighlight){
+          this.toggleClass(this.cellHighlighted.highlightClass, cellHighlight);
+        }
+      },
+      _clearHighlight: function(){
+        this.toggleClass('cell--value__highlight--color__high', false);
+        this.toggleClass('cell--value__highlight--color__medium', false);
+        this.toggleClass('cell--value__highlight--color__low', false);
       }
     });
   </script>

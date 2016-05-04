@@ -1,3 +1,9 @@
+v1.9.0
+================
+* Many fixes to move highlight and selection styles onto px-data-table-cell.
+* Fixes to make highlight style consistent.
+* Highlight style fixes to make it in combination with selection styles and validation modes.
+
 v1.8.2
 ================
 * cosmetic enhancements for column reordering
