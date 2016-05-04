@@ -18,7 +18,7 @@
       <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
       <iron-ajax id="test" url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
 
-      <!-- <h3>Data table demos</h3>
+      <h3>Data table demos</h3>
 
       <p>A very simple data table.  Just displays data and has sortable columns.</p>
       <px-data-table show-column-chooser enable-column-resize enable-column-reorder hide-pagination-control table-data="{{minidata}}"></px-data-table>
@@ -131,34 +131,6 @@
           max-column-character-width="25"
           ellipsis-clip-position="right">
         </px-data-table-column>
-      </px-data-table> -->
-
-      <px-data-table id="mytable2" hide-pagination-control selected-rows="{{mySelectedRows}}" enable-column-resizing enable-column-reorder show-column-chooser filterable selectable table-data="{{minidata}}">
-        <px-data-table-column
-          name="first"
-          filterable
-          sortable
-          editable
-          filter-function-name="myTableCustomFunctions.filterWholeWord">
-          <px-validation>
-            <px-validator validation-method="isNumber" import="../px-validation/px-example-validator.html"></px-validator>
-          </px-validation>
-          <px-data-table-highlight highlight-type="cell" highlight-value="medium" highlight-method="wordBeginsWithLetterJ" import="px-example-highlight.html"></px-data-table-highlight>
-          <px-data-table-highlight highlight-type="row" highlight-value="high" highlight-method="isLongString" import="px-example-highlight.html"></px-data-table-highlight>
-          <px-data-table-highlight highlight-type="cell" highlight-value="low" highlight-method="wordBeginsWithLetterS" import="px-example-highlight.html"></px-data-table-highlight>
-        </px-data-table-column>
-        <px-data-table-column
-          name="image"
-          max-column-character-width="40"
-          ellipsis-clip-position="left">
-        </px-data-table-column>
-        <px-data-table-column
-          name="date"
-
-          max-column-character-width="25"
-          ellipsis-clip-position="right">
-        </px-data-table-column>
-
       </px-data-table>
 
       <script>
@@ -183,11 +155,6 @@
           }
         };
 
-       var tbl = document.getElementById("mytable2");
-
-      /*  tbl.tableData = [{"first": "one"},{"image": "one"},{"date": "one"}];
-        tbl.tableData = [{"first": "two"},{"image": "one"},{"date": "one"}];*/
-
         function logSelectedRows() {
           var selectedRows = document.getElementById("mytable").selectedRows;
           console.log("Get all selected rows:", selectedRows);
@@ -199,7 +166,6 @@
             var clickedRow = e.detail.row;
             console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
           });
-
         });
 
 

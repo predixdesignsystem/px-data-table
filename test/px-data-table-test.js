@@ -702,8 +702,7 @@ document.addEventListener("WebComponentsReady", function() {
 function runTests() {
   suite('Unit Tests for Data Table', function() {
 
-
-    test('Polymer exists', function(done) {
+    test('Polymer exists', function() {
       assert.isTrue(Polymer !== null);
     });
     test('table1 fixture is created', function() {

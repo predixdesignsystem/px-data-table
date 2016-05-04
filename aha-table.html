@@ -279,7 +279,7 @@
         type: String,
         value: ''
       },
-      _isReady: {
+      _isAttached: {
         type: Boolean,
         value: false
       },
@@ -299,18 +299,16 @@
       '_columnChooserChanged(_columnChooserItems.*)'
     ],
 
-    created: function() {
-      //temporarily observe nodes on this before being ready
-      var boundHandler = this._columnChanged.bind(this);
-      this._observer = Polymer.dom(this).observeNodes(boundHandler);
-    //  this._observer2 = Polymer.dom(Polymer.dom(this).querySelector('content')).observeNodes(boundHandler);
-    },
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
       this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
-      Polymer.dom.flush();
-      this._isReady = true;
+      var boundHandler = this._columnChanged.bind(this);
+      this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
     },
+    attached: function() {
+      this._isAttached = true;
+    },
+
     _columnChanged: function(info){
       var addedColumns = info.addedNodes.filter(function(node) {
         return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
@@ -434,10 +432,11 @@
         return;
       }
 
-      //delay this until we're ready
-      if(!this._isReady) {
+      //wait for us to be attached before processing data changes
+      //debounce it as well
+      if(!this._isAttached) {
         var _this = this;
-        setTimeout(function() {
+        this.debounce(function() {
           _this._dataChanged(changeRec);
         }, 10);
         return;
@@ -494,8 +493,6 @@
           Polymer.dom(this).appendChild(colInfo);
         }
       }
-
-      Polymer.dom.flush();
       return meta;
     },
 
