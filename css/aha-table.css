@@ -1862,6 +1862,9 @@ label {
 .insertion-indicator.insertion-indicator.insertion-indicator {
   background-color: #3e87e8; }
 
+.dragged {
+  color: #3e87e8; }
+
 .btn--pagination:focus {
   outline: 0; }
 
