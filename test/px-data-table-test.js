@@ -985,7 +985,6 @@ function runTests() {
   suite('Column reordering', function(){
 
       test('Moving a column through drag and drop', function(done){
-
         //simulate moving column 'name' to column 'color'
         var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
             dragStart = new Event('dragstart'),
@@ -1000,7 +999,7 @@ function runTests() {
         //make sure 'name' is first
         assert.equal(effChild[0].name, 'name');
         assert.equal(tb.meta[1].name, 'name');
-        assert.equal(headers[1].innerText.trim(), 'Name');
+        assert.equal(headers[1].textContent.trim(), 'Name');
 
         //try moving the column
         startElem.dispatchEvent(dragStart);
@@ -1012,7 +1011,7 @@ function runTests() {
           headers = Polymer.dom(tb.root).querySelectorAll('.th');
           assert.equal(effChild[effChild.length-1].name, 'name');
           assert.equal(tb.meta[tb.meta.length-1].name, 'name');
-          assert.equal(headers[headers.length-1].innerText.trim(), 'Name');
+          assert.equal(headers[headers.length-1].textContent.trim(), 'Name');
 
           done();
         });
