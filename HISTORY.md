@@ -1,3 +1,7 @@
+v1.9.1
+================
+* fix racing condition that could lead to the same column being shown several times if px-data-column was defined in HTML + the data changed several time in succession at init
+
 v1.9.0
 ================
 * Many fixes to move highlight and selection styles onto px-data-table-cell.
