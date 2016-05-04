@@ -702,7 +702,8 @@ document.addEventListener("WebComponentsReady", function() {
 function runTests() {
   suite('Unit Tests for Data Table', function() {
 
-    test('Polymer exists', function() {
+
+    test('Polymer exists', function(done) {
       assert.isTrue(Polymer !== null);
     });
     test('table1 fixture is created', function() {
@@ -725,6 +726,7 @@ function runTests() {
     // Spot checks for correct table structure, cell values and control states
 
     test('There should be 17 columns in the table1 fixture', function() {
+
       // Select a div corresponding to a data row in the table
       var divSelector = '#dataTable > .scroll-body.style-scope.aha-table > div > :nth-child(4)';
       var divRow = document.querySelector(divSelector);

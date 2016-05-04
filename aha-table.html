@@ -279,6 +279,10 @@
         type: String,
         value: ''
       },
+      _isReady: {
+        type: Boolean,
+        value: false
+      },
       //scroll body html element
       scrollBody: {
         type: HTMLElement,
@@ -295,12 +299,17 @@
       '_columnChooserChanged(_columnChooserItems.*)'
     ],
 
+    created: function() {
+      //temporarily observe nodes on this before being ready
+      var boundHandler = this._columnChanged.bind(this);
+      this._observer = Polymer.dom(this).observeNodes(boundHandler);
+    //  this._observer2 = Polymer.dom(Polymer.dom(this).querySelector('content')).observeNodes(boundHandler);
+    },
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
-
-      var boundHandler = this._columnChanged.bind(this);
-      this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
       this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
+      Polymer.dom.flush();
+      this._isReady = true;
     },
     _columnChanged: function(info){
       var addedColumns = info.addedNodes.filter(function(node) {
@@ -420,13 +429,24 @@
     },
 
     _dataChanged: function(changeRec) {
-      if(this.data === undefined || this.data === null) {
+
+      if(this.data === undefined || this.data === null || changeRec.base.length === 0) {
         return;
       }
+
+      //delay this until we're ready
+      if(!this._isReady) {
+        var _this = this;
+        setTimeout(function() {
+          _this._dataChanged(changeRec);
+        }, 10);
+        return;
+      }
+
       // initialize the meta if there is none
       if(!this.meta || this.meta.length === 0) {
-        var meta = this._generateMetaFromData();
-      //  this.set('meta', meta);
+        this._generateMetaFromData();
+      //this.set('meta', meta);
       }
 
       if(typeof this._internalData !== "undefined" && this._internalData.length === 0){
@@ -475,6 +495,7 @@
         }
       }
 
+      Polymer.dom.flush();
       return meta;
     },
 
