@@ -1,3 +1,7 @@
+v1.9.2
+================
+* added auto github pages functionality
+
 v1.9.1
 ================
 * fix racing condition that could lead to the same column being shown several times if px-data-column was defined in HTML + the data changed several time in succession at init

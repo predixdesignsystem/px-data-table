@@ -44,18 +44,10 @@ bower install ${REPO_NAME} --force
 
 #do the git stuff
 git add .
-rev=$(git rev-parse --short HEAD)
-git commit -m "rebuild github pages at ${rev}"
-
-#and deploy using the encrypted/unencrypted key.
-ENCRYPTED_KEY_VAR="encrypted_${ENCRYPTION_LABEL}_key"
-ENCRYPTED_IV_VAR="encrypted_${ENCRYPTION_LABEL}_iv"
-ENCRYPTED_KEY=${!ENCRYPTED_KEY_VAR}
-ENCRYPTED_IV=${!ENCRYPTED_IV_VAR}
-openssl aes-256-cbc -K $ENCRYPTED_KEY -iv $ENCRYPTED_IV -in deploy_key.enc -out deploy_key -d
-chmod 600 deploy_key
+git commit -m "rebuild github pages"
 eval `ssh-agent -s`
-ssh-add deploy_key
-
+#and cahnge permissions
+chmod 0400 $TRAVIS_BUILD_DIR/deploy_key
+ssh-add $TRAVIS_BUILD_DIR/deploy_key
 #Now that we're all set up, we can push.
 git push $SSH_REPO $TARGET_BRANCH
