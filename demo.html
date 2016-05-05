@@ -16,7 +16,7 @@
   <body unresolved>
     <template is="dom-bind">
       <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
-      <iron-ajax url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
+      <iron-ajax id="test" url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
 
       <h3>Data table demos</h3>
 
@@ -166,8 +166,8 @@
             var clickedRow = e.detail.row;
             console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
           });
-
         });
+
 
       </script>
 

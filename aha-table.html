@@ -22,7 +22,7 @@
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser">
         <px-dropdown display-value="Show/Hide Column">
-          <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" max-cont-character-width="10" items='{{_columnChooserItems}}'>
+          <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" max-cont-character-width="16" items='{{_columnChooserItems}}'>
           </px-dropdown-content>
         </px-dropdown>
       </div>
@@ -34,7 +34,7 @@
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <template is="dom-if" if="{{_isFalse(column.hide)}}">
-              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader">
+              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
                 <div class="flex header--container">
                   <span
                     class$="{{_getTextSortingClass(column, sortedColumn)}}"
@@ -75,13 +75,13 @@
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
-          <div class$="{{_getRowClass(internalRow, internalRow._selected, internalRow._highlight)}}">
+          <div class$="{{_getRowClass(internalRow)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <template is="dom-if" if="{{_isFalse(column.hide)}}">
                 <!-- selected column checkbox -->
                 <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                  <span class$="{{_getSelectedCellClass(internalRow._selected)}}" on-click="_clickRow">
+                  <span class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" on-click="_clickRow">
                     <span class="flex flex--center flex--middle">
                       <input type="checkbox"
                       checked="{{internalRow._selected::change}}"/>
@@ -89,9 +89,11 @@
                   </span>
                 </template>
                 <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-                  <px-data-table-cell class$="{{_getCellClass(internalRow, column, column.highlightdefined)}}"
+                  <px-data-table-cell
                                       on-save="_save"
-                                      cell-selected="{{internalRow._selected}}"
+                                      row-highlighted="[[internalRow._highlight]]"
+                                      cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
+                                      cell-selected="[[internalRow._selected]]"
                                       on-validate="_handleValidateEvent"
                                       cell-type="{{column.type}}"
                                       dropdown-items="{{column.dropdownItems}}"
@@ -279,6 +281,10 @@
         type: String,
         value: ''
       },
+      _isAttached: {
+        type: Boolean,
+        value: false
+      },
       //scroll body html element
       scrollBody: {
         type: HTMLElement,
@@ -297,11 +303,14 @@
 
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
-
+      this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
       var boundHandler = this._columnChanged.bind(this);
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
-      this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
     },
+    attached: function() {
+      this._isAttached = true;
+    },
+
     _columnChanged: function(info){
       var addedColumns = info.addedNodes.filter(function(node) {
         return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
@@ -420,13 +429,25 @@
     },
 
     _dataChanged: function(changeRec) {
-      if(this.data === undefined || this.data === null) {
+
+      if(this.data === undefined || this.data === null || changeRec.base.length === 0) {
         return;
       }
+
+      //wait for us to be attached before processing data changes
+      //debounce it as well
+      if(!this._isAttached) {
+        var _this = this;
+        this.debounce(function() {
+          _this._dataChanged(changeRec);
+        }, 10);
+        return;
+      }
+
       // initialize the meta if there is none
       if(!this.meta || this.meta.length === 0) {
-        var meta = this._generateMetaFromData();
-      //  this.set('meta', meta);
+        this._generateMetaFromData();
+      //this.set('meta', meta);
       }
 
       if(typeof this._internalData !== "undefined" && this._internalData.length === 0){
@@ -449,8 +470,9 @@
             return true;
           }
         });
-        var validationObj = column.validate(changeRec.value);
-        this._setInternalCellValidationStateAt(this._internalData[index], column.name, validationObj);
+        if(this._cellChanged(this._readContent(this._internalData[index], column), changeRec.value)){
+          this._handleValidateEvent(evt);
+        }
       }
 
     },
@@ -474,7 +496,6 @@
           Polymer.dom(this).appendChild(colInfo);
         }
       }
-
       return meta;
     },
 
@@ -880,10 +901,6 @@
       if(row){
         this.fire('before-save', {"event": evt, "row" : row, "column" : column});
 
-        // only run validation if user has updated cell.
-        if(this._cellChanged(this._readContent(row, column), newValue)){
-          this._handleValidateEvent(evt);
-        }
         this._setInternalDataAt(row, column.name, newValue);
         evt.currentTarget.cellValue = this._getInternalDataAt(row, column.name);
         evt.currentTarget.cellDisplayValue = this._readContent(row, column);
@@ -991,6 +1008,7 @@
 
     _touchDropColumnHeader: function(evt) {
       if(this.enableColumnReorder) {
+        this._removeDragFromSourceHeader();
         var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
         target = this._findHeaderFromChild(target);
 
@@ -1012,36 +1030,43 @@
       regex = target.classList.toString().match(/.*aha-(.*)-th/);
       targetName = (regex && regex.length > 1) ? regex[1] : null;
 
-      //Allow drop if target != moving column
-      if(targetName != null && targetName !== srcName) {
-        columns = this.getEffectiveChildren();
+      if(targetName != null) {
 
-        columns.forEach(function(column) {
-          //how not to base that on text?
-          if(column.name === srcName) {
-            toMove = column;
-          }
-          if(column.name == targetName) {
-            targetColumn = column;
-          }
-        });
+        //Allow drop if target != moving column
+        if(targetName !== srcName) {
+          columns = this.getEffectiveChildren();
 
-        //allow drop on selected only if this is not the first (not including
-        //selected) column. Otherwise no need to do anything
-        if(toMove && targetName !== '_selected' || toMove !== columns[0]) {
-          parent = Polymer.dom(toMove).parentNode;
-          //remove and insert in the right place
-          Polymer.dom(parent).removeChild(toMove);
-          Polymer.dom.flush();
+          columns.forEach(function(column) {
+            //how not to base that on text?
+            if(column.name === srcName) {
+              toMove = column;
+            }
+            if(column.name == targetName) {
+              targetColumn = column;
+            }
+          });
 
-          //if the target is the 'selected' column just add column at the beginning
-          //because 'selected' is not in the light dom
-          if(targetName === '_selected') {
-            Polymer.dom(parent).insertBefore(toMove, columns[0]);
+          //allow drop on selected only if this is not the first (not including
+          //selected) column. Otherwise no need to do anything
+          if(toMove && targetName !== '_selected' || toMove !== columns[0]) {
+            parent = Polymer.dom(toMove).parentNode;
+            //remove and insert in the right place
+            Polymer.dom(parent).removeChild(toMove);
+            Polymer.dom.flush();
+
+            //if the target is the 'selected' column just add column at the beginning
+            //because 'selected' is not in the light dom
+            if(targetName === '_selected') {
+              Polymer.dom(parent).insertBefore(toMove, columns[0]);
+            }
+            else {
+              Polymer.dom(parent).insertBefore(toMove, targetColumn.nextSibling);
+            }
           }
-          else {
-            Polymer.dom(parent).insertBefore(toMove, targetColumn.nextSibling);
-          }
+        }
+        else {
+          //we're dropping on ourselves
+          target.classList.remove('dragged');
         }
       }
 
@@ -1154,6 +1179,12 @@
       this._removeInsertionDisplay();
     },
 
+    _dragEndColumnHeader: function(evt) {
+
+      //make sure the collumn we were dragging doesn't show as dragged anymore
+      this._removeDragFromSourceHeader();
+    },
+
     _removeInsertionDisplay: function() {
 
       var _this = this;
@@ -1191,16 +1222,29 @@
         //parse column name
         var name = target.classList.toString().match(/.*aha-(.*)-th/)[1];
         this._columnDragged = name;
+
+        target.classList.add('dragged');
+
+        //mobile
+        if(evt.changedTouches){
+
+           //prevent default so it won't scroll the table while dragging
+          evt.preventDefault();
+
+          //show indicator right now to make it more obvious something is happening
+          this._allowColumnDrop(target, false);
+        }
       }
-
-      //mobile
-      if(evt.changedTouches){
-
-         //prevent default so it won't scroll the table while dragging
+      else {
         evt.preventDefault();
+      }
+    },
 
-        //show indicator right now to make it more obvious something is happening
-        this._allowColumnDrop(target, false);
+    _removeDragFromSourceHeader: function() {
+
+      var src = Polymer.dom(this.root).querySelector('.dragged');
+      if(src) {
+        src.classList.remove('dragged');
       }
     },
 
@@ -1299,35 +1343,42 @@
         evt.stopPropagation();
       }
     },
-
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
 
-    _getRowClass: function(row, isSelected) {
+    _getRowClass: function(row) {
       return ['tr', 'rows',
-        this.striped ? 'striped' : '',
-        row._selected ? 'selected' : '',
-        row._highlight.value ? row._highlight.highlightClass : ''
+        this.striped ? 'striped' : ''
       ].join(' ');
     },
-    _getCellClass: function(row, column) {
+    _getHighlightValue: function(row, column, high) {
       var highlightElements = Polymer.dom(column).querySelectorAll('px-data-table-highlight'),
-          classList = 'td ' + 'aha-' + column.name + '-td',
-          doHighlight = false;
+          doHighlight = false,
+          highlightObj = {value:false},
+          highlightClass;
 
       highlightElements.forEach(function(highlightEl) {
         doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
-        // this.customStyle['--cell--value__highlight--color'] = highlightEl.calculateHighlightColor();
-        // this.updateStyles();
-        if (highlightEl.highlightType === 'row' && doHighlight) {
-          this._setInternalDataAt(row, '_highlight',
-            {value: doHighlight,
-             highlightClass: 'cell--value__highlight--color__' + highlightEl.highlightValue});
+        if (highlightObj.value && doHighlight) {
+          if(highlightObj.highlightValue === 'low'){
+            highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+          } else if(highlightObj.highlightValue === 'medium'){
+            if (highlightEl.highlightValue === 'high') {
+              highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+            }
+          } else {
+            highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+          }
+        } else if(!highlightObj.value) {
+          highlightObj.value = doHighlight;
+          highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
         }
-        if (highlightEl.highlightType === 'cell' && doHighlight) {
-          classList += ' cell--value__highlight--color__' + highlightEl.highlightValue;
+
+        if (highlightEl.highlightType === 'row') {
+          this._setInternalDataAt(row, '_highlight', highlightObj);
+          highlightObj = {value: false};
         }
       }.bind(this));
-      return classList;
+      return highlightObj;
     },
     _isSelectAllColumn: function(column) {
       return column.selectAll;
@@ -1443,9 +1494,11 @@
     _getPaginationVisibility: function(hidePaginationControl){
       return (hidePaginationControl ? "visuallyhidden" : "");
     },
-    _getSelectedCellClass: function(selected){
+    _getSelectedCellClass: function(selected, rowHighlighted){
       var classList = ['td'];
       classList.push(selected ? 'selected-cell__selected' : '');
+      classList.push(rowHighlighted.value? rowHighlighted.highlightClass : '');
+
       return classList.join(' ');
     },
     /**

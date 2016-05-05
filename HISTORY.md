@@ -1,3 +1,21 @@
+v1.9.1
+================
+* fix racing condition that could lead to the same column being shown several times if px-data-column was defined in HTML + the data changed several time in succession at init
+
+v1.9.0
+================
+* Many fixes to move highlight and selection styles onto px-data-table-cell.
+* Fixes to make highlight style consistent.
+* Highlight style fixes to make it in combination with selection styles and validation modes.
+
+v1.8.2
+================
+* cosmetic enhancements for column reordering
+
+v1.8.1
+=================
+* make sure insertion indicator when moving columns has a consistent size. Make sure 'select' column can't be dragged
+
 v1.8.0
 =================
 * Upgrade to Polymer 1.4.0
