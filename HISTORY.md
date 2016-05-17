@@ -1,3 +1,7 @@
+v1.9.5
+================
+* Upping bower dependencies to latest polymer-font-awesome to stop bower resolution conflicts.
+
 v1.9.4
 ================
 * added oss_notice to bower ignore
