@@ -123,11 +123,10 @@ Events:
        *    ]
        */
       tableData: {
-        type: Array,
-        value: function() {
-          return [];
-        },
-        notify: true
+        type: Object,
+        notify: true,
+        observer: '_checkArray'
+
       },
 
 
@@ -253,6 +252,20 @@ Events:
         type: Boolean,
         value: false
       }
+    },
+
+
+    /* Function to check the values for incoming values are Array.
+       If its string or null return empty array.
+       */
+    _checkArray: function () {
+      if (this.tableData && (this.tableData instanceof Array)) {
+        this.tempTableData = this.tableData;
+      }
+      else {
+        this.tempTableData = [];
+      }
+      return tempTableData;
     },
 
     /**
