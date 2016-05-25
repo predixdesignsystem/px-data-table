@@ -104,7 +104,8 @@
                                       cell-editable="{{column.editable}}"
                                       cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
                                       column-name="{{column.name}}"
-                                      dropdown-max-character-width="{{column.maxColumnCharacterWidth}}">
+                                      dropdown-max-character-width="{{column.maxColumnCharacterWidth}}"
+                                      on-tap="_clickCell">
                   </px-data-table-cell>
                 </template>
               </template>
@@ -945,7 +946,13 @@
         }
       }
     },
+    _clickCell: function(evt) {
+      var column = evt.model.column,
+          row = evt.model.internalRow,
+          detail = {"row": row, "column": column, "rowIndex":this.$.recordList.indexForElement(evt.currentTarget)};
 
+      this.fire('px-cell-click', detail); // fire the event after it is marked selected
+    },
     _clickSelectAll: function(e) {
       if(e.target.checked) {
         this._setAllRows(true); // selected
