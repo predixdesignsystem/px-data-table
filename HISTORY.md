@@ -1,3 +1,7 @@
+v1.10.0
+================
+* Added cell click event.
+
 v1.9.5
 ================
 * Upping bower dependencies to latest polymer-font-awesome to stop bower resolution conflicts.
