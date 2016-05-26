@@ -430,8 +430,7 @@
     },
 
     _dataChanged: function(changeRec) {
-
-      if(this.data === undefined || this.data === null || changeRec.base.length === 0) {
+      if(this.data === undefined || this.data === null || (!this._isAttached && changeRec.base.length === 0)) {
         return;
       }
 
@@ -448,7 +447,6 @@
       // initialize the meta if there is none
       if(!this.meta || this.meta.length === 0) {
         this._generateMetaFromData();
-      //this.set('meta', meta);
       }
 
       if(typeof this._internalData !== "undefined" && this._internalData.length === 0){
