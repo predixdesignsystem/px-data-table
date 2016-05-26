@@ -1019,6 +1019,34 @@ function runTests() {
       });
     });
 
+  suite('Table data mutations tests', function(){
+    //uses table3Fixture - no other tests using this. Adding/removing rows could unsettle other tests if they were using this fixture.
+
+    test('Test table has 10 visible rows', function(done){
+      var tb = Polymer.dom(table3Fixture.root).querySelector('aha-table');
+      assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
+      done();
+    });
+
+    test('Setting table-data to empty array removes all rows from table', function(done){
+      var tb = Polymer.dom(table3Fixture.root).querySelector('aha-table');
+      var tableData = table3Fixture.tableData;
+      assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
+
+      table3Fixture.tableData = [];
+      flush(function(){
+        assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 0);
+        table3Fixture.tableData = tableData;
+      });
+
+      flush(function(){
+        assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
+        done();
+      })
+    });
+
+  });
+
   suite('Column show/hide tests', function(){
 
       var countHidden = function(headers) {
@@ -1134,6 +1162,4 @@ function runTests() {
         });
       });
     });
-
-
 }
