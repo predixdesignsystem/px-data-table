@@ -1,3 +1,7 @@
+v1.10.1
+================
+* Fix & tests for https://github.com/PredixDev/px-data-table/issues/30
+
 v1.10.0
 ================
 * Added cell click event.
