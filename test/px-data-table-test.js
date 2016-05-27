@@ -1037,12 +1037,12 @@ function runTests() {
       flush(function(){
         assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 0);
         table3Fixture.tableData = tableData;
+        flush(function(){
+          assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
+          done();
+        });
       });
 
-      flush(function(){
-        assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
-        done();
-      })
     });
 
   });
