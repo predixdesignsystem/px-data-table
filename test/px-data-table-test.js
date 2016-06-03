@@ -1,4 +1,4 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, table6Fixture, dropdownFixture;
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, table6Fixture, dropdownFixture, filtertest;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
@@ -694,6 +694,9 @@ document.addEventListener("WebComponentsReady", function() {
   table6Fixture = document.getElementById('table6');
   table6Fixture.tableData = data;
 
+  filtertest = document.getElementById('filtertest');
+  filtertest.tableData = minidata;
+
   runTests();
 });
 
@@ -1047,6 +1050,47 @@ function runTests() {
 
   });
 
+  suite('Table filtering tests', function() {
+    var tb = Polymer.dom(table2Fixture.root).querySelector("aha-table");
+
+    test('Filter header row should not be visible by default', function(done){
+      var filterRowEl = Polymer.dom(tb.root).querySelector('.tr--filter');
+      assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
+      done();
+    });
+
+    test('Filter header row should be visible when no columns specified but "filterable" set to true on px-data-table', function(done){
+      var filterRowEl = Polymer.dom(tb.root).querySelector('.tr--filter');
+      table2Fixture.filterable = true;
+      assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
+      assert.equal(Polymer.dom(tb.root).querySelectorAll('.text-input--filter').length, 15, 'Should be the default 15 filter input boxes, one for each column');
+      done();
+    });
+
+    test('When table set to filterable but no child columns are, filter row should be hidden', function(done){
+      var filterInnerTable = Polymer.dom(filtertest.root).querySelector("aha-table");
+      var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
+
+      filtertest.filterable = true;
+
+      assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter should have hidden class');
+      done();
+    });
+
+    test('When table set to filterable and a child column is set to filterable, filter row should be visible', function(done){
+      var filterInnerTable = Polymer.dom(filtertest.root).querySelector("aha-table");
+      var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
+
+      var colEl = filtertest.getEffectiveChildren()[0];
+
+      colEl.filterable = true;
+      filtertest.filterable = true;
+
+      assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
+      done();
+    });
+  });
+
   suite('Column show/hide tests', function(){
 
       var countHidden = function(headers) {
@@ -1140,7 +1184,7 @@ function runTests() {
             headers = Polymer.dom(tb.root).querySelectorAll(".th");
             assert.equal(countHidden(headers), 0);
             //double check we've been reinserted at the same place, check header 3 + 1 to account for "select" column
-            assert.equal(columnLabel, Polymer.dom(tb.root).querySelectorAll(".th")[4].textContent.trim())
+            assert.equal(columnLabel, Polymer.dom(tb.root).querySelectorAll(".th")[4].textContent.trim());
 
             done();
           });
