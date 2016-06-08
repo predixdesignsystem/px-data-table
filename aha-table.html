@@ -430,6 +430,7 @@
     },
 
     _dataChanged: function(changeRec) {
+      console.log(this.data);
       if(this.data === undefined || this.data === null || (!this._isAttached && changeRec.base.length === 0)) {
         return;
       }
