@@ -51,7 +51,7 @@
         </div>
 
         <!-- Second Header (filter/select all) -->
-        <div class$="{{_getSecondHeaderClass(filterable)}}">
+        <div class$="{{_getSecondHeaderClass(_enableFilterRow)}}">
           <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
             <template is="dom-if" if="{{_isFalse(column.hide)}}">
               <span class$="{{_getFilterHeaderClass(column)}}">
@@ -64,7 +64,7 @@
                 </template>
 
                 <!-- filter entry -->
-                <template is="dom-if" if="{{_isFilterableColumn(column)}}">
+                <template is="dom-if" if="{{column.filterable)}}">
                   <input placeholder="Filter" class="text-input text-input--filter" type="text" on-keyup="_filter"/>
                 </template>
 
@@ -180,6 +180,11 @@
       },
       //filterable: if table row is filterable
       filterable: {
+        type: Boolean,
+        value: false,
+      },
+      //_enableFilterRow: if table row is _enableFilterRow
+      _enableFilterRow: {
         type: Boolean,
         value: false
       },
@@ -299,7 +304,8 @@
       '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
       '_updateDisplayedRows(pageSize)', // when the size of the page changes
       '_dataChanged(data.*)',
-      '_columnChooserChanged(_columnChooserItems.*)'
+      '_columnChooserChanged(_columnChooserItems.*)',
+      '_computeIfColumnFilterEnabled(meta.splices, filterable, meta.*)'
     ],
 
     ready: function() {
@@ -1388,7 +1394,11 @@
     _isSelectAllColumn: function(column) {
       return column.selectAll;
     },
-    _isFilterableColumn: function(column) {
+    _isFilterableColumn: function(column, filterable) {
+      console.log(column);
+      console.log(column.filterable);
+      console.log('-----------');
+
       return !column.selectAll && column.filterable && !column.hide;
     },
     _readContent: function(row, column) {
@@ -1519,6 +1529,12 @@
       }
 
       return header;
+    },
+    _computeIfColumnFilterEnabled: function(meta, filterable, baa) {
+      // console.log(baa);
+      this._enableFilterRow = meta && filterable && this.meta.some(function(val){
+        return this._isFilterableColumn(val);
+      }.bind(this));
     }
   });
 </script>
