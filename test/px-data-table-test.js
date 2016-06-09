@@ -1083,7 +1083,7 @@ function runTests() {
 
       var colEl = filtertest.getEffectiveChildren()[0];
 
-      colEl.filterable = true;
+      filterInnerTable.set('meta.0.filterable', true);
       filtertest.filterable = true;
 
       assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');

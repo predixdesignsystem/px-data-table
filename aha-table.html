@@ -64,7 +64,7 @@
                 </template>
 
                 <!-- filter entry -->
-                <template is="dom-if" if="{{column.filterable)}}">
+                <template is="dom-if" if="{{_isFilterableColumn(column, column.filterable)}}">
                   <input placeholder="Filter" class="text-input text-input--filter" type="text" on-keyup="_filter"/>
                 </template>
 
@@ -1395,10 +1395,6 @@
       return column.selectAll;
     },
     _isFilterableColumn: function(column, filterable) {
-      console.log(column);
-      console.log(column.filterable);
-      console.log('-----------');
-
       return !column.selectAll && column.filterable && !column.hide;
     },
     _readContent: function(row, column) {
@@ -1531,7 +1527,6 @@
       return header;
     },
     _computeIfColumnFilterEnabled: function(meta, filterable, baa) {
-      // console.log(baa);
       this._enableFilterRow = meta && filterable && this.meta.some(function(val){
         return this._isFilterableColumn(val);
       }.bind(this));
