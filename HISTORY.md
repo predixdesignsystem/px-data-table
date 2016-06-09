@@ -1,3 +1,7 @@
+v1.10.2
+================
+* Fix & tests for empty filter header row showing when no columns are marked as filterable.
+
 v1.10.1
 ================
 * Fix & tests for https://github.com/PredixDev/px-data-table/issues/30
