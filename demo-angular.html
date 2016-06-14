@@ -1,0 +1,39 @@
+<!doctype html>
+
+<html ng-app="myapp">
+ <head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>px-data-table Demo</title>
+
+   <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
+   <script src="../angular/angular.js"></script>
+
+   <link rel="import" href="px-data-table.html" />
+   <link rel="import" href="../px-theme/px-theme.html"/>
+ </head>
+
+ <body>
+   <!-- <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax> -->
+
+   <h3>Data table demos</h3>
+
+   <p>A very simple data table.  Just displays data and has sortable columns.</p>
+
+   <div ng-controller="HelloController" >
+     <px-data-table id="mytable" table-data="{{tabledata}}"></px-data-table>
+     <span>{{tabledata}}</span>
+   </div>
+ </body>
+
+ <script>
+   document.addEventListener('HTMLImportsLoaded', function() {
+
+     angular.module("myapp", [])
+       .controller("HelloController", function($scope) {
+         $scope.tabledata = '[{"a":"b"}]';
+       });
+   });
+ </script>
+
+</html>

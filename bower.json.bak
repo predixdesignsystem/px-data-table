@@ -1,6 +1,6 @@
 {
   "name": "px-data-table",
-  "version": "1.10.2",
+  "version": "1.10.1",
   "main": [
     "px-data-table.html"
   ],
@@ -34,9 +34,7 @@
     "px-buttons-design": "~0.4.13",
     "px-forms-design": "~0.3.13",
     "px-button-group-design": "~0.3.8",
-    "px-typography-design": "~0.3.2"
-  },
-  "resolutions": {
-    "polymer": "^1.5.0"
+    "px-typography-design": "~0.3.2",
+    "angular": "^1.5.6"
   }
 }
