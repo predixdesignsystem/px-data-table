@@ -1,3 +1,7 @@
+v1.10.3
+================
+* Filterable hide fix & merge.
+
 v1.10.2
 ================
 * Fix & tests for empty filter header row showing when no columns are marked as filterable.
