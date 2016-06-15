@@ -1,4 +1,4 @@
-Px-Data-Table
+Px-Data-Table [![Build Status](https://travis-ci.org/PredixDev/px-data-table.svg?branch=master)](https://travis-ci.org/PredixDev/px-data-table)
 -----------------------------------------------
 
 ## Overview

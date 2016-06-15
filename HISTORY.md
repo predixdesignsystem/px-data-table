@@ -1,3 +1,7 @@
+v1.11.0
+================
+* Upgrade to Polymer 1.5.0
+
 v1.10.3
 ================
 * Filterable hide fix & merge.
