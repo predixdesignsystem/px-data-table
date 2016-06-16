@@ -305,7 +305,7 @@
       '_updateDisplayedRows(pageSize)', // when the size of the page changes
       '_dataChanged(data.*)',
       '_columnChooserChanged(_columnChooserItems.*)',
-      '_computeIfColumnFilterEnabled(meta.splices, filterable, meta.*)'
+      '_computeIfColumnFilterEnabled(meta.splices, filterable, meta.*, selectable)'
     ],
 
     ready: function() {
@@ -436,7 +436,6 @@
     },
 
     _dataChanged: function(changeRec) {
-      console.log(this.data);
       if(this.data === undefined || this.data === null || (!this._isAttached && changeRec.base.length === 0)) {
         return;
       }
@@ -487,7 +486,10 @@
       // if meta is already defined and then selectable is set, we need to backfill the meta with the _selected column
       if(newSelectable === true && this.meta !== null && this.meta !== undefined && this.meta.length > 0) {
         this.splice('meta', 0, 0, this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
+      } else if(newSelectable === false && this.meta !== null && this.meta !== undefined && this.meta.length > 0 && this.meta[0].name === "_selected"){
+        this.shift('meta');
       }
+
     },
 
     /********** Generating column metadata *************/
@@ -1021,7 +1023,7 @@
     _touchDropColumnHeader: function(evt) {
       if(this.enableColumnReorder) {
         this._removeDragFromSourceHeader();
-        var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
+        var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
         target = this._findHeaderFromChild(target);
 
         this._dropColumnHeader(target);
@@ -1053,7 +1055,7 @@
             if(column.name === srcName) {
               toMove = column;
             }
-            if(column.name == targetName) {
+            if(column.name === targetName) {
               targetColumn = column;
             }
           });
@@ -1104,7 +1106,7 @@
     _touchMoveHeader: function(evt) {
       if(this.enableColumnReorder) {
 
-        var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
+        var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
         target = this._findHeaderFromChild(target);
 
         //if we're not actually dragging over the
@@ -1527,10 +1529,10 @@
 
       return header;
     },
-    _computeIfColumnFilterEnabled: function(meta, filterable, baa) {
-      this._enableFilterRow = meta && filterable && this.meta.some(function(val){
+    _computeIfColumnFilterEnabled: function(meta, filterable) {
+      this._enableFilterRow = meta && (this.selectable === true || filterable && this.meta.some(function(val){
         return this._isFilterableColumn(val);
-      }.bind(this));
+      }.bind(this)));
     }
   });
 </script>

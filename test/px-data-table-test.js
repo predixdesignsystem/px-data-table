@@ -1051,19 +1051,22 @@ function runTests() {
   });
 
   suite('Table filtering tests', function() {
-    var tb = Polymer.dom(table2Fixture.root).querySelector("aha-table");
+    var tb = Polymer.dom(filtertest.root).querySelector("aha-table");
 
     test('Filter header row should not be visible by default', function(done){
       var filterRowEl = Polymer.dom(tb.root).querySelector('.tr--filter');
-      assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
-      done();
+      flush(function(){
+        assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
+        done();
+      });
     });
 
     test('Filter header row should be visible when no columns specified but "filterable" set to true on px-data-table', function(done){
-      var filterRowEl = Polymer.dom(tb.root).querySelector('.tr--filter');
+      var tb2 = Polymer.dom(table2Fixture.root).querySelector("aha-table");
+      var filterRowEl = Polymer.dom(tb2.root).querySelector('.tr--filter');
       table2Fixture.filterable = true;
       assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
-      assert.equal(Polymer.dom(tb.root).querySelectorAll('.text-input--filter').length, 15, 'Should be the default 15 filter input boxes, one for each column');
+      assert.equal(Polymer.dom(tb2.root).querySelectorAll('.text-input--filter').length, 15, 'Should be the default 15 filter input boxes, one for each column');
       done();
     });
 
@@ -1085,6 +1088,16 @@ function runTests() {
 
       filterInnerTable.set('meta.0.filterable', true);
       filtertest.filterable = true;
+
+      assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
+      done();
+    });
+
+    test('When table set to selectable, filter row should be visible', function(done){
+      var filterInnerTable = Polymer.dom(filtertest.root).querySelector("aha-table");
+      var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
+      filtertest.filterable = false;
+      filtertest.selectable = true;
 
       assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
       done();
