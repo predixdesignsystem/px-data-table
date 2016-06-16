@@ -1,3 +1,7 @@
+v1.11.1
+================
+* Fix bug that when table was selectable but not filterable, select all button (and row) were hidden.
+
 v1.11.0
 ================
 * Upgrade to Polymer 1.5.0
