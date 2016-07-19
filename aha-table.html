@@ -437,6 +437,7 @@
 
     _dataChanged: function(changeRec) {
       if(this.data === undefined || this.data === null || (!this._isAttached && changeRec.base.length === 0)) {
+        this._internalData = [];
         return;
       }
 
@@ -592,19 +593,19 @@
           if ( Object.prototype.hasOwnProperty.call( thisObj, key ) ) {
             cellDataObj[key] = {};
             cellDataObj[key].value = thisObj[key];
-            if(resetDataState){
+            if(resetDataState || i >= this._internalData.length){
               cellDataObj[key]._validation = {passedValidation: true};
             }else{
               cellDataObj[key]._validation = this._internalData[i].row[key]._validation;
             }
           }
         }
-
+        var resetDataFlag = resetDataState || i >= this._internalData.length;
         _internalData.push({
           row: cellDataObj,
-          _filtered: (resetDataState ? false : this._internalData[i]._filtered),
-          _selected: (resetDataState ? false : this._internalData[i]._selected),
-          _highlight: (resetDataState ? {value:false, highlightColor: ''} : this._internalData[i]._highlight)
+          _filtered: (resetDataFlag ? false : this._internalData[i]._filtered),
+          _selected: (resetDataFlag ? false : this._internalData[i]._selected),
+          _highlight: (resetDataFlag ? {value:false, highlightColor: ''} : this._internalData[i]._highlight)
         });
       }
       return _internalData;
