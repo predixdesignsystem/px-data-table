@@ -1,13 +1,127 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>px-data-table API</title>
-        <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
-        <link rel="import" href="../iron-component-page/iron-component-page.html"/>
-    </head>
-    <body>
-        <iron-component-page src="px-data-table.html" active="px-data-table"></iron-component-page>
-    </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>px-data-table Demo</title>
+  <link rel="stylesheet" type="text/css" href="css/px-data-table-demo.css"/>
+  <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+  <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../px-theme/px-theme.html"/>
+  <link rel="import" href="../iron-ajax/iron-ajax.html"/>
+  <link rel="import" href="../px-api-viewer/px-api-viewer.html" />
+  <link rel="import" href="../px-tabs/px-tab-set.html" />
+  <link rel="import" href="../iron-component-page/iron-component-page.html"/>
+  <link rel="import" href="px-data-table.html"/>
+  <link rel="icon" href="px-favicon.png" type="image/x-icon"/>
+
+  <link rel="import" href="../px-demo-snippet/px-demo-snippet.html">
+  <link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
+  <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+
+  </head>
+
+<body>
+
+  <!-- Wrap elements with auto-binding template to -->
+  <!-- allow use of Polymer bindings in main document -->
+  <template id="just-for-demo" is="dom-bind" >
+
+    <!-- discription -->
+    <div class="hero u-p++ text--shadow">
+  		<h1 class="delta">px-data-table</h1>
+  		<p>
+  			px-data-table is a Predix UI component used to indicate when data is being loaded, a view is changing, or any place a visual indication is needed to show that work is being done for an indefinite period of time.
+      </p>
+  		<div class="flex">
+  			<img class="u-mr--" src="https://img.shields.io/travis/PredixDev/px-data-table.svg?style=flat-square" alt="Travis"/>
+  			<img class="u-mr--" src="https://img.shields.io/bower/v/px-data-table.svg?style=flat-square" alt="Bower"/>
+  			<img class="u-mr--" src="https://img.shields.io/github/issues-raw/PredixDev/px-data-table.svg?style=flat-square" alt="Issues"/>
+  			<img class="u-mr--" src="https://img.shields.io/github/watchers/PredixDev/px-data-table.svg?style=social&label=Watch"/>
+  		</div>
+  	</div>
+    <br />
+
+    <!-- mega demo -->
+    <div style="position: relative;" class="u-pb++ flex flex--col" id="defaultTab">
+      <div class="tabContainer u-pt++ u-pl++">
+        <px-tab-set selected="{{selected}}" bare no-bottom-border>
+          <template is="dom-repeat" items="{{optionsArray}}">
+            <px-tab>Configuration {{indexPlusOne(index)}}</px-tab>
+          </template>
+        </px-tab-set>
+      </div>
+      <px-tab-pages selected="{{selected}}">
+        <template is="dom-repeat" items="{{optionsArray}}">
+          <section class="tab-page flex flex--right flex--wrap">
+            <div class="mega-demo flex u-pb++">
+            <!-- Properties -->
+            <div class="properties u-ph+ u-pb+  u-m++">
+              <p class="epsilon">Properties</p>
+              <div class="flex u-mb-">
+                <input id="hide{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.finished::change}}">
+                <label for$="hide{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Hide</div>
+              </div>
+              <div class="u-mb-">Size: <input id="size{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="{{item.size}}" value="{{item.size::input}}" /></div>
+            </div>
+
+            <div class="demoContainer u-mr++">
+              <!-- demo -->
+              <div class="flex flex--col">
+                <div class="flex__item demo u-ph+ u-pb+ u-mt++">
+                  <br />
+
+                  <px-data-table
+                    size="{{item.size}}"
+                    finished="{{item.finished}}">
+                  </px-data-table>
+                </div>
+                <div class="flex__item">
+                  <px-demo-snippet
+                    element-properties={{item}}
+                    element-name="px-data-table">
+                  </px-demo-snippet>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="background-color:white;">
+            <div class="flex flex--col api u-mt++" >
+              <div>
+                <px-api-viewer source="px-data-table"></px-api-viewer>
+              </div>
+            </div>
+          </div>
+        </section>
+      </template>
+    </px-tab-pages>
+  </div>
+</template>
+<script>
+window.addEventListener('WebComponentsReady', function() {
+  var template = document.querySelector('template[is=dom-bind]');
+
+  var optionsArray = [
+    {
+      "size":150,
+      "finished": false
+    },
+    {
+      "size":100,
+      "finished": true
+    },
+  ];
+
+    var indexPlusOne = function(num) {
+      return num + 1;
+    };
+
+    template.selected = "0";
+    template.optionsArray = optionsArray;
+    template.indexPlusOne = indexPlusOne;
+});
+</script>
+
+</body>
 </html>
