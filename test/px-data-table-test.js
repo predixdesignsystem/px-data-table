@@ -1187,7 +1187,7 @@ function runTests() {
     });
   });
 
-  suite('Column show/hide tests', function() {
+  suite('Column show/hide tests', function(){
 
       var countHidden = function(headers) {
         var hiddenNumber = 0;
