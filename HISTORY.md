@@ -1,3 +1,19 @@
+v1.11.1
+================
+* Fix bug that when table was selectable but not filterable, select all button (and row) were hidden.
+
+v1.11.0
+================
+* Upgrade to Polymer 1.5.0
+
+v1.10.3
+================
+* Filterable hide fix & merge.
+
+v1.10.2
+================
+* Fix & tests for empty filter header row showing when no columns are marked as filterable.
+
 v1.10.1
 ================
 * Fix & tests for https://github.com/PredixDev/px-data-table/issues/30

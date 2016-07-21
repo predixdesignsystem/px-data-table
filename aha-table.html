@@ -51,7 +51,7 @@
         </div>
 
         <!-- Second Header (filter/select all) -->
-        <div class$="{{_getSecondHeaderClass(filterable)}}">
+        <div class$="{{_getSecondHeaderClass(_enableFilterRow)}}">
           <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
             <template is="dom-if" if="{{_isFalse(column.hide)}}">
               <span class$="{{_getFilterHeaderClass(column)}}">
@@ -64,7 +64,7 @@
                 </template>
 
                 <!-- filter entry -->
-                <template is="dom-if" if="{{_isFilterableColumn(column)}}">
+                <template is="dom-if" if="{{_isFilterableColumn(column, column.filterable)}}">
                   <input placeholder="Filter" class="text-input text-input--filter" type="text" on-keyup="_filter"/>
                 </template>
 
@@ -180,6 +180,11 @@
       },
       //filterable: if table row is filterable
       filterable: {
+        type: Boolean,
+        value: false,
+      },
+      //_enableFilterRow: if table row is _enableFilterRow
+      _enableFilterRow: {
         type: Boolean,
         value: false
       },
@@ -299,7 +304,8 @@
       '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
       '_updateDisplayedRows(pageSize)', // when the size of the page changes
       '_dataChanged(data.*)',
-      '_columnChooserChanged(_columnChooserItems.*)'
+      '_columnChooserChanged(_columnChooserItems.*)',
+      '_computeIfColumnFilterEnabled(meta.splices, filterable, meta.*, selectable)'
     ],
 
     ready: function() {
@@ -431,6 +437,7 @@
 
     _dataChanged: function(changeRec) {
       if(this.data === undefined || this.data === null || (!this._isAttached && changeRec.base.length === 0)) {
+        this._internalData = [];
         return;
       }
 
@@ -480,7 +487,10 @@
       // if meta is already defined and then selectable is set, we need to backfill the meta with the _selected column
       if(newSelectable === true && this.meta !== null && this.meta !== undefined && this.meta.length > 0) {
         this.splice('meta', 0, 0, this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
+      } else if(newSelectable === false && this.meta !== null && this.meta !== undefined && this.meta.length > 0 && this.meta[0].name === "_selected"){
+        this.shift('meta');
       }
+
     },
 
     /********** Generating column metadata *************/
@@ -578,28 +588,27 @@
           len;
       for(i = 0, len = this.data.length; i < len; i++) {
         var thisObj = this.data[i],
-            cellDataObj = {dataIndex: i };
+            cellDataObj = {dataIndex: i },
+            resetDataFlag = resetDataState || i >= this._internalData.length;
         for ( var key in thisObj ) {
           if ( Object.prototype.hasOwnProperty.call( thisObj, key ) ) {
             cellDataObj[key] = {};
             cellDataObj[key].value = thisObj[key];
-            if(resetDataState){
+            if(resetDataFlag){
               cellDataObj[key]._validation = {passedValidation: true};
             }else{
               cellDataObj[key]._validation = this._internalData[i].row[key]._validation;
             }
           }
         }
-
         _internalData.push({
           row: cellDataObj,
-          _filtered: (resetDataState ? false : this._internalData[i]._filtered),
-          _selected: (resetDataState ? false : this._internalData[i]._selected),
-          _highlight: (resetDataState ? {value:false, highlightColor: ''} : this._internalData[i]._highlight)
+          _filtered: (resetDataFlag ? false : this._internalData[i]._filtered),
+          _selected: (resetDataFlag ? false : this._internalData[i]._selected),
+          _highlight: (resetDataFlag ? {value:false, highlightColor: ''} : this._internalData[i]._highlight)
         });
       }
       return _internalData;
-
     },
 
     _initializeInternalData: function() {
@@ -1014,7 +1023,7 @@
     _touchDropColumnHeader: function(evt) {
       if(this.enableColumnReorder) {
         this._removeDragFromSourceHeader();
-        var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
+        var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
         target = this._findHeaderFromChild(target);
 
         this._dropColumnHeader(target);
@@ -1046,7 +1055,7 @@
             if(column.name === srcName) {
               toMove = column;
             }
-            if(column.name == targetName) {
+            if(column.name === targetName) {
               targetColumn = column;
             }
           });
@@ -1097,7 +1106,7 @@
     _touchMoveHeader: function(evt) {
       if(this.enableColumnReorder) {
 
-        var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY)
+        var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
         target = this._findHeaderFromChild(target);
 
         //if we're not actually dragging over the
@@ -1388,7 +1397,7 @@
     _isSelectAllColumn: function(column) {
       return column.selectAll;
     },
-    _isFilterableColumn: function(column) {
+    _isFilterableColumn: function(column, filterable) {
       return !column.selectAll && column.filterable && !column.hide;
     },
     _readContent: function(row, column) {
@@ -1519,6 +1528,11 @@
       }
 
       return header;
+    },
+    _computeIfColumnFilterEnabled: function(meta, filterable) {
+      this._enableFilterRow = meta && (this.selectable === true || filterable && this.meta.some(function(val){
+        return this._isFilterableColumn(val);
+      }.bind(this)));
     }
   });
 </script>
