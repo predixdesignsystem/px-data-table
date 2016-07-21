@@ -437,6 +437,7 @@
 
     _dataChanged: function(changeRec) {
       if(this.data === undefined || this.data === null || (!this._isAttached && changeRec.base.length === 0)) {
+        this._internalData = [];
         return;
       }
 
@@ -587,28 +588,27 @@
           len;
       for(i = 0, len = this.data.length; i < len; i++) {
         var thisObj = this.data[i],
-            cellDataObj = {dataIndex: i };
+            cellDataObj = {dataIndex: i },
+            resetDataFlag = resetDataState || i >= this._internalData.length;
         for ( var key in thisObj ) {
           if ( Object.prototype.hasOwnProperty.call( thisObj, key ) ) {
             cellDataObj[key] = {};
             cellDataObj[key].value = thisObj[key];
-            if(resetDataState){
+            if(resetDataFlag){
               cellDataObj[key]._validation = {passedValidation: true};
             }else{
               cellDataObj[key]._validation = this._internalData[i].row[key]._validation;
             }
           }
         }
-
         _internalData.push({
           row: cellDataObj,
-          _filtered: (resetDataState ? false : this._internalData[i]._filtered),
-          _selected: (resetDataState ? false : this._internalData[i]._selected),
-          _highlight: (resetDataState ? {value:false, highlightColor: ''} : this._internalData[i]._highlight)
+          _filtered: (resetDataFlag ? false : this._internalData[i]._filtered),
+          _selected: (resetDataFlag ? false : this._internalData[i]._selected),
+          _highlight: (resetDataFlag ? {value:false, highlightColor: ''} : this._internalData[i]._highlight)
         });
       }
       return _internalData;
-
     },
 
     _initializeInternalData: function() {
