@@ -48,6 +48,9 @@ $inuit-enable-inline-fields : true;
 $inuit-enable-input--regular : true;
 @import "px-forms-design/_base.forms.scss";
 
+$inuit-enable-list-inline--delimited : true;
+@import "px-list-inline-design/_objects.list-inline.scss";
+
 // Component
 .mega-demo{
   background: $gray1;
@@ -110,12 +113,56 @@ $inuit-enable-input--regular : true;
   margin-top:calculateRem(35px);
   background: $gray1;
 }
+
+.apiContainer {
+  background-color: white;
+  margin: 0 auto;
+}
+
+.footer{
+  background-color: $gray7;
+}
+.footer__container{
+  flex-basis: 90%;
+  color: $gray4;
+  font-size: 12px;
+  align-items: center;
+  display: inline-flex;
+  justify-content: space-between;
+}
+.footer__list--lnk{
+  color: $gray4;
+  text-decoration: none;
+  &:link,
+  &:visited,
+  &:active,
+  &:focus {
+    color: $gray4;
+  }
+  &:hover{
+    color: $gray2;
+  }
+  &:active {
+    color: $grey4;
+  }
+}
+.footer__img{
+  width: 150px;
+}
+
 @media screen  and (max-width: calculateRem(672px)){
   .mega-demo {
     flex-direction: column;
   }
   .demoContainer {
     margin-left: calculateRem(30px);
+  }
+  .footer__container{
+    flex-direction: column;
+  }
+  .footer__list{
+    padding-top: $inuit-base-spacing-unit--small;
+    text-align: center;
   }
 }
 // Trumps

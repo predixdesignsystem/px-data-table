@@ -33,10 +33,10 @@
   			px-data-table is a Predix UI component used to indicate when data is being loaded, a view is changing, or any place a visual indication is needed to show that work is being done for an indefinite period of time.
       </p>
   		<div class="flex">
-  			<img class="u-mr--" src="https://img.shields.io/travis/PredixDev/px-data-table.svg?style=flat-square" alt="Travis"/>
-  			<img class="u-mr--" src="https://img.shields.io/bower/v/px-data-table.svg?style=flat-square" alt="Bower"/>
-  			<img class="u-mr--" src="https://img.shields.io/github/issues-raw/PredixDev/px-data-table.svg?style=flat-square" alt="Issues"/>
-  			<img class="u-mr--" src="https://img.shields.io/github/watchers/PredixDev/px-data-table.svg?style=social&label=Watch"/>
+  			<img class="u-mr--" src="https://img.shields.io/travis/PredixDev/px-data-table.svg?style=flat-square" alt="Travis" onerror="this.style.display='none'"/>
+  			<img class="u-mr--" src="https://img.shields.io/bower/v/px-data-table.svg?style=flat-square" alt="Bower" onerror="this.style.display='none'"/>
+  			<img class="u-mr--" src="https://img.shields.io/github/issues-raw/PredixDev/px-data-table.svg?style=flat-square" alt="Issues" onerror="this.style.display='none'"/>
+  			<img class="u-mr--" src="https://img.shields.io/github/watchers/PredixDev/px-data-table.svg?style=social&label=Watch" onerror="this.style.display='none'"/>
   		</div>
   	</div>
     <br />
@@ -96,6 +96,26 @@
       </template>
     </px-tab-pages>
   </div>
+  <footer class="footer flex flex--center">
+    <div class="footer__container u-pv++">
+      <div>
+        <a href="https://ge.com/digital" >
+          <img src="monogram-wdmk.png" alt="GE Monogram" class="footer__img">
+        </a>
+      </div>
+      <div class="footer__list">
+        <ul class="list-inline list-inline--delimited">
+          <li>
+            <a href="http://predix.io/legal" class="footer__list--lnk">Legal</a>
+          </li>
+          <li>
+            <a href="mailto:info@predix.io" class="footer__list--lnk">Contact Us</a>
+          </li>
+          <li>Copyright &copy; {{year}} General Electric Company. All rights reserved.</li>
+        </ul>
+      </div>
+    </div>
+  </footer>
 </template>
 <script>
 window.addEventListener('WebComponentsReady', function() {

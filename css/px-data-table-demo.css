@@ -962,6 +962,7 @@ select {
   padding: 0 3em 0 1em;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   line-height: calc(2em - 2px);
+  height: calc(2em - 2px);
   cursor: pointer;
   background-color: #e4e4ea;
   background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20viewBox%3D%220%200%20658%201024%22%3E%3Cpath%20fill%3D%22%233b3b3f%22%20d%3D%22M614.286%20420.571q0%207.429-5.714%2013.143l-266.286%20266.286q-5.714%205.714-13.143%205.714t-13.143-5.714l-266.286-266.286q-5.714-5.714-5.714-13.143t5.714-13.143l28.571-28.571q5.714-5.714%2013.143-5.714t13.143%205.714l224.571%20224.571%20224.571-224.571q5.714-5.714%2013.143-5.714t13.143%205.714l28.571%2028.571q5.714%205.714%205.714%2013.143z%22%2F%3E%3C%2Fsvg%3E");
@@ -1062,6 +1063,20 @@ textarea {
 .form-field--inline .text-input {
   margin-bottom: 1.3333333333rem; }
 
+.list-inline {
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+  .list-inline > li {
+    display: inline-block; }
+
+/**
+     * Pipe delimited list to semantically mark up lists of tags, etc.
+     *
+     */
+.list-inline--delimited > li + li:before {
+  content: " | "; }
+
 .mega-demo {
   background: #f7f7fc;
   width: 100%; }
@@ -1124,12 +1139,46 @@ textarea {
   background-color: white;
   margin: 0 auto; }
 
+.footer {
+  background-color: #7c7c84; }
+
+.footer__container {
+  -ms-flex-preferred-size: 90%;
+      flex-basis: 90%;
+  color: #d1d0d8;
+  font-size: 12px;
+  -ms-flex-align: center;
+      align-items: center;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-pack: justify;
+      justify-content: space-between; }
+
+.footer__list--lnk {
+  color: #d1d0d8;
+  text-decoration: none; }
+  .footer__list--lnk:link, .footer__list--lnk:visited, .footer__list--lnk:active, .footer__list--lnk:focus {
+    color: #d1d0d8; }
+  .footer__list--lnk:hover {
+    color: #efeff4; }
+  .footer__list--lnk:active {
+    color: #d1d0d8; }
+
+.footer__img {
+  width: 150px; }
+
 @media screen and (max-width: 44.8rem) {
   .mega-demo {
     -ms-flex-direction: column;
         flex-direction: column; }
   .demoContainer {
-    margin-left: 2rem; } }
+    margin-left: 2rem; }
+  .footer__container {
+    -ms-flex-direction: column;
+        flex-direction: column; }
+  .footer__list {
+    padding-top: 0.6666666667rem;
+    text-align: center; } }
 
 /**
  * Margin and padding helper classes. Use these to tweak layout on a micro
@@ -1511,7 +1560,7 @@ textarea {
   -ms-flex: none !important;
       flex: none !important; }
 
-@media screen and (max-width: 47.9rem) {
+@media screen and (max-width: 47.9375rem) {
   .u-1\/1-palm {
     width: 100% !important; }
   .u-1\/2-palm {
@@ -1559,7 +1608,7 @@ textarea {
     -ms-flex: none !important;
         flex: none !important; } }
 
-@media screen and (min-width: 48rem) and (max-width: 63.9rem) {
+@media screen and (min-width: 48rem) and (max-width: 68.204166667rem) {
   .u-1\/1-lap {
     width: 100% !important; }
   .u-1\/2-lap {
@@ -1655,7 +1704,7 @@ textarea {
     -ms-flex: none !important;
         flex: none !important; } }
 
-@media screen and (max-width: 63.9rem) {
+@media screen and (max-width: 68.2rem) {
   .u-1\/1-portable {
     width: 100% !important; }
   .u-1\/2-portable {
@@ -1703,7 +1752,7 @@ textarea {
     -ms-flex: none !important;
         flex: none !important; } }
 
-@media screen and (min-width: 63.9rem) {
+@media screen and (min-width: 68.266666667rem) {
   .u-1\/1-desk {
     width: 100% !important; }
   .u-1\/2-desk {
@@ -1751,7 +1800,7 @@ textarea {
     -ms-flex: none !important;
         flex: none !important; } }
 
-@media screen and (min-width: 100%) {
+@media screen and (min-width: 80rem) {
   .u-1\/1-desk-wide {
     width: 100% !important; }
   .u-1\/2-desk-wide {
