@@ -1,3 +1,7 @@
+v1.12.2
+================
+* vulcanized old demo page as well.
+
 v1.12.1
 ================
 * added vulcanize to demo page
