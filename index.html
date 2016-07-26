@@ -119,25 +119,28 @@
 <script>
 window.addEventListener('WebComponentsReady', function() {
   var template = document.querySelector('template[is=dom-bind]');
+  var tableEls = document.querySelectorAll('px-data-table');
 
   var optionsArray = [
     {
       "size":150,
-      "finished": false
+      "finished": false,
+      "table-data": [{"a":"b"}]
     },
     {
       "size":100,
-      "finished": true
+      "finished": true,
+      "table-data": [{"a":"b"}]
     },
   ];
 
-    var indexPlusOne = function(num) {
-      return num + 1;
-    };
+  var indexPlusOne = function(num) {
+    return num + 1;
+  };
 
-    template.selected = "0";
-    template.optionsArray = optionsArray;
-    template.indexPlusOne = indexPlusOne;
+  template.selected = "0";
+  template.optionsArray = optionsArray;
+  template.indexPlusOne = indexPlusOne;
 });
 </script>
 
