@@ -1,3 +1,7 @@
+v1.11.2
+================
+* added vulcanize to demo page
+
 v1.11.1
 ================
 * Fix bug that when table was selectable but not filterable, select all button (and row) were hidden.
