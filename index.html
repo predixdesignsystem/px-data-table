@@ -8,14 +8,14 @@
   <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
   <script src="../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../px-theme/px-theme.html"/>
-  <link rel="import" href="../iron-ajax/iron-ajax.html"/>
   <link rel="import" href="../px-api-viewer/px-api-viewer.html" />
   <link rel="import" href="../px-tabs/px-tab-set.html" />
+  <link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html" />
   <link rel="import" href="px-data-table.html"/>
-  <link rel="icon" href="px-favicon.png" type="image/x-icon"/>
-
+  <link rel="icon" href="favicon.ico" type="image/x-icon"/>
   <link rel="import" href="../px-demo-snippet/px-demo-snippet.html">
   <link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
+  <link rel="import" href="../iron-ajax/iron-ajax.html" />
   <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
 
   </head>
@@ -25,18 +25,19 @@
   <!-- Wrap elements with auto-binding template to -->
   <!-- allow use of Polymer bindings in main document -->
   <template id="just-for-demo" is="dom-bind" >
+  <iron-ajax url="contacts-mini.json" last-response="{{data}}" auto></iron-ajax>
 
-    <!-- discription -->
+    <!-- description -->
     <div class="hero u-p++ text--shadow">
+      <a class="actionable flex flex--right flex--middle" href="https://github.com/PredixDev/px-data-table" target="_blank"><iron-icon class="menu__open" icon="fa:fa-github"></iron-icon>View on Github</a>
   		<h1 class="delta">px-data-table</h1>
   		<p>
-  			px-data-table is a Predix UI component used to indicate when data is being loaded, a view is changing, or any place a visual indication is needed to show that work is being done for an indefinite period of time.
+  			The Data Table component is useful for displaying tabular data, and provides more functionality than a simple table. Users can sort ascending or descending on each column, filter within columns using simple search, select one or more rows, and edit data in-line with input validation. Rows are automatically paginated, but the user can select the number of rows to display in a single page. Cell borders can be configured by the developer to show up horizontally, vertically, or both.
       </p>
   		<div class="flex">
   			<img class="u-mr--" src="https://img.shields.io/travis/PredixDev/px-data-table.svg?style=flat-square" alt="Travis" onerror="this.style.display='none'"/>
   			<img class="u-mr--" src="https://img.shields.io/bower/v/px-data-table.svg?style=flat-square" alt="Bower" onerror="this.style.display='none'"/>
   			<img class="u-mr--" src="https://img.shields.io/github/issues-raw/PredixDev/px-data-table.svg?style=flat-square" alt="Issues" onerror="this.style.display='none'"/>
-  			<img class="u-mr--" src="https://img.shields.io/github/watchers/PredixDev/px-data-table.svg?style=social&label=Watch" onerror="this.style.display='none'"/>
   		</div>
   	</div>
     <br />
@@ -56,13 +57,60 @@
             <div class="mega-demo flex u-pb++">
             <!-- Properties -->
             <div class="properties u-ph+ u-pb+ u-mt++ u-mh++">
-              <p class="epsilon">Properties</p>
+              <p class="epsilon">Table Properties</p>
               <div class="flex u-mb-">
-                <input id="hide{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.finished::change}}">
-                <label for$="hide{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
-                <div class="u-ml-">Hide</div>
+                <input id="striped{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.striped::change}}">
+                <label for$="striped{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Striped</div>
               </div>
-              <div class="u-mb-">Size: <input id="size{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="{{item.size}}" value="{{item.size::input}}" /></div>
+              <div class="flex u-mb-">
+                <input id="filterable{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.filterable::change}}">
+                <label for$="filterable{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Filterable</div>
+              </div>
+              <div class="flex u-mb-">
+                <input id="selectable{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.selectable::change}}">
+                <label for$="selectable{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Selectable</div>
+              </div>
+              <div class="flex u-mb-">
+                <input id="showColumnChooser{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.showColumnChooser::change}}">
+                <label for$="showColumnChooser{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Show/Hide Columns</div>
+              </div>
+              <div class="flex u-mb-">
+                <input id="enableColumnReorder{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.enableColumnReorder::change}}">
+                <label for$="enableColumnReorder{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Reorder Columns</div>
+              </div>
+              <div class="flex u-mb-">
+                <input id="enableColumnResize{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.enableColumnResize::change}}">
+                <label for$="enableColumnResize{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Resize Columns</div>
+              </div>
+              <div class="flex u-mb-">
+                <input id="tableColumns{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.tableColumns::change}}">
+                <label for$="tableColumns{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Display as Columns</div>
+              </div>
+              <div class="flex u-mb-">
+                <input id="tableRows{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.tableRows::change}}">
+                <label for$="tableRows{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Display as Rows</div>
+              </div>
+              <!--TODO: the display of sub-properties is out of whack beccause of px-demo-snippet-->
+              <p class="epsilon">Column Properties</p>
+              <div class="flex u-mb-">
+                <input id="sortable{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.sortable::change}}">
+                <label for$="sortable{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Sortable</div>
+              </div>
+              <div class="flex u-mb-">
+                <input id="editable{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.editable::change}}">
+                <label for$="editable{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <div class="u-ml-">Editable</div>
+              </div>
+              <!--<div class="u-mb-">Size: <input id="size{{indexPlusOne(index)}}" class="text-input" type="number" placeholder="{{item.size}}" value="{{item.size::input}}" /></div>-->
             </div>
 
             <div class="demoContainer u-mr++">
@@ -70,12 +118,24 @@
               <div class="flex flex--col">
                 <div class="flex__item demo u-ph+ u-pb+ u-mt++">
                   <br />
+
                   <px-data-table
-                    size="{{item.size}}"
-                    finished="{{item.finished}}">
+                  table-data="{{data}}"
+                  striped="{{item.striped}}"
+                  filterable="{{item.filterable}}"
+                  selectable="{{item.selectable}}"
+                  show-column-chooser="{{item.showColumnChooser}}"
+                  enable-column-reorder="{{item.enableColumnReorder}}"
+                  enable-column-resize="{{item.enableColumnResize}}"
+                  table-columns="{{item.tableColumns}}"
+                  table-rows="{{item.tableRows}}">
+                    <px-data-table-column name="first" sortable="{{item.sortable}}" filterable="{{item.filterable}}" editable="{{item.editable}}"></px-data-table-column>
+                    <px-data-table-column name="last" sortable="{{item.sortable}}" filterable="{{item.filterable}}" editable="{{item.editable}}"></px-data-table-column>
+                    <px-data-table-column name="email" sortable="{{item.sortable}}" filterable="{{item.filterable}}" editable="{{item.editable}}"></px-data-table-column>
                   </px-data-table>
                 </div>
                 <div class="flex__item">
+                  <!--TODO: the display of sub-properties is out of whack beccause of px-demo-snippet-->
                   <px-demo-snippet
                     element-properties={{item}}
                     element-name="px-data-table">
@@ -110,7 +170,7 @@
           <li>
             <a href="mailto:info@predix.io" class="footer__list--lnk">Contact Us</a>
           </li>
-          <li>Copyright &copy; {{year}} General Electric Company. All rights reserved.</li>
+          <li>Copyright &copy; 2016 General Electric Company. All rights reserved.</li>
         </ul>
       </div>
     </div>
@@ -118,29 +178,44 @@
 </template>
 <script>
 window.addEventListener('WebComponentsReady', function() {
-  var template = document.querySelector('template[is=dom-bind]');
-  var tableEls = document.querySelectorAll('px-data-table');
-
-  var optionsArray = [
+  var template = document.querySelector('template[is=dom-bind]'),
+  optionsArray = [
     {
-      "size":150,
-      "finished": false,
-      "table-data": [{"a":"b"}]
+      "tableData": "...",
+      "striped": false,
+      "sortable": false,
+      "filterable": false,
+      "selectable": false,
+      "editable": false,
+      "showColumnChooser": false,
+      "enableColumnReorder": false,
+      "enableColumnResize": false,
+      "tableColumns": false,
+      "tableRows": false
     },
     {
-      "size":100,
-      "finished": true,
-      "table-data": [{"a":"b"}]
-    },
+      "tableData": "...",
+      "striped": true,
+      "sortable": true,
+      "filterable": true,
+      "selectable": true,
+      "editable": true,
+      "showColumnChooser": true,
+      "enableColumnReorder": true,
+      "enableColumnResize": true,
+      "tableColumns": false,
+      "tableRows": true
+    }
   ];
 
-  var indexPlusOne = function(num) {
-    return num + 1;
-  };
+    var indexPlusOne = function(num) {
+      return num + 1;
+    };
 
-  template.selected = "0";
-  template.optionsArray = optionsArray;
-  template.indexPlusOne = indexPlusOne;
+
+    template.selected = "0";
+    template.optionsArray = optionsArray;
+    template.indexPlusOne = indexPlusOne;
 });
 </script>
 
