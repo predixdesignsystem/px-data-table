@@ -9,11 +9,11 @@ Element that provides pagination.
 
 @demo demo.html
 -->
+<link rel="import" href="css/aha-table-styles.html">
 <dom-module id="px-pagination">
-  <link rel="import" type="css" href="css/aha-table.css"/>
-
   <template>
-
+    <style include="aha-table-styles"></style>
+    <style include="px-theme-css"></style>
 			<span class="pagesize">
 				<span class="u-mr--">{{pagesizetitle}}</span>
 				<select id="pageSizeSelect" on-change="_changeDropDown">

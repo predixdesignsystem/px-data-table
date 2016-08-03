@@ -13,10 +13,13 @@
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
 <link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
+<link rel="import" href="css/px-data-table-styles.html">
 
 <dom-module id="aha-table">
-  <link rel="import" type="css" href="css/aha-table.css"/>
   <template>
+    <style include="aha-table-styles"></style>
+    <style include="px-theme-css"></style>
+
     <content id="columndefs"></content>
 
     <template is="dom-if" if="{{showColumnChooser}}">

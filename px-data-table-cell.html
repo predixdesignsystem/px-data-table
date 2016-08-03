@@ -4,10 +4,13 @@
 <link rel="import" href="px-edit-cell.html">
 <link rel="import" href="../px-dropdown/px-dropdown.html">
 
+<link rel="import" href="css/px-data-table-cell-styles.html">
 
 <dom-module id="px-data-table-cell">
-  <link rel="import" type="css" href="css/px-data-table-cell.css"/>
   <template>
+    <style include="px-data-table-cell-styles"></style>
+    <style include="px-theme-css"></style>
+  
     <span class$="{{_getReaderClass(_editing)}}" on-mouseover='onCellHovered' on-mouseout='onCellUnHovered'>
 
       <!-- in place editing template -->

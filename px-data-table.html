@@ -68,10 +68,12 @@ Events:
 
 @demo demo.html
 -->
-<dom-module id="px-data-table">
-  <link rel="import" type="css" href="css/px-data-table.css"/>
+<link rel="import" href="css/px-data-table-styles.html">
 
+<dom-module id="px-data-table">
   <template>
+    <style include="px-data-table-styles"></style>
+    <style include="px-theme-css"></style>
     <div class="flex">
       <aha-table data="{{tableData}}"
                  filterable="{{filterable}}"
