@@ -1,9 +1,11 @@
 Px-Data-Table [![Build Status](https://travis-ci.org/PredixDev/px-data-table.svg?branch=master)](https://travis-ci.org/PredixDev/px-data-table)
 -----------------------------------------------
 
+[![px-data-table demo](px-data-table.png?raw=true)](https://github.com/PredixDev/px-data-table)
+
 ## Overview
 
-Px-Data-Table is a Predix Experience ('Px') component that defines a data table, optionally using a sub-element for advanced column settings.
+Px-Data-Table is a Predix UI component that defines a data table, optionally using a sub-element for advanced column settings.
 
 ## Usage
 

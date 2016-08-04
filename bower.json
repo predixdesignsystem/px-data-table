@@ -1,6 +1,6 @@
 {
   "name": "px-data-table",
-  "version": "1.12.0",
+  "version": "1.12.3",
   "main": [
     "px-data-table.html"
   ],
@@ -45,6 +45,8 @@
     "px-actionable-text-icons-design": "^0.0.3",
     "px-code-design": "^0.2.11",
     "px-headings-design": "^0.2.14",
-    "px-list-inline-design": "^0.2.11"
+    "px-list-inline-design": "^0.2.11",
+    "px-polymer-font-awesome": "^0.1.8",
+    "px-dropdown": "^0.10.1"
   }
 }
