@@ -36,10 +36,8 @@ gulp.task('sass', function() {
         path.basename = new RegExp('.+?(?=\-predix)').exec(path.basename)[0];
       })
     ))
-    // .pipe(gulp.dest('css'))
     .pipe($.cssmin())
     .pipe(stylemod({
-      // Use '-css' suffix instead of '-styles' for module ids
       moduleId: function(file) {
         return path.basename(file.path, path.extname(file.path)) + '-styles';
       }
@@ -87,5 +85,4 @@ gulp.task('serve', function() {
 //
 // });
 
-// gulp.task('default', gulpSequence('clean', 'css'));
 gulp.task('default', gulpSequence('clean', 'sass'));
