@@ -57,7 +57,21 @@
             <!-- Properties -->
             <div class="properties u-ph+ u-pb+ u-mt++ u-mh++">
               <p class="epsilon">Properties</p>
-              <div class="u-mb-">Highlight Color: <input id="highlightColor{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="#0000FF" value="{{item.highlightColor::input}}" /></div>
+              <div class="u-mb-">Highlight Method:</div>
+              <px-dropdown display-value="{{item.highlightMethod}}" value="{{item.highlightMethod}}">
+                <px-dropdown-content class="px-dropdown-content" items={{highlightMethods}}>
+                </px-dropdown-content>
+              </px-dropdown><br />
+              <div class="u-mb-">Highlight Values:</div>
+              <px-dropdown display-value="{{item.highlightValue}}" value="{{item.highlightValue}}">
+                <px-dropdown-content class="px-dropdown-content" items={{highlightValues}}>
+                </px-dropdown-content>
+              </px-dropdown><br />
+              <div class="u-mb-">Highlight Types:</div>
+              <px-dropdown display-value="{{item.highlightType}}" value="{{item.highlightType}}">
+                <px-dropdown-content class="px-dropdown-content" items={{highlightTypes}}>
+                </px-dropdown-content>
+              </px-dropdown>
             </div>
 
             <div class="demoContainer u-mr++">
@@ -65,11 +79,9 @@
               <div class="flex flex--col">
                 <div class="flex__item demo u-ph+ u-pb+ u-mt++">
                   <br />
-                  <px-data-table table-data="{{data}}">
+                  <px-data-table id="mytable" selectable table-data="{{data}}">
                     <px-data-table-column name="first">
-                      <px-data-table-highlight highlight-type="cell" highlight-value="medium" highlight-method="wordBeginsWithLetterJ" import="px-example-highlight.html"></px-data-table-highlight>
-                      <px-data-table-highlight highlight-type="row" highlight-value="high" highlight-method="isLongString" import="px-example-highlight.html"></px-data-table-highlight>
-                      <px-data-table-highlight highlight-type="cell" highlight-value="low" highlight-method="wordBeginsWithLetterS" import="px-example-highlight.html"></px-data-table-highlight>
+                      <px-data-table-highlight highlight-type="{{item.highlightType}}" highlight-value="{{item.highlightValue}}" highlight-method="{{item.highlightMethod}}" import="px-example-highlight.html"></px-data-table-highlight>
                     </px-data-table-column>
                     <px-data-table-column name="last"></px-data-table-column>
                     <px-data-table-column name="email"></px-data-table-column>
@@ -142,13 +154,24 @@
 
 window.addEventListener('WebComponentsReady', function() {
   var template = document.querySelector('template[is=dom-bind]'),
+  highlightMethods = [{"key":"one","val":"isLongString"},{"key":"two","val":"wordBeginsWithLetterJ"},{"key":"three","val":"wordBeginsWithLetterS"}],
+  highlightValues = [{"key":"one","val":"low"},{"key":"two","val":"medium"},{"key":"three","val":"high"}],
+  highlightTypes = [{"key":"one","val":"cell"},{"key":"two","val":"row"}],
   optionsArray = [
     {
-      "highlightColor": "#0000FF"
-
+      "highlightMethod": "wordBeginsWithLetterJ",
+      "highlightType": "row",
+      "highlightValue": "high"
     },
     {
-      "highlightColor": "#FF0000"
+      "highlightMethod": "wordBeginsWithLetterS",
+      "highlightType": "cell",
+      "highlightValue": "medium"
+    },
+    {
+      "highlightMethod": "isLongString",
+      "highlightType": "cell",
+      "highlightValue": "low"
     }
   ];
 
@@ -169,6 +192,9 @@ window.addEventListener('WebComponentsReady', function() {
     template.selected = "0";
     template.optionsArray = optionsArray;
     template.indexPlusOne = indexPlusOne;
+    template.highlightMethods = highlightMethods;
+    template.highlightValues = highlightValues;
+    template.highlightTypes = highlightTypes;
 });
 </script>
 
