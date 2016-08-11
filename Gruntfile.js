@@ -44,6 +44,11 @@ module.exports = function (grunt) {
                 'css/noprefix/px-data-table-highlight-sketch.css': 'sass/px-data-table-highlight-sketch.scss',
                 'css/noprefix/px-data-table-highlight.css': 'sass/px-data-table-highlight-predix.scss'
               }
+            },
+            demo: {
+              files: {
+                'css/noprefix/px-data-table-demo.css': 'sass/px-data-table-demo.scss'
+              }
             }
         },
 
