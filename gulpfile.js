@@ -24,7 +24,7 @@ gulp.task('clean', function() {
 });
 
 gulp.task('sass', function() {
-  return gulp.src(['./sass/*.scss','!./sass/*sketch.scss'])
+  return gulp.src(['./sass/*.scss', '!./sass/*sketch.scss', '!./sass/*-demo.scss'])
     .pipe($.sass(sassOptions).on('error', $.sass.logError))
     .pipe($.autoprefixer({
       browsers: ['last 2 versions', 'Safari 8.0'],
