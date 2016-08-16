@@ -24,7 +24,7 @@ gulp.task('clean', function() {
 });
 
 gulp.task('sass', function() {
-  return gulp.src([`./sass/*.scss`,`!./sass/*sketch.scss`])
+  return gulp.src(['./sass/*.scss','!./sass/*sketch.scss'])
     .pipe($.sass(sassOptions).on('error', $.sass.logError))
     .pipe($.autoprefixer({
       browsers: ['last 2 versions', 'Safari 8.0'],
@@ -32,7 +32,6 @@ gulp.task('sass', function() {
     }))
     .pipe(gulpif(/.*predix/,
       $.rename(function(path){
-        console.log(new RegExp('.+?(?=\-predix)').exec(path.basename)[0]);
         path.basename = new RegExp('.+?(?=\-predix)').exec(path.basename)[0];
       })
     ))
@@ -43,19 +42,20 @@ gulp.task('sass', function() {
       }
     }))
     .pipe(gulp.dest('css'))
-    .pipe(browserSync.stream({match: '**/*.css'}));
+    .pipe(browserSync.stream({match: 'css/*.html'}));
 });
 
-// gulp.task('css', ['sass'], function() {
-//   return gulp.src('css/**/*.css')
-//     .pipe($.sourcemaps.init())
-//     .pipe($.cssmin())
-//     .pipe($.sourcemaps.write('.'))
-//     .pipe($.rename({
-//       suffix: '.min'
-//     }))
-//     .pipe(gulp.dest('css'));
-// });
+gulp.task('demosass', function() {
+  return gulp.src(['./sass/*-demo.scss'])
+    .pipe($.sass(sassOptions).on('error', $.sass.logError))
+    .pipe($.autoprefixer({
+      browsers: ['last 2 versions', 'Safari 8.0'],
+      cascade: false
+    }))
+    .pipe($.cssmin())
+    .pipe(gulp.dest('css'))
+    .pipe(browserSync.stream({match: '**/*.css'}));
+});
 
 gulp.task('watch', function() {
   gulp.watch('./sass/**/*.scss', ['default']);
@@ -85,4 +85,4 @@ gulp.task('serve', function() {
 //
 // });
 
-gulp.task('default', gulpSequence('clean', 'sass'));
+gulp.task('default', gulpSequence('clean', 'sass', 'demosass'));
