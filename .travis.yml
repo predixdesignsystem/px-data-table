@@ -2,36 +2,43 @@ sudo: required
 dist: trusty
 language: node_js
 node_js:
-- stable
+  - stable
 branches:
   except:
-  - gh-pages
+    - gh-pages
 addons:
-  firefox: latest
   apt:
     sources:
-    - google-chrome
+      - google-chrome
     packages:
-    - google-chrome-stable
+      - google-chrome-stable
 before_script:
-- npm install web-component-tester
-- npm install bower
-- export PATH=$PWD/node_modules/.bin:$PATH
-- bower install
+  - npm install web-component-tester
+  - npm install bower
+  - 'export PATH=$PWD/node_modules/.bin:$PATH'
+  - bower install
 script:
-- xvfb-run wct --skip-plugin sauce
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct --plugin sauce --skip-plugin
-  local; fi
+  - xvfb-run wct --skip-plugin sauce
+  - >-
+    if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct --plugin sauce
+    --skip-plugin local; fi
 env:
   global:
-  - secure: HqhnZMd53k+XnWh6FqFwEnb5CBzIj0Rw96ea2uSPTDxa71GNDaMEpwFrBXm/oEJ8d9eH2dHz7nNXWK0Tuvf4TweX0KsN26WKMHdfoU8vDaD9PgljdvJAfpWXrpqaJUhqO3d5al/ZpGPIdISOl2DTObkjf93QVS6evbVfzc1pS3A8zcoUvouuCUkS+kdmWM57JIAXp2AuWzi9l8LyvH3F8bGosJOi1k76/+Z+IjYF5qC8DhKQ65BUjwu0+LxeAtf3pNhwMXEC3UDxdP2BdONIJSfvQ8oykhFmQGW0RupKOdzJwWz3IFSMXlHd9VKYWU2vxKiMCFdabDIdLnIQ+D23cVt2C/VBs+jKZ5CE0PRmZ/eHQvRkNXaLEL4M+zpNtWG7/LCgIolVU0mdk1r5JHn2xRXAf+KuJPVfPhkz+sfQ8KpKdH7SsmdNU0MQw0iYEZEPN0dU0k0UxO4zAwEDr8vvzaqMLuAq+3TcT2tDO1M9X04GU3oiGp0jlcy/dH3nVTF5yNj3rcKC/ImBOzveTKbCP7dMMjWb5K0ndaWnLyPCRUC/lHP6eSzdR6Hnjqa/NQJKLeZLRIS9l6wIGSN4167O5VetNWXNLIf23Ft3ZO4XLgJgw79TXOQFGImz5aUTsIeHdUNnnTpbPqIfYEZYrng7HVugAfKH83fCYvbcT2SE8O4=
-  - secure: Q4RWLDrguebDaEkv0pMyTaCgMPrF5nVdpEwexVeRzLNvRYJnsVECX5xl01xB50fnkKXGGVhd+9QPE53CEO+YpjPcjOYBTOf2pnygBdnA/U6LwblkaKhoOAtMrHJGmGYEOujIM1Zf6TbkU8jykjNeeQppaN955Rb/ah9cVk9Ly4MMPgsyh8ARrJ4HkBkuKLo+uYp2C2XdCcEydAiYn0ndC8WEmGDFxiEawVdxylU5ofc7EyA9GHUOv9sCLxBA/fNVC+VjAOHc5OuDhsiR5dg5FYwKWx+Zl9YVeA2R5SI4sBK8UVB5/FQl9DxSI5UAe26MDKt4evekuRxjRkvHjnfjEXkCf1HitqvlLrlE7obY8kYBh381bJC2qp3289WfCWp56E66pLhkEY+OnailOW1eDKtf/bk4v7Lxvpe4iM1U6oS/3wkvAY18miBPes0Ms7o7GQRlb7tyfnQ4hNPUzQ7idk0qo1f0AoqY7DzBQR9h99GG7o/VPAI1o+LPLzW902X09PP5j6AnC+twEQ2JGgru9VFfJ7r+4gGVsJlF9f9SMW7BJSgQe7nBx2tGBzPcztlmWuSeA2hIem8IuvcBX0n6itlrBavbWfaCRf2uobEJNUrzz52+liF1bDKvmA1Y66jlmr6VS/mKIqRmnnzpqq5j22WpxZj0AYQpgZ1e1iJMaUY=
-  - secure: HDUv9bmcbXWsX00/vlMtmDdGTFWpauQjTTzCkGqSaGqzJQCLXaHUzWbLytyFLF4OHzsVJsyCtKV6MSxVsQzDV2Tu0Z5nGChd0Gfha4oHxX5g9YgGn9/rCqxdGdRCDmosABJP8COQMe7oAnNe45impR6IttAqAutdtoh6PeQA7FGgb+hssNiIwbPcpEMUpchF1Tb9Ud7KkG591bUw/QFEosk59AfA9BOcjQRf8poK9u0taBBGOS4GE8iC7pV2tem7Uj4Am3zFu6yVINZGmwfeFB5doK+Z7cWnKqemvfnBz1dRcDu/6pFnj+/Ho818gqgxXHYRP5zZFchzjGXZdIbkrWtg4vELFWsec0mKJyKGaTVryzzJu/qNDguS0CsPyHEvxpvzv6+LgkkK1OUjz93GUdGWj8WMUSfpnipQggwfx2C85yNWJr5d59E7yQFQEJ/5/75XVEmUGKJnfE9O6eckzRB+5T19xd75Ju3lyd3eKSBPFm1SOq5SF4hT/XDyY5LhubOHYi5hNpRpNTqVEQwt02oF9ZxJT6m9ZXeXLq/vXLsjrKhY02ZBZX8zDEYTn9tXGNZ+oiCd0Z8bFUKwafrlmDfcIi+trrbupXL027uOKgNHeLZyJATIvPo/vWMaK9BMOhASpE+cW0fJTtssg632QqOvk7PNy8+FNldA85pHaPM=
-  - secure: NLbPfzwFfNhzI5+5B/IBtnvQ8EfXsA5oKJ1qiaNXtbnSLN0jbWN0McqpRxRh/Gse6vAO6oepE3Www3MT7/MnJn6cXD0Aw/B6Hah47D6Y1xx/mf1qZO4YCkh0nP0/6uJp9iahaaU0Ev0F6Pn3jwtG5HyYlvr8OX0B3LDJlPy0ivuJhTGWcEc/0UuBDP9n1bIQmtTucMq3uIhZw/jKLXtVlqxxORs/GSA6jFMXIL8PzhQFLSVKhORQcRK/mOzsLLzbeGyrBWU23MUkz8qvD0WoBDTI+L5aMlfVnLc0haErSlmA2WIP6AfcCYQaR5DwnAZIwQtliXSLtWpDV3A27/B1BXdfdC8UahaP4bQvc1nakcdigC7N8H+eC/VCSvsYNTJbH28JzD2oc9/ehMqG3B1pZSJijZIxR2Gkx+DhFxBb2S7ohbNtavC5+ivpnu+qpFmavNvd79tgTMMwj4H5M4y6w4X+LFyVxmHX2Jhhd0Pu+8cizGbHdVNdp2Gm43HRT1l0ZIv1K+hfK1FoiM4DW+bBVk3+GSyNA0Hf56SypfoG6S+V7qAY2+58xiD5EPp+NjI2GMBWM38QxyWmUEH0faChb5s9hWxCqCHygztlOHA77tZegtAWf3+a0SxZ0FWmwcjhmcAMRuZq2DazhHn+EfHugp1hH4vynAe5S44h0up3anc=
-  - secure: SHpS9cLAsKAlrqJWSx1Y//PZNym295mTXkD3X5CCXBjeBBsqtaZ60z1mG6sZNH/3Y64Jv8Kf55S62PPJgfBRahmcYyWaFqyD47WMYZfX4PCU13cunozWIFaH6SzMCFp6vu/+VCcgPMS7Nd3E+t92fLgyd48LJ9G1tql6FY3UryN06BIR++qQMpDIygBdK9yFWT/tpzW4cavVcIwhZHxntk7tmsDpJ1wSgkwDBYKEQCRwyA5nYV/XQiXf+q66ZzFt17hXpleSnBUbFtr2G3kHnm7BFm0ag7FvZNtQEamwwK7mcguFadqldpTU3SFC8pxfiUvaTWFHgzTEs2xDalJoEttJ+F1Ak/ndzBmC1TxYRVAUOVBsZAc5e7lvDb6LUuHRwHRdg4xbUOB3WEX677icuPqcThLGLoov9UDwpPTwWUHDJ5+T0YgCtHRKirKUwUJ38qeCP0WqvCmaxdFN+N9NjcTTmtbOejuIjHiWifbqQZ2PEJdHqfdZMJoHQJDl/sa8PgQo+By4u6seTUBhGUSlb+8r9LzC6Eelj5kqvGQyp74yDkH+tYVTbWOnBTG6tG4dYZZpdwvBScwasqlSjRLapIZs6JL58LJnuYSaeAtECQ9ktp03LtsNErMKofAX1rULgTg73MBnropReZv2A7aeYoltlrOpZTV9wDNm/x9sFJU=
+    - secure: >-
+        HqhnZMd53k+XnWh6FqFwEnb5CBzIj0Rw96ea2uSPTDxa71GNDaMEpwFrBXm/oEJ8d9eH2dHz7nNXWK0Tuvf4TweX0KsN26WKMHdfoU8vDaD9PgljdvJAfpWXrpqaJUhqO3d5al/ZpGPIdISOl2DTObkjf93QVS6evbVfzc1pS3A8zcoUvouuCUkS+kdmWM57JIAXp2AuWzi9l8LyvH3F8bGosJOi1k76/+Z+IjYF5qC8DhKQ65BUjwu0+LxeAtf3pNhwMXEC3UDxdP2BdONIJSfvQ8oykhFmQGW0RupKOdzJwWz3IFSMXlHd9VKYWU2vxKiMCFdabDIdLnIQ+D23cVt2C/VBs+jKZ5CE0PRmZ/eHQvRkNXaLEL4M+zpNtWG7/LCgIolVU0mdk1r5JHn2xRXAf+KuJPVfPhkz+sfQ8KpKdH7SsmdNU0MQw0iYEZEPN0dU0k0UxO4zAwEDr8vvzaqMLuAq+3TcT2tDO1M9X04GU3oiGp0jlcy/dH3nVTF5yNj3rcKC/ImBOzveTKbCP7dMMjWb5K0ndaWnLyPCRUC/lHP6eSzdR6Hnjqa/NQJKLeZLRIS9l6wIGSN4167O5VetNWXNLIf23Ft3ZO4XLgJgw79TXOQFGImz5aUTsIeHdUNnnTpbPqIfYEZYrng7HVugAfKH83fCYvbcT2SE8O4=
+    - secure: >-
+        Q4RWLDrguebDaEkv0pMyTaCgMPrF5nVdpEwexVeRzLNvRYJnsVECX5xl01xB50fnkKXGGVhd+9QPE53CEO+YpjPcjOYBTOf2pnygBdnA/U6LwblkaKhoOAtMrHJGmGYEOujIM1Zf6TbkU8jykjNeeQppaN955Rb/ah9cVk9Ly4MMPgsyh8ARrJ4HkBkuKLo+uYp2C2XdCcEydAiYn0ndC8WEmGDFxiEawVdxylU5ofc7EyA9GHUOv9sCLxBA/fNVC+VjAOHc5OuDhsiR5dg5FYwKWx+Zl9YVeA2R5SI4sBK8UVB5/FQl9DxSI5UAe26MDKt4evekuRxjRkvHjnfjEXkCf1HitqvlLrlE7obY8kYBh381bJC2qp3289WfCWp56E66pLhkEY+OnailOW1eDKtf/bk4v7Lxvpe4iM1U6oS/3wkvAY18miBPes0Ms7o7GQRlb7tyfnQ4hNPUzQ7idk0qo1f0AoqY7DzBQR9h99GG7o/VPAI1o+LPLzW902X09PP5j6AnC+twEQ2JGgru9VFfJ7r+4gGVsJlF9f9SMW7BJSgQe7nBx2tGBzPcztlmWuSeA2hIem8IuvcBX0n6itlrBavbWfaCRf2uobEJNUrzz52+liF1bDKvmA1Y66jlmr6VS/mKIqRmnnzpqq5j22WpxZj0AYQpgZ1e1iJMaUY=
+    - secure: >-
+        HDUv9bmcbXWsX00/vlMtmDdGTFWpauQjTTzCkGqSaGqzJQCLXaHUzWbLytyFLF4OHzsVJsyCtKV6MSxVsQzDV2Tu0Z5nGChd0Gfha4oHxX5g9YgGn9/rCqxdGdRCDmosABJP8COQMe7oAnNe45impR6IttAqAutdtoh6PeQA7FGgb+hssNiIwbPcpEMUpchF1Tb9Ud7KkG591bUw/QFEosk59AfA9BOcjQRf8poK9u0taBBGOS4GE8iC7pV2tem7Uj4Am3zFu6yVINZGmwfeFB5doK+Z7cWnKqemvfnBz1dRcDu/6pFnj+/Ho818gqgxXHYRP5zZFchzjGXZdIbkrWtg4vELFWsec0mKJyKGaTVryzzJu/qNDguS0CsPyHEvxpvzv6+LgkkK1OUjz93GUdGWj8WMUSfpnipQggwfx2C85yNWJr5d59E7yQFQEJ/5/75XVEmUGKJnfE9O6eckzRB+5T19xd75Ju3lyd3eKSBPFm1SOq5SF4hT/XDyY5LhubOHYi5hNpRpNTqVEQwt02oF9ZxJT6m9ZXeXLq/vXLsjrKhY02ZBZX8zDEYTn9tXGNZ+oiCd0Z8bFUKwafrlmDfcIi+trrbupXL027uOKgNHeLZyJATIvPo/vWMaK9BMOhASpE+cW0fJTtssg632QqOvk7PNy8+FNldA85pHaPM=
+    - secure: >-
+        NLbPfzwFfNhzI5+5B/IBtnvQ8EfXsA5oKJ1qiaNXtbnSLN0jbWN0McqpRxRh/Gse6vAO6oepE3Www3MT7/MnJn6cXD0Aw/B6Hah47D6Y1xx/mf1qZO4YCkh0nP0/6uJp9iahaaU0Ev0F6Pn3jwtG5HyYlvr8OX0B3LDJlPy0ivuJhTGWcEc/0UuBDP9n1bIQmtTucMq3uIhZw/jKLXtVlqxxORs/GSA6jFMXIL8PzhQFLSVKhORQcRK/mOzsLLzbeGyrBWU23MUkz8qvD0WoBDTI+L5aMlfVnLc0haErSlmA2WIP6AfcCYQaR5DwnAZIwQtliXSLtWpDV3A27/B1BXdfdC8UahaP4bQvc1nakcdigC7N8H+eC/VCSvsYNTJbH28JzD2oc9/ehMqG3B1pZSJijZIxR2Gkx+DhFxBb2S7ohbNtavC5+ivpnu+qpFmavNvd79tgTMMwj4H5M4y6w4X+LFyVxmHX2Jhhd0Pu+8cizGbHdVNdp2Gm43HRT1l0ZIv1K+hfK1FoiM4DW+bBVk3+GSyNA0Hf56SypfoG6S+V7qAY2+58xiD5EPp+NjI2GMBWM38QxyWmUEH0faChb5s9hWxCqCHygztlOHA77tZegtAWf3+a0SxZ0FWmwcjhmcAMRuZq2DazhHn+EfHugp1hH4vynAe5S44h0up3anc=
+    - secure: >-
+        SHpS9cLAsKAlrqJWSx1Y//PZNym295mTXkD3X5CCXBjeBBsqtaZ60z1mG6sZNH/3Y64Jv8Kf55S62PPJgfBRahmcYyWaFqyD47WMYZfX4PCU13cunozWIFaH6SzMCFp6vu/+VCcgPMS7Nd3E+t92fLgyd48LJ9G1tql6FY3UryN06BIR++qQMpDIygBdK9yFWT/tpzW4cavVcIwhZHxntk7tmsDpJ1wSgkwDBYKEQCRwyA5nYV/XQiXf+q66ZzFt17hXpleSnBUbFtr2G3kHnm7BFm0ag7FvZNtQEamwwK7mcguFadqldpTU3SFC8pxfiUvaTWFHgzTEs2xDalJoEttJ+F1Ak/ndzBmC1TxYRVAUOVBsZAc5e7lvDb6LUuHRwHRdg4xbUOB3WEX677icuPqcThLGLoov9UDwpPTwWUHDJ5+T0YgCtHRKirKUwUJ38qeCP0WqvCmaxdFN+N9NjcTTmtbOejuIjHiWifbqQZ2PEJdHqfdZMJoHQJDl/sa8PgQo+By4u6seTUBhGUSlb+8r9LzC6Eelj5kqvGQyp74yDkH+tYVTbWOnBTG6tG4dYZZpdwvBScwasqlSjRLapIZs6JL58LJnuYSaeAtECQ9ktp03LtsNErMKofAX1rULgTg73MBnropReZv2A7aeYoltlrOpZTV9wDNm/x9sFJU=
 before_install:
-  - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then openssl aes-256-cbc -k "$password" -in id_rsa.enc -out deploy_key -d; fi
+  - >-
+    if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then openssl aes-256-cbc -k
+    "$password" -in id_rsa.enc -out deploy_key -d; fi
 after_success:
-- cd $TRAVIS_BUILD_DIR/scripts
-- chmod 755 ghp.sh
-- "./ghp.sh"
+  - cd $TRAVIS_BUILD_DIR/scripts
+  - chmod 755 ghp.sh
+  - ./ghp.sh
