@@ -46,110 +46,102 @@
       <div class="tabContainer u-pt++ u-pl++">
         <px-tab-set selected="{{selected}}" bare no-bottom-border>
           <template is="dom-repeat" items="{{optionsArray}}">
-            <px-tab>Configuration {{indexPlusOne(index)}}</px-tab>
+            <px-tab>Option {{indexPlusOne(index)}}</px-tab>
           </template>
         </px-tab-set>
       </div>
       <px-tab-pages selected="{{selected}}">
         <template is="dom-repeat" items="{{optionsArray}}">
-          <section class="tab-page flex flex--right flex--wrap">
-            <div class="mega-demo flex u-pb++">
-            <!-- Properties -->
-            <div class="properties u-ph+ u-pb+ u-mt++ u-mh++">
-              <p class="epsilon">Properties</p>
-              <div class="u-mb-">Highlight Method:</div>
-              <px-dropdown display-value="{{item.highlightMethod}}" value="{{item.highlightMethod}}">
-                <px-dropdown-content class="px-dropdown-content" items={{highlightMethods}}>
-                </px-dropdown-content>
-              </px-dropdown><br />
-              <div class="u-mb-">Highlight Values:</div>
-              <px-dropdown display-value="{{item.highlightValue}}" value="{{item.highlightValue}}">
-                <px-dropdown-content class="px-dropdown-content" items={{highlightValues}}>
-                </px-dropdown-content>
-              </px-dropdown><br />
-              <div class="u-mb-">Highlight Types:</div>
-              <px-dropdown display-value="{{item.highlightType}}" value="{{item.highlightType}}">
-                <px-dropdown-content class="px-dropdown-content" items={{highlightTypes}}>
-                </px-dropdown-content>
-              </px-dropdown>
-            </div>
+          <section class="tab-page">
+            <div class="mega-demo flex u-ph++ u-pb++">
+              <!-- Properties -->
+              <div class="properties u-ph+ u-pb+ u-mt+">
+                <p class="epsilon">Properties</p>
+                <p class="zeta">
+                  Note: the following properties are not dynamically reflected at this time, but you can view the differences by using the "Option" tabs above.
+                </p>
 
-            <div class="demoContainer u-mr++">
-              <!-- demo -->
-              <div class="flex flex--col">
-                <div class="flex__item demo u-ph+ u-pb+ u-mt++">
-                  <br />
-                  <px-data-table id="mytable" selectable table-data="{{data}}">
-                    <px-data-table-column name="first">
-                      <px-data-table-highlight highlight-type="{{item.highlightType}}" highlight-value="{{item.highlightValue}}" highlight-method="{{item.highlightMethod}}" import="px-example-highlight.html"></px-data-table-highlight>
-                    </px-data-table-column>
-                    <px-data-table-column name="last"></px-data-table-column>
-                    <px-data-table-column name="email"></px-data-table-column>
-                  </px-data-table>
-                </div>
-                <div class="flex__item">
-                  <px-demo-snippet
-                    element-properties={{item}}
-                    element-name="px-data-table-highlight">
-                  </px-demo-snippet>
-                </div>
+                <div class="u-mb-">Highlight Method: <input id="highlightMethod{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="First" value="{{item.highlightMethod::input}}" disabled /></div>
+                <div class="u-mb-">Highlight Value: <input id="highlightValue{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="First" value="{{item.highlightValue::input}}" disabled /></div>
+                <div class="u-mb-">Highlight Type: <input id="highlightType{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="First" value="{{item.highlightType::input}}" disabled /></div>
+
               </div>
-            </div>
-          </div>
-          <div class="apiContainer">
-            <div class="flex flex--col api u-mt++" >
-              <div class="flex">
-                <div class="flex__item">
-                  <div class="flex flex--col">
-                    <div class="componentHeader">Parent Component</div>
-                    <div class="componentList">
-                      <ul>
-                        <li><a href="px-data-table-column-demo.html">px-data-table-column</a></li>
-                      </ul>
-                    </div>
+
+              <div class="demoContainer clearfix u-mt+">
+                <!-- demo -->
+                <div class="flex flex--col">
+                  <div class="demo u-p+">
+                    <px-data-table id="mytable" selectable table-data="{{data}}">
+                      <px-data-table-column name="first">
+                        <px-data-table-highlight highlight-type="{{item.highlightType}}" highlight-value="{{item.highlightValue}}" highlight-method="{{item.highlightMethod}}" import="{{item.import}}"></px-data-table-highlight>
+                      </px-data-table-column>
+                      <px-data-table-column name="last"></px-data-table-column>
+                      <px-data-table-column name="email"></px-data-table-column>
+                    </px-data-table>
                   </div>
-                </div>
-                <div class="flex__item">
-                  <div class="flex flex--col">
-                    <div class="componentHeader">Associated Component</div>
-                    <div class="componentList">
-                      <ul>
-                        <li><a href="index.html">px-data-table</a></li>
-                      </ul>
-                    </div>
+                  <div class="flex__item">
+                    <px-demo-snippet
+                      element-properties={{item}}
+                      element-name="px-data-table-highlight">
+                    </px-demo-snippet>
                   </div>
                 </div>
               </div>
-              <div>
-                <px-api-viewer source="px-data-table-highlight"></px-api-viewer>
+            </div>
+            <div class="apiContainer">
+              <div class="flex flex--col api u-mt++" >
+                <div class="flex">
+                  <div class="flex__item">
+                    <div class="flex flex--col">
+                      <div class="componentHeader">Parent Component</div>
+                      <div class="componentList">
+                        <ul>
+                          <li><a href="px-data-table-column-demo.html">px-data-table-column</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex__item">
+                    <div class="flex flex--col">
+                      <div class="componentHeader">Associated Component</div>
+                      <div class="componentList">
+                        <ul>
+                          <li><a href="index.html">px-data-table</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <px-api-viewer source="px-data-table-highlight"></px-api-viewer>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
-      </template>
-    </px-tab-pages>
-  </div>
-  <footer class="footer flex flex--center">
-    <div class="footer__container u-pv++">
-      <div>
-        <a href="https://ge.com/digital" >
-          <img src="monogram-wdmk.png" alt="GE Monogram" class="footer__img">
-        </a>
-      </div>
-      <div class="footer__list">
-        <ul class="list-inline list-inline--delimited">
-          <li>
-            <a href="http://predix.io/legal" class="footer__list--lnk">Legal</a>
-          </li>
-          <li>
-            <a href="mailto:info@predix.io" class="footer__list--lnk">Contact Us</a>
-          </li>
-          <li>Copyright &copy; 2016 General Electric Company. All rights reserved.</li>
-        </ul>
-      </div>
+          </section>
+        </template>
+      </px-tab-pages>
     </div>
-  </footer>
-</template>
+    <footer class="footer flex flex--center">
+      <div class="footer__container u-pv++">
+        <div>
+          <a href="https://ge.com/digital" >
+            <img src="monogram-wdmk.png" alt="GE Monogram" class="footer__img">
+          </a>
+        </div>
+        <div class="footer__list">
+          <ul class="list-inline list-inline--delimited">
+            <li>
+              <a href="http://predix.io/legal" class="footer__list--lnk">Legal</a>
+            </li>
+            <li>
+              <a href="mailto:info@predix.io" class="footer__list--lnk">Contact Us</a>
+            </li>
+            <li>Copyright &copy; 2016 General Electric Company. All rights reserved.</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </template>
 <script>
 
 window.addEventListener('WebComponentsReady', function() {
@@ -161,17 +153,23 @@ window.addEventListener('WebComponentsReady', function() {
     {
       "highlightMethod": "wordBeginsWithLetterJ",
       "highlightType": "row",
-      "highlightValue": "high"
+      "highlightValue": "high",
+      "import": "px-example-highlight.html",
+      "parentComponent": ["<px-data-table table-data={{data}}><px-data-table-column name=\"first\">","</px-data-table-column></px-data-table>"]
     },
     {
       "highlightMethod": "wordBeginsWithLetterS",
       "highlightType": "cell",
-      "highlightValue": "medium"
+      "highlightValue": "medium",
+      "import": "px-example-highlight.html",
+      "parentComponent": ["<px-data-table table-data={{data}}><px-data-table-column name=\"first\">","</px-data-table-column></px-data-table>"]
     },
     {
       "highlightMethod": "isLongString",
       "highlightType": "cell",
-      "highlightValue": "low"
+      "highlightValue": "low",
+      "import": "px-example-highlight.html",
+      "parentComponent": ["<px-data-table table-data={{data}}><px-data-table-column name=\"first\">","</px-data-table-column></px-data-table>"]
     }
   ];
 

@@ -1,3 +1,7 @@
+v1.12.4
+================
+* Added new demo pages
+
 v1.12.3
 ================
 * added image to readme

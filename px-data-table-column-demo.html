@@ -46,47 +46,41 @@
       <div class="tabContainer u-pt++ u-pl++">
         <px-tab-set selected="{{selected}}" bare no-bottom-border>
           <template is="dom-repeat" items="{{optionsArray}}">
-            <px-tab>Configuration {{indexPlusOne(index)}}</px-tab>
+            <px-tab>Option {{indexPlusOne(index)}}</px-tab>
           </template>
         </px-tab-set>
       </div>
       <px-tab-pages selected="{{selected}}">
         <template is="dom-repeat" items="{{optionsArray}}">
-          <section class="tab-page flex flex--right flex--wrap">
-            <div class="mega-demo flex u-pb++">
-            <!-- Properties -->
-            <div class="properties u-ph+ u-pb+ u-mt++ u-mh++">
-              <p class="epsilon">Properties</p>
-              <div class="u-mb-">Label: <input id="label{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="First" value="{{item.label::input}}" /></div>
+          <section class="tab-page">
+            <div class="mega-demo flex u-ph++ u-pb++">
+              <!-- Properties -->
+              <div class="properties u-ph+ u-pb+ u-mt+">
+                <p class="epsilon">Properties</p>
+              <p class="zeta">
+                Note: the following properties are not dynamically reflected at this time, but you can view the differences by using the "Option" tabs above. The options are only tied to the first column in the example data table.
+              </p>
+              <div class="u-mb-">Label: <input id="label{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="First" value="{{item.label::input}}" disabled /></div>
               <div class="flex u-mb-">
-                <input id="sortable{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.sortable::change}}">
-                <label for$="sortable{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <input id="sortable{{indexPlusOne(index)}}" type="checkbox" checked="{{item.sortable::change}}" disabled>
                 <div class="u-ml-">Sortable</div>
               </div>
               <div class="flex u-mb-">
-                <input id="filterable{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.filterable::change}}">
-                <label for$="filterable{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <input id="filterable{{indexPlusOne(index)}}" type="checkbox" checked="{{item.filterable::change}}" disabled>
                 <div class="u-ml-">Filterable</div>
               </div>
               <div class="flex u-mb-">
-                <input id="editable{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.editable::change}}">
-                <label for$="editable{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                <input id="editable{{indexPlusOne(index)}}" type="checkbox" checked="{{item.editable::change}}" disabled>
                 <div class="u-ml-">Editable</div>
-              </div>
-              <div class="flex u-mb-">
-                <input id="hide{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.hide::change}}">
-                <label for$="hide{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
-                <div class="u-ml-">Hide</div>
               </div>
             </div>
 
-            <div class="demoContainer u-mr++">
-              <!-- demo -->
-              <div class="flex flex--col">
-                <div class="flex__item demo u-ph+ u-pb+ u-mt++">
-                  <br />
+            <div class="demoContainer clearfix u-mt+">
+                <!-- demo -->
+                <div class="flex flex--col">
+                  <div class="demo u-p+">
                   <px-data-table table-data="{{data}}" filterable="true">
-                    <px-data-table-column type="{{item.type}}" dropdown-items="{{dropdownItems}}" name="{{item.name}}" label="{{item.label}}" sortable="{{item.sortable}}" editable="{{item.editable}}" filterable="{{item.filterable}}" hide="{{item.hide}}"></px-data-table-column>
+                    <px-data-table-column type="{{item.type}}" dropdown-items="{{dropdownItems}}" name="{{item.name}}" label="{{item.label}}" sortable="{{item.sortable}}" editable="{{item.editable}}" filterable="{{item.filterable}}"></px-data-table-column>
                     <px-data-table-column name="last"></px-data-table-column>
                     <px-data-table-column name="email"></px-data-table-column>
                   </px-data-table>
@@ -167,9 +161,9 @@ window.addEventListener('WebComponentsReady', function() {
       "sortable": true,
       "filterable": true,
       "editable": false,
-      "hide": false,
       "type": "",
-      "dropdownItems": false
+      "dropdownItems": false,
+      "parentComponent": ["<px-data-table table-data={{data}}>","</px-data-table>"]
 
     },
     {
@@ -178,9 +172,9 @@ window.addEventListener('WebComponentsReady', function() {
       "sortable": false,
       "filterable": false,
       "editable": true,
-      "hide": false,
       "type": "dropdown",
-      "dropdownItems": dropdownItems
+      "dropdownItems": dropdownItems,
+      "parentComponent": ["<px-data-table table-data={{data}}>","</px-data-table>"]
     }
   ];
 

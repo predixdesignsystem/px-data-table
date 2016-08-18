@@ -46,17 +46,17 @@
       <div class="tabContainer u-pt++ u-pl++">
         <px-tab-set selected="{{selected}}" bare no-bottom-border>
           <template is="dom-repeat" items="{{optionsArray}}">
-            <px-tab>Configuration {{indexPlusOne(index)}}</px-tab>
+            <px-tab>Option {{indexPlusOne(index)}}</px-tab>
           </template>
         </px-tab-set>
       </div>
       <px-tab-pages selected="{{selected}}">
         <template is="dom-repeat" items="{{optionsArray}}">
-          <section class="tab-page flex flex--right flex--wrap">
-            <div class="mega-demo flex u-pb++">
-            <!-- Properties -->
-            <div class="properties u-ph+ u-pb+ u-mt++ u-mh++">
-              <p class="epsilon">Properties</p>
+          <section class="tab-page">
+            <div class="mega-demo flex u-ph++ u-pb++">
+              <!-- Properties -->
+              <div class="properties u-ph+ u-pb+ u-mt+">
+                <p class="epsilon">Properties</p>
               <div class="flex u-mb-">
                 <input id="striped{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.striped::change}}">
                 <label for$="striped{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
@@ -78,16 +78,6 @@
                 <div class="u-ml-">Show/Hide Columns</div>
               </div>
               <div class="flex u-mb-">
-                <input id="enableColumnReorder{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.enableColumnReorder::change}}">
-                <label for$="enableColumnReorder{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
-                <div class="u-ml-">Reorder Columns</div>
-              </div>
-              <div class="flex u-mb-">
-                <input id="enableColumnResize{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.enableColumnResize::change}}">
-                <label for$="enableColumnResize{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
-                <div class="u-ml-">Resize Columns</div>
-              </div>
-              <div class="flex u-mb-">
                 <input id="tableColumns{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.tableColumns::change}}">
                 <label for$="tableColumns{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
                 <div class="u-ml-">Display as Columns</div>
@@ -102,13 +92,23 @@
                 <label for$="hidePaginationControl{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
                 <div class="u-ml-">Hide Pagination Control</div>
               </div>
+              <p class="zeta">
+                Note: the following properties are not dynamically reflected at this time, but you can view the differences by using the "Option" tabs above.
+              </p>
+              <div class="flex u-mb-">
+                <input id="enableColumnReorder{{indexPlusOne(index)}}" type="checkbox" checked="{{item.enableColumnReorder::change}}" disabled>
+                <div class="u-ml-">Reorder Columns</div>
+              </div>
+              <div class="flex u-mb-">
+                <input id="enableColumnResize{{indexPlusOne(index)}}" type="checkbox" checked="{{item.enableColumnResize::change}}" disabled>
+                <div class="u-ml-">Resize Columns</div>
+              </div>
             </div>
 
-            <div class="demoContainer u-mr++">
-              <!-- demo -->
-              <div class="flex flex--col">
-                <div class="flex__item demo u-ph+ u-pb+ u-mt++">
-                  <br />
+            <div class="demoContainer clearfix u-mt+">
+                <!-- demo -->
+                <div class="flex flex--col">
+                  <div class="demo u-p+">
 
                   <px-data-table
                   table-data="{{data}}"
@@ -121,9 +121,9 @@
                   table-columns="{{item.tableColumns}}"
                   table-rows="{{item.tableRows}}"
                   hide-pagination-control="{{item.hidePaginationControl}}">
-                    <px-data-table-column name="first" filterable="{{item.filterable}}"></px-data-table-column>
-                    <px-data-table-column name="last" filterable="{{item.filterable}}"></px-data-table-column>
-                    <px-data-table-column name="email" filterable="{{item.filterable}}"></px-data-table-column>
+                    <px-data-table-column name="first" filterable></px-data-table-column>
+                    <px-data-table-column name="last" filterable></px-data-table-column>
+                    <px-data-table-column name="email" filterable></px-data-table-column>
                   </px-data-table>
                 </div>
                 <div class="flex__item">
@@ -196,6 +196,7 @@ window.addEventListener('WebComponentsReady', function() {
   var template = document.querySelector('template[is=dom-bind]'),
   optionsArray = [
     {
+      "tableData": "{{data}}",
       "striped": false,
       "filterable": false,
       "selectable": false,
@@ -207,6 +208,7 @@ window.addEventListener('WebComponentsReady', function() {
       "hidePaginationControl": false
     },
     {
+      "tableData": "{{data}}",
       "striped": true,
       "filterable": true,
       "selectable": true,
