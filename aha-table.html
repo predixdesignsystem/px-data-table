@@ -445,7 +445,7 @@
       //debounce it as well
       if(!this._isAttached) {
         var _this = this;
-        this.debounce(function() {
+        this.debounce('attach', function() {
           _this._dataChanged(changeRec);
         }, 10);
         return;
