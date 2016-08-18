@@ -61,7 +61,8 @@ gulp.task('demosass', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch('./sass/**/*.scss', ['default']);
+  gulp.watch(['!sass/*-demo.scss', 'sass/*.scss'], ['sass']);
+  gulp.watch('sass/*-demo.scss', ['demosass']);
 });
 
 gulp.task('serve', function() {
@@ -76,7 +77,8 @@ gulp.task('serve', function() {
   });
 
   gulp.watch(['!${pkg.name}-styles.html', '*.html', 'bower_components/**/*.html']).on('change', browserSync.reload);
-  gulp.watch('sass/*.scss', ['sass']);
+  gulp.watch(['!sass/*-demo.scss', 'sass/*.scss'], ['sass']);
+  gulp.watch('sass/*-demo.scss', ['demosass']);
 
 });
 
@@ -97,8 +99,6 @@ gulp.task('bump:major', function(){
   .pipe(bump({type:'major'}))
   .pipe(gulp.dest('./'));
 });
-
-// gulp.task('default', gulpSequence('clean', 'sass', 'demosass'));
 
 gulp.task('default', function(callback) {
   gulpSequence('clean', 'sass', 'demosass')(callback);
