@@ -1,3 +1,7 @@
+v1.12.5
+================
+* Update ghp to include secondary demo pages
+
 v1.12.4
 ================
 * Added new demo pages
