@@ -17,7 +17,7 @@
   "dependencies": {
     "polymer": "^v1.5.0",
     "px-tooltip": "~v0.7.0",
-    "px-theme": "~0.8.0",
+    "px-theme": "~1.1.0",
     "iron-a11y-keys-behavior": "PolymerElements/iron-a11y-keys-behavior#~1.1.0",
     "polymer-font-awesome": "polymer-font-awesome#~v0.1.1",
     "px-validation": "~0.2.0",
@@ -34,6 +34,10 @@
     "px-buttons-design": "~0.4.13",
     "px-forms-design": "~0.3.13",
     "px-button-group-design": "~0.3.8",
-    "px-typography-design": "~0.3.2"
+    "px-typography-design": "~1.1.0"
+  },
+  "resolutions": {
+    "px-theme": "~1.1.0",
+    "px-typography-design": "^1.1.0"
   }
 }
