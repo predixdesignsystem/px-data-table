@@ -1,5 +1,9 @@
 v1.12.5
 ================
+* added support for parent-name in demo-snippet
+
+v1.12.5
+================
 * Update ghp to include secondary demo pages
 
 v1.12.4
