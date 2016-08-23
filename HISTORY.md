@@ -1,3 +1,7 @@
+v1.12.7
+================
+* Added wrapping for long column headers
+
 v1.12.6
 ================
 * added support for parent-name in demo-snippet

@@ -1101,7 +1101,7 @@ th, .th {
   text-align: left; }
 
 .column-head {
-  white-space: nowrap; }
+  white-space: pre-wrap; }
 
 label {
   margin: 0; }
