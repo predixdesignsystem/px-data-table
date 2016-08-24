@@ -78,7 +78,7 @@
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
-          <div class$="{{_getRowClass(internalRow)}}">
+          <div class$="{{_getRowClass(internalRow,striped)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <template is="dom-if" if="{{_isFalse(column.hide)}}">
@@ -448,7 +448,7 @@
       //debounce it as well
       if(!this._isAttached) {
         var _this = this;
-        this.debounce(function() {
+        this.debounce('attach', function() {
           _this._dataChanged(changeRec);
         }, 10);
         return;
@@ -1362,7 +1362,7 @@
     },
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
 
-    _getRowClass: function(row) {
+    _getRowClass: function(row,striped) {
       return ['tr', 'rows',
         this.striped ? 'striped' : ''
       ].join(' ');

@@ -1,0 +1,201 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>px-data-table-highlight Demo</title>
+  <link rel="stylesheet" type="text/css" href="css/px-data-table-demo.css"/>
+  <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+  <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../iron-ajax/iron-ajax.html" />
+  <link rel="import" href="../px-theme/px-theme.html"/>
+  <link rel="import" href="../px-api-viewer/px-api-viewer.html" />
+  <link rel="import" href="../px-tabs/px-tab-set.html" />
+  <link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html" />
+  <link rel="import" href="px-data-table.html"/>
+  <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+  <link rel="import" href="../px-demo-snippet/px-demo-snippet.html">
+  <link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html">
+  <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+
+  </head>
+
+<body>
+
+  <!-- Wrap elements with auto-binding template to -->
+  <!-- allow use of Polymer bindings in main document -->
+  <template id="just-for-demo" is="dom-bind" >
+
+    <!-- description -->
+    <div class="hero u-p++ text--shadow">
+      <a class="actionable flex flex--right flex--middle" href="https://github.com/PredixDev/px-data-table" target="_blank"><iron-icon class="menu__open" icon="fa:fa-github"></iron-icon>View on Github</a>
+  		<h1 class="delta">px-data-table-highlight</h1>
+  		<p>
+  			The Data Table Highlight sub-component is a helper that provides the ability to display a row or cell with a different background color based on a function provided in the configuration.
+      </p>
+  		<div class="flex">
+  			<img class="u-mr--" src="https://img.shields.io/travis/PredixDev/px-data-table.svg?style=flat-square" alt="Travis" onerror="this.style.display='none'"/>
+  			<img class="u-mr--" src="https://img.shields.io/bower/v/px-data-table.svg?style=flat-square" alt="Bower" onerror="this.style.display='none'"/>
+  			<img class="u-mr--" src="https://img.shields.io/github/issues-raw/PredixDev/px-data-table.svg?style=flat-square" alt="Issues" onerror="this.style.display='none'"/>
+  		</div>
+  	</div>
+    <br />
+
+    <!-- mega demo -->
+    <div style="position: relative;" class="u-pb++ flex flex--col" id="defaultTab">
+      <div class="tabContainer u-pt++ u-pl++">
+        <px-tab-set selected="{{selected}}" bare no-bottom-border>
+          <template is="dom-repeat" items="{{optionsArray}}">
+            <px-tab>Option {{indexPlusOne(index)}}</px-tab>
+          </template>
+        </px-tab-set>
+      </div>
+      <px-tab-pages selected="{{selected}}">
+        <template is="dom-repeat" items="{{optionsArray}}">
+          <section class="tab-page">
+            <div class="mega-demo flex u-ph++ u-pb++">
+              <!-- Properties -->
+              <div class="properties u-ph+ u-pb+ u-mt+">
+                <p class="epsilon">Properties</p>
+                <p class="zeta">
+                  Note: the following properties are not dynamically reflected at this time, but you can view the differences by using the "Option" tabs above.
+                </p>
+
+                <div class="u-mb-">Highlight Method: <input id="highlightMethod{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="First" value="{{item.highlightMethod::input}}" disabled /></div>
+                <div class="u-mb-">Highlight Value: <input id="highlightValue{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="First" value="{{item.highlightValue::input}}" disabled /></div>
+                <div class="u-mb-">Highlight Type: <input id="highlightType{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="First" value="{{item.highlightType::input}}" disabled /></div>
+
+              </div>
+
+              <div class="demoContainer clearfix u-mt+">
+                <!-- demo -->
+                <div class="flex flex--col">
+                  <div class="demo u-p+">
+                    <px-data-table id="mytable" selectable table-data="{{data}}">
+                      <px-data-table-column name="first">
+                        <px-data-table-highlight highlight-type="{{item.highlightType}}" highlight-value="{{item.highlightValue}}" highlight-method="{{item.highlightMethod}}" import="{{item.import}}"></px-data-table-highlight>
+                      </px-data-table-column>
+                      <px-data-table-column name="last"></px-data-table-column>
+                      <px-data-table-column name="email"></px-data-table-column>
+                    </px-data-table>
+                  </div>
+                  <div class="flex__item">
+                    <px-demo-snippet
+                      element-properties={{item}}
+                      element-name="px-data-table-highlight"
+                      parent-name="px-data-table">
+                    </px-demo-snippet>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="apiContainer">
+              <div class="flex flex--col api u-mt++" >
+                <div class="flex">
+                  <div class="flex__item">
+                    <div class="flex flex--col">
+                      <div class="componentHeader">Parent Component</div>
+                      <div class="componentList">
+                        <ul>
+                          <li><a href="px-data-table-column-demo.html">px-data-table-column</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex__item">
+                    <div class="flex flex--col">
+                      <div class="componentHeader">Associated Component</div>
+                      <div class="componentList">
+                        <ul>
+                          <li><a href="index.html">px-data-table</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <px-api-viewer source="px-data-table-highlight"></px-api-viewer>
+                </div>
+              </div>
+            </div>
+          </section>
+        </template>
+      </px-tab-pages>
+    </div>
+    <footer class="footer flex flex--center">
+      <div class="footer__container u-pv++">
+        <div>
+          <a href="https://ge.com/digital" >
+            <img src="monogram-wdmk.png" alt="GE Monogram" class="footer__img">
+          </a>
+        </div>
+        <div class="footer__list">
+          <ul class="list-inline list-inline--delimited">
+            <li>
+              <a href="http://predix.io/legal" class="footer__list--lnk">Legal</a>
+            </li>
+            <li>
+              <a href="mailto:info@predix.io" class="footer__list--lnk">Contact Us</a>
+            </li>
+            <li>Copyright &copy; 2016 General Electric Company. All rights reserved.</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+  </template>
+<script>
+
+window.addEventListener('WebComponentsReady', function() {
+  var template = document.querySelector('template[is=dom-bind]'),
+  highlightMethods = [{"key":"one","val":"isLongString"},{"key":"two","val":"wordBeginsWithLetterJ"},{"key":"three","val":"wordBeginsWithLetterS"}],
+  highlightValues = [{"key":"one","val":"low"},{"key":"two","val":"medium"},{"key":"three","val":"high"}],
+  highlightTypes = [{"key":"one","val":"cell"},{"key":"two","val":"row"}],
+  optionsArray = [
+    {
+      "highlightMethod": "wordBeginsWithLetterJ",
+      "highlightType": "row",
+      "highlightValue": "high",
+      "import": "px-example-highlight.html",
+      "parentComponent": ["<px-data-table table-data={{data}}><px-data-table-column name=\"first\">","</px-data-table-column></px-data-table>"]
+    },
+    {
+      "highlightMethod": "wordBeginsWithLetterS",
+      "highlightType": "cell",
+      "highlightValue": "medium",
+      "import": "px-example-highlight.html",
+      "parentComponent": ["<px-data-table table-data={{data}}><px-data-table-column name=\"first\">","</px-data-table-column></px-data-table>"]
+    },
+    {
+      "highlightMethod": "isLongString",
+      "highlightType": "cell",
+      "highlightValue": "low",
+      "import": "px-example-highlight.html",
+      "parentComponent": ["<px-data-table table-data={{data}}><px-data-table-column name=\"first\">","</px-data-table-column></px-data-table>"]
+    }
+  ];
+
+  var ironAjaxEl = document.createElement('iron-ajax'),
+      data;
+  ironAjaxEl.handleAs = "json";
+  ironAjaxEl.url = "contacts-mini.json";
+  ironAjaxEl.addEventListener('response', function(evt) {
+    data = evt.detail.response;
+    template.data = data;
+  });
+  ironAjaxEl.generateRequest();
+
+    var indexPlusOne = function(num) {
+      return num + 1;
+    };
+
+    template.selected = "0";
+    template.optionsArray = optionsArray;
+    template.indexPlusOne = indexPlusOne;
+    template.highlightMethods = highlightMethods;
+    template.highlightValues = highlightValues;
+    template.highlightTypes = highlightTypes;
+});
+</script>
+
+</body>
+</html>

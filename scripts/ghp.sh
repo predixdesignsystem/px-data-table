@@ -45,13 +45,16 @@ bower install ${REPO_NAME} --force
 #optimize for production
 cd ${REPO_NAME} #go into the component folder
 npm install vulcanize
-vulcanize index.html -o index.vulacanized.html --inline-scripts --inline-css --strip-comments
-vulcanize demo.html -o demo.vulacanized.html --inline-scripts --inline-css --strip-comments
-yes | cp index.vulacanized.html index.html
-yes | cp demo.vulacanized.html demo.html
-rm demo.vulacanized.html
+vulcanize index.html -o index.vulcanized.html --inline-scripts --inline-css --strip-comments
+yes | cp index.vulcanized.html index.html
+rm index.vulcanized.html
+vulcanize px-data-table-column-demo.html -o px-data-table-column-demo.vulcanized.html --inline-scripts --inline-css --strip-comments
+yes | cp px-data-table-column-demo.vulcanized.html px-data-table-column-demo.html
+rm px-data-table-column-demo.vulcanized.html
+vulcanize px-data-table-highlight-demo.html -o px-data-table-highlight-demo.vulcanized.html --inline-scripts --inline-css --strip-comments
+yes | cp px-data-table-highlight-demo.vulcanized.html px-data-table-highlight-demo.html
+rm px-data-table-highlight-demo.vulcanized.html
 cd ../ #remember to exit out of the component before you do any git stuff
-
 
 #do the git stuff
 git add .

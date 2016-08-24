@@ -1,3 +1,19 @@
+v1.12.7
+================
+* Added wrapping for long column headers
+
+v1.12.6
+================
+* added support for parent-name in demo-snippet
+
+v1.12.5
+================
+* Update ghp to include secondary demo pages
+
+v1.12.4
+================
+* Added new demo pages
+
 v1.12.3
 ================
 * added image to readme
