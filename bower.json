@@ -42,12 +42,15 @@
     "px-api-viewer": "^0.0.4",
     "px-demo-snippet": "^0.2.0",
     "px-toggle-design": "^0.2.12",
-    "px-headings-design": "^0.2.13",
+    "px-headings-design": "^0.2.14",
     "px-actionable-text-icons-design": "^0.0.3",
     "px-code-design": "^0.2.11",
-    "px-headings-design": "^0.2.14",
     "px-list-inline-design": "^0.2.11",
     "px-polymer-font-awesome": "^0.1.8",
     "px-dropdown": "^0.10.1"
+  },
+  "resolutions": {
+    "px-theme": "~1.1.0",
+    "px-typography-design": "^1.1.0"
   }
 }
