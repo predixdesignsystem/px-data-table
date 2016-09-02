@@ -1,3 +1,11 @@
+v1.13.3
+================
+* Hide scrollbar if not needed
+
+v1.13.2
+================
+* Remove gruntfile
+
 v1.13.1
 ================
 * Fix for column chooser and long column names
