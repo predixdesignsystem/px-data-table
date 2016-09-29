@@ -1334,4 +1334,30 @@ function runTests() {
       });
     });
   });
+
+  suite('Unit Tests for page size property', function () {
+
+    test('Default pagination size is 10', function(){
+      assert.equal(table1Fixture.pageSize, 10, 'Default page size should be 10 rows.');
+    });
+
+    test('Default rows displayed size is 10', function(){
+      var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
+          rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
+      assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
+    });
+
+    test('Switching pageSize property to 20 should make table re-render', function(done){
+      var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
+          rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
+      assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
+
+      table1Fixture.pageSize = 20;
+      flush(function(){
+        var newRowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
+        assert.equal(newRowCount, 20, 'Default rows displayed should be 20 rows.');
+        done();
+      });
+    });
+  });
 }
