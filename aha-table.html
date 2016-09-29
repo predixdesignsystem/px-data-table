@@ -216,6 +216,18 @@
         value: false
       },
       /**
+       * Property to set the page size instead of the default of 10.
+       *
+       *      <px-data-table page-size="50" table-data="{{data}}"></px-data-table>
+       *
+       * @default 10
+       */
+      pageSize: {
+        type: Number,
+        value: 10,
+        observer : '_setPageSize'
+      },
+      /**
        * Property to set the visibility of the table pagination controls.
        *
        *      <px-data-table hide-pagination-control="false" table-data="{{data}}"></px-data-table>
@@ -659,6 +671,10 @@
 
     /******* Update Displayed rows when major changes ****/
 
+    _setPageSize: function() {
+      this.$.pagination.setPageSize(this.pageSize);
+    },
+    
     _updateDisplayedRows: function() {
       var fromPage,
           to;

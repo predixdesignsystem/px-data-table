@@ -83,6 +83,7 @@ Events:
                  selectable="{{selectable}}"
                  selected-rows="{{selectedRows}}"
                  meta="{{meta}}"
+                 page-size="{{pageSize}}"
                  hide-pagination-control="{{hidePaginationControl}}"
                  show-column-chooser="{{showColumnChooser}}"
                  enable-column-reorder="{{enableColumnReorder}}"
@@ -205,6 +206,18 @@ Events:
       hidePaginationControl: {
         type: Boolean,
         value: false
+      },
+
+      /**
+       * Property to set the page size instead of the default of 10.
+       *
+       *      <px-data-table page-size="50" table-data="{{data}}"></px-data-table>
+       *
+       * @default 10
+       */
+      pageSize: {
+        type: Number,
+        value: 10
       },
 
       /**

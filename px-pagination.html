@@ -135,17 +135,30 @@ Element that provides pagination.
       }
     },
 
+    /**
+     * Set page size public interface.
+     * 
+     * Set Page size, trigger update of table, update combobox.
+     */
+    setPageSize: function(size) {
+      this._updatePageSize(size);
+    },
+
     _changeDropDown: function(e) {
+      this._updatePageSize(parseInt(e.target.value));
+    },
+
+    _updatePageSize: function(size) {
       var sizelist = [10, 20, 50, 100];
-      var size = parseInt(e.target.value),
-        index = sizelist.indexOf(size);
+      var index = sizelist.indexOf(size);
+
       var parentElem = this.$.pageSizeSelect,
         optionList = Polymer.dom(parentElem).querySelectorAll("option");
 
       optionList.forEach(function(option) {
         if(parseInt(option.value) === parseInt(size)) {
           option.setAttribute('selected', '');
-          e.target.selectedIndex = parseInt(index);
+          parentElem.selectedIndex = parseInt(index);
         } else {
           option.removeAttribute('selected');
         }
