@@ -61,6 +61,7 @@
                 Note: the following properties are not dynamically reflected at this time, but you can view the differences by using the "Option" tabs above. The options are only tied to the first column in the example data table.
               </p>
               <div class="u-mb-">Label: <input id="label{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="First" value="{{item.label::input}}" disabled /></div>
+              <div class="u-mb-">Type: <input id="type{{indexPlusOne(index)}}" class="text-input" type="text" placeholder="string" value="{{item.type::input}}" disabled /></div>
               <div class="flex u-mb-">
                 <input id="sortable{{indexPlusOne(index)}}" type="checkbox" checked="{{item.sortable::change}}" disabled>
                 <div class="u-ml-">Sortable</div>
@@ -162,7 +163,7 @@ window.addEventListener('WebComponentsReady', function() {
       "sortable": true,
       "filterable": true,
       "editable": false,
-      "type": "",
+      "type": "string",
       "dropdownItems": false,
       "parentComponent": ["<px-data-table table-data={{data}}>","</px-data-table>"]
 
