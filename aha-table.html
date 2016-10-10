@@ -476,6 +476,10 @@
       } else{
         this._internalData = this._refreshInternalData();
       }
+      this.selectedRows = this._internalData.filter(function(it){
+        return it._selected === true;
+      });
+
       this._filterSortAndUpdateDisplayedTable();
 
       var pathNumber = new RegExp('([#])([0-9])+');
@@ -674,7 +678,7 @@
     _setPageSize: function() {
       this.$.pagination.setPageSize(this.pageSize);
     },
-    
+
     _updateDisplayedRows: function() {
       var fromPage,
           to;
