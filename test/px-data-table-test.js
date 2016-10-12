@@ -1,4 +1,4 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, table6Fixture, dropdownFixture, filtertest, resetDataFixture, additionalDataFixture;
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, table6Fixture, dropdownFixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
@@ -780,6 +780,10 @@ document.addEventListener("WebComponentsReady", function() {
   additionalDataFixture = document.getElementById('updateTableWithAdditionalData');
   additionalDataFixture.tableData = data;
 
+  updateSelectFixture = document.getElementById('updateTableWithSelection');
+  // use `data.slice()` to avoid breaking `additionalDataFixture` tests
+  updateSelectFixture.tableData = data.slice();
+
   runTests();
 });
 
@@ -1129,6 +1133,32 @@ function runTests() {
         });
       });
 
+    });
+
+    test('Modifying data with selected rows updates `selectedRows`', function(done){
+      var tableData = updateSelectFixture.tableData;
+      assert.equal(updateSelectFixture.selectedRows.length, 0);
+
+      // select the checkbox on the first row (the first one is global selector!)
+      var firstRowCheckbox = updateSelectFixture.querySelectorAll("input[type=checkbox]")[1];
+
+      // click on the checkbox to select the row
+      firstRowCheckbox.click();
+      flush(function(){
+        assert.equal(updateSelectFixture.selectedRows.length, 1);
+
+        // update table data. every operation will work.
+        updateSelectFixture.push("tableData", tableData[0]);
+        flush(function(){
+          // de-select the row
+          firstRowCheckbox.click();
+
+          flush(function() {
+            assert.equal(updateSelectFixture.selectedRows.length, 0);
+            done();
+          });
+        });
+      });
     });
 
   });
