@@ -1,3 +1,7 @@
+v1.14.1
+================
+* Update dependencies
+
 v1.13.3
 ================
 * Hide scrollbar if not needed
