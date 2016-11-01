@@ -114,7 +114,7 @@
                   <div class="demo u-p+">
 
                   <px-data-table
-                  table-data="{{data}}"
+                  table-data="{{item.tableData}}"
                   striped="{{item.striped}}"
                   filterable="{{item.filterable}}"
                   selectable="{{item.selectable}}"
@@ -197,9 +197,25 @@
 <script>
 window.addEventListener('WebComponentsReady', function() {
   var template = document.querySelector('template[is=dom-bind]'),
+  tableData = [
+    {
+      "first": "Valentine",
+      "last": "Meyer",
+      "email": "valentinemeyer@scentric.com"
+    },
+    {
+      "first": "Silva",
+      "last": "Alexander",
+      "email": "silvaalexander@gmail.com"
+    },
+    {
+      "first": "Hopkins",
+      "last": "Wong",
+      "email": "hopkinswong@hotmail.com"
+    }],
   optionsArray = [
     {
-      "tableData": "{{data}}",
+      "tableData": tableData,
       "striped": false,
       "filterable": false,
       "selectable": false,
@@ -211,7 +227,7 @@ window.addEventListener('WebComponentsReady', function() {
       "hidePaginationControl": false
     },
     {
-      "tableData": "{{data}}",
+      "tableData": tableData,
       "striped": true,
       "filterable": true,
       "selectable": true,
