@@ -78,7 +78,7 @@
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
-          <div class$="{{_getRowClass(internalRow,striped)}}">
+          <div class$="{{_getRowClass(internalRow,striped)}}" on-tap="_rowTap" data-args="[[internalRow]]">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <template is="dom-if" if="{{_isFalse(column.hide)}}">
@@ -113,6 +113,9 @@
                 </template>
               </template>
             </template>
+          </div>
+		  <div id="px-row-detail" is="dom-if" if="{{expandable}}">
+                        
           </div>
         </template>
       </div>
@@ -165,6 +168,11 @@
         type: Boolean,
         value: false,
         observer: "_selectableChanged"
+      },
+      //expandable: if table row is expandable
+      expandable: {
+        type: Boolean,
+        value: false,
       },
       //striped: if table row is striped
       striped: {
@@ -1381,6 +1389,32 @@
       }
     },
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
+    _rowTap: function (e) {
+      this.fire('row-tap', {
+        'e': e,
+        'row': e.currentTarget.dataArgs,
+        'data': this.data[e.currentTarget.dataArgs.row.dataIndex]
+      });
+      if (this.expandable) {
+        if (e.currentTarget.dataArgs.expanded) {
+          e.currentTarget.setAttribute('expanded', false);
+          e.currentTarget.dataArgs.expanded = false;
+          this.fire('row-collapse', {
+            'e': e,
+            'row': e.currentTarget.dataArgs,
+            'data': this.data[e.currentTarget.dataArgs.row.dataIndex]
+          })
+        } else {
+          e.currentTarget.setAttribute('expanded', true);
+          e.currentTarget.dataArgs.expanded = true;
+          this.fire('row-expand', {
+            'e': e,
+            'row': e.currentTarget.dataArgs,
+            'data': this.data[e.currentTarget.dataArgs.row.dataIndex]
+          });
+        }
+      }
+    },
 
     _getRowClass: function(row,striped) {
       return ['tr', 'rows',
