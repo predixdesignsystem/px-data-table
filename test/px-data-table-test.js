@@ -784,6 +784,9 @@ document.addEventListener("WebComponentsReady", function() {
   // use `data.slice()` to avoid breaking `additionalDataFixture` tests
   updateSelectFixture.tableData = data.slice();
 
+  dataTableWithRowClickFixture = document.getElementById('dataTableWithRowClick');
+  dataTableWithRowClickFixture.tableData = data;
+
   runTests();
 });
 
@@ -811,16 +814,17 @@ function runTests() {
     test('myTable fixture is created', function() {
       assert.isTrue(document.getElementById('myTable') !== null);
     });
-
+    test('dataTableWithRowClick fixture is created', function () {
+        assert.isTrue(document.getElementById('dataTableWithRowClick') !== null);
+    });
     // Spot checks for correct table structure, cell values and control states
 
     test('There should be 17 columns in the table1 fixture', function() {
-
       // Select a div corresponding to a data row in the table
-      var divSelector = '#dataTable > .scroll-body.style-scope.aha-table > div > :nth-child(4)';
+var divSelector = '#dataTable > .scroll-body.style-scope.aha-table > div > :nth-child(5)';
       var divRow = document.querySelector(divSelector);
       // Select all <span> children of divRow
-      var childSpanSelector = ':nth-child(4) > .td.style-scope.aha-table';
+      var childSpanSelector = ':nth-child(5) > .td.style-scope.aha-table';
       var columnCount = divRow.querySelectorAll(childSpanSelector).length;
       // There should be 17 such spans
       assert.equal(columnCount, 17);
@@ -881,7 +885,7 @@ function runTests() {
       var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
       lastNameFilter.addEventListener('keyup', function(e){
         setTimeout(function() {
-          var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
+          var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(5) .aha-first-td';
           var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
           assert.equal(secondReturnedRowFirstName.innerHTML.indexOf('Rita') >= 0, true);
           done(); // end the test
@@ -1389,5 +1393,32 @@ function runTests() {
         done();
       });
     });
+  });
+
+  suite('Unit Tests to check row click event based on expanded property', function () {
+
+      // Spot checks for row click functionality
+      test('Row click is perfomed correctly when row is clicked', function (done) {
+          
+          var clickableTableRoot = document.querySelector('#dataTableWithRowClick');
+          var dataRowSelector = '.rows';
+          var dataRow = clickableTableRoot.querySelector(dataRowSelector);
+          dataRow.addEventListener('click', function (e) {
+              setTimeout(function () {
+                  var rowDetailsContainer = clickableTableRoot.querySelector(".rows + div");
+                  rowDetailsContainer.textContent = "Row is clicked";
+                  var updatedRowDetailsContainerText = Polymer.dom(dataTableWithRowClickFixture.root).querySelector('aha-table').querySelector(".rows + div");
+
+                  //make sure row click had updated the inner container textContent
+                  assert.equal(updatedRowDetailsContainerText.textContent, 'Row is clicked');
+                  
+                  done();
+
+              }, 0);
+          });
+          // Trigger a click on the First Name column header
+          dataRow.click();
+         
+      });
   });
 }
