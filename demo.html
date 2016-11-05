@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 
 <html>
   <head>
@@ -42,6 +42,11 @@
       <px-data-table table-rows enable-column-reorder table-data="{{data}}"></px-data-table>
 
       <hr>
+
+        <p>Expanding Row functionality to show inline content on row click.</p>
+        <px-data-table id="mytableForRowExpand" table-rows table-data="{{data}}" expandable></px-data-table>
+
+        <hr>
 
       <h3>Very customized data table</h3>
 
@@ -169,6 +174,25 @@
             var clickedRow = e.detail.row;
             console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
           });
+
+          var allRows = document.querySelectorAll('#mytableForRowExpand div.rows');
+
+          for (var i = 0; i < allRows.length; i++) {
+              allRows[i].addEventListener('click', function (e, data) {
+                  if (e.currentTarget.dataArgs.expanded) {
+                      var container = e.currentTarget.nextElementSibling;
+                      var newDivElement = document.createElement("div");
+                      newDivElement.innerHTML = "The Inner text or Control can be placed here";
+                      container.append(newDivElement);
+                  }
+                  else {
+                      var parent = e.currentTarget.nextElementSibling;
+                      while (parent.hasChildNodes()) {
+                          parent.removeChild(parent.lastChild);
+                      }
+                  }
+              });
+          }
         });
 
 
