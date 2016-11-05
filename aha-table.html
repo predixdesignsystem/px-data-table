@@ -114,9 +114,9 @@
               </template>
             </template>
           </div>
-		  <template id="px-row-detail" is="dom-if" if="{{expandable}}">
-            <div class="flex flex--center" is="dom-if"></div>
-          </template>
+            <template id="px-row-detail" is="dom-if" if="{{expandable}}">
+                <div class="flex flex--center" if="{{expandable}}"> Inner content goes here</div>
+            </template>
         </template>
       </div>
 

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -95,6 +95,11 @@
                 <label for$="hidePaginationControl{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
                 <div class="u-ml-">Hide Pagination Control</div>
               </div>
+              <div class="flex u-mb-">
+                  <input id="rowExpand{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.expandable::change}}">
+                  <label for$="rowExpand{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
+                  <div class="u-ml-">Row Expand</div>
+              </div>
               <p class="zeta">
                 Note: the following properties are not dynamically reflected at this time, but you can view the differences by using the "Option" tabs above.
               </p>
@@ -123,6 +128,7 @@
                   enable-column-resize="{{item.enableColumnResize}}"
                   table-columns="{{item.tableColumns}}"
                   table-rows="{{item.tableRows}}"
+                  expandable="{{item.expandable}}"
                   hide-pagination-control="{{item.hidePaginationControl}}">
                     <px-data-table-column name="first" filterable></px-data-table-column>
                     <px-data-table-column name="last" filterable></px-data-table-column>
