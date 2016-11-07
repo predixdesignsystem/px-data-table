@@ -1,4 +1,4 @@
-v1.14.3
+v1.14.4
 ================
 * updated to latest version of dropdown
 
