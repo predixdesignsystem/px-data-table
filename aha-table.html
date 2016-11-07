@@ -1295,7 +1295,7 @@
         //parse index of item that has changed
         var index = dropdownItem.path.match(/\.#(\d+)./)[1];
         if(index) {
-          var columnName = dropdownItem.base[index].name,
+          var columnName = dropdownItem.base[index].key,
               checked = dropdownItem.value;
 
           if(checked) {
@@ -1313,7 +1313,7 @@
       var items = [];
       meta.forEach(function(column, index) {
         if(column.name !== '_selected' && column.name !== 'insertion-indicator') {
-          items.push({ name: column.name, val: column.label, checked: !column.hide});
+          items.push({ key: column.name, val: column.label, checked: !column.hide});
         }
       });
 

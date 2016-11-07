@@ -1,3 +1,7 @@
+v1.14.3
+================
+* updated to latest version of dropdown
+
 v1.14.2
 ================
 * fixed codepen

@@ -1,6 +1,6 @@
 {
   "name": "px-data-table",
-  "version": "1.14.2",
+  "version": "1.14.3",
   "main": [
     "px-data-table.html"
   ],
@@ -24,7 +24,7 @@
     "iron-a11y-keys-behavior": "~1.1.9",
     "polymer-font-awesome": "~v0.1.5",
     "px-validation": "~0.3.0",
-    "px-dropdown": "~0.12.2"
+    "px-dropdown": "~1.0.0"
   },
   "devDependencies": {
     "px-tables-design": "~0.3.13",
