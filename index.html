@@ -96,7 +96,7 @@
                 <div class="u-ml-">Hide Pagination Control</div>
               </div>
               <div class="flex u-mb-">
-                  <input id="rowExpand{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.expandable::change}}">
+                  <input id="rowExpand{{indexPlusOne(index)}}" class="toggle__input toggle__input--small" type="checkbox" checked="{{item.expandable::change}}"  onclick="addRowExpandEventListeners()">
                   <label for$="rowExpand{{indexPlusOne(index)}}" class="toggle__label toggle__label--small"></label>
                   <div class="u-ml-">Row Expand</div>
               </div>
@@ -118,7 +118,7 @@
                 <div class="flex flex--col">
                   <div class="demo u-p+">
 
-                  <px-data-table
+                  <px-data-table id="demoPxDataTable"
                   table-data="{{item.tableData}}"
                   striped="{{item.striped}}"
                   filterable="{{item.filterable}}"
@@ -264,6 +264,28 @@ window.addEventListener('WebComponentsReady', function() {
     template.optionsArray = optionsArray;
     template.indexPlusOne = indexPlusOne;
 });
+function addRowExpandEventListeners() {
+    /*Adding event listener to all rows to expand on click and show a div inside it */
+    var allRows = document.querySelectorAll('#demoPxDataTable div.rows');
+
+    for (var i = 0; i < allRows.length; i++) {
+        allRows[i].addEventListener('click', function (e, data) {
+            if (e.currentTarget.dataArgs.expanded) {
+                var container = e.currentTarget.nextElementSibling;
+                var newDivElement = document.createElement("div");
+                newDivElement.innerHTML = "The Inner text or Control can be placed here";
+                container.append(newDivElement);
+            }
+            else {
+                var parent = e.currentTarget.nextElementSibling;
+                while (parent.hasChildNodes()) {
+                    parent.removeChild(parent.lastChild);
+                }
+            }
+        });
+    }
+
+}
 </script>
 
 </body>
