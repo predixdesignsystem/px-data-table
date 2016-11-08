@@ -276,7 +276,7 @@
         this.addEventListener('undo-edit-mode', this._undoEditMode.bind(this));
         this.addEventListener('setDropdownItem', this._setDropdownItem),
         this.toggleClass('td', true);
-        this.toggleClass('aha-' + this.columnName + '-td', true);
+        this.toggleClass('aha-' + this.columnName.replace(/\s/g, "-") + '-td', true);
       },
       attached: function() {
         this.toggleClass('td__dropdown', this._dropdownItem);
