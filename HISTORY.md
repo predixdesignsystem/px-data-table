@@ -1,3 +1,7 @@
+v1.14.5
+================
+* Fix for error with auto-generated columns with white spaces in names.
+
 v1.14.4
 ================
 * updated to latest version of dropdown
