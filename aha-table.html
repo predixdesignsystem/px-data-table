@@ -921,7 +921,9 @@
       if(searchString === undefined || searchString === null || searchString === "") {
         return true;
       }
-      return (cellValue.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
+      if(cellValue){
+        return (cellValue.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
+      }
     },
 
     _save: function(evt) {
