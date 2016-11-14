@@ -1,4 +1,4 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, table6Fixture, dropdownFixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture;
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, dropdownFixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
@@ -768,9 +768,6 @@ document.addEventListener("WebComponentsReady", function() {
   dropdownFixture = document.getElementById('myDropdownTable');
   dropdownFixture.tableData = data;
 
-  table6Fixture = document.getElementById('table6');
-  table6Fixture.tableData = data;
-
   filtertest = document.getElementById('filtertest');
   filtertest.tableData = minidata;
 
@@ -1058,17 +1055,23 @@ function runTests() {
   suite('Additional unit tests for when hide-pagination-control is used.', function(){
 
     test('Pagination controls are not displayed.', function(done){
-        var fixture = document.querySelector('#table6 #pagination');
-        assert.isTrue(fixture.classList.contains('visuallyhidden'));
-        done();
+        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table');
+        var paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
+        table5Fixture.setAttribute('hide-pagination-control', true);
+        flush(function(){
+          assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
+          done();
+        });
     });
 
     test('Table shows all data (26 rows) instead of 10.', function(done){
-        var fixture = document.getElementById('table6');
         var selector = '.summary.style-scope.px-pagination :nth-child(4)';
-        var span = fixture.querySelector(selector);
-        assert.equal(span.innerHTML, '26');
-        done();
+        var span = table5Fixture.querySelector(selector);
+        table5Fixture.setAttribute('hide-pagination-control', true);
+        flush(function(){
+          assert.equal(span.innerHTML, '26');
+          done();
+        });
     });
 
   });
