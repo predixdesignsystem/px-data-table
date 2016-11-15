@@ -1,3 +1,8 @@
+
+v1.14.6
+==================
+* bower updating px-demo-snippet
+
 v1.14.5
 ================
 * Fix for error with auto-generated columns with white spaces in names.
