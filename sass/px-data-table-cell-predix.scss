@@ -22,15 +22,15 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 @import 'px-data-table-cell-sketch.scss';
 
 :host{
-  --dropdown_bg_default: transparent;
-  --dropdown_bg_hover: transparent;
-  --dropdown_bg_opened: transparent;
-  --dropdown_border_color: 0;
+  --px-dropdown-bg-default: transparent;
+  --px-dropdown-bg--hover: transparent;
+  --px-dropdown-bg--opened: transparent;
+  --px-dropdown-border-color: 0;
 }
 
 :host(.cell__edit) {
-  background-color: $inuit-forms-background !important;
-  border: $inuit-table-border-width double $primary-blue !important;
+  background-color: var(--px-data-table-cell-background-color--edit,$inuit-forms-background) !important;
+  border: $inuit-table-border-width double var(--px-data-table-cell-border-color--edit,$primary-blue) !important;
   box-shadow: $inuit-forms-border--inner;
   & input, textarea {
     outline: none;
@@ -40,12 +40,12 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 :host(.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected){
-  border: $inuit-table-border-width double $select-blue-default;
+  border: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, $select-blue-default);
 }
 
 :host(.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row){
-  border-top: $inuit-table-border-width double $select-blue-default;
-  border-bottom: $inuit-table-border-width double $select-blue-default;
+  border-top: $inuit-table-border-width double var(--px-data-table-row-border-top-color--selected, $select-blue-default);
+  border-bottom: $inuit-table-border-width double var(--px-data-table-row-border-bottom-color--selected, $select-blue-default);
 }
 
 :host(.cell--value__highlight--color__high){
@@ -61,17 +61,13 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 :host(.selected) {
-  background-color: $select-blue-default;
-  color: $white;
-  border-top: $inuit-table-border-width double $select-blue-default !important;
-  border-bottom: $inuit-table-border-width double $select-blue-default !important;
+  background-color: var(--px-data-table-cell--selected, $select-blue-default);
+  color: var(--px-data-table-cell-text-color--selected, $white);
+  border-top: $inuit-table-border-width double var(--px-data-table-row-border-top-color--selected, $select-blue-default) !important;
+  border-bottom: $inuit-table-border-width double var(--px-data-table-row-border-bottom-color--selected, $select-blue-default) !important;
 
 }
 
 .cell--value--icon__validation-failed {
-  color: $alert-red;
+  color: var(--px-data-table-cell-text-color-validation--failed, $alert-red);
 }
-
-// .tooltip-font {
-//   font-family: $predix-font-family;
-// }

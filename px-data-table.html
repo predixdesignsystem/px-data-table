@@ -66,7 +66,44 @@ Events:
         console.log("Select/unselect all", allSelectedRows);
       });
 
-@demo demo.html
+### Styling
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--px-data-table-border-color` | The table border color | $gray5
+`--px-data-table-cell-border-color` | The cell border color | `$gray5`
+`--px-data-table-cell-border-validation--failed` | The cell border color when validation fails | `$alert-red`
+`--px-data-table-cell-border-color--edit` | The cell border color when in edit mode | `$primary-blue`
+`--px-data-table-cell-border-color--selected` | The cell border color when selected | `$select-blue-default`
+`--px-data-table-cell-background-color--selected` | The cell background color when selected | `$select-blue-default`
+`--px-data-table-cell-background-color--edit` | The cell background color when in edit mode | `$inuit-forms-background`
+`--px-data-table-background-color-striped--even` | The background color of a striped cell (even) | `$gray2`
+`--px-data-table-row-border-top-color--selected` | The row border top color when selected | `$select-blue-default`
+`--px-data-table-row-border-bottom-color--selected` | The row border bottom color when selected | `$select-blue-default`
+`--px-data-table-cell-text-color--selected` | The cell text color when selected | `$white`
+`--px-data-table-cell-text-color-validation--failed` | The cell text color when validation fails | `$alert-red`
+`--px-data-table-cell-text-color--sorted` | The text color in a sorted cell | `$select-blue-default`
+`--px-data-table-cell-border-validation--failed` | The border color of a cell when validation fails | `$alert-red`
+`--px-data-table-results-text-color--none` | The text color the results when there are none | `$gray6`
+`--px-data-table-btn-pagination-number-background-color` | The backgorund color of a pagination btn | `$select-blue-default`
+`--px-data-table-btn-pagination-number-text-color` | The text color of a pagination btn | `$white`
+`--px-data-table-btn-pagination-number-background-color--hover` | The backgorund color of a pagination btn when hovered | `$select-blue-default`
+`--px-data-table-btn-pagination-number-text-color--hover` | The text color of a pagination btn when hovered | `$white`
+`--px-data-table-insertion-indicator-td-background-color` | The background color of an insertion indicator td  | `$primary-blue`
+`--px-data-table-text-input-background-color--filter` | The background color of a filtered input box | `$white`
+`--px-data-table-text-color--dragged` | The text color of a dragged item | `$primary-blue`
+`--cell--value__highlight--color__high` | A high highlight | `rgba($alert-red, 0.25)`
+`--cell--value__highlight--color__medium` | A medium highlight | `rgba($alert-yellow, 0.25)`
+`--cell--value__highlight--color__low` | A low highlight | `rgba($alert-blue, 0.25)`
+`--px-data-table-padding-top` | The padding top for a td |
+`--px-data-table-padding-bottom` |  The padding bottm for a td |
+`--px-data-table-padding-left` |  The padding left for a td |
+`--px-data-table-padding-right` |  The padding right for a td |
+
+
+
+@demo index.html
 -->
 <link rel="import" href="css/px-data-table-styles.html">
 

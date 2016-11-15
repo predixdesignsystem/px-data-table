@@ -38,7 +38,7 @@ $inuit-enable-table--small: true;
 $inuit-enable-table--large: true;
 $inuit-enable-table--rows: true;
 $inuit-enable-table--columns: true;
-$inuit-table-border-color: $gray5;
+$inuit-table-border-color: var(--px-data-table-cell-border-color, $gray5);
 
 @import "px-tables-design/_base.tables.scss";
 
@@ -126,7 +126,7 @@ label {
 }
 
 .no-results {
-  color: $gray6;
+  color: var(--px-data-table-results-text-color--none,$gray6);
   height: 2rem;
   align-items: center;
 }

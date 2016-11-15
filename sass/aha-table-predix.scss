@@ -21,32 +21,32 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 @import 'aha-table-sketch.scss';
 
 .striped:nth-child(even) {
-  background-color: $gray2;
+  background-color: var(--px-data-table-background-color-striped--even, $gray2);
 }
 
 .sorted-text {
-  color: $select-blue-default;
+  color: var(--px-data-table-cell-text-color--sorted, $select-blue-default);
 }
 
 .btn--pagination--number {
-  background-color: $select-blue-default;
-  color: $white;
+  background-color: var(--px-data-table-btn-pagination-number-background-color, $select-blue-default);
+  color: var(--px-data-table-btn-pagination-number-text-color,$white);
   &:hover {
-    background-color: $select-blue-default;
-    color: $white;
+    background-color: var(--px-data-table-btn-pagination-number-background-color--hover,$select-blue-default);
+    color: var(--px-data-table-btn-pagination-number-text-color--hover, $white);
   }
 }
 
 .table .aha-insertion-indicator-td {
-  background-color: $primary-blue;
+  background-color: var(--px-data-table-insertion-indicator-td-background-color, $primary-blue);
 }
 
 .insertion-indicator.insertion-indicator.insertion-indicator {
-  background-color: $primary-blue;
+  background-color: var(--px-data-table-insertion-indicator-td-background-color, $primary-blue);
 }
 
 .dragged {
-  color: $primary-blue;
+  color: var(--px-data-table-text-color--dragged, $primary-blue);
 }
 
 .btn--pagination:focus {
@@ -54,16 +54,16 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 .text-input--filter {
-  background-color: $white;
+  background-color: var(--px-data-table-text-input-background-color--filter, $white);
 }
 
 .tr--filter {
-  background-color: $gray4;
+  background-color: var(--px-data-table-tr--filter, $gray4);
 }
 
 .selected-cell__selected.selected-cell__selected {
-  background-color: $select-blue-default;
-  border: 1px double $select-blue-default !important;
+  background-color: var(--px-data-table-cell-background-color--selected, $select-blue-default);
+  border: 1px double var(--px-data-table-cell-border-color--selected, $select-blue-default) !important;
 }
 
 .th {
@@ -71,12 +71,12 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 }
 
 .sorted-text-hover:hover {
-  color: $select-blue-hover;
+  color: var(--px-data-table-sorted-text--hover, $select-blue-hover);
   cursor: pointer;
 }
 
 .cell--value__validation-failed{
-  border: $inuit-table-border-width double $alert-red !important;
+  border: $inuit-table-border-width double var(--px-data-table-cell-border-validation--failed, $alert-red) !important;
 }
 
 .cell--value__highlight--color__high{

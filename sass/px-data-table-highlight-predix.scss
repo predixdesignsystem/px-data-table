@@ -26,6 +26,6 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   --cell--value__highlight--low--color: rgba($alert-blue, 0.25);
 }
 
-.use-the-var-in-something{
-  background-color: var(--cell--value__highlight--color);
-}
+// .use-the-var-in-something{
+//   background-color: var(--cell--value__highlight--color);
+// }
