@@ -1,13 +1,13 @@
 {
     "name": "px-data-table",
-    "version": "1.14.7",
+    "version": "1.14.8",
     "main": [
         "px-data-table.html"
     ],
     "ignore": [
         ".*",
         "npm-debug.log",
-        "Gruntfile.js",
+        "gulpfile.js",
         "sass",
         "bower_components",
         "node_modules",
