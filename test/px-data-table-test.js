@@ -1,4 +1,4 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, dropdownFixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture;
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
@@ -765,9 +765,6 @@ document.addEventListener("WebComponentsReady", function() {
   table5Fixture = document.getElementById('myTable');
   table5Fixture.tableData = data;
 
-  dropdownFixture = document.getElementById('myDropdownTable');
-  dropdownFixture.tableData = data;
-
   filtertest = document.getElementById('filtertest');
   filtertest.tableData = minidata;
 
@@ -987,7 +984,7 @@ function runTests() {
     });
 
     test('dropdown opens on click', function(done){
-      var tb = Polymer.dom(dropdownFixture.root).querySelector('aha-table'),
+      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
           px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
           px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
           dropcell = px_dropdown.$.dropcell,
@@ -999,7 +996,7 @@ function runTests() {
       done();
     });
     test('items passed into dropdown are the ones shown', function(done){
-      var tb = Polymer.dom(dropdownFixture.root).querySelector('aha-table'),
+      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
           px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
           px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
           dropcell = px_dropdown.$.dropcell,
@@ -1011,7 +1008,7 @@ function runTests() {
     });
 
     test('Tooltip dom-if sees the text is too long, and is included in the dom', function(done){
-      var tb = Polymer.dom(dropdownFixture.root).querySelector('aha-table'),
+      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
           px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
           px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
           dropcell = px_dropdown.$.dropcell,
