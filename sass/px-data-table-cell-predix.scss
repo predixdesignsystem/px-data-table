@@ -22,9 +22,9 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 @import 'px-data-table-cell-sketch.scss';
 
 :host{
-  --px-dropdown-bg-default: transparent;
-  --px-dropdown-bg--hover: transparent;
-  --px-dropdown-bg--opened: transparent;
+  --px-dropdown-bg-color--default :transparent;
+  --px-dropdown-bg-color--hover: transparent;
+  --px-dropdown-bg-color--opened: transparent;
   --px-dropdown-border-color: 0;
 }
 
