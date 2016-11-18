@@ -1,3 +1,7 @@
+v1.14.11
+==================
+* update dependencies for dropdown
+
 v1.14.10
 ==================
 * Fix dropdown css variable names to point to correct name.
