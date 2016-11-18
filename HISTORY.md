@@ -1,3 +1,7 @@
+v1.14.12
+==================
+* Ensure cell tooltip is removed on detached
+
 v1.14.11
 ==================
 * update dependencies for dropdown

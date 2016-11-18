@@ -193,6 +193,13 @@
       observers: [
         '_updateHighlight(cellHighlighted.value, rowHighlighted.value)'
       ],
+      detached: function() {
+        //make sure we remove the tooltip in case it's currently showing
+        var tooltip = this.$$('px-tooltip');
+        if(tooltip) {
+          tooltip.remove();
+        }
+      },
       _cellDisplayValueChanged: function(newValue){
         if(this.$$('.cell--value') !== undefined && this.$$('.cell--value') !== null){
           if (newValue !== undefined && newValue !== '') {
