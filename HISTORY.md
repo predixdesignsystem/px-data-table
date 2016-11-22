@@ -1,3 +1,7 @@
+v1.14.15
+==================
+* small change to demo options
+
 v1.14.14
 ==================
 * fixed typo in documentation
