@@ -1,3 +1,7 @@
+v1.14.16
+==================
+* Update px-theme to 2.0.1 and update test fixtures
+
 v1.14.15
 ==================
 * small change to demo options
