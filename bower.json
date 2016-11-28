@@ -1,6 +1,6 @@
 {
     "name": "px-data-table",
-    "version": "1.14.16",
+    "version": "1.14.17",
     "main": [
         "px-data-table.html"
     ],
@@ -27,17 +27,17 @@
         "px-dropdown": "~2.0.0"
     },
     "devDependencies": {
-        "px-tables-design": "~0.3.13",
-        "px-starter-kit-design": "~0.6.0",
+        "px-tables-design": "^0.3.13",
+        "px-starter-kit-design": "^0.6.0",
         "iron-ajax": "^1.4.3",
-        "px-layout-design": "~0.3.13",
-        "px-spacing-design": "~0.3.8",
-        "px-buttons-design": "~0.4.26",
-        "px-button-group-design": "~0.3.12",
-        "px-typography-design": "~1.1.1",
-        "px-forms-design": "~0.3.17",
+        "px-layout-design": "^0.3.13",
+        "px-spacing-design": "^0.3.8",
+        "px-buttons-design": "^0.4.26",
+        "px-button-group-design": "^0.3.12",
+        "px-typography-design": "^1.1.1",
+        "px-forms-design": "^0.3.17",
         "iron-demo-helpers": "~1.2.5",
-        "px-tabs": "~0.5.2",
+        "px-tabs": "^0.5.2",
         "px-api-viewer": "^0.1.0",
         "px-demo-snippet": "^0.6.11",
         "px-toggle-design": "^0.2.12",
