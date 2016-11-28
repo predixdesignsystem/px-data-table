@@ -1,6 +1,6 @@
 {
     "name": "px-data-table",
-    "version": "1.14.17",
+    "version": "1.14.18",
     "main": [
         "px-data-table.html"
     ],

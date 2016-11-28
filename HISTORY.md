@@ -1,3 +1,7 @@
+v1.14.18
+==================
+* Fix sort icon wrapping onto newline issue
+
 v1.14.17
 ==================
 * changing all devDeps to ^
