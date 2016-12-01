@@ -57,7 +57,7 @@ rm px-data-table-highlight-demo.vulcanized.html
 cd ../ #remember to exit out of the component before you do any git stuff
 
 npm install sw-precache
-node node_modules/sw-precache/cli.js  --root='.' --static-file-globs='**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'
+sw-precache  --root='.' --static-file-globs='**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'
 
 #do the git stuff
 git add .
