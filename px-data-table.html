@@ -72,6 +72,8 @@ The following custom properties are available for styling:
 Custom property | Description | Default
 ----------------|-------------|----------
 `--px-data-table-border-color` | The table border color | $gray5
+`--px-data-table-header-text-color` | Text color for the header row | `inherit`
+`--px-data-table-header-background-color` | Background color for the header row | `inherit`
 `--px-data-table-cell-border-color` | The cell border color | `$gray5`
 `--px-data-table-cell-border-validation--failed` | The cell border color when validation fails | `$alert-red`
 `--px-data-table-cell-border-color--edit` | The cell border color when in edit mode | `$primary-blue`
@@ -110,7 +112,7 @@ Custom property | Description | Default
 <dom-module id="px-data-table">
   <template>
     <style include="px-data-table-styles"></style>
-    
+
     <div class="flex">
       <aha-table data="{{tableData}}"
                  filterable="{{filterable}}"

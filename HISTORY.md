@@ -1,3 +1,7 @@
+v1.14.21
+==================
+* added style variables for header row
+
 v1.14.18
 ==================
 * Fix sort icon wrapping onto newline issue
