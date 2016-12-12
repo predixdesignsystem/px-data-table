@@ -1,3 +1,7 @@
+v1.15.0
+==================
+* Updated dependencies
+
 v1.14.22
 ==================
 * Fixed striping table row style
