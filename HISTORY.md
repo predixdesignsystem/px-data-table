@@ -1,3 +1,7 @@
+v1.14.22
+==================
+* Fixed striping table row style
+
 v1.14.21
 ==================
 * added style variables for header row
