@@ -1,50 +1,50 @@
 {
-  "name": "px-data-table",
-  "version": "1.15.0",
-  "main": [
-    "px-data-table.html"
-  ],
-  "ignore": [
-    ".*",
-    "npm-debug.log",
-    "gulpfile.js",
-    "sass",
-    "bower_components",
-    "node_modules",
-    "test",
-    "OSS_Notice.pdf",
-    "scripts",
-    ".github",
-    "px-data-table.png"
-  ],
-  "dependencies": {
-    "polymer": "^1.7.0",
-    "px-tooltip": "^0.10.0",
-    "px-theme": "^2.0.1",
-    "iron-a11y-keys-behavior": "~1.1.9",
-    "polymer-font-awesome": "~v0.1.5",
-    "px-validation": "^0.4.0",
-    "px-dropdown": "^2.1.0"
-  },
-  "devDependencies": {
-    "px-tables-design": "^1.1.0",
-    "px-starter-kit-design": "^0.7.0",
-    "iron-ajax": "^1.4.3",
-    "px-layout-design": "^0.4.0",
-    "px-spacing-design": "^0.4.0",
-    "px-buttons-design": "^1.1.0",
-    "px-button-group-design": "^0.3.12",
-    "px-typography-design": "^1.2.0",
-    "px-forms-design": "^1.1.0",
-    "iron-demo-helpers": "~1.2.5",
-    "px-tabs": "^0.6.0",
-    "px-api-viewer": "^0.1.0",
-    "px-demo-snippet": "^0.6.11",
-    "px-toggle-design": "^1.1.0",
-    "px-headings-design": "^0.3.0",
-    "px-actionable-text-icons-design": "^1.1.0",
-    "px-code-design": "^1.1.0",
-    "px-list-inline-design": "^0.3.0",
-    "px-polymer-font-awesome": "^1.1.0"
-  }
+    "name": "px-data-table",
+    "version": "1.15.1",
+    "main": [
+        "px-data-table.html"
+    ],
+    "ignore": [
+        ".*",
+        "npm-debug.log",
+        "gulpfile.js",
+        "sass",
+        "bower_components",
+        "node_modules",
+        "test",
+        "OSS_Notice.pdf",
+        "scripts",
+        ".github",
+        "px-data-table.png"
+    ],
+    "dependencies": {
+        "polymer": "^1.7.0",
+        "px-tooltip": "^0.10.0",
+        "px-theme": "^2.0.1",
+        "iron-a11y-keys-behavior": "~1.1.9",
+        "polymer-font-awesome": "~v0.1.5",
+        "px-validation": "^0.4.0",
+        "px-dropdown": "^2.1.0"
+    },
+    "devDependencies": {
+        "px-tables-design": "^1.1.0",
+        "px-starter-kit-design": "^0.7.0",
+        "iron-ajax": "^1.4.3",
+        "px-layout-design": "^0.4.0",
+        "px-spacing-design": "^0.4.0",
+        "px-buttons-design": "^1.1.0",
+        "px-button-group-design": "^1.0.3",
+        "px-typography-design": "^1.2.0",
+        "px-forms-design": "^1.1.0",
+        "iron-demo-helpers": "~1.2.5",
+        "px-tabs": "^0.6.0",
+        "px-api-viewer": "^0.1.0",
+        "px-demo-snippet": "^0.6.11",
+        "px-toggle-design": "^1.1.0",
+        "px-headings-design": "^0.3.0",
+        "px-actionable-text-icons-design": "^1.1.0",
+        "px-code-design": "^1.1.0",
+        "px-list-inline-design": "^0.3.0",
+        "px-polymer-font-awesome": "^1.1.0"
+    }
 }

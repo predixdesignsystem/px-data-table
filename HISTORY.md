@@ -1,3 +1,7 @@
+v1.15.1
+==================
+* Update missed design depndencies
+
 v1.15.0
 ==================
 * Updated dependencies
