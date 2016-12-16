@@ -1,6 +1,6 @@
 {
     "name": "px-data-table",
-    "version": "1.15.1",
+    "version": "1.15.2",
     "main": [
         "px-data-table.html"
     ],
@@ -22,7 +22,7 @@
         "px-tooltip": "^0.10.0",
         "px-theme": "^2.0.1",
         "iron-a11y-keys-behavior": "~1.1.9",
-        "polymer-font-awesome": "~v0.1.5",
+        "px-polymer-font-awesome": "^1.1.0",
         "px-validation": "^0.4.0",
         "px-dropdown": "^2.1.0"
     },
@@ -44,7 +44,6 @@
         "px-headings-design": "^0.3.0",
         "px-actionable-text-icons-design": "^1.1.0",
         "px-code-design": "^1.1.0",
-        "px-list-inline-design": "^0.3.0",
-        "px-polymer-font-awesome": "^1.1.0"
+        "px-list-inline-design": "^0.3.0"
     }
 }

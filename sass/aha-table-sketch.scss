@@ -115,6 +115,11 @@ th {
 
 .column-head {
   white-space: pre-line;
+  user-select: none;
+  &--selected {
+    white-space: nowrap;
+    user-select: none;
+  }
 }
 
 label {

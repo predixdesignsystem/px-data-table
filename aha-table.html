@@ -12,7 +12,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
-<link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
+<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
 <link rel="import" href="css/px-data-table-styles.html">
 
 <dom-module id="aha-table">
@@ -39,7 +39,7 @@
                 <div class="flex header--container">
                   <span
                     class$="{{_getTextSortingClass(column, sortedColumn)}}"
-                    on-tap="_sort">{{column.label}}<iron-icon icon="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
+                    on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
                   </span>
                   <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                     <div class="header--drag-handle" on-down="_headerResizeMouseDown" on-track="_headerTrack">
@@ -1497,7 +1497,7 @@
     _getSortingIcon: function(column, sortingColumn, descending) {
       var sortingIcon = ' ';
       if(sortingColumn === column.name) {
-        sortingIcon = descending ? 'polymer-font-awesome:fa-caret-down' : 'polymer-font-awesome:fa-caret-up';
+        sortingIcon = descending ? 'fa:fa-caret-down' : 'fa:fa-caret-up';
       }
       return sortingIcon;
     },
@@ -1510,6 +1510,9 @@
     },
     _getTextSortingClass: function(column, sortingColumn) {
       var classList = ['column-head', 'u-m--'];
+      if (column.name === '_selected'){
+        classList.push('column-head--selected');
+      };
       if(column.sortable) {
         classList.push('sorted-text-hover');
       }

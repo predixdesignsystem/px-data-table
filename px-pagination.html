@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
 
 <!--
 Element that provides pagination.
@@ -13,7 +14,7 @@ Element that provides pagination.
 <dom-module id="px-pagination">
   <template>
     <style include="aha-table-styles"></style>
-    
+
 			<span class="pagesize">
 				<span class="u-mr--">{{pagesizetitle}}</span>
 				<select id="pageSizeSelect" on-change="_changeDropDown">
@@ -33,7 +34,7 @@ Element that provides pagination.
 			<span class="paging">
 				<button
           class$="{{_getPageupClass(currentPage)}}"
-          on-click="goToPreviousPage"><i class="fa fa-angle-left"></i></button>
+          on-click="goToPreviousPage"><iron-icon icon="fa:fa-angle-left"></iron-icon></i></button>
 				<span class="pager">
 					<template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
             <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
@@ -41,7 +42,7 @@ Element that provides pagination.
 				</span>
 				<button
           class$="{{_getPagedownClass(currentPage, pageCount)}}"
-          on-click="goToNextPage"><i class="fa fa-angle-right"></i></button>
+          on-click="goToNextPage"><iron-icon icon="fa:fa-angle-right"></iron-icon></button>
 			</span>
 
   </template>
@@ -137,7 +138,7 @@ Element that provides pagination.
 
     /**
      * Set page size public interface.
-     * 
+     *
      * Set Page size, trigger update of table, update combobox.
      */
     setPageSize: function(size) {
