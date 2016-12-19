@@ -76,5 +76,5 @@ ssh-add $TRAVIS_BUILD_DIR/deploy_key
 #Now that we're all set up, we can push.
 git push $SSH_REPO $TARGET_BRANCH
 git remote add docs https://github.com/predix-ui/${REPO_NAME}
-git push https://github.com/predix-ui/${REPO_NAME} $TARGET_BRANCH
+git push docs $TARGET_BRANCH
 git remote remove docs
