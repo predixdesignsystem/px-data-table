@@ -41,11 +41,14 @@ yes | cp ../tmp_bower/bower.json bower.json
 
 #install your new tag through bower, it will fail without forcing it.
 bower install ${REPO_NAME} --force
+bower install px-dark-theme --force
 
 #optimize for production
 cd ${REPO_NAME} #go into the component folder
 npm install vulcanize -g
 vulcanize index.html -o index.vulcanized.html --inline-scripts --inline-css --strip-comments
+yes | cp index.html indexh2.html
+yes | cp indexh2.html indexdarkh2.html
 yes | cp index.vulcanized.html index.html
 rm index.vulcanized.html
 vulcanize px-data-table-column-demo.html -o px-data-table-column-demo.vulcanized.html --inline-scripts --inline-css --strip-comments
@@ -54,10 +57,14 @@ rm px-data-table-column-demo.vulcanized.html
 vulcanize px-data-table-highlight-demo.html -o px-data-table-highlight-demo.vulcanized.html --inline-scripts --inline-css --strip-comments
 yes | cp px-data-table-highlight-demo.vulcanized.html px-data-table-highlight-demo.html
 rm px-data-table-highlight-demo.vulcanized.html
+
+perl -pi -w -e 's/px-theme\/px-theme-styles.html/px-dark-theme\/px-dark-theme-styles.html/g;' indexdarkh2.html
+
+
 cd ../ #remember to exit out of the component before you do any git stuff
 
-npm install sw-precache
-sw-precache  --root='.' --static-file-globs='**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'
+# npm install sw-precache
+# sw-precache  --root='.' --static-file-globs='**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'
 
 #do the git stuff
 git add .
@@ -68,3 +75,4 @@ chmod 0400 $TRAVIS_BUILD_DIR/deploy_key
 ssh-add $TRAVIS_BUILD_DIR/deploy_key
 #Now that we're all set up, we can push.
 git push $SSH_REPO $TARGET_BRANCH
+git push --mirror https://github.com/predix-ui/${REPO_NAME}
