@@ -118,11 +118,13 @@ git commit -m "[Travis] Automatically rebuild documentation for Github Pages"
 # Prepare ssh key, which we'll use to authenticate for SSH-push deploy
 eval `ssh-agent -s`
 # ... and change permissions for deploy key
-chmod 0400 $TRAVIS_BUILD_DIR/deploy_key
-ssh-add $TRAVIS_BUILD_DIR/deploy_key
+chmod 0400 $TRAVIS_BUILD_DIR/deploy_key1
+chmod 0400 $TRAVIS_BUILD_DIR/deploy_key2
 
 # First, push to PredixDev/REPO (force to override out-of-date refs)
+ssh-add $TRAVIS_BUILD_DIR/deploy_key1
 git push $SSH_PREDIXDEV_REMOTE $TARGET_BRANCH --force
 
 # Second, push to predix-ui/REPO (force to override out-of-date refs)
+ssh-add $TRAVIS_BUILD_DIR/deploy_key2
 git push $SSH_PREDIXUI_REMOTE $TARGET_BRANCH --force

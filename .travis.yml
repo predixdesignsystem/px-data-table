@@ -23,8 +23,9 @@ script:
 - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct --plugin sauce --skip-plugin
   local; fi
 before_install:
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then openssl aes-256-cbc -k "$password"
-  -in deploy.enc -out deploy_key -d; fi
+- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+  openssl aes-256-cbc -k "$password" -in deploy1.enc -out deploy_key1 -d;
+  openssl aes-256-cbc -k "$password" -in deploy2.enc -out deploy_key2 -d; fi
 after_success:
 - cd $TRAVIS_BUILD_DIR/scripts
 - chmod 755 ghp.sh
