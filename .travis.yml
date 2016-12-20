@@ -38,7 +38,7 @@ env:
 before_install:
   - >-
     if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then openssl aes-256-cbc -k
-    "$password" -in id_rsa.enc -out deploy_key -d; fi
+    "$password" -in deploy.enc -out deploy_key -d; fi
 after_success:
   - cd $TRAVIS_BUILD_DIR/scripts
   - chmod 755 ghp.sh
