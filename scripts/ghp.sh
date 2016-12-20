@@ -125,6 +125,9 @@ chmod 0400 $TRAVIS_BUILD_DIR/deploy_key2
 ssh-add $TRAVIS_BUILD_DIR/deploy_key1
 git push $SSH_PREDIXDEV_REMOTE $TARGET_BRANCH --force
 
-# Second, push to predix-ui/REPO (force to override out-of-date refs)
+# Second, remove the previous identity.
+ssh-add -D
+
+# Third, push to predix-ui/REPO (force to override out-of-date refs)
 ssh-add $TRAVIS_BUILD_DIR/deploy_key2
 git push $SSH_PREDIXUI_REMOTE $TARGET_BRANCH --force
