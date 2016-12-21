@@ -93,7 +93,7 @@ cd ../
 
 # Do the git stuff
 git add .
-git commit -m ${GIT_COMMIT_MESSAGE}
+git commit -m "${GIT_COMMIT_MESSAGE}"
 
 # Set git credentials (defined in settings above)
 git config user.name ${GIT_USER_NAME}
