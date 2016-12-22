@@ -1,6 +1,10 @@
+v1.15.3
+==================
+* Scripting to CI/CD and preparing for docs push
+
 v1.15.2
 ==================
-* Fix pagination button icons and column sort icons. Fix double-tap selection of column headers and add nowrap for first column.
+* Fix pagination button icons and column sort icons. Fix double-tap selection of column headers and add nowrap for first column
 
 v1.15.1
 ==================
