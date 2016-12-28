@@ -1,3 +1,7 @@
+v1.15.4
+==================
+* fixed polymer-font-awesome icon
+
 v1.15.3
 ==================
 * Scripting to CI/CD and preparing for docs push
