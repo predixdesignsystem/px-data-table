@@ -1,3 +1,7 @@
+v1.15.6
+==================
+* changing ghp.sh to account for Alpha releases
+
 v1.15.5
 ==================
 * Fixed validation failure icon. Fix up imports of px-polymer-font-awesome.
