@@ -1,3 +1,7 @@
+v1.15.9
+==================
+* fixed failing unit test with new grays
+
 v1.15.8
 ==================
 * hide ms-clear to fix issue #90 in IE
