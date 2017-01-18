@@ -1,4 +1,4 @@
-v1.15.9
+v1.15.10
 ==================
 * fixed failing unit test with new grays
 
