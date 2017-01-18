@@ -57,6 +57,10 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   background-color: var(--px-data-table-text-input-background-color--filter, $white);
 }
 
+.text-input--filter::-ms-clear {
+  display: none;
+}
+
 .tr--filter {
   background-color: var(--px-data-table-tr--filter, $gray4);
 }
