@@ -1,3 +1,7 @@
+v1.15.11
+==================
+* bower updated so px-demo-snippet and px-api-viewer have new grays 
+
 v1.15.10
 ==================
 * fixed failing unit test with new grays
