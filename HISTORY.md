@@ -1,6 +1,10 @@
+v1.15.12
+==================
+* fix up column demo to correctly configure dropdown columns
+
 v1.15.11
 ==================
-* bower updated so px-demo-snippet and px-api-viewer have new grays 
+* bower updated so px-demo-snippet and px-api-viewer have new grays
 
 v1.15.10
 ==================
