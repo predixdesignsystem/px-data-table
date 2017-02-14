@@ -127,7 +127,8 @@ Custom property | Description | Default
                  show-column-chooser="{{showColumnChooser}}"
                  enable-column-reorder="{{enableColumnReorder}}"
                  enable-column-resize="{{enableColumnResize}}"
-                 id="dataTable">
+                 id="dataTable"
+				 expandable="{{expandable}}">
                  <content></content>
       </aha-table>
     </div>
@@ -195,6 +196,19 @@ Custom property | Description | Default
        * @default false
        */
       filterable: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Use the expandable attribute if the table has expandable functionality per row turned on.
+       *    <px-data-table expandable table-data="{{data}}"></px-data-table>
+       * If columns are specified with px-data-table-column, they must have a expandable attribute to be able to be expanded.
+       * Need to implement px-row-expand and px-row-collapse listeners and add/remove content using them.
+       * Add content to #rowDetail
+       * @default false
+       */
+      expandable: {
         type: Boolean,
         value: false
       },
@@ -308,7 +322,17 @@ Custom property | Description | Default
         value: false
       }
     },
-
+	/**
+     * Listeners:
+     *
+     * This will listen to the events
+     *
+     */
+    listeners: {
+      'row-tap': 'onRowTap',
+      'row-expand': 'onRowExpand',
+      'row-collapse': 'onRowCollapse',
+    },
     /**
      * Events:
      *
@@ -316,5 +340,17 @@ Custom property | Description | Default
      *
      */
 
+    onRowTap(e, data) {
+      this.fire('px-row-tap', data);
+    },
+
+    onRowExpand(e, data) {
+      this.fire('px-row-expand', data);
+    },
+
+    onRowCollapse(e, data) {
+      this.fire('px-row-collapse', data);
+    },
   });
+
 </script>
