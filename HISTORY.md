@@ -1,3 +1,7 @@
+v1.15.13
+==================
+* updated to px-demo
+
 v1.15.12
 ==================
 * fix up column demo to correctly configure dropdown columns

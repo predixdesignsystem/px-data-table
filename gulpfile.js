@@ -35,7 +35,7 @@ function buildCSS(){
   return combiner.obj([
     $.sass(sassOptions),
     $.autoprefixer({
-      browsers: ['last 2 versions', 'Safari 8.0'],
+      browsers: ['last 2 versions'],
       cascade: false
     }),
     gulpif(!argv.debug, $.cssmin())
@@ -73,10 +73,8 @@ gulp.task('serve', function() {
     server: ['./', 'bower_components'],
   });
 
-  if(!argv.nosync){
-    gulp.watch(['css/*-styles.html', 'css/*-demo.css', '*.html', '*.js']).on('change', browserSync.reload);
-    gulp.watch(['sass/*.scss'], ['sass']);
-  }
+  gulp.watch(['css/*-styles.html', '*.html', '*.js', 'demo/*.html']).on('change', browserSync.reload);
+  gulp.watch(['sass/*.scss'], ['sass']);
 
 });
 

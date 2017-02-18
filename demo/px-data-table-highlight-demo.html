@@ -1,0 +1,155 @@
+<!-- Common imports -->
+<link rel="import" href="../../polymer/polymer.html" />
+<link rel="import" href="../../px-polymer-font-awesome/px-polymer-font-awesome.html" />
+
+<!-- Common demo imports -->
+<link rel="import" href="../../px-demo/px-demo-header.html" />
+<link rel="import" href="../../px-demo/px-demo-api-viewer.html" />
+<link rel="import" href="../../px-demo/px-demo-footer.html" />
+<link rel="import" href="../../px-demo/px-demo-configs.html" />
+<link rel="import" href="../../px-demo/px-demo-props.html" />
+<link rel="import" href="../../px-demo/px-demo-interactive.html" />
+<link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
+
+<!-- Imports for this componnent -->
+<link rel="import" href="../../px-demo/css/px-demo-styles.html" />
+<link rel="import" href="../px-data-table.html" />
+
+<!-- Demo DOM module -->
+<dom-module id="px-data-table-highlight-demo">
+  <template>
+    <style include="px-demo-styles" is="custom-style"></style>
+
+    <!-- Header -->
+    <px-demo-header
+        module-name="px-data-table-highlight"
+        description="The Data Table Highlight sub-component is a helper that provides the ability to display a row or cell with a different background color based on a function provided in the configuration, similar to the 'conditional highlighting' functionality in many spreadsheet applications.">
+    </px-demo-header>
+
+    <!-- Interactive -->
+    <px-demo-interactive>
+      <!-- Configs -->
+      <px-demo-configs configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
+
+      <!-- Props -->
+      <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
+
+      <!-- Component ---------------------------------------------------------->
+      <px-demo-component>
+
+        <div>
+          <p>Properties for px-data-table-highlight can't be dynamically changed, they must be specified ahead of time. This example illustrates a highlight of type "row" and value of "high" (red, by default). It is associated with the first name column, and uses a method specified in px-example-highlight.html that catches strings starting with "S".</p>
+          <px-data-table table-data={{tableData}} filterable="true" selectable="true" hide-pagination-control="true">
+            <px-data-table-column name="first">
+              <px-data-table-highlight
+                highlight-type="row"
+                highlight-value="high"
+                highlight-method="wordBeginsWithLetterS"
+                import="px-example-highlight.html">
+              </px-data-table-highlight>
+            </px-data-table-column>
+            <px-data-table-column name="last"></px-data-table-column>
+            <px-data-table-column name="email"></px-data-table-column>
+          </px-data-table>
+        </div>
+      </px-demo-component>
+      <!-- END Component ------------------------------------------------------>
+
+      <px-demo-component-snippet
+          element-properties="{{props}}"
+          element-name="px-data-table-highlight"
+          links-includes='["px-data-table/px-data-table.html"]'>
+      </px-demo-component-snippet>
+    </px-demo-interactive>
+
+    <!-- API Viewer -->
+    <px-demo-api-viewer source="px-data-table-highlight"></px-demo-api-viewer>
+
+    <!-- Footer -->
+    <px-demo-footer></px-demo-footer>
+
+  </template>
+
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-data-table-highlight-demo',
+
+    properties: {
+
+      props: {
+        type: Object,
+        value: function(){ return this.demoProps; }
+      },
+
+      tableData: {
+        type: Array,
+        value: function() {
+          return [
+            {"first":"Valentine","last":"Meyer","email":"valentinemeyer@scentric.com"},
+            {"first":"Silva","last":"Alexander","email":"silvaalexander@gmail.com"},
+            {"first":"Hopkins","last":"Wong","email":"hopkinswong@hotmail.com"},
+            {"first": "Joe","last": "Sherman","email": "joejoe@yahoo.com"},
+            {"first": "Jane","last": "Bartlett","email": "jane@scentric.com"}
+          ];
+        }
+      },
+
+      configs: {
+        type: Array,
+        value: function(){
+          var tableData = [
+            {"first":"Valentine","last":"Meyer","email":"valentinemeyer@scentric.com"},
+            {"first":"Silva","last":"Alexander","email":"silvaalexander@gmail.com"},
+            {"first":"Hopkins","last":"Wong","email":"hopkinswong@hotmail.com"},
+            {"first": "Joe","last": "Sherman","email": "joejoe@yahoo.com"},
+            {"first": "Jane","last": "Bartlett","email": "jane@scentric.com"}
+          ];
+          return [
+            { configName: "Row highlight",
+              configShowProps: [],
+              highlightMethod: "wordBeginsWithLetterS",
+              highlightType: "row",
+              highlightValue: "high",
+              lightDomContent: "<!-- Note: due to its complexity, this sub-component will not function in CodePen -->" }
+          ]
+        }
+      }
+    },
+
+    demoProps: {
+      highlightMethod: {
+        type: String,
+        defaultValue: 'wordBeginsWithLetterS',
+        inputType: 'dropdown',
+        inputChoices: ['wordBeginsWithLetterS','wordBeginsWithLetterJ','isLongString']
+      },
+
+      highlightType: {
+        type: String,
+        defaultValue: 'row',
+        inputType: 'dropdown',
+        inputChoices: ['row','cell']
+      },
+
+      highlightValue: {
+        type: String,
+        defaultValue: 'high',
+        inputType: 'dropdown',
+        inputChoices: ['low','medium','high']
+      },
+
+      import: {
+        type: String,
+        defaultValue: 'px-example-highlight.html'
+      },
+
+      lightDomContent: {
+        type: String,
+        defaultValue: "<!-- Note: due to its complexity, this sub-component will not function in CodePen -->"
+      }
+
+    }
+
+  });
+</script>
