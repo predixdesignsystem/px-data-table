@@ -1,3 +1,7 @@
+v1.15.14
+==================
+* fixed badges for subcomponent pages
+
 v1.15.13
 ==================
 * updated to px-demo
