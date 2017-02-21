@@ -1,3 +1,7 @@
+v1.15.15
+==================
+* fixed CodePen for subcomponent
+
 v1.15.14
 ==================
 * fixed badges for subcomponent pages
