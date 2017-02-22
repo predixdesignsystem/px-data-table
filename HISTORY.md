@@ -1,3 +1,7 @@
+v1.15.16
+==================
+* fixed #79 to support pasting in filter fields
+
 v1.15.15
 ==================
 * fixed CodePen for subcomponent
