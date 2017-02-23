@@ -1,3 +1,7 @@
+v1.15.17
+==================
+* fixed enableColumnResize so that it actually works
+
 v1.15.16
 ==================
 * fixed #79 to support pasting in filter fields

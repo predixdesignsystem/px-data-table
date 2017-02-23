@@ -42,8 +42,9 @@
                     on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
                   </span>
                   <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-                    <div class="header--drag-handle" on-down="_headerResizeMouseDown" on-track="_headerTrack">
-                    </div>
+                    <template is="dom-if" if="{{enableColumnResize}}">
+                      <div class="header--drag-handle" on-down="_headerResizeMouseDown" on-track="_headerTrack"></div>
+                    </template>
                   </template>
                 </div>
               </span>
