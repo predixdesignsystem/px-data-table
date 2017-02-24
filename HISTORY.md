@@ -1,3 +1,7 @@
+v1.15.18
+==================
+* updated css variable naming for dropdown
+
 v1.15.17
 ==================
 * fixed enableColumnResize so that it actually works

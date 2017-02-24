@@ -21,10 +21,12 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 @import 'px-data-table-cell-sketch.scss';
 
 :host{
-  --px-dropdown-bg-color--default :transparent;
+  --px-dropdown-bg-color :transparent;
   --px-dropdown-bg-color--hover: transparent;
   --px-dropdown-bg-color--opened: transparent;
-  --px-dropdown-border-color: 0;
+  --px-dropdown-border-color: transparent;
+  --px-dropdown-border-color--hover: transparent;
+  --px-dropdown-border-color--opened: transparent;
 }
 
 :host(.cell__edit) {
