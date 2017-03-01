@@ -34,7 +34,7 @@ Element that provides pagination.
 			<span class="paging">
 				<button
           class$="{{_getPageupClass(currentPage)}}"
-          on-click="goToPreviousPage"><iron-icon icon="fa:fa-angle-left"></iron-icon></i></button>
+          on-click="goToPreviousPage"><iron-icon icon="fa:fa-angle-left"></iron-icon></button>
 				<span class="pager">
 					<template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
             <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>

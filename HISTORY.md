@@ -1,3 +1,10 @@
+v1.15.19
+==================
+* several minor fixes:
+  * fixed #102
+  * removed misleading references to highlight-color
+  * copied style variables to highlight API
+
 v1.15.18
 ==================
 * updated css variable naming for dropdown

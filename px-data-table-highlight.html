@@ -14,6 +14,15 @@ Element to define and configure highlighting behaviour for a given column (and h
     <px-data-table-highlight highlight-type="row" highlight-method="isLongString" import="px-example-highlight.html"></px-data-table-highlight>
 
 
+### Styling
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--cell--value__highlight--color__high` | A high highlight | `rgba($alert-red, 0.25)`
+`--cell--value__highlight--color__medium` | A medium highlight | `rgba($alert-yellow, 0.25)`
+`--cell--value__highlight--color__low` | A low highlight | `rgba($alert-blue, 0.25)`
+
 @element px-data-table-highlight
 @blurb Element to define and configure highlighting behaviour for a given column (and hence cell or row).
 @homepage index.html
@@ -73,18 +82,6 @@ Element to define and configure highlighting behaviour for a given column (and h
         value: ''
       },
       /**
-       * Property to set the custom highlight colour style - supports any CSS color value e.g. 'rgb(67,100,221,0.25)', 'lightblue', '#0000FF' etc.
-       *
-       *      <px-data-table-highlight highlight-color="rgb(67,100,221,0.25)" highlight-type="row" highlight-method="isLongString" import="px-data-table-highlight-example.html"></px-data-table-highlight>
-       *
-       * @property highlightColor
-       * @default ""
-       */
-      highlightColor: {
-        type: String,
-        value: ''
-      },
-      /**
        * Property for what actually gets highlighted - either 'cell' or 'row'
        *
        *      <px-data-table-highlight highlight-color="rgb(67,100,221,0.25)" highlight-type="row" highlight-method="isLongString" import="px-data-table-highlight-example.html"></px-data-table-highlight>
@@ -97,7 +94,7 @@ Element to define and configure highlighting behaviour for a given column (and h
         value: 'cell'
       },
       /**
-       * Property to set the pre-defined style of a highlight based on severity. One of 'high', 'medium' or 'low'
+       * Property to set the pre-defined style of a highlight based on severity. One of 'high', 'medium' or 'low' - the colors for these three highlight types can be configured using the style variables above.
        *
        *      <px-data-table-highlight highlight-value="low" highlight-type="row" highlight-method="isLongString" import="px-data-table-highlight-example.html"></px-data-table-highlight>
        *
@@ -124,22 +121,6 @@ Element to define and configure highlighting behaviour for a given column (and h
       }, function(e) {
         // loading error
       }, false);
-    },
-    /**
-     * Returns the appropriate highlight color according to what is configured via highlight-color or highlight-value.
-     *
-     * @method calculateHighLightColor
-     */
-    calculateHighlightColor: function(){
-      var highlightColorValue;
-      this.updateStyles();
-      if(this.highlightColor){
-        highlightColorValue = this.highlightColor;
-      } else {
-        var cssVarName = '--cell--value__highlight--' + this.highlightValue + '--color';
-        highlightColorValue = this.getComputedStyleValue(cssVarName);
-      }
-      return highlightColorValue;
     }
 
   });
