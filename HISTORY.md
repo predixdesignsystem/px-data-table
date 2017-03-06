@@ -1,3 +1,8 @@
+v1.15.20
+==================
+* fixed spacing of pagination buttons
+* fixed borders for table--rows and table--columns
+
 v1.15.19
 ==================
 * several minor fixes:

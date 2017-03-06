@@ -185,11 +185,11 @@ Element that provides pagination.
     },
 
     _getPageupClass: function(currentPage) {
-      return [currentPage === 1 ? "btn--disabled" : "", 'btn btn--bare btn--pagination u-p- previous'].join(' ');
+      return [currentPage === 1 ? "btn--disabled" : "", 'btn btn--bare btn--pagination previous'].join(' ');
     },
 
     _getPagedownClass: function(currentPage, pageCount) {
-      return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", 'btn btn--bare btn--pagination u-p- next'].join(' ');
+      return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", 'btn btn--bare btn--pagination next'].join(' ');
     },
 
     _getPagerButtonClass: function(buttonValue, currentPage) {

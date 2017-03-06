@@ -81,6 +81,14 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   cursor: pointer;
 }
 
+.table--rows {
+  border-top-width: 0;
+}
+
+.table--columns .th {
+  border-right: $inuit-table-border-width solid $inuit-table-border-color;
+}
+
 .cell--value__validation-failed{
   border: $inuit-table-border-width double var(--px-data-table-cell-border-validation--failed, $alert-red) !important;
 }
