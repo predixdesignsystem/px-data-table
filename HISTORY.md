@@ -1,3 +1,7 @@
+v1.15.21
+==================
+* Issue #108
+
 v1.15.20
 ==================
 * fixed spacing of pagination buttons

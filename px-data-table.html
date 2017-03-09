@@ -6,7 +6,7 @@
 
 
 <!--
-Element that defines a data table, optionally using a sub-element for advanced column settings.
+Element that defines a data table, optionally using a sub-element for advanced column settings. Use the dropdown at the top of this screen to see documentation on the px-data-table-column and px-data-table-highlight sub-components.
 
 ### Usage
 
@@ -19,6 +19,7 @@ Advanced:
     <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
 
     <px-data-table selected-rows="{{mySelectedRows}}" filterable selectable striped table-data="{{data}}">
+      // See px-data-table-column API using dropdown at top of screen.
       <px-data-table-column
         name="first"
     		sortable
@@ -98,10 +99,10 @@ Custom property | Description | Default
 `--cell--value__highlight--color__high` | A high highlight | `rgba($alert-red, 0.25)`
 `--cell--value__highlight--color__medium` | A medium highlight | `rgba($alert-yellow, 0.25)`
 `--cell--value__highlight--color__low` | A low highlight | `rgba($alert-blue, 0.25)`
-`--px-data-table-padding-top` | The padding top for a td |
-`--px-data-table-padding-bottom` |  The padding bottm for a td |
-`--px-data-table-padding-left` |  The padding left for a td |
-`--px-data-table-padding-right` |  The padding right for a td |
+`--px-data-table-padding-top` | The padding top for a td | 5px
+`--px-data-table-padding-bottom` |  The padding bottom for a td | 5px
+`--px-data-table-padding-left` |  The padding left for a td | 5px
+`--px-data-table-padding-right` |  The padding right for a td | 5px
 
 
 
