@@ -337,12 +337,12 @@
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
       this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
+      if(this.selectable) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
       var boundHandler = this._columnChanged.bind(this);
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
     },
     attached: function() {
       this._isAttached = true;
-      if(this.selectable) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
     },
 
     _columnChanged: function(info){
@@ -1421,7 +1421,7 @@
       }.bind(this));
       return highlightObj;
     },
-    _isFilterableColumn: function(column, filterable) {
+    _isFilterableColumn: function(column) {
       return !column.selectAll && column.filterable && this.filterable && !column.hide;
     },
     _readContent: function(row, column) {
@@ -1554,7 +1554,7 @@
       return header;
     },
     _computeIfColumnFilterEnabled: function(meta, filterable) {
-      this._enableFilterRow = meta && (this.selectable && !this.singleSelect || this.meta.some(function(val){
+      this._enableFilterRow = meta && (this.selectable && !this.singleSelect || filterable && this.meta.some(function(val){
         return this._isFilterableColumn(val);
       }.bind(this)));
     }

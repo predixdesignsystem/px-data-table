@@ -871,7 +871,7 @@ function runTests() {
     // Spot checks for filtering functionality
     test('Matching records are returned when filter text is entered', function(done) {
       var filterableTableRoot = document.querySelector('#table2');
-      var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(5) > input';
+      var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
       var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
       lastNameFilter.addEventListener('keyup', function(e){
         setTimeout(function() {
@@ -1076,33 +1076,33 @@ function runTests() {
   suite('Column reordering', function(){
 
       test('Moving a column through drag and drop', function(done){
-        //simulate moving column 'name' to column 'color'
+        //simulate moving column 'index' to column 'color'
         var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
             dragStart = new Event('dragstart'),
             drop = new Event('drop'),
-            startElem = Polymer.dom(tb.root).querySelector('.aha-name-th'),
+            startElem = Polymer.dom(tb.root).querySelector('.aha-index-th'),
             stopElem  = Polymer.dom(tb.root).querySelector('.aha-color-th'),
             effChild = tb.getEffectiveChildren(),
             headers = Polymer.dom(tb.root).querySelectorAll('.th');
 
 
         //do all checks in light dom + shadow dom + meta
-        //make sure 'name' is first
-        assert.equal(effChild[0].name, 'name');
-        assert.equal(tb.meta[1].name, 'name');
-        assert.equal(headers[1].textContent.trim(), 'Name');
+        //make sure 'index' is first
+        assert.equal(effChild[0].name, 'index');
+        assert.equal(tb.meta[1].name, 'index');
+        assert.equal(headers[1].textContent.trim(), 'Index');
 
         //try moving the column
         startElem.dispatchEvent(dragStart);
         stopElem.dispatchEvent(drop);
 
         flush(function(){
-          //verify order, 'name' should be last
+          //verify order, 'index' should be last
           effChild = tb.getEffectiveChildren();
           headers = Polymer.dom(tb.root).querySelectorAll('.th');
-          assert.equal(effChild[effChild.length-1].name, 'name');
-          assert.equal(tb.meta[tb.meta.length-1].name, 'name');
-          assert.equal(headers[headers.length-1].textContent.trim(), 'Name');
+          assert.equal(effChild[effChild.length-1].name, 'index');
+          assert.equal(tb.meta[tb.meta.length-1].name, 'index');
+          assert.equal(headers[headers.length-1].textContent.trim(), 'Index');
 
           done();
         });
@@ -1174,15 +1174,6 @@ function runTests() {
       });
     });
 
-    test('Filter header row should be visible when no columns specified but "filterable" set to true on px-data-table', function(done){
-      var tb2 = Polymer.dom(table2Fixture.root).querySelector("aha-table");
-      var filterRowEl = Polymer.dom(tb2.root).querySelector('.tr--filter');
-      table2Fixture.filterable = true;
-      assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
-      assert.equal(Polymer.dom(tb2.root).querySelectorAll('.text-input--filter').length, 15, 'Should be the default 15 filter input boxes, one for each column');
-      done();
-    });
-
     test('When table set to filterable but no child columns are, filter row should be hidden', function(done){
       var filterInnerTable = Polymer.dom(filtertest.root).querySelector("aha-table");
       var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
@@ -1209,11 +1200,32 @@ function runTests() {
     test('When table set to selectable, filter row should be visible', function(done){
       var filterInnerTable = Polymer.dom(filtertest.root).querySelector("aha-table");
       var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
+      var selectionPath = '#dataTable :nth-child(3) .td input[type=checkbox]';
       filtertest.filterable = false;
       filtertest.selectable = true;
+      filtertest.singleSelect = false;
+      flush(function() {
+        var selectionEls = Polymer.dom(filterInnerTable.root).querySelectorAll(selectionPath);
+        assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
+        assert.equal(selectionEls.length, 11);
+        done();
+      })
+    });
 
-      assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
-      done();
+    test('When table set to singleSelect, selection column should switch to radio buttons', function(done){
+      var filterInnerTable = Polymer.dom(filtertest.root).querySelector("aha-table");
+      var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
+      var selectionPath = '#dataTable :nth-child(3) .td input[type=radio]';
+
+      filtertest.filterable = false;
+      filtertest.selectable = true;
+      filtertest.singleSelect = true;
+      flush(function() {
+        var selectionEls = Polymer.dom(filterInnerTable.root).querySelectorAll(selectionPath);
+        assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
+        assert.equal(selectionEls.length, 10);
+        done();
+      })
     });
   });
 
