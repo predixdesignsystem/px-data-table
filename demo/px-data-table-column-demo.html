@@ -40,7 +40,7 @@
 
         <div>
           <template is="dom-if" if="{{isSimple(props.label.value)}}">
-            <px-data-table table-data={{tableData}} selectable="true" filterable="true" hide-pagination-control="true">
+            <px-data-table table-data={{tableData}} hide-pagination-control="true">
               <px-data-table-column
                 name="first"
                 type="string"
@@ -54,7 +54,7 @@
             </px-data-table>
           </template>
           <template is="dom-if" if="{{!isSimple(props.label.value)}}">
-            <px-data-table table-data={{tableData}} selectable="true" filterable="true" hide-pagination-control="true">
+            <px-data-table table-data={{tableData}} hide-pagination-control="true">
               <px-data-table-column
                 name="first"
                 type="dropdown"
