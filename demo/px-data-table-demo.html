@@ -42,10 +42,13 @@
               table-data="{{props.tableData.value}}"
               striped="{{props.striped.value}}"
               filterable="{{props.filterable.value}}"
+              selectable="{{props.selectable.value}}"
+              single-select="{{props.singleSelect.value}}"
               show-column-chooser="{{props.showColumnChooser.value}}"
               table-columns="{{props.tableColumns.value}}"
               table-rows="{{props.tableRows.value}}"
               hide-pagination-control="{{props.hidePaginationControl.value}}">
+              <px-data-table-column name="first" sortable editable></px-data-table-column>
           </px-data-table>
         </div>
       </px-demo-component>
@@ -84,6 +87,8 @@
             { configName: "Simple",
               striped: false,
               filterable: false,
+              selectable: false,
+              singleSelect: false,
               showColumnChooser: false,
               tableColumns: false,
               tableRows: true,
@@ -92,6 +97,8 @@
             { configName: "Complex",
               striped: true,
               filterable: true,
+              selectable: true,
+              singleSelect: true,
               showColumnChooser: true,
               tableColumns: false,
               tableRows: false,
@@ -115,6 +122,18 @@
       },
 
       filterable: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+
+      selectable: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+
+      singleSelect: {
         type: Boolean,
         defaultValue: false,
         inputType: 'toggle'

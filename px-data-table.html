@@ -122,6 +122,7 @@ Custom property | Description | Default
                  table-rows="{{tableRows}}"
                  selectable="{{selectable}}"
                  selected-rows="{{selectedRows}}"
+                 single-select="{{singleSelect}}"
                  meta="{{meta}}"
                  page-size="{{pageSize}}"
                  hide-pagination-control="{{hidePaginationControl}}"
@@ -232,6 +233,18 @@ Custom property | Description | Default
        * @default false
        */
       selectable: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Use the single-select property if only one row should be selectable at a time (radio button vs checkbox).
+       *
+       *      <px-data-table selectable single-select table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      singleSelect: {
         type: Boolean,
         value: false
       },
