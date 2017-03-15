@@ -115,20 +115,25 @@ Custom property | Description | Default
     <style include="px-data-table-styles"></style>
 
     <div class="flex">
-      <aha-table data="{{tableData}}"
+      <aha-table 
+                 data-remote="{{dataRemote}}"
+                 data="{{tableData}}"
+                 enable-column-reorder="{{enableColumnReorder}}"
+                 enable-column-resize="{{enableColumnResize}}"
                  filterable="{{filterable}}"
+                 first-item-index="{{firstItemIndex}}"
+                 hide-pagination-control="{{hidePaginationControl}}"
+                 id="dataTable"
+                 meta="{{meta}}"
+                 page-size="{{pageSize}}"
+                 selectable="{{selectable}}"
+                 selected-rows="{{selectedRows}}"
+                 show-column-chooser="{{showColumnChooser}}"
                  striped="{{striped}}"
                  table-columns="{{tableColumns}}"
                  table-rows="{{tableRows}}"
-                 selectable="{{selectable}}"
-                 selected-rows="{{selectedRows}}"
-                 meta="{{meta}}"
-                 page-size="{{pageSize}}"
-                 hide-pagination-control="{{hidePaginationControl}}"
-                 show-column-chooser="{{showColumnChooser}}"
-                 enable-column-reorder="{{enableColumnReorder}}"
-                 enable-column-resize="{{enableColumnResize}}"
-                 id="dataTable">
+                 total-entries="{{totalEntries}}"
+                 >
                  <content></content>
       </aha-table>
     </div>
@@ -249,7 +254,57 @@ Custom property | Description | Default
       },
 
       /**
+       * Property to set the the total number of entries in the table,
+       * assuming that dataRemote is true and the data provided is only
+       * for the visible page.
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      totalEntries: {
+        type: Number,
+        value: 10
+      },
+
+      /**
+       * Property to set the the remote index of the first item on this page,
+       * assuming that dataRemote is true and the data provided is only
+       * for the visible page.
+       *
+       * If on page 2 with a page size of 10, then the first-item-index would be 11.
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      firstItemIndex: {
+        type: Number,
+        value: 1
+      },
+
+      /**
+       * Property to set the the data paradigm.
+       *
+       * If this is false, then px-data-table expects all of the data to be provided to it.
+       * 
+       * If this is true, then px-data-table will expect only one page's worth of data to be supplied.
+       * This will require other fields to be set, e.g. page-size, total-entries, and first-item-index
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      dataRemote: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
        * Property to set the table page size.
+       * 
+       * Even in data-remote mode, page size may not match count of data provided.
+       * Page size could be 50, but only 40 items are provided.
        *
        *      <px-data-table page-size="50" table-data="{{data}}"></px-data-table>
        *

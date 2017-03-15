@@ -67,27 +67,32 @@ Element that provides pagination.
       /**
        * The size of a page
        *
-       * Read only.
        */
       pageSize: {
         type: Number,
         value: 10,
-        notify: true,
-        readOnly: true
+        notify: true
+      },
+
+      /**
+       * Changes paradigms for pagination from local (all data local)
+       * VS remote (all data remote and only one page local)
+       *
+       */
+      dataRemote: {
+        type: Boolean,
+        value: false
       },
 
       /**
        * Passes the firstItemIndexToDisplay back to the user
-       *
-       * Read only.
        *
        * 1-based
        */
       firstItemIndexToDisplay: {
         type: Number,
         notify: true,
-        value: 1,
-        readOnly: true
+        value: 1
       }
 
     },
@@ -98,32 +103,56 @@ Element that provides pagination.
     },
 
     _goBackToFirstPage: function() {
-      this.goToPageNumber(1);
+      if (!this.dataRemote) {
+        console.log('_goBackToFirstPage');
+        this.goToPageNumber(1);
+      } else {
+        // recalculate paging, just to make sure we're on the right page
+        this.updateDisplay();
+      }
     },
 
-    _updateDisplay: function() {
+    updateDisplay: function() {
       this.set('pageCount', Math.ceil(this.numberOfItems / this.pageSize));
 
-      if(this.pageCount === 0) {
-        this._setFirstItemIndexToDisplay(0);
-        this.set('lastItemIndexToDisplay', 0);
-      }
-      else {
-        this._setFirstItemIndexToDisplay(((this.currentPage - 1) * this.pageSize) + 1);
-        if(this.currentPage === this.pageCount) {
-          this.set('lastItemIndexToDisplay', this.numberOfItems);
-        } else {
-          this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
+      // local data
+      if (!this.dataRemote) {
+        if(this.pageCount === 0) {
+          this.set('firstItemIndexToDisplay',0);
+          this.set('lastItemIndexToDisplay', 0);
         }
+        else {
+          this.set('firstItemIndexToDisplay',((this.currentPage - 1) * this.pageSize) + 1);
+          if(this.currentPage === this.pageCount) {
+            this.set('lastItemIndexToDisplay', this.numberOfItems);
+          } else {
+            this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
+          }
+        }  
+      // remote data
+      } else {
+        // first item is passed in appropriately
+        // now update last item index and current page
+        this.set('currentPage', Math.ceil( this.firstItemIndexToDisplay / this.pageSize ) );
+        // debugger;
+        this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
       }
+
+      
     },
 
     /**
      * Go to the previous page
      **/
     goToPreviousPage: function() {
-      if(this.currentPage > 1) {
-        this.goToPageNumber(this.currentPage - 1);
+      console.log('goToPreviousPage');
+
+      if (this.currentPage > 1) {
+        if (!this.dataRemote) {
+          this.goToPageNumber(this.currentPage - 1);
+        } else {
+          this._triggerPageChangeRequest(this.currentPage - 1);
+        }
       }
     },
 
@@ -131,8 +160,14 @@ Element that provides pagination.
      * Go to the next page
      */
     goToNextPage: function() {
-      if(this.currentPage < this.pageCount) {
-        this.goToPageNumber(this.currentPage + 1);
+      console.log('goToNextPage');
+
+      if (this.currentPage < this.pageCount) {
+        if (!this.dataRemote) {
+          this.goToPageNumber(this.currentPage + 1);
+        } else {
+          this._triggerPageChangeRequest(this.currentPage + 1);
+        }
       }
     },
 
@@ -165,7 +200,7 @@ Element that provides pagination.
         }
       });
 
-      this._setPageSize(size);
+      this.set('pageSize',size);
       this._goBackToFirstPage();
     },
 
@@ -174,14 +209,24 @@ Element that provides pagination.
      * @param number
      */
     goToPageNumber: function(number) {
+      console.log('goToPageNumber: ', number);
       if(number) {
         this.currentPage = number;
-        this._updateDisplay();
+        this.updateDisplay();
       }
     },
 
     _goToPage: function(evt) {
-      this.goToPageNumber(parseInt(evt.target.textContent));
+      console.log('_goToPage');
+      if (!this.dataRemote) {
+        this.goToPageNumber(parseInt(evt.target.textContent));
+      } else {
+        this._triggerPageChangeRequest(parseInt(evt.target.textContent));
+      }
+    },
+
+    _triggerPageChangeRequest: function (intendedPage) {
+      this.fire('page-change-intent', intendedPage);
     },
 
     _getPageupClass: function(currentPage) {
@@ -248,7 +293,27 @@ Element that provides pagination.
         }
         return pagerNavButtonsConfig;
       }
-    }
+    },
+    
+    _resolveFunctionOnWindow: function (customFunctionName) {
+
+      if ( typeof customFunctionName !== 'string' && customFunctionName.length < 1) {
+        return false;
+      }
+
+      var customFunction = window,
+        customFunctionFullPath = customFunctionName.split(".");
+
+      for (i in customFunctionFullPath) {
+        customFunction = customFunction[customFunctionFullPath[i]];
+        if (customFunction === undefined) {
+          console.warn("px-data-table: Custom function was used, but was not found on window. Is the path correct?");
+          return null;
+        }
+      }
+
+      return customFunction;
+    },
 
   });
 </script>
