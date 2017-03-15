@@ -207,7 +207,7 @@ Custom property | Description | Default
       },
 
       /**
-       * Use the single-select property if only one row should be selectable at a time (radio button vs checkbox). Select All checkbox will be hidden.
+       * Use this property if only one row should be selectable at a time (radio button vs checkbox). The Select All checkbox will be hidden if `singleSelect` is true.
        */
       singleSelect: {
         type: Boolean,
@@ -248,7 +248,7 @@ Custom property | Description | Default
         value: false
       },
       /**
-       * If true, users can drag a column header from one location to another in order to re-sort the columns.
+       * If true, users can drag a column header from one location to another in order to reorder the columns.
        */
       enableColumnReorder: {
         type: Boolean,
@@ -281,7 +281,7 @@ Custom property | Description | Default
 
     /**
      * Fired when a cell is clicked in the table. If the cell is not editable or of type 'dropdown',
-     * `px-row-click will` also be fired. Cell information is stored in `evt.detail`.
+     * `px-row-click` will also be fired. Cell information is stored in `evt.detail`.
      *
      * @event px-cell-click
      */

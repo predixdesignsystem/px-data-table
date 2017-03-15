@@ -125,7 +125,7 @@
               editable: true,
               type: "string",
               dropdownItems: "",
-              parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "'>", "</px-data-table>"] },
+              parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "' hide-pagination-control>", "</px-data-table>"] },
 
             { configName: "Dropdown",
               configShowProps: ['name'],
@@ -136,7 +136,7 @@
               editable: true,
               type: "dropdown",
               dropdownItems: [{"key":"one","val":"Mike"},{"key":"two","val":"Maria"},{"key":"three","val":"Wei"}],
-              parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "'>", "</px-data-table>"] }
+              parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "' hide-pagination-control>", "</px-data-table>"] }
           ]
         }
       }
@@ -192,11 +192,6 @@
         defaultValue: function() {
           return ["<px-data-table>","</px-data-table>"];
         }
-      },
-
-      siblingElement: {
-        type: String,
-        defaultValue: '<px-data-table-column name="last"></px-data-table-column><px-data-table-column name="email"></px-data-table-column>'
       }
 
     }

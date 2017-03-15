@@ -9,13 +9,18 @@ the `px-data-table-column` definitions provided.
 
     <px-data-table-column name="first"></px-data-table-column>
 
-The px-data-table-column component accepts both px-validation and px-data-table-highlight sub-components, for example:
+The px-data-table-column component accepts both px-validation and px-data-table-highlight sub-components. For example:
 
     <px-data-table table-data="{{...}}">
       <px-data-table-column name="first" label="First Name" filterable sortable editable>
         <px-validation>
           <px-validator validation-method="isNumber" import="../px-validation/px-example-validator.html"></px-validator>
         </px-validation>
+      </px-data-table-column>
+    </px-data-table>
+
+    <px-data-table table-data="{{...}}">
+      <px-data-table-column name="first" label="First Name" filterable sortable editable>
         <px-data-table-highlight highlight-method="wordBeginsWithLetterJ" import="px-example-highlight.html">
         </px-data-table-highlight>
       </px-data-table-column>
@@ -55,9 +60,9 @@ Click [here](https://www.predix-ui.com/#/components/px-validation/) for more inf
       },
 
       /**
-       * Type of data in the column. Should be one of: string, html, dropdown. Strings will appear literally, whereas HTML content will be rendered. 
+       * Type of data in the column. Should be one of: string, html, dropdown. Strings will appear literally, whereas HTML content will be rendered.
        * Dropdowns allow users to pick from a provided set of options (see `dropdownItems`).
-       * 
+       *
        * **WARNING!** Potential XSS vulnerability if `html` comes from an untrusted source
        */
       type: {
@@ -136,7 +141,7 @@ Click [here](https://www.predix-ui.com/#/components/px-validation/) for more inf
       },
       /**
        * For columns of `type` "dropdown", this property dictates which options should be available in the dropdown.
-       */ 
+       */
       dropdownItems:{
         type: Array,
         value: function() {return [];},
@@ -155,7 +160,7 @@ Click [here](https://www.predix-ui.com/#/components/px-validation/) for more inf
       }
     },
     /**
-     * This method is used by `px-validation` sub-components to verify that editable cells follow a specific validation pattern. 
+     * This method is used by `px-validation` sub-components to verify that editable cells follow a specific validation pattern.
      * If no validation/validator sub-components are specified, editable cells will always pass validation. Example usage:
      * ```
      * <px-data-table-column ...>

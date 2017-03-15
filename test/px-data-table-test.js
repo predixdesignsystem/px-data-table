@@ -757,7 +757,7 @@ document.addEventListener("WebComponentsReady", function() {
   table2Fixture.tableData = minidata;
 
   table3Fixture = document.getElementById('table3');
-  table3Fixture.tableData = data;
+  table3Fixture.tableData = minidata;
 
   table4Fixture = document.getElementById('table4');
   table4Fixture.tableData = data;
@@ -1209,7 +1209,7 @@ function runTests() {
         assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
         assert.equal(selectionEls.length, 11);
         done();
-      })
+      });
     });
 
     test('When table set to singleSelect, selection column should switch to radio buttons', function(done){
@@ -1225,7 +1225,7 @@ function runTests() {
         assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
         assert.equal(selectionEls.length, 10);
         done();
-      })
+      });
     });
   });
 
