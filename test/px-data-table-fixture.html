@@ -22,23 +22,27 @@
 
       <h3>Data table demos</h3>
 
-      <p>A very simple data table.  Just displays data and has sortable columns.</p>
-      <px-data-table id="table1"></px-data-table>
+      <p>A very simple data table. Just displays data and has a sortable column.</p>
+      <px-data-table id="table1" include-all-columns>
+        <px-data-table-column name="first" sortable></px-data-table-column>
+      </px-data-table>
 
       <hr>
 
-      <p>Filterable columns and selectable rows.</p>
-      <px-data-table selectable id="table2"></px-data-table>
+      <p>Filterable column and selectable rows.</p>
+      <px-data-table id="table2" selectable filterable include-all-columns>
+        <px-data-table-column name="last" filterable></px-data-table-column>
+      </px-data-table>
 
       <hr>
 
       <p>Display as columns instead of a grid.</p>
-      <px-data-table table-columns id="table3"></px-data-table>
+      <px-data-table id="table3" table-columns></px-data-table>
 
       <hr>
 
       <p>Display as rows instead of a grid.</p>
-      <px-data-table table-rows hide-pagination-control id="table4"></px-data-table>
+      <px-data-table id="table4" table-rows hide-pagination-control></px-data-table>
 
       <p>Very customized data table, with:</p>
       <ul>
@@ -54,6 +58,7 @@
       </ul>
 
       <px-data-table id="myTable" filterable selectable striped show-column-chooser enable-column-reorder>
+        <px-data-table-column name="index"></px-data-table-column>
         <px-data-table-column name="name"></px-data-table-column>
         <px-data-table-column
           name="first"
@@ -113,7 +118,7 @@
 
       <template is="dom-bind" id="app">
         <px-data-table id="domrepeat" table-data="{{minidata}}">
-          <template is="dom-repeat" items="{{meta}}"> -->
+          <template is="dom-repeat" items="{{meta}}">
             <px-data-table-column name="{{item.name}}"></px-data-table-column>
           </template>
         </px-data-table>

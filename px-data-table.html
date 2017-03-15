@@ -6,7 +6,8 @@
 
 
 <!--
-Element that defines a data table, optionally using a sub-element for advanced column settings. Use the dropdown at the top of this screen to see documentation on the px-data-table-column and px-data-table-highlight sub-components.
+Element that defines a data table, optionally using a sub-element for advanced column settings.
+Use the dropdown at the top of this screen to see documentation on the `px-data-table-column` and `px-data-table-highlight` sub-components.
 
 ### Usage
 
@@ -16,24 +17,16 @@ Minimum:
 
 Advanced:
 
-    <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
-
-    <px-data-table selected-rows="{{mySelectedRows}}" filterable selectable striped table-data="{{data}}">
+    <px-data-table filterable selectable striped table-data="{{data}}">
       // See px-data-table-column API using dropdown at top of screen.
-      <px-data-table-column
-        name="first"
-    		sortable
-        editable
-        filter-function-name="mytableCustomFunctions.filterWholeWord"
-        sort-function-name="mytableCustomFunctions.sortByEmailDomain">
-      </px-data-table-column>
+      <px-data-table-column name="first" ...></px-data-table-column>
       <px-data-table-column name="last" ...></px-data-table-column>
       <px-data-table-column name="color" ...></px-data-table-column>
       <px-data-table-column name="date" ...></px-data-table-column>
     </px-data-table>
 
 
-##### Integrating with other frameworks (ex: Angular):
+### Integrating with other frameworks (ex: Angular):
 
 You may not be able to use 2-way binding with the objects/arrays in other frameworks such as Angular.
 
@@ -50,22 +43,6 @@ We suggest instead to use events and selectors, for example:
     $scope.doSomethingWithSelectedRows = function() {
         $scope.allSelectedRows = document.getElementById("myDataTable").selectedRows;
     };
-
-Events:
-
-- px-row-click : fired when table row is clicked (selected or unselected)
-
-      document.getElementById("mytable").addEventListener("px-row-click", function(e) {
-        var clickedRow = e.detail.row;
-        console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
-      });
-
-- px-select-all-click : fired when the select all button is clicked (selected or unselected)
-
-      document.getElementById("mytable").addEventListener("px-select-all-click", function(e) {
-        var allSelectedRows = e.detail;
-        console.log("Select/unselect all", allSelectedRows);
-      });
 
 ### Styling
 The following custom properties are available for styling:
@@ -99,10 +76,10 @@ Custom property | Description | Default
 `--cell--value__highlight--color__high` | A high highlight | `rgba($alert-red, 0.25)`
 `--cell--value__highlight--color__medium` | A medium highlight | `rgba($alert-yellow, 0.25)`
 `--cell--value__highlight--color__low` | A low highlight | `rgba($alert-blue, 0.25)`
-`--px-data-table-padding-top` | The padding top for a td | 5px
-`--px-data-table-padding-bottom` |  The padding bottom for a td | 5px
-`--px-data-table-padding-left` |  The padding left for a td | 5px
-`--px-data-table-padding-right` |  The padding right for a td | 5px
+`--px-data-table-padding-top` | The top padding for table cells | 5px
+`--px-data-table-padding-bottom` |  The bottom padding for table cells | 5px
+`--px-data-table-padding-left` |  The left padding for table cells | 5px
+`--px-data-table-padding-right` |  The right padding for table cells | 5px
 
 
 
@@ -116,20 +93,23 @@ Custom property | Description | Default
 
     <div class="flex">
       <aha-table data="{{tableData}}"
-                 filterable="{{filterable}}"
-                 striped="{{striped}}"
-                 table-columns="{{tableColumns}}"
-                 table-rows="{{tableRows}}"
-                 selectable="{{selectable}}"
-                 selected-rows="{{selectedRows}}"
-                 meta="{{meta}}"
-                 page-size="{{pageSize}}"
-                 hide-pagination-control="{{hidePaginationControl}}"
-                 show-column-chooser="{{showColumnChooser}}"
-                 enable-column-reorder="{{enableColumnReorder}}"
-                 enable-column-resize="{{enableColumnResize}}"
-                 id="dataTable">
-                 <content></content>
+        sortable="{{sortable}}"
+        filterable="{{filterable}}"
+        striped="{{striped}}"
+        table-columns="{{tableColumns}}"
+        table-rows="{{tableRows}}"
+        selectable="{{selectable}}"
+        selected-rows="{{selectedRows}}"
+        single-select="{{singleSelect}}"
+        meta="{{meta}}"
+        page-size="{{pageSize}}"
+        hide-pagination-control="{{hidePaginationControl}}"
+        show-column-chooser="{{showColumnChooser}}"
+        enable-column-reorder="{{enableColumnReorder}}"
+        enable-column-resize="{{enableColumnResize}}"
+        id="dataTable"
+        include-all-columns="{{includeAllColumns}}">
+        <content></content>
       </aha-table>
     </div>
   </template>
@@ -144,12 +124,12 @@ Custom property | Description | Default
       /**
        * Data for the table to display.
        *
-       * Expected data format is just a json array.  Each object in the array represents a row in the table.
+       * Expected data format is just a JSON array.  Each object in the array represents a row in the table.
        *
        * Each item in an object will be displayed as a separate column, unless px-data-table-columns are defined to limit which columns are displayed.
+       * See also includeAllColumns.
        *
-       *     <px-data-table table-data="{{data}}"></px-data-table>
-       *
+       *     Expected format:
        *     [
        *       {
        *        "index": 0,
@@ -175,11 +155,7 @@ Custom property | Description | Default
 
 
       /**
-       * Use the striped attribute if the table rows are striped
-       *
-       *      <px-data-table striped table-data="{{data}}"></px-data-table>
-       *
-       * @default false
+       * If true, every other row in the table will appear with a background color to improve visual scanning.
        */
       striped: {
         type: Boolean,
@@ -187,13 +163,9 @@ Custom property | Description | Default
       },
 
       /**
-       * Use the filterable attribute if the table has filtering functionality per column turned on.
-       *
-       *      <px-data-table filterable table-data="{{data}}"></px-data-table>
-       *
-       * If columns are specified with px-data-table-column, they must have a filterable attribute to be able to be filtered.
-       *
-       * @default false
+       * If true, a row of filter inputs will appear under the column headings which allow the user to filter the table's contents.
+       * If columns are specified with px-data-table-column, they must also have a filterable property to enable filtering for that column.
+       * For custom filtering, see `filterFunctionName` in the px-data-table-column API using the dropdown at the top of this screen.
        */
       filterable: {
         type: Boolean,
@@ -201,11 +173,17 @@ Custom property | Description | Default
       },
 
       /**
-       * Use the table-columns attribute if the table should be displayed as columns, instead of a grid.
-       *
-       *      <px-data-table table-columns table-data="{{data}}"></px-data-table>
-       *
-       * @default false
+       * If true, users can click on a column heading to sort table rows in a certain order (by default, alphabetically).
+       * If columns are specified with px-data-table-column, they must also have a sortable property to enable sorting for that column.
+       * For custom sorting, see `sortFunctionName` in the px-data-table-column API using the dropdown at the top of this screen.
+       */
+      sortable: {
+        type: Boolean,
+        value: true
+      },
+
+      /**
+       * If true, the table will only appear with vertical borders.
        */
       tableColumns: {
         type: Boolean,
@@ -213,11 +191,7 @@ Custom property | Description | Default
       },
 
       /**
-       * Use the table-rows attribute if the table should be displayed as rows, instead of a grid.
-       *
-       *      <px-data-table table-rows table-data="{{data}}"></px-data-table>
-       *
-       * @default false
+       * If true, the table will only appear with horizontal borders.
        */
       tableRows: {
         type: Boolean,
@@ -225,11 +199,7 @@ Custom property | Description | Default
       },
 
       /**
-       * Use the selectable attribute if the table rows should be able to be selected.
-       *
-       *      <px-data-table selectable table-data="{{data}}"></px-data-table>
-       *
-       * @default false
+       * Use the selectable property if one or more rows within the table should be selectable. See also `singleSelect`.
        */
       selectable: {
         type: Boolean,
@@ -237,11 +207,15 @@ Custom property | Description | Default
       },
 
       /**
-       * Property to set the visibility of the table pagination controls.
-       *
-       *      <px-data-table hide-pagination-control table-data="{{data}}"></px-data-table>
-       *
-       * @default false
+       * Use this property if only one row should be selectable at a time (radio button vs checkbox). The Select All checkbox will be hidden if `singleSelect` is true.
+       */
+      singleSelect: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Whether or not the table pagination controls should be hidden.
        */
       hidePaginationControl: {
         type: Boolean,
@@ -249,11 +223,7 @@ Custom property | Description | Default
       },
 
       /**
-       * Property to set the table page size.
-       *
-       *      <px-data-table page-size="50" table-data="{{data}}"></px-data-table>
-       *
-       * @default 10
+       * The default page size (number of visible rows) used in the pagination controls.
        */
       pageSize: {
         type: Number,
@@ -261,12 +231,7 @@ Custom property | Description | Default
       },
 
       /**
-       * Selected rows in the data table setup for binding.
-       *
-       * This property is read only.
-       *
-       *      <px-data-table selectedRows="{{mySelectedItems}}" table-data="{{data}}"></px-data-table>
-       *
+       * Selected rows in the data table, setup for binding. This property is read only.
        */
       selectedRows: {
         type: Array,
@@ -276,21 +241,14 @@ Custom property | Description | Default
         notify: true
       },
       /**
-       * Property to set the visibility of the table column chooser (allowing
-       * the user to show and hide columns)
-       *
-       *
-       *
+       * If true, a table column chooser will appear above the table, allowing the user to show and hide columns.
        */
       showColumnChooser: {
         type: Boolean,
         value: false
       },
       /**
-       * Property to enable draggability of column headers for reordering
-       * columns
-       *
-       * @default false
+       * If true, users can drag a column header from one location to another in order to reorder the columns.
        */
       enableColumnReorder: {
         type: Boolean,
@@ -302,19 +260,52 @@ Custom property | Description | Default
        * If there is no space available then resizing won't be possible (i.e all
        * columns already to their minimum size, typically when the table can't
        * be displayed entirely)
-       * @default false
        */
       enableColumnResize: {
         type: Boolean,
         value: false
+      },
+      /**
+       * By default, if you specify one or more `<px-data-table-column>` sub-component
+       * definitions, the table will only render those columns. By setting this boolean
+       * to true, the data table will include **all** columns of data found in table-data,
+       * with default settings **unless** you override these settings by including a
+       * `<px-data-table-column>` definition for that column. The `sortable` and `filterable`
+       * properties for each column will default to the current settings at the table level.
+       */
+      includeAllColumns: {
+        type: Boolean,
+        value: false
       }
-    },
+    }
 
     /**
-     * Events:
+     * Fired when a cell is clicked in the table. If the cell is not editable or of type 'dropdown',
+     * `px-row-click` will also be fired. Cell information is stored in `evt.detail`.
      *
-     * px-row-click : fired when table row is clicked (selected or unselected)
-     *
+     * @event px-cell-click
+     */
+    /**
+     * Fired when table row is clicked (and selected or unselected, if selectable is true).
+     * Row information is stored in `evt.detail.row`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-row-click", function(e) {
+     *   var clickedRow = e.detail.row;
+     *   console.log("Row clicked: ", clickedRow);
+     * });
+     * ```
+     * @event px-row-click
+     */
+    /**
+     * Fired when the select all button is clicked (and all rows are then selected or unselected).
+     * Row information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-select-all-click", function(e) {
+     *   var allSelectedRows = e.detail;
+     *   console.log("Select/unselect all: ", allSelectedRows);
+     * });
+     * ```
+     * @event px-select-all-click
      */
 
   });
