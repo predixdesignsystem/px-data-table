@@ -1,3 +1,12 @@
+v2.0.0
+==================
+* This release addresses a number of issues (PR #112):
+  * fixes the behavior of the selectable column (currently appears in the wrong place when turned on dynamically)
+  * adds an option for single-select (radio button vs checkbox)
+  * fires the row-click behavior for non-editable cells
+  * fixes the validateEvent error
+  * changes the behavior of row declaration (it will create all of the columns found in data with default settings then override the settings for any columns declared in lightDOM).
+
 v1.15.21
 ==================
 * Issue #108
