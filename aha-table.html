@@ -38,8 +38,8 @@
               <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
                 <div class="flex header--container">
                   <span
-                    class$="{{_getTextSortingClass(column, sortedColumn)}}"
-                    on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
+                    class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}"
+                    on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></iron-icon>
                   </span>
                   <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                     <template is="dom-if" if="{{enableColumnResize}}">
@@ -192,6 +192,16 @@
       filterable: {
         type: Boolean,
         value: false,
+      },
+      //filterable: if table columns are sortable
+      sortable: {
+        type: Boolean,
+        value: false,
+      },
+      includeAllColumns: {
+        type: Boolean,
+        value: false,
+        observer: '_includeAllColumnsChanged'
       },
       //_enableFilterRow: if table row is _enableFilterRow
       _enableFilterRow: {
@@ -382,8 +392,7 @@
     },
 
     _addColumn: function(addedColumn) {
-      //meta needs to reflect the order in light dom. Find the node just before
-      //this one
+      //meta needs to reflect the order in light dom. Find the node just before this one
       var previousNode,
           notFound = this.getEffectiveChildren().every(function(column, index) {
             if(column.name === addedColumn.name) {
@@ -473,7 +482,11 @@
         return;
       }
 
-      this._generateMetaFromData();
+      // if includeAllColumns is true, or if no px-data-table-columns have been defined,
+      // need to calculate meta from the actual data passed in to the table
+      if(this.includeAllColumns || this.meta.length === 0 || (this.meta.length === 1 && this.meta[0].name === "_selected")) {
+        this._generateMetaFromData();
+      }
 
       if(typeof this._internalData !== "undefined" && this._internalData.length === 0){
         this._internalData = this._initializeInternalData();
@@ -504,6 +517,15 @@
         }
       }
 
+    },
+
+    _includeAllColumnsChanged: function(newValue) {
+      if(newValue === true) {
+        this._generateMetaFromData();
+      }
+      else if (newValue === false && this._isAttached && this.getEffectiveChildren(this.$.content).length > 0) {
+        this.meta = this.getEffectiveChildren(this.$.content);
+      }
     },
 
     _selectableChanged: function(newSelectable) {
@@ -547,8 +569,8 @@
         name: prop,
         label: label,
         type: type,
-        sortable: false,
-        filterable: false,
+        sortable: this.sortable,
+        filterable: this.filterable,
         editable: false,
         required: false,
         selectAll: isSelectAll,
@@ -700,6 +722,7 @@
 
     // sort by header click handler
     _sort: function(e, p) {
+      if(!this.sortable) return;
       var column = e.model.column,
           sortingColumn;
       if(column && column.sortable) {
@@ -800,37 +823,19 @@
     // fallback default sort function if per-column sort isn't specified.
     _defaultSortAlphabetically: function(a, b) {
       if(this.descending) {
-        if(a.value < b.value) {
-          return 1;
-        }
-        return -1;
+        return (a.value < b.value) ? 1 : -1;
       }
       else {
-        if(a.value > b.value) {
-          return 1;
-        }
-        return -1;
+        return (a.value > b.value) ? 1 : -1
       }
     },
 
     _defaultSortSelected: function(a, b) {
       if(this.descending) {
-        if(a.value && !b.value) {
-          return 1;
-        }
-        else if(!a.value && b.value) {
-          return -1;
-        }
-        return 0;
+        return (a.value && !b.value) ? 1 : (!a.value && b.value) ? -1 : 0;
       }
       else {
-        if(a.value && !b.value) {
-          return -1;
-        }
-        else if(!a.value && b.value) {
-          return 1;
-        }
-        return 0;
+        return (a.value && !b.value) ? -1 : (!a.value && b.value) ? 1 : 0;
       }
     },
 
@@ -1470,12 +1475,9 @@
       return source === target;
     },
     _getHeaderClass: function(item) {
-      var classList = ['th ', 'aha-' + item.name + '-th', 'u-p0'];
-      if(item.sortable) {
+      var classList = ['th', 'th--no-borders', 'aha-' + item.name + '-th', 'u-p0'];
+      if(this.sortable && item.sortable) {
         classList.push('sortable');
-      }
-      if((!this.tableRows && !this.tableColumns) || item.type === 'selected') {
-        classList.push('th--no-borders');
       }
       if(this.enableColumnReorder && item.type !== 'selected') {
         classList.push('moveable');
@@ -1492,29 +1494,29 @@
     _getFilterHeaderClass: function(column) {
       return column.name === 'insertion-indicator' ? 'td insertion-indicator' : 'td';
     },
-    _getSortingIcon: function(column, sortingColumn, descending) {
+    _getSortingIcon: function(sortable, column, sortingColumn, descending) {
       var sortingIcon = ' ';
-      if(sortingColumn === column.name) {
+      if(sortable && sortingColumn === column.name) {
         sortingIcon = descending ? 'fa:fa-caret-down' : 'fa:fa-caret-up';
       }
       return sortingIcon;
     },
-    _getSortingClass: function(column, sortingColumn, descending) {
+    _getSortingClass: function(sortable, column, sortingColumn, descending) {
       var classList = 'sorting fa';
-      if(sortingColumn !== column.name) {
+      if(sortable && sortingColumn !== column.name) {
         classList = classList + ' visuallyhidden';
       }
       return classList;
     },
-    _getTextSortingClass: function(column, sortingColumn) {
+    _getTextSortingClass: function(sortable, column, sortingColumn) {
       var classList = ['column-head', 'u-m--'];
       if (column.name === '_selected'){
         classList.push('column-head--selected');
       };
-      if(column.sortable) {
+      if(sortable && column.sortable) {
         classList.push('sorted-text-hover');
       }
-      if(sortingColumn === column.name) {
+      if(sortable && sortingColumn === column.name) {
         classList.push('sorted-text');
       }
       return classList.join(' ');

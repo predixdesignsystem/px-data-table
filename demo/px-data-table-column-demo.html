@@ -49,8 +49,6 @@
                 editable="true"
                 filterable="true">
               </px-data-table-column>
-              <px-data-table-column name="last"></px-data-table-column>
-              <px-data-table-column name="email"></px-data-table-column>
             </px-data-table>
           </template>
           <template is="dom-if" if="{{!isSimple(props.label.value)}}">
@@ -61,8 +59,6 @@
                 dropdown-items='[{"key":"one","val":"Mike"},{"key":"two","val":"Maria"},{"key":"three","val":"Wei"}]'
                 label="First Name">
               </px-data-table-column>
-              <px-data-table-column name="last"></px-data-table-column>
-              <px-data-table-column name="email"></px-data-table-column>
             </px-data-table>
           </template>
         </div>
@@ -121,7 +117,7 @@
           ];
           return [
             { configName: "Editable",
-              configShowProps: [],
+              configShowProps: ['name'],
               name: "first",
               label: "",
               filterable: true,
@@ -129,11 +125,10 @@
               editable: true,
               type: "string",
               dropdownItems: "",
-              parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "'>", "</px-data-table>"],
-              siblingElement: '<px-data-table-column name="last"></px-data-table-column><px-data-table-column name="email"></px-data-table-column>' },
+              parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "'>", "</px-data-table>"] },
 
             { configName: "Dropdown",
-              configShowProps: [],
+              configShowProps: ['name'],
               name: "first",
               label: "First Name",
               filterable: false,
@@ -141,8 +136,7 @@
               editable: true,
               type: "dropdown",
               dropdownItems: [{"key":"one","val":"Mike"},{"key":"two","val":"Maria"},{"key":"three","val":"Wei"}],
-              parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "'>", "</px-data-table>"],
-              siblingElement: '<px-data-table-column name="last"></px-data-table-column><px-data-table-column name="email"></px-data-table-column>' }
+              parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "'>", "</px-data-table>"] }
           ]
         }
       }
@@ -155,7 +149,10 @@
     demoProps: {
       name: {
         type: String,
-        defaultValue: 'first'
+        defaultValue: 'first',
+        inputType: 'text',
+        inputDisabled: true,
+        inputHelpText: 'Most of the properties of px-data-table-column can not currently be set dynamically, due to the nature of the component. They should be defined explicitly at the time of table creation, or you should delete and re-add the full <px-data-table-column> sub-component on change. For a few different preset configurations, see the tabs above.'
       },
 
       type: {

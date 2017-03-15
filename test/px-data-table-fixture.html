@@ -22,27 +22,27 @@
 
       <h3>Data table demos</h3>
 
-      <p>A very simple data table.  Just displays data and has sortable columns.</p>
-      <px-data-table id="table1">
+      <p>A very simple data table. Just displays data and has a sortable column.</p>
+      <px-data-table id="table1" include-all-columns>
         <px-data-table-column name="first" sortable></px-data-table-column>
       </px-data-table>
 
       <hr>
 
-      <p>Filterable columns and selectable rows.</p>
-      <px-data-table selectable filterable id="table2">
+      <p>Filterable column and selectable rows.</p>
+      <px-data-table id="table2" selectable filterable include-all-columns>
         <px-data-table-column name="last" filterable></px-data-table-column>
       </px-data-table>
 
       <hr>
 
       <p>Display as columns instead of a grid.</p>
-      <px-data-table table-columns id="table3"></px-data-table>
+      <px-data-table id="table3" table-columns></px-data-table>
 
       <hr>
 
       <p>Display as rows instead of a grid.</p>
-      <px-data-table table-rows hide-pagination-control id="table4"></px-data-table>
+      <px-data-table id="table4" table-rows hide-pagination-control></px-data-table>
 
       <p>Very customized data table, with:</p>
       <ul>
