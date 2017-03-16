@@ -1410,42 +1410,79 @@ function runTests() {
     });
   });
 
-  suite('Unit Tests for data remote property', function () {
 
-    // shows same number of rows as minidata
-    // pagination counts match up
-    //  1-x
-    //  of x
+  suite('Unit Tests for data remote property being `true` on page 1', function () {
 
-    // on page change, triggers event
+    test('Default pagination size is 10', function(){
+      assert.equal(remoteDataFixture1.pageSize, 10, 'Default page size should be 10 rows.');
+    });
+
+    test('Default rows displayed size is 10', function(){
+      var tb = Polymer.dom(remoteDataFixture1.root).querySelector('aha-table'),
+          rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
+      assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
+    });
+
+    test('Pagination shows 1-10 of 100', function(){
+      var paginationSpan = document.getElementById('remoteData1').querySelector('.summary.style-scope.px-pagination');
+      var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
+      assert.equal(paginationTextString, '1-10 of 100', 'Shows correct pagination counts.');
+    });
+
+    test('Page 1 should be selected', function(){
+      var paginationPager = document.getElementById('remoteData1').querySelector('.pager.px-pagination');
+      // note: classList does not have prototype Array methods
+      var page1IconClassList = paginationPager.children[0].classList.toString().split(' ');
+      assert(page1IconClassList.indexOf('btn--icon') > -1 && page1IconClassList.indexOf('btn--pagination--number') > -1,  
+        'Has btn-icon and btn--pagination--number classes.');
+      assert.equal(page1IconClassList.indexOf('btn--bare'), -1, 'Does not have btn-bare class.');
+    });
+
+    test('Page 2 should NOT be selected', function(){
+      var paginationPager = document.getElementById('remoteData1').querySelector('.pager.px-pagination');
+      // note: classList does not have prototype Array methods
+      var page1IconClassList = paginationPager.children[1].classList.toString().split(' ');
+      assert(page1IconClassList.indexOf('btn--icon') === -1 && page1IconClassList.indexOf('btn--pagination--number') === -1,  
+        'Has btn-icon and btn--pagination--number classes.');
+      assert(page1IconClassList.indexOf('btn--bare') > -1, 'Does not have btn-bare class.');
+    });
+
+  });
+
+  suite('Unit Tests for data remote property being `true` on page 2', function () {
+
+    test('Default pagination size is 10', function(){
+      assert.equal(remoteDataFixture2.pageSize, 10, 'Default page size should be 10 rows.');
+    });
+
+    test('Default rows displayed size is 10', function(){
+      var tb = Polymer.dom(remoteDataFixture2.root).querySelector('aha-table'),
+          rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
+      assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
+    });
     
-    // can simulate page 2 using only one page's worth of data
-    // on update of data, responds accordingly
+    test('Pagination shows 11-20 of 100', function(){
+      var paginationSpan = document.getElementById('remoteData2').querySelector('.summary.style-scope.px-pagination');
+      var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
+      assert.equal(paginationTextString, '11-20 of 100', 'Shows correct pagination counts.');
+    });
 
+    test('Page 1 should NOT be selected', function(){
+      var paginationPager = document.getElementById('remoteData2').querySelector('.pager.px-pagination');
+      // note: classList does not have prototype Array methods
+      var page1IconClassList = paginationPager.children[0].classList.toString().split(' ');
+      assert(page1IconClassList.indexOf('btn--icon') === -1 && page1IconClassList.indexOf('btn--pagination--number') === -1,  
+        'Has btn-icon and btn--pagination--number classes.');
+      assert(page1IconClassList.indexOf('btn--bare') > -1, 'Does not have btn-bare class.');
+    });
 
-
-
-    // test('Default pagination size is 10', function(){
-    //   assert.equal(table1Fixture.pageSize, 10, 'Default page size should be 10 rows.');
-    // });
-
-    // test('Default rows displayed size is 10', function(){
-    //   var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
-    //       rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
-    //   assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
-    // });
-
-    // test('Switching pageSize property to 20 should make table re-render', function(done){
-    //   var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
-    //       rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
-    //   assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
-
-    //   table1Fixture.pageSize = 20;
-    //   flush(function(){
-    //     var newRowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
-    //     assert.equal(newRowCount, 20, 'Default rows displayed should be 20 rows.');
-    //     done();
-    //   });
-    // });
+    test('Page 2 should be selected', function(){
+      var paginationPager = document.getElementById('remoteData2').querySelector('.pager.px-pagination');
+      // note: classList does not have prototype Array methods
+      var page1IconClassList = paginationPager.children[1].classList.toString().split(' ');
+      assert(page1IconClassList.indexOf('btn--icon') > -1 && page1IconClassList.indexOf('btn--pagination--number') > -1,  
+        'Has btn-icon and btn--pagination--number classes.');
+      assert.equal(page1IconClassList.indexOf('btn--bare'), -1, 'Does not have btn-bare class.');
+    });
   });
 }
