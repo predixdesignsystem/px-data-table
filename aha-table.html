@@ -34,12 +34,12 @@
         <!-- Header -->
         <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
-            <template is="dom-if" if="{{_isFalse(column.hide)}}">
-              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader"
-                on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader"
-                on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
+            <template is="dom-if" if="{{!column.hide}}">
+              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
                 <div class="flex header--container">
-                  <span class$="{{_getTextSortingClass(column, sortedColumn)}}" on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(column, sortedColumn, descending)}}" class$="{{_getSortingClass(column, sortedColumn, descending)}}"></iron-icon>
+                  <span
+                    class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}"
+                    on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></iron-icon>
                   </span>
                   <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                     <template is="dom-if" if="{{enableColumnResize}}">
@@ -55,61 +55,66 @@
         <!-- Second Header (filter/select all) -->
         <div class$="{{_getSecondHeaderClass(_enableFilterRow)}}">
           <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
-            <template is="dom-if" if="{{_isFalse(column.hide)}}">
-              <span class$="{{_getFilterHeaderClass(column)}}">
-                <!-- select all checkbox -->
-                <template is="dom-if" if="{{_isSelectAllColumn(column)}}">
-                  <span class="flex flex--center">
-                    <input id="selectAllCheckbox" type="checkbox"
-                           on-change="_clickSelectAll"/>
+            <span class$="{{_getFilterHeaderClass(column)}}" hidden$="{{column.hide}}">
+              <!-- select all checkbox -->
+              <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
+                <span class="flex flex--center" hidden$="{{column.hide}}">
+                  <template is="dom-if" if="{{!singleSelect}}">
+                    <input id="selectAllCheckbox" type="checkbox" on-change="_clickSelectAll"/>
+                  </template>
+                </span>
+              </template>
+
+              <!-- filter entry -->
+              <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
+                <input placeholder="Filter" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
+              </template>
+
+            </span>
+          </template>
+        </div>
+        <!-- Data rows -->
+        <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
+
+          <div class$="{{_getRowClass(internalRow,striped)}}">
+            <!-- Data cells -->
+            <template is="dom-repeat" items="{{meta}}" as="column">
+              <!-- selected column checkbox or radio button -->
+              <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
+                <span class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
+                  <span class="flex flex--center flex--middle">
+                    <template is="dom-if" if="{{!singleSelect}}">
+                      <input type="checkbox" checked="{{internalRow._selected::change}}"/>
+                    </template>
+                    <template is="dom-if" if="{{singleSelect}}">
+                      <input type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
+                    </template>
                   </span>
+                </span>
+              </template>
+              <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
+                <px-data-table-cell
+                    hidden$="{{column.hide}}"
+                    on-save="_save"
+                    row-highlighted="[[internalRow._highlight]]"
+                    cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
+                    cell-selected="[[internalRow._selected]]"
+                    on-validate="_handleValidateEvent"
+                    cell-type="{{column.type}}"
+                    dropdown-items="{{column.dropdownItems}}"
+                    dropdown-bounds="{{scrollBody}}"
+                    cell-display-value="{{_readContent(internalRow, column)}}"
+                    cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
+                    cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
+                    cell-editable="{{column.editable}}"
+                    cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
+                    column-name="{{column.name}}"
+                    dropdown-max-character-width="{{column.maxColumnCharacterWidth}}"
+                    on-tap="_clickCell">
+                </px-data-table-cell>
+              </template>
             </template>
-
-            <!-- filter entry -->
-            <template is="dom-if" if="{{_isFilterableColumn(column, column.filterable)}}">
-              <input placeholder="Filter" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter" />
-            </template>
-
-            </span>
-          </template>
-  </template>
-  </div>
-  <!-- Data rows -->
-  <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
-
-    <div class$="{{_getRowClass(internalRow,striped)}}">
-      <!-- Data cells -->
-      <template is="dom-repeat" items="{{meta}}" as="column">
-        <template is="dom-if" if="{{_isFalse(column.hide)}}">
-          <!-- selected column checkbox -->
-          <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-            <span class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" on-click="_clickRow">
-                    <span class="flex flex--center flex--middle">
-                      <input type="checkbox"
-                      checked="{{internalRow._selected::change}}"/>
-                    </span>
-            </span>
-          </template>
-          <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-            <px-data-table-cell 
-              on-save="_save" 
-              row-highlighted="[[internalRow._highlight]]" 
-              cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
-              cell-selected="[[internalRow._selected]]" 
-              on-validate="_handleValidateEvent" 
-              cell-type="{{column.type}}" 
-              dropdown-items="{{column.dropdownItems}}"
-              dropdown-bounds="{{scrollBody}}" 
-              cell-display-value="{{_readContent(internalRow, column)}}" 
-              cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
-              cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}" 
-              cell-editable="{{column.editable}}" 
-              cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
-              column-name="{{column.name}}" 
-              dropdown-max-character-width="{{column.maxColumnCharacterWidth}}" 
-              on-tap="_clickCell">
-              </px-data-table-cell>
-          </template>
+          </div>
         </template>
       </template>
     </div>
@@ -168,6 +173,12 @@
         value: false,
         observer: "_selectableChanged"
       },
+      //single-select: if only one row can be selected
+      singleSelect: {
+        type: Boolean,
+        value: false,
+        observer: "_singleSelectChanged"
+      },
       //striped: if table row is striped
       striped: {
         type: Boolean,
@@ -187,6 +198,16 @@
       filterable: {
         type: Boolean,
         value: false,
+      },
+      //filterable: if table columns are sortable
+      sortable: {
+        type: Boolean,
+        value: false,
+      },
+      includeAllColumns: {
+        type: Boolean,
+        value: false,
+        observer: '_includeAllColumnsChanged'
       },
       //_enableFilterRow: if table row is _enableFilterRow
       _enableFilterRow: {
@@ -373,12 +394,17 @@
       '_updateDisplayedRows(pageSize)', // when the size of the page changes
       '_dataChanged(data.*)',
       '_columnChooserChanged(_columnChooserItems.*)',
-      '_computeIfColumnFilterEnabled(meta.splices, filterable, meta.*, selectable)'
+      '_computeIfColumnFilterEnabled(meta.splices, filterable, meta.*, selectable, singleSelect)'
     ],
 
-    ready: function () {
+    listeners: {
+      'validate': '_handleValidateEvent'
+    },
+
+    ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
       this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
+      if(this.selectable) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
       var boundHandler = this._columnChanged.bind(this);
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
     },
@@ -394,12 +420,7 @@
         return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
       });
 
-      if (addedColumns.length > 0) {
-        // need the Selected column if the table is selectable
-        if (this.selectable && !this._selectedColumnExists()) {
-          // add a selected column if selectable
-          this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
-        }
+      if(addedColumns.length > 0) {
 
         for (var i = 0; i < addedColumns.length; i++) {
 
@@ -427,9 +448,8 @@
       }.bind(this));
     },
 
-    _addColumn: function (addedColumn) {
-      //meta needs to reflect the order in light dom. Find the node just before
-      //this one
+    _addColumn: function(addedColumn) {
+      //meta needs to reflect the order in light dom. Find the node just before this one
       var previousNode,
         notFound = this.getEffectiveChildren().every(function (column, index) {
           if (column.name === addedColumn.name) {
@@ -453,7 +473,7 @@
           });
         }
         else {
-          idx = this.selectable ? 1 : 0;
+          if(this.selectable) idx += 1;
         }
         this.splice('meta', idx, 0, addedColumn);
       }
@@ -462,8 +482,8 @@
       }
     },
 
-    _selectedColumnExists: function () {
-      return this.meta[0] && this.meta[0].name === '_selected';
+    _selectedColumnExists: function(){
+      return this.meta && this.meta[0] && this.meta[0].name === '_selected';
     },
 
     _highlightLoaded: function (evt) {
@@ -519,8 +539,9 @@
         return;
       }
 
-      // initialize the meta if there is none
-      if (!this.meta || this.meta.length === 0) {
+      // if includeAllColumns is true, or if no px-data-table-columns have been defined,
+      // need to calculate meta from the actual data passed in to the table
+      if(this.includeAllColumns || this.meta.length === 0 || (this.meta.length === 1 && this.meta[0].name === "_selected")) {
         this._generateMetaFromData();
       }
 
@@ -559,53 +580,56 @@
       return dataRemote ? totalEntries : numberOfItems;
     },
 
-    _selectableChanged: function (newSelectable) {
+    _includeAllColumnsChanged: function(newValue) {
+      if(newValue === true) {
+        this._generateMetaFromData();
+      }
+      else if (newValue === false && this._isAttached && this.getEffectiveChildren(this.$.content).length > 0) {
+        this.meta = this.getEffectiveChildren(this.$.content);
+      }
+    },
+
+    _selectableChanged: function(newSelectable) {
       // if meta is already defined and then selectable is set, we need to backfill the meta with the _selected column
       if (newSelectable === true && this.meta !== null && this.meta !== undefined && this.meta.length > 0) {
         this.splice('meta', 0, 0, this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
       } else if (newSelectable === false && this.meta !== null && this.meta !== undefined && this.meta.length > 0 && this.meta[0].name === "_selected") {
         this.shift('meta');
       }
+    },
 
+    _singleSelectChanged: function() {
+      if(this._internalData && this.selectedRows.length > 1) this._setAllRows(false);
     },
 
     /********** Generating column metadata *************/
 
 
-    _generateMetaFromData: function () {
-      var meta = [];
+    _generateMetaFromData: function() {
+      for(var prop in this.data[0]) {
+        var previousNode,
+          notFound = this.meta.every(function(column, index) {
+            if(column.name === prop) {
+              return false;
+            }
+            return true;
+          });
 
-      for (var prop in this.data[0]) {
-        if (prop.indexOf('_') !== 0) {//skip internal field
-          var colInfo = this._generateLightDomColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1));
-          Polymer.dom(this).appendChild(colInfo);
+        // if column not found
+        if(notFound) {
+          var colInfo = this._generateMetaForColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1));
+          this.push('meta', colInfo);
         }
       }
-      return meta;
     },
-
-    _generateLightDomColumn: function (prop, type, isSelectAll, label) {
-      return Polymer.Base.create('px-data-table-column', {
-        name: prop,
-        label: label,
-        type: type,
-        sortable: true,
-        filterable: true,
-        editable: false,
-        required: false,
-        selectAll: isSelectAll
-        //validation?
-      });
-    },
-
 
     _generateMetaForColumn: function (prop, type, isSelectAll, label) {
       return Polymer.Base.create('px-data-table-column', {
         name: prop,
         label: label,
         type: type,
-        sortable: true,
-        filterable: true,
+        sortable: this.sortable,
+        filterable: this.filterable,
         editable: false,
         required: false,
         selectAll: isSelectAll,
@@ -769,7 +793,8 @@
     /********** Sorting ************/
 
     // sort by header click handler
-    _sort: function (e, p) {
+    _sort: function(e, p) {
+      if(!this.sortable) return;
       var column = e.model.column,
         sortingColumn;
       if (column && column.sortable) {
@@ -868,39 +893,21 @@
     },
 
     // fallback default sort function if per-column sort isn't specified.
-    _defaultSortAlphabetically: function (a, b) {
-      if (this.descending) {
-        if (a.value < b.value) {
-          return 1;
-        }
-        return -1;
+    _defaultSortAlphabetically: function(a, b) {
+      if(this.descending) {
+        return (a.value < b.value) ? 1 : -1;
       }
       else {
-        if (a.value > b.value) {
-          return 1;
-        }
-        return -1;
+        return (a.value > b.value) ? 1 : -1
       }
     },
 
-    _defaultSortSelected: function (a, b) {
-      if (this.descending) {
-        if (a.value && !b.value) {
-          return 1;
-        }
-        else if (!a.value && b.value) {
-          return -1;
-        }
-        return 0;
+    _defaultSortSelected: function(a, b) {
+      if(this.descending) {
+        return (a.value && !b.value) ? 1 : (!a.value && b.value) ? -1 : 0;
       }
       else {
-        if (a.value && !b.value) {
-          return -1;
-        }
-        else if (!a.value && b.value) {
-          return 1;
-        }
-        return 0;
+        return (a.value && !b.value) ? -1 : (!a.value && b.value) ? 1 : 0;
       }
     },
 
@@ -1030,9 +1037,10 @@
     },
     _clickRow: function (evt) {
       var column = evt.model.column,
-        row = evt.model.internalRow,
-        detail = { "row": row, "column": column },
-        selectAllCheckbox;
+          row = evt.model.internalRow,
+          detail = {"row": row, "column": column},
+          selectAllCheckbox;
+      if(column.editable || column.type === 'dropdown') return;
       this.fire('px-row-click', detail); // fire the event after it is marked selected
 
       if (this.selectable) {
@@ -1050,9 +1058,9 @@
     },
     _clickCell: function (evt) {
       var column = evt.model.column,
-        row = evt.model.internalRow,
-        detail = { "row": row, "column": column, "rowIndex": this.$.recordList.indexForElement(evt.currentTarget) };
-
+          row = evt.model.internalRow,
+          detail = {"row": row, "column": column, "rowIndex":this.$.recordList.indexForElement(evt.currentTarget)};
+      this._clickRow(evt);
       this.fire('px-cell-click', detail); // fire the event after it is marked selected
     },
     _clickSelectAll: function (e) {
@@ -1099,6 +1107,7 @@
         this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
       }
       else {
+        if(this.singleSelect) this._setAllRows(false);
         row._selected = true;
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
         this.push('selectedRows', row);
@@ -1489,12 +1498,15 @@
       }.bind(this));
       return highlightObj;
     },
+
     _isSelectAllColumn: function (column) {
       return column.selectAll;
     },
-    _isFilterableColumn: function (column, filterable) {
-      return !column.selectAll && column.filterable && !column.hide;
+
+    _isFilterableColumn: function(column) {
+      return !column.selectAll && column.filterable && this.filterable && !column.hide;
     },
+
     _readContent: function (row, column) {
       var datum = this._getInternalDataAt(row, column.name);
       if (datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
@@ -1537,21 +1549,17 @@
       }
       return datum;
     },
+
     _isEqual: function (source, target) {
       return source === target;
     },
-    _isFalse: function (source) {
-      return source === false || source === "false";
-    },
-    _getHeaderClass: function (item) {
-      var classList = ['th ', 'aha-' + item.name + '-th', 'u-p0'];
-      if (item.sortable) {
+
+    _getHeaderClass: function(item) {
+      var classList = ['th', 'th--no-borders', 'aha-' + item.name + '-th', 'u-p0'];
+      if(this.sortable && item.sortable) {
         classList.push('sortable');
       }
-      if (!this.tableRows && !this.tableColumns) {
-        classList.push('th--no-borders');
-      }
-      if (this.enableColumnReorder && item.type !== 'selected') {
+      if(this.enableColumnReorder && item.type !== 'selected') {
         classList.push('moveable');
       }
       return classList.join(' ');
@@ -1566,29 +1574,35 @@
     _getFilterHeaderClass: function (column) {
       return column.name === 'insertion-indicator' ? 'td insertion-indicator' : 'td';
     },
+    
     _getSortingIcon: function (column, sortingColumn, descending) {
       var sortingIcon = ' ';
       if (sortingColumn === column.name) {
+    _getSortingIcon: function(sortable, column, sortingColumn, descending) {
+      var sortingIcon = ' ';
+      if(sortable && sortingColumn === column.name) {
         sortingIcon = descending ? 'fa:fa-caret-down' : 'fa:fa-caret-up';
       }
       return sortingIcon;
     },
-    _getSortingClass: function (column, sortingColumn, descending) {
+    
+    _getSortingClass: function(sortable, column, sortingColumn, descending) {
       var classList = 'sorting fa';
-      if (sortingColumn !== column.name) {
+      if(sortable && sortingColumn !== column.name) {
         classList = classList + ' visuallyhidden';
       }
       return classList;
     },
-    _getTextSortingClass: function (column, sortingColumn) {
+
+    _getTextSortingClass: function(sortable, column, sortingColumn) {
       var classList = ['column-head', 'u-m--'];
       if (column.name === '_selected') {
         classList.push('column-head--selected');
       };
-      if (column.sortable) {
+      if(sortable && column.sortable) {
         classList.push('sorted-text-hover');
       }
-      if (sortingColumn === column.name) {
+      if(sortable && sortingColumn === column.name) {
         classList.push('sorted-text');
       }
       return classList.join(' ');
@@ -1627,8 +1641,9 @@
 
       return header;
     },
-    _computeIfColumnFilterEnabled: function (meta, filterable) {
-      this._enableFilterRow = meta && (this.selectable === true || filterable && this.meta.some(function (val) {
+
+    _computeIfColumnFilterEnabled: function(meta, filterable) {
+      this._enableFilterRow = meta && (this.selectable && !this.singleSelect || filterable && this.meta.some(function(val){
         return this._isFilterableColumn(val);
       }.bind(this)));
     }

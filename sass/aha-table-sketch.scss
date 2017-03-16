@@ -58,8 +58,12 @@ $inuit-enable-btn--disabled: true;
 .th {
   @extend th;
   display: table-cell;
-  resize:horizontal;
+  resize: horizontal;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
 }
+
 
 // making th--no-borders class specific enough to override other table.table.aha-table, etc. selectors
 .th--no-borders.th--no-borders.th--no-borders {
