@@ -766,7 +766,8 @@
     /******* Update Displayed rows when major changes ****/
 
     _setPageSize: function () {
-      this.$.pagination.setPageSize(this.pageSize);
+      debugger;
+        this.$.pagination.setPageSize(this.pageSize);
     },
 
     _updateDisplayedRows: function () {
@@ -1575,10 +1576,7 @@
       return column.name === 'insertion-indicator' ? 'td insertion-indicator' : 'td';
     },
     
-    _getSortingIcon: function (column, sortingColumn, descending) {
-      var sortingIcon = ' ';
-      if (sortingColumn === column.name) {
-    _getSortingIcon: function(sortable, column, sortingColumn, descending) {
+    _getSortingIcon: function (sortable, column, sortingColumn, descending) {
       var sortingIcon = ' ';
       if(sortable && sortingColumn === column.name) {
         sortingIcon = descending ? 'fa:fa-caret-down' : 'fa:fa-caret-up';

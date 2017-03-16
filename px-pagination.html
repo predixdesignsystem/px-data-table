@@ -71,6 +71,7 @@ Element that provides pagination.
       pageSize: {
         type: Number,
         value: 10,
+        readOnly: true,
         notify: true
       },
 
@@ -92,6 +93,7 @@ Element that provides pagination.
       firstItemIndexToDisplay: {
         type: Number,
         notify: true,
+        readOnly: true,
         value: 1
       }
 
@@ -161,11 +163,11 @@ Element that provides pagination.
       // if local data
       if (!this.dataRemote) {
         if(this.pageCount === 0) {
-          this.set('firstItemIndexToDisplay',0);
+          this.setFirstItemIndexToDisplay(0);
           this.set('lastItemIndexToDisplay', 0);
         }
         else {
-          this.set('firstItemIndexToDisplay',((this.currentPage - 1) * this.pageSize) + 1);
+          this.setFirstItemIndexToDisplay(((this.currentPage - 1) * this.pageSize) + 1);
           if(this.currentPage === this.pageCount) {
             this.set('lastItemIndexToDisplay', this.numberOfItems);
           } else {
@@ -294,7 +296,7 @@ Element that provides pagination.
         }
       });
 
-      this.set('pageSize',size);
+      this.setPageSize(size);
       this._goBackToFirstPage();
     },
 
