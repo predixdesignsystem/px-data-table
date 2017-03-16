@@ -257,6 +257,8 @@ Custom property | Description | Default
        * Property to set the the total number of entries in the table,
        * assuming that dataRemote is true and the data provided is only
        * for the visible page.
+       * 
+       * Requires dataRemote="true" to take effect
        *
        *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
        *
@@ -271,6 +273,8 @@ Custom property | Description | Default
        * Property to set the the remote index of the first item on this page,
        * assuming that dataRemote is true and the data provided is only
        * for the visible page.
+       * 
+       * Requires dataRemote="true" to take effect
        *
        * If on page 2 with a page size of 10, then the first-item-index would be 11.
        *

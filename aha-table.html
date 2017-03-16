@@ -20,27 +20,6 @@
     <style include="aha-table-styles"></style>
     <content id="columndefs"></content>
 
-
-    <table>
-      <tr>
-        <td>totalEntries</td>
-        <td>[[totalEntries]]</td>
-      </tr>
-      <tr>
-        <td>firstItemIndex</td>
-        <td>[[firstItemIndex]]</td>
-      </tr>
-      <tr>
-        <td>dataRemote</td>
-        <td>[[dataRemote]]</td>
-      </tr>
-      <tr>
-        <td>pageSize</td>
-        <td>[[pageSize]]</td>
-      </tr>
-    </table>
-
-
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser u-mb-">
         <px-dropdown display-value="Show/Hide Column">
@@ -238,24 +217,27 @@
         type: Boolean,
         value: false
       },
-     /**
-      * Property to set the the total number of entries in the table,
-      * assuming that dataRemote is true and the data provided is only
-      * for the visible page.
-      *
-      *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
-      *
-      * @default false
-      */
+      /**
+       * Property to set the the total number of entries in the table,
+       * assuming that dataRemote is true and the data provided is only
+       * for the visible page.
+       * 
+       * Requires dataRemote="true" to take effect
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
       totalEntries: {
         type: Number,
         value: 10
       },
-
       /**
        * Property to set the the remote index of the first item on this page,
        * assuming that dataRemote is true and the data provided is only
        * for the visible page.
+       * 
+       * Requires dataRemote="true" to take effect
        *
        * If on page 2 with a page size of 10, then the first-item-index would be 11.
        *
