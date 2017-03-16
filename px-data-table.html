@@ -92,23 +92,28 @@ Custom property | Description | Default
     <style include="px-data-table-styles"></style>
 
     <div class="flex">
-      <aha-table data="{{tableData}}"
-        sortable="{{sortable}}"
+      <aha-table
+        data-remote$="{{dataRemote}}"
+        data="{{tableData}}"
+        enable-column-reorder="{{enableColumnReorder}}"
+        enable-column-resize="{{enableColumnResize}}"
         filterable="{{filterable}}"
+        first-item-index="{{firstItemIndex}}"
+        hide-pagination-control="{{hidePaginationControl}}"
+        id="dataTable"
+        include-all-columns="{{includeAllColumns}}"
+        meta="{{meta}}"
+        page-size="{{pageSize}}"
+        selectable="{{selectable}}"
+        selected-rows="{{selectedRows}}"
+        show-column-chooser="{{showColumnChooser}}"
+        single-select="{{singleSelect}}"
+        sortable="{{sortable}}"
         striped="{{striped}}"
         table-columns="{{tableColumns}}"
         table-rows="{{tableRows}}"
-        selectable="{{selectable}}"
-        selected-rows="{{selectedRows}}"
-        single-select="{{singleSelect}}"
-        meta="{{meta}}"
-        page-size="{{pageSize}}"
-        hide-pagination-control="{{hidePaginationControl}}"
-        show-column-chooser="{{showColumnChooser}}"
-        enable-column-reorder="{{enableColumnReorder}}"
-        enable-column-resize="{{enableColumnResize}}"
-        id="dataTable"
-        include-all-columns="{{includeAllColumns}}">
+        total-entries="{{totalEntries}}"
+        >
         <content></content>
       </aha-table>
     </div>
