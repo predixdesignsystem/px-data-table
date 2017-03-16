@@ -93,7 +93,6 @@ Element that provides pagination.
       firstItemIndexToDisplay: {
         type: Number,
         notify: true,
-        readOnly: true,
         value: 1
       }
 
@@ -133,7 +132,7 @@ Element that provides pagination.
     },
 
     /**
-     * Go to the previous page or trigger request to chagne page
+     * Go to the previous page or trigger request to change page
      **/
     goToPreviousPage: function() {
       if (this.currentPage > 1) {
@@ -153,21 +152,21 @@ Element that provides pagination.
     setPageSize: function(size) {
       this._updatePageSize(size);
     },
-
+    
     /**
      * Update the display given current property values
      */
-    updateDisplay: function() {
+    updateDisplay: function () {
       this.set('pageCount', Math.ceil(this.numberOfItems / this.pageSize));
 
       // if local data
       if (!this.dataRemote) {
         if(this.pageCount === 0) {
-          this.setFirstItemIndexToDisplay(0);
+          this.set('firstItemIndexToDisplay',0);
           this.set('lastItemIndexToDisplay', 0);
         }
         else {
-          this.setFirstItemIndexToDisplay(((this.currentPage - 1) * this.pageSize) + 1);
+          this.set('firstItemIndexToDisplay',((this.currentPage - 1) * this.pageSize) + 1);
           if(this.currentPage === this.pageCount) {
             this.set('lastItemIndexToDisplay', this.numberOfItems);
           } else {
@@ -182,8 +181,8 @@ Element that provides pagination.
         this.set('currentPage', Math.ceil( this.firstItemIndexToDisplay / this.pageSize ) );
         this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
       }
-
     },
+
 
 
     // --------------------
@@ -259,26 +258,6 @@ Element that provides pagination.
         return pagerNavButtonsConfig;
       }
     },
-    
-    _resolveFunctionOnWindow: function (customFunctionName) {
-
-      if ( typeof customFunctionName !== 'string' && customFunctionName.length < 1) {
-        return false;
-      }
-
-      var customFunction = window,
-        customFunctionFullPath = customFunctionName.split(".");
-
-      for (i in customFunctionFullPath) {
-        customFunction = customFunction[customFunctionFullPath[i]];
-        if (customFunction === undefined) {
-          console.warn("px-data-table: Custom function was used, but was not found on window. Is the path correct?");
-          return null;
-        }
-      }
-
-      return customFunction;
-    },
 
     _updatePageSize: function(size) {
       var sizelist = [10, 20, 50, 100];
@@ -296,7 +275,7 @@ Element that provides pagination.
         }
       });
 
-      this.setPageSize(size);
+      this.set('pageSize',size);
       this._goBackToFirstPage();
     },
 

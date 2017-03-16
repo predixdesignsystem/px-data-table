@@ -116,27 +116,22 @@
             </template>
           </div>
         </template>
-      </template>
+        <template is="dom-if" if="{{!displayedRows.length}}">
+          <div class="flex flex--center no-results">No Results</div>
+        </template>
+        </div>
+        <!-- Pagination controls -->
+        <div class="pagination">
+          <px-pagination 
+            class$="{{_getPaginationVisibility(hidePaginationControl)}}" 
+            data-remote="{{dataRemote}}"
+            first-item-index-to-display="{{firstItemIndex}}"
+            id="pagination" 
+            number-of-items="{{_adaptedNumberOfItems}}"
+            page-size="{{pageSize}}" 
+            >
+        </px-pagination>
     </div>
-  </template>
-  </div>
-
-  <template is="dom-if" if="{{!displayedRows.length}}">
-    <div class="flex flex--center no-results">No Results</div>
-  </template>
-  </div>
-  <!-- Pagination controls -->
-  <div class="pagination">
-    <px-pagination 
-      class$="{{_getPaginationVisibility(hidePaginationControl)}}" 
-      data-remote="dataRemote"
-      first-item-index-to-display="{{firstItemIndex}}"
-      id="pagination" 
-      number-of-items="{{_getNumberOfItems(numberOfItems,totalEntries,dataRemote)}}"
-      page-size="{{pageSize}}" 
-      >
-      </px-pagination>
-  </div>
   </template>
 </dom-module>
 <script>
@@ -287,11 +282,11 @@
         value: false
       },
       /**
-       * Property to set the table page size.
+       * Property to set the page size instead of the default of 10.
        * 
-       * Even in data-remote mode, page size may not match count of data provided.
+       * In data-remote mode, page size may not match count of data provided.
        * Page size could be 50, but only 40 items are provided.
-       *
+       * 
        *      <px-data-table page-size="50" table-data="{{data}}"></px-data-table>
        *
        * @default 10
@@ -300,6 +295,15 @@
         type: Number,
         value: 10,
         observer: '_setPageSize'
+      },
+      // when dataRemote is true, then this reflects the total count on observer
+      // and numberOfItems reflects count of items in table
+      _adaptedNumberOfItems: {
+        type: Number,
+      },
+      numberOfItems: { 
+        type: Number, 
+        observer: '_calculateAdaptedNumberOfItems' 
       },
       /**
        * Property to set the visibility of the table pagination controls.
@@ -685,7 +689,7 @@
         this.$.pagination.updateDisplay();
         this.set('numberOfItems', this.totalEntries);
       }
-
+      
       this._updateDisplayedRows();
     },
 
@@ -1399,6 +1403,10 @@
       });
 
       return items;
+    },
+
+    _calculateAdaptedNumberOfItems: function () {
+      this.set('_adaptedNumberOfItems', this.dataRemote ? this.totalEntries : this.numberOfItems);
     },
 
     /**

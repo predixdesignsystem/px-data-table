@@ -5,7 +5,7 @@
       "browsers": [
         "chrome"
       ]
-    },
+   },
     "sauce": {
       "disabled": true,
       "browsers": [
