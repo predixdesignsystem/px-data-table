@@ -77,6 +77,16 @@ Element that provides pagination.
       },
 
       /**
+       * Changes paradigms for pagination from local (all data local)
+       * VS remote (all data remote and only one page local)
+       *
+       */
+      dataRemote: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
        * Passes the firstItemIndexToDisplay back to the user
        *
        * Read only.
@@ -86,8 +96,7 @@ Element that provides pagination.
       firstItemIndexToDisplay: {
         type: Number,
         notify: true,
-        value: 1,
-        readOnly: true
+        value: 1
       }
 
     },
@@ -97,21 +106,71 @@ Element that provides pagination.
       this.set('pagesizetitle', 'Rows per page');
     },
 
-    _goBackToFirstPage: function() {
-      this.goToPageNumber(1);
+
+    // --------------------
+    // PUBLIC METHODS
+    // --------------------
+
+    /**
+     * Go to the next page
+     */
+    goToNextPage: function() {
+      if (this.currentPage < this.pageCount) {
+        if (!this.dataRemote) {
+          this.goToPageNumber(this.currentPage + 1);
+        } else {
+          this._triggerPageChangeRequest(this.currentPage + 1);
+        }
+      }
     },
 
-    _updateDisplay: function() {
+    /**
+     * Go to the page number specified
+     * @param number
+     */
+    goToPageNumber: function(number) {
+      if(number) {
+        this.currentPage = number;
+        this.updateDisplay();
+      }
+    },
+
+    /**
+     * Go to the previous page
+     **/
+    goToPreviousPage: function() {
+      if (this.currentPage > 1) {
+        if (!this.dataRemote) {
+          this.goToPageNumber(this.currentPage - 1);
+        } else {
+          this._triggerPageChangeRequest(this.currentPage - 1);
+        }
+      }
+    },
+
+    /**
+     * Set page size public interface.
+     *
+     * Set Page size, trigger update of table, update combobox.
+     */
+    setPageSize: function(size) {
+      this._updatePageSize(size);
+    },
+    
+    /**
+     * Update the display given current property values
+     */
+    updateDisplay: function() {
       this.set('pageCount', Math.ceil(this.numberOfItems / this.pageSize));
 
       // if local data
       if (!this.dataRemote) {
         if(this.pageCount === 0) {
-          this._setFirstItemIndexToDisplay(0);
+          this.set('firstItemIndexToDisplay',0);
           this.set('lastItemIndexToDisplay', 0);
         }
         else {
-          this._setFirstItemIndexToDisplay(((this.currentPage - 1) * this.pageSize) + 1);
+          this.set('firstItemIndexToDisplay',((this.currentPage - 1) * this.pageSize) + 1);
           if(this.currentPage === this.pageCount) {
             this.set('lastItemIndexToDisplay', this.numberOfItems);
           } else {
@@ -128,70 +187,34 @@ Element that provides pagination.
       }
     },
 
-    /**
-     * Go to the previous page
-     **/
-    goToPreviousPage: function() {
-      if(this.currentPage > 1) {
-        this.goToPageNumber(this.currentPage - 1);
+
+
+    // --------------------
+    // OBSERVERS
+    // --------------------
+
+    _goBackToFirstPage: function() {
+      if (!this.dataRemote) {
+        this.goToPageNumber(1);
+      } else {
+        // recalculate paging, just to make sure we're on the right page
+        this.updateDisplay();
       }
     },
 
-    /**
-     * Go to the next page
-     */
-    goToNextPage: function() {
-      if(this.currentPage < this.pageCount) {
-        this.goToPageNumber(this.currentPage + 1);
-      }
+
+    // --------------------
+    // BROADCASTING METHODS
+    // --------------------
+
+    _triggerPageChangeRequest: function (intendedPage) {
+      this.fire('page-change-intent', intendedPage);
     },
 
-    /**
-     * Set page size public interface.
-     *
-     * Set Page size, trigger update of table, update combobox.
-     */
-    setPageSize: function(size) {
-      this._updatePageSize(size);
-    },
 
-    _changeDropDown: function(e) {
-      this._updatePageSize(parseInt(e.target.value));
-    },
-
-    /**
-     * Go to the page number specified
-     * @param number
-     */
-    goToPageNumber: function(number) {
-      if(number) {
-        this.currentPage = number;
-        this._updateDisplay();
-      }
-    },
-
-    _goToPage: function(evt) {
-      this.goToPageNumber(parseInt(evt.target.textContent));
-    },
-
-    _getPageupClass: function(currentPage) {
-      return [currentPage === 1 ? "btn--disabled" : "", 'btn btn--bare btn--pagination previous'].join(' ');
-    },
-
-    _getPagedownClass: function(currentPage, pageCount) {
-      return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", 'btn btn--bare btn--pagination next'].join(' ');
-    },
-
-    _getPagerButtonClass: function(buttonValue, currentPage) {
-      var classList = ['btn'];
-      if(buttonValue === currentPage) {
-        classList.push('btn--icon', 'u-ml0', 'btn--pagination--number');
-      }
-      else {
-        classList.push('btn--bare', 'u-ml0', 'btn--bare__pagination');
-      }
-      return classList.join(' ');
-    },
+    // --------------------
+    // HELPER METHODS
+    // --------------------
 
     _pagerButtons: function() {
       if(this.pageCount) {

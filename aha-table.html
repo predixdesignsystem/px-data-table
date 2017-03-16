@@ -126,7 +126,7 @@
     <div class="pagination">
       <px-pagination 
         class$="{{_getPaginationVisibility(hidePaginationControl)}}" 
-        data-remote$="{{dataRemote}}"
+        data-remote="{{dataRemote}}"
         first-item-index-to-display="{{firstItemIndex}}"
         id="pagination" 
         number-of-items="{{_adaptedNumberOfItems}}"
@@ -236,6 +236,54 @@
         value: false
       },
       /**
+       * Property to set the the total number of entries in the table,
+       * assuming that dataRemote is true and the data provided is only
+       * for the visible page.
+       * 
+       * Requires dataRemote="true" to take effect
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      totalEntries: {
+        type: Number,
+        value: 10
+      },
+      /**
+       * Property to set the the remote index of the first item on this page,
+       * assuming that dataRemote is true and the data provided is only
+       * for the visible page.
+       * 
+       * Requires dataRemote="true" to take effect
+       *
+       * If on page 2 with a page size of 10, then the first-item-index would be 11.
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      firstItemIndex: {
+        type: Number,
+        value: 1
+      },
+      /**
+       * Property to set the the data paradigm.
+       *
+       * If this is false, then px-data-table expects all of the data to be provided to it.
+       * 
+       * If this is true, then px-data-table will expect only one page's worth of data to be supplied.
+       * This will require other fields to be set, e.g. page-size, total-entries, and first-item-index
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      dataRemote: {
+        type: Boolean,
+        value: false
+      },
+      /**
        * Property to set the page size instead of the default of 10.
        *
        *      <px-data-table page-size="50" table-data="{{data}}"></px-data-table>
@@ -255,12 +303,6 @@
       numberOfItems: { 
         type: Number, 
         observer: '_calculateAdaptedNumberOfItems' 
-      },
-      totalEntries: { 
-        type: Number 
-      },
-      dataRemote: { 
-        type: Boolean 
       },
       /**
        * Property to set the visibility of the table pagination controls.
@@ -614,28 +656,36 @@
         this._setInternalDataAt(this._internalData[i], '_filtered', false);
       }
 
-      // sort
-      if(this.sortedColumn) {
-        this.filteredSortedData = this._sortByColumn(this.filteredSortedData);
-      }
+      if (!this.dataRemote) {
+        // If remote, all sorting/filtering is done on server
 
-      // filter
-      for(index in this.filteredColumns) {
-        this.filteredSortedData = this._filterByColumn(this.filteredColumns[index].name,
-          this.filteredColumns[index].userEntry, this.filteredSortedData);
-      }
-
-      // count total number of rows
-      self = this;
-      this._internalData.forEach(function(row) {
-        if(!self._getInternalCellStateAt(row, '_filtered')) {
-          count++;
+        // sort
+        if (this.sortedColumn) {
+          this.filteredSortedData = this._sortByColumn(this.filteredSortedData);
         }
-      });
-      this.set('numberOfItems', count);
 
-      // with filtering/sorting, it's best just to go back to the first page
-      this.$.pagination.goToPageNumber(1);
+        // filter
+        for (index in this.filteredColumns) {
+          this.filteredSortedData = this._filterByColumn(this.filteredColumns[index].name,
+            this.filteredColumns[index].userEntry, this.filteredSortedData);
+        }
+
+        // count total number of rows
+        self = this;
+        this._internalData.forEach(function (row) {
+          if (!self._getInternalCellStateAt(row, '_filtered')) {
+            count++;
+          }
+        });
+
+        this.set('numberOfItems', count);
+
+        // with filtering/sorting, it's best just to go back to the first page
+        this.$.pagination.goToPageNumber(1);
+      } else {
+        this.$.pagination.updateDisplay();
+        this.set('numberOfItems', this.totalEntries);
+      }
       this._updateDisplayedRows();
     },
 
@@ -729,7 +779,11 @@
         fromPage = this.firstItemIndex - 1; // pagination is 1-based
         to = fromPage + this.pageSize;
 
-        this.set('displayedRows', this.filteredSortedData.slice(fromPage, to));
+        if (this.dataRemote) {
+          this.set('displayedRows', this.filteredSortedData);
+        } else {
+          this.set('displayedRows', this.filteredSortedData.slice(fromPage, to));
+        }
 
       } else if (this.filteredSortedData !== undefined && this.filteredSortedData !== null && this.hidePaginationControl) {
         this.set('displayedRows', this.filteredSortedData);

@@ -1,4 +1,4 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture;
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture, remoteDataFixture1, remoteDataFixture2;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
@@ -778,6 +778,13 @@ document.addEventListener("WebComponentsReady", function() {
   // use `data.slice()` to avoid breaking `additionalDataFixture` tests
   updateSelectFixture.tableData = data.slice();
 
+  remoteDataFixture1 = document.getElementById('remoteData1');
+  remoteDataFixture1.tableData = minidata;
+
+  remoteDataFixture2 = document.getElementById('remoteData2');
+  // remoteDataFixture2.firstItemIndex = 5;
+  remoteDataFixture2.tableData = minidata;
+
   runTests();
 });
 
@@ -1401,5 +1408,44 @@ function runTests() {
         done();
       });
     });
+  });
+
+  suite('Unit Tests for data remote property', function () {
+
+    // shows same number of rows as minidata
+    // pagination counts match up
+    //  1-x
+    //  of x
+
+    // on page change, triggers event
+    
+    // can simulate page 2 using only one page's worth of data
+    // on update of data, responds accordingly
+
+
+
+
+    // test('Default pagination size is 10', function(){
+    //   assert.equal(table1Fixture.pageSize, 10, 'Default page size should be 10 rows.');
+    // });
+
+    // test('Default rows displayed size is 10', function(){
+    //   var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
+    //       rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
+    //   assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
+    // });
+
+    // test('Switching pageSize property to 20 should make table re-render', function(done){
+    //   var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
+    //       rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
+    //   assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
+
+    //   table1Fixture.pageSize = 20;
+    //   flush(function(){
+    //     var newRowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
+    //     assert.equal(newRowCount, 20, 'Default rows displayed should be 20 rows.');
+    //     done();
+    //   });
+    // });
   });
 }
