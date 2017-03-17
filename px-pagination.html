@@ -71,7 +71,8 @@ Element that provides pagination.
       pageSize: {
         type: Number,
         value: 10,
-        notify: true
+        notify: true,
+        observer: '_conditionallyUpdatePageSize'
       },
 
       /**
@@ -161,12 +162,12 @@ Element that provides pagination.
 
       // if local data
       if (!this.dataRemote) {
-        if(this.pageCount === 0) {
+        if (this.pageCount === 0) {
           this.set('firstItemIndexToDisplay',0);
           this.set('lastItemIndexToDisplay', 0);
         } else {
           this.set('firstItemIndexToDisplay',((this.currentPage - 1) * this.pageSize) + 1);
-          if(this.currentPage === this.pageCount) {
+          if (this.currentPage === this.pageCount) {
             this.set('lastItemIndexToDisplay', this.numberOfItems);
           } else {
             this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
@@ -178,7 +179,11 @@ Element that provides pagination.
         // first item is passed in appropriately
         // now update last item index and current page
         this.set('currentPage', Math.ceil( this.firstItemIndexToDisplay / this.pageSize ) );
-        this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
+        if (this.currentPage === this.pageCount) {
+          this.set('lastItemIndexToDisplay', this.numberOfItems);
+        } else {
+          this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
+        }
       }
     },
 
@@ -198,9 +203,9 @@ Element that provides pagination.
 
     /* 
      * If firstItemIndexToDisplay has changed, then update the display
-     * UNLESS dataRemote is not true
+     * Condition: dataRemote is true
      * 
-     * If dataRemote is false, blindly calling updateDisplay would 
+     * If dataRemote is false, calling updateDisplay would 
      *   cause a circular update cycle
      * 
      * Necessary if dataRemote is true to ensure that the currentPage
@@ -212,6 +217,22 @@ Element that provides pagination.
       }
     },
 
+    /* 
+     * If pageSize has changed, then update the display
+     * Condition: dataRemote is true
+     * 
+     * If dataRemote is false, calling _updatePageSize would 
+     *   cause a circular update cycle
+     * 
+     * Necessary if dataRemote is true to ensure that the currentPage
+     *   and lastItemIndexToDisplay are appropriately updated
+     */
+    _conditionallyUpdatePageSize: function (newPageSize) {
+      if (this.dataRemote) {
+        this._updatePageSize(newPageSize);
+      }
+    },
+
 
     // --------------------
     // BROADCASTING METHODS
@@ -219,6 +240,10 @@ Element that provides pagination.
 
     _triggerPageChangeRequest: function (intendedPage) {
       this.fire('page-change-intent', intendedPage);
+    },
+
+    _triggerPageSizeChangeRequest: function (intendedPageSize) {
+      this.fire('page-size-change-intent', intendedPageSize);
     },
 
 
@@ -290,7 +315,12 @@ Element that provides pagination.
       });
 
       this.set('pageSize',size);
-      this._goBackToFirstPage();
+
+      if (!this.dataRemote) {
+        this._goBackToFirstPage();
+      } else {
+        this.updateDisplay();
+      }
     },
 
 
@@ -299,7 +329,11 @@ Element that provides pagination.
     // --------------------
 
     _changeDropDown: function(e) {
-      this._updatePageSize(parseInt(e.target.value));
+      if (!this.dataRemote) {
+        this._updatePageSize(parseInt(e.target.value));
+      } else {
+        this._triggerPageSizeChangeRequest(e.target.value);
+      }
     },
 
     _getPagedownClass: function(currentPage, pageCount) {
