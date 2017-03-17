@@ -229,7 +229,7 @@ Element that provides pagination.
      */
     _conditionallyUpdatePageSize: function (newPageSize) {
       if (this.dataRemote) {
-        this._updatePageSize(newPageSize);
+        this._updatePageSize(parseInt(newPageSize,10));
       }
     },
 
