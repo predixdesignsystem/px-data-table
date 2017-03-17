@@ -92,7 +92,8 @@ Element that provides pagination.
       firstItemIndexToDisplay: {
         type: Number,
         notify: true,
-        value: 1
+        value: 1,
+        observer: '_conditionallyUpdateDisplay'
       }
 
     },
@@ -163,8 +164,7 @@ Element that provides pagination.
         if(this.pageCount === 0) {
           this.set('firstItemIndexToDisplay',0);
           this.set('lastItemIndexToDisplay', 0);
-        }
-        else {
+        } else {
           this.set('firstItemIndexToDisplay',((this.currentPage - 1) * this.pageSize) + 1);
           if(this.currentPage === this.pageCount) {
             this.set('lastItemIndexToDisplay', this.numberOfItems);
@@ -183,7 +183,6 @@ Element that provides pagination.
     },
 
 
-
     // --------------------
     // OBSERVERS
     // --------------------
@@ -193,6 +192,22 @@ Element that provides pagination.
         this.goToPageNumber(1);
       } else {
         // recalculate paging, just to make sure we're on the right page
+        this.updateDisplay();
+      }
+    },
+
+    /* 
+     * If firstItemIndexToDisplay has changed, then update the display
+     * UNLESS dataRemote is not true
+     * 
+     * If dataRemote is false, blindly calling updateDisplay would 
+     *   cause a circular update cycle
+     * 
+     * Necessary if dataRemote is true to ensure that the currentPage
+     *   and lastItemIndexToDisplay are appropriately updated
+     */
+    _conditionallyUpdateDisplay: function () {
+      if (this.dataRemote) {
         this.updateDisplay();
       }
     },

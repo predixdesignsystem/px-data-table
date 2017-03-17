@@ -1441,10 +1441,41 @@ function runTests() {
     test('Page 2 should NOT be selected', function(){
       var paginationPager = document.getElementById('remoteData1').querySelector('.pager.px-pagination');
       // note: classList does not have prototype Array methods
-      var page1IconClassList = paginationPager.children[1].classList.toString().split(' ');
-      assert(page1IconClassList.indexOf('btn--icon') === -1 && page1IconClassList.indexOf('btn--pagination--number') === -1,  
+      var page2IconClassList = paginationPager.children[1].classList.toString().split(' ');
+      assert(page2IconClassList.indexOf('btn--icon') === -1 && page2IconClassList.indexOf('btn--pagination--number') === -1,  
         'Has btn-icon and btn--pagination--number classes.');
-      assert(page1IconClassList.indexOf('btn--bare') > -1, 'Does not have btn-bare class.');
+      assert(page2IconClassList.indexOf('btn--bare') > -1, 'Does not have btn-bare class.');
+    });
+
+    test('Clicking Next Page button fires a `page-change-intent` event', function(done) {
+      var dataTable = document.getElementById('remoteData1');
+      var pageChangeButton = dataTable.querySelector('.paging.px-pagination .btn--pagination.next');
+
+      dataTable.addEventListener('page-change-intent', (evt) => {
+        assert(true, 'Event is triggered');
+        assert.equal(parseInt(evt.detail,10), 2, 'Requesting page 2');
+        done();
+      });
+
+      pageChangeButton.click();
+    });
+
+    test('Updating properties triggers appearance of Page 2', function() {
+      var page = 2;
+      var dataTable = document.getElementById('remoteData1');
+
+      dataTable.firstItemIndex = 11;
+      dataTable.totalEntries = 50;
+
+      var paginationSpan = dataTable.querySelector('.summary.style-scope.px-pagination');
+      var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
+      assert.equal(paginationTextString, '11-20 of 50', 'Shows correct pagination counts.');
+
+      var paginationPager = dataTable.querySelector('.pager.px-pagination');
+      // note: classList does not have prototype Array methods
+      var pageNIconClass = paginationPager.children[page - 1].classList.toString().split(' ');
+      assert(pageNIconClass.indexOf('btn--icon') > -1 && pageNIconClass.indexOf('btn--pagination--number') > -1,  
+        'Page '+page+' is selected.');
     });
 
   });
@@ -1476,13 +1507,45 @@ function runTests() {
       assert(page1IconClassList.indexOf('btn--bare') > -1, 'Does not have btn-bare class.');
     });
 
-    test('Page 2 should be selected', function(){
+    test('Page 2 should be selected', function() {
       var paginationPager = document.getElementById('remoteData2').querySelector('.pager.px-pagination');
       // note: classList does not have prototype Array methods
-      var page1IconClassList = paginationPager.children[1].classList.toString().split(' ');
-      assert(page1IconClassList.indexOf('btn--icon') > -1 && page1IconClassList.indexOf('btn--pagination--number') > -1,  
+      var page2IconClassList = paginationPager.children[1].classList.toString().split(' ');
+      assert(page2IconClassList.indexOf('btn--icon') > -1 && page2IconClassList.indexOf('btn--pagination--number') > -1,  
         'Has btn-icon and btn--pagination--number classes.');
-      assert.equal(page1IconClassList.indexOf('btn--bare'), -1, 'Does not have btn-bare class.');
+      assert.equal(page2IconClassList.indexOf('btn--bare'), -1, 'Does not have btn-bare class.');
     });
+
+    test('Clicking Previous Page button fires a `page-change-intent` event', function(done) {
+      var dataTable = document.getElementById('remoteData2');
+      var pageChangeButton = dataTable.querySelector('.paging.px-pagination .btn--pagination.previous');
+
+      dataTable.addEventListener('page-change-intent', (evt) => {
+        assert(true, 'Event is triggered');
+        assert.equal(parseInt(evt.detail,10), 1, 'Requesting page 1');
+        done();
+      });
+
+      pageChangeButton.click();
+    });
+
+    test('Updating properties triggers appearance of Page 1', function() {
+      var page = 1;
+      var dataTable = document.getElementById('remoteData2');
+
+      dataTable.firstItemIndex = 1;
+      dataTable.totalEntries = 50;
+
+      var paginationSpan = dataTable.querySelector('.summary.style-scope.px-pagination');
+      var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
+      assert.equal(paginationTextString, '1-10 of 50', 'Shows correct pagination counts.');
+
+      var paginationPager = dataTable.querySelector('.pager.px-pagination');
+      // note: classList does not have prototype Array methods
+      var pageNIconClass = paginationPager.children[page - 1].classList.toString().split(' ');
+      assert(pageNIconClass.indexOf('btn--icon') > -1 && pageNIconClass.indexOf('btn--pagination--number') > -1,  
+        'Page '+page+' is selected.');
+    });
+
   });
 }

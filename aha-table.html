@@ -246,7 +246,8 @@
        */
       totalEntries: {
         type: Number,
-        value: 10
+        value: 10,
+        observer: '_calculateAdaptedNumberOfItems' 
       },
       /**
        * Property to set the the remote index of the first item on this page,
