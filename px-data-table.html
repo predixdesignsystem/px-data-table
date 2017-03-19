@@ -1,8 +1,8 @@
 <link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="aha-table.html">
-<link rel="import" href="px-data-table-column.html">
-<link rel="import" href="px-data-table-highlight.html">
-<link rel="import" href="../px-validation/px-validation.html">
+<link rel="import" href="aha-table.html"/>
+<link rel="import" href="px-data-table-column.html"/>
+<link rel="import" href="px-data-table-highlight.html"/>
+<link rel="import" href="../px-validation/px-validation.html"/>
 
 
 <!--
@@ -108,7 +108,8 @@ Custom property | Description | Default
         enable-column-reorder="{{enableColumnReorder}}"
         enable-column-resize="{{enableColumnResize}}"
         id="dataTable"
-        include-all-columns="{{includeAllColumns}}">
+        include-all-columns="{{includeAllColumns}}"
+        language="{{language}}">
         <content></content>
       </aha-table>
     </div>
@@ -276,6 +277,11 @@ Custom property | Description | Default
       includeAllColumns: {
         type: Boolean,
         value: false
+      },
+
+      language: {
+        type: String,
+        value: 'en'
       }
     }
 

@@ -1,3 +1,8 @@
+v2.0.1
+==================
+* Cutover pagination to px-dropdown
+* i18n and a11y improvements
+
 v2.0.0
 ==================
 * This release addresses a number of issues (PR #112):
