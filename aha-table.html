@@ -21,14 +21,14 @@
     <content id="columndefs"></content>
 
     <template is="dom-if" if="{{showColumnChooser}}">
-      <div class="flex columnChooser u-mb-" class$="{{_getColumnChooserClass(greedy)}}">
+      <div class$="{{_getColumnChooserClass(greedy)}}">
         <px-dropdown display-value="Show/Hide Column">
           <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
           </px-dropdown-content>
         </px-dropdown>
       </div>
     </template>
-    <div class="scroll-body" class$="{{_getScrollBodyClass(greedy)}}">
+    <div class$="{{_getScrollBodyClass(greedy)}}">
 
       <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}">
         <!-- Header -->
@@ -123,7 +123,7 @@
       </template>
     </div>
     <!-- Pagination controls -->
-    <div class="pagination" class$="{{_getPaginationClass(greedy)}}">
+    <div class$="{{_getPaginationClass(greedy)}}">
       <px-pagination class$="{{_getPaginationVisibility(hidePaginationControl)}}"
                      id="pagination"
                      number-of-items="{{numberOfItems}}"
@@ -1414,7 +1414,7 @@
       ].join(' ');
     },
     _getColumnChooserClass: function(greedy) {
-      return ['columnChooser',
+      return ['flex columnChooser u-mb-',
         this.greedy ? 'greedy' : ''
       ].join(' ');
     },

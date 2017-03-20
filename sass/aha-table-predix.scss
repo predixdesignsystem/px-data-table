@@ -38,6 +38,7 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 
 .greedy.pagination {
   flex-basis: var(--px-data-table-pagination-flex-basis-greedy, 34px);
+  text-align: var(--px-data-table-pagination-text-align-greedy, right);
 }
 
 .greedy.columnChooser {
