@@ -24,7 +24,7 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   background-color: var(--px-data-table-background-color-striped--even, $gray2);
 }
 
-:host[greedyHeightWithScroll] {
+:host[greedy-height-with-scroll] {
   display: var(--px-data-table-aha-table-display-greedy-height-with-scroll, flex);
   flex: var(--px-data-table-aha-table-flex-greedy-height-with-scroll, 1);
   flex-direction: var(--px-data-table-aha-table-flex-direction-greedy-height-with-scroll, column);

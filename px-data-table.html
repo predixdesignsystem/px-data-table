@@ -91,7 +91,7 @@ Custom property | Description | Default
   <template>
     <style include="px-data-table-styles"></style>
 
-    <div class="flex">
+    <div class$="{{_getFlexClass(greedyHeightWithScroll)}}">
       <aha-table data="{{tableData}}"
         sortable="{{sortable}}"
         filterable="{{filterable}}"
@@ -285,8 +285,13 @@ Custom property | Description | Default
       	type: Boolean,
         value: false
       }
-    }
+    },
 
+    _getFlexClass: function(greedyHeightWithScroll) {
+      return ['flex',
+        this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : ''
+      ].join(' ');
+    },
     /**
      * Fired when a cell is clicked in the table. If the cell is not editable or of type 'dropdown',
      * `px-row-click` will also be fired. Cell information is stored in `evt.detail`.
