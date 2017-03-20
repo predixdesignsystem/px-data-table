@@ -108,7 +108,8 @@ Custom property | Description | Default
         enable-column-reorder="{{enableColumnReorder}}"
         enable-column-resize="{{enableColumnResize}}"
         id="dataTable"
-        include-all-columns="{{includeAllColumns}}">
+        include-all-columns="{{includeAllColumns}}"
+        greedy="{{greedy}}">
         <content></content>
       </aha-table>
     </div>
@@ -276,6 +277,13 @@ Custom property | Description | Default
       includeAllColumns: {
         type: Boolean,
         value: false
+      },
+      /**
+       * If true, data table will fit greedy on the screen
+       */
+      greedy: {
+      	type: Boolean,
+        value: true
       }
     }
 

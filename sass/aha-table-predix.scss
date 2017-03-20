@@ -24,6 +24,26 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   background-color: var(--px-data-table-background-color-striped--even, $gray2);
 }
 
+:host[greedy] {
+  display: var(--px-data-table-aha-table-display-greedy, flex);
+  flex: var(--px-data-table-aha-table-flex-greedy, 1);
+  flex-direction: var(--px-data-table-aha-table-flex-direction-greedy, column);
+}
+
+.greedy.scroll-body {
+  flex: var(--px-data-table-scroll-body-flex-greedy, 1);
+  min-width: var(--px-data-table-scroll-body-min-width-greedy, 0px);
+  overflow-y: var(----px-data-table-scroll-body-overflow-y-greedy, auto);
+}
+
+.greedy.pagination {
+  flex-basis: var(--px-data-table-pagination-flex-basis-greedy, 34px);
+}
+
+.greedy.columnChooser {
+  flex-basis: var(--px-data-table-column-chooser-flex-basis-greedy, 30px);
+}
+
 .sorted-text {
   color: var(--px-data-table-cell-text-color--sorted, $select-blue-default);
 }

@@ -21,14 +21,14 @@
     <content id="columndefs"></content>
 
     <template is="dom-if" if="{{showColumnChooser}}">
-      <div class="flex columnChooser u-mb-">
+      <div class="flex columnChooser u-mb-" class$="{{_getColumnChooserClass(greedy)}}">
         <px-dropdown display-value="Show/Hide Column">
           <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
           </px-dropdown-content>
         </px-dropdown>
       </div>
     </template>
-    <div class="scroll-body">
+    <div class="scroll-body" class$="{{_getScrollBodyClass(greedy)}}">
 
       <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}">
         <!-- Header -->
@@ -123,7 +123,7 @@
       </template>
     </div>
     <!-- Pagination controls -->
-    <div class="pagination">
+    <div class="pagination" class$="{{_getPaginationClass(greedy)}}">
       <px-pagination class$="{{_getPaginationVisibility(hidePaginationControl)}}"
                      id="pagination"
                      number-of-items="{{numberOfItems}}"
@@ -176,6 +176,12 @@
       //striped: if table row is striped
       striped: {
         type: Boolean,
+        value: false
+      },
+      //greedy: if table needs to be greedy
+      greedy: {
+        type: Boolean,
+        reflectToAttribute: true,
         value: false
       },
       //tableRows: if table row is striped
@@ -1396,6 +1402,23 @@
         this.striped ? 'striped' : ''
       ].join(' ');
     },
+
+    _getPaginationClass: function(greedy) {
+      return ['pagination',
+        this.greedy ? 'greedy' : ''
+      ].join(' ');
+    },
+    _getScrollBodyClass: function(greedy) {
+      return ['scroll-body',
+        this.greedy ? 'greedy' : ''
+      ].join(' ');
+    },
+    _getColumnChooserClass: function(greedy) {
+      return ['columnChooser',
+        this.greedy ? 'greedy' : ''
+      ].join(' ');
+    },
+
     _getHighlightValue: function(row, column, high) {
       var highlightElements = Polymer.dom(column).querySelectorAll('px-data-table-highlight'),
           doHighlight = false,
