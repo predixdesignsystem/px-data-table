@@ -92,7 +92,7 @@ Custom property | Description | Default
     <style include="px-data-table-styles"></style>
 
     <div class="flex">
-      <aha-table 
+      <aha-table
         data-remote="{{dataRemote}}"
         data="{{tableData}}"
         enable-column-reorder="{{enableColumnReorder}}"
@@ -113,6 +113,7 @@ Custom property | Description | Default
         table-columns="{{tableColumns}}"
         table-rows="{{tableRows}}"
         total-entries="{{totalEntries}}"
+        greedy-height-with-scroll="{{greedyHeightWithScroll}}"
         >
         <content></content>
       </aha-table>
@@ -231,7 +232,7 @@ Custom property | Description | Default
        * Property to set the the total number of entries in the table,
        * assuming that dataRemote is true and the data provided is only
        * for the visible page.
-       * 
+       *
        * Requires dataRemote="true" to take effect
        *
        *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
@@ -247,7 +248,7 @@ Custom property | Description | Default
        * Property to set the the remote index of the first item on this page,
        * assuming that dataRemote is true and the data provided is only
        * for the visible page.
-       * 
+       *
        * Requires dataRemote="true" to take effect
        *
        * If on page 2 with a page size of 10, then the first-item-index would be 11.
@@ -263,12 +264,12 @@ Custom property | Description | Default
 
       /**
        * Property to set the the data paradigm.
-       * 
+       *
        * Local means all data is local.
        * Remote means that only one page's worth of data is local.
-       * 
+       *
        * If this is false, then px-data-table expects all of the data to be provided to it.
-       * 
+       *
        * If this is true, then px-data-table will expect only one page's worth of data to be supplied.
        * This will require other fields to be set, e.g. page-size, total-entries, and first-item-index
        *
@@ -283,7 +284,7 @@ Custom property | Description | Default
 
       /**
        * The default page size (number of visible rows) used in the pagination controls.
-       * 
+       *
        * Even in data-remote mode, page size may not match count of data provided.
        * Page size could be 50, but only 40 items are provided.
        *
@@ -341,6 +342,11 @@ Custom property | Description | Default
        */
       includeAllColumns: {
         type: Boolean,
+        value: false
+      },
+
+      greedyHeightWithScroll: {
+      	type: Boolean,
         value: false
       }
     }
