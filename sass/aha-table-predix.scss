@@ -24,25 +24,25 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
   background-color: var(--px-data-table-background-color-striped--even, $gray2);
 }
 
-:host[greedy] {
-  display: var(--px-data-table-aha-table-display-greedy, flex);
-  flex: var(--px-data-table-aha-table-flex-greedy, 1);
-  flex-direction: var(--px-data-table-aha-table-flex-direction-greedy, column);
+:host[greedyHeightWithScroll] {
+  display: var(--px-data-table-aha-table-display-greedy-height-with-scroll, flex);
+  flex: var(--px-data-table-aha-table-flex-greedy-height-with-scroll, 1);
+  flex-direction: var(--px-data-table-aha-table-flex-direction-greedy-height-with-scroll, column);
 }
 
-.greedy.scroll-body {
-  flex: var(--px-data-table-scroll-body-flex-greedy, 1);
-  min-width: var(--px-data-table-scroll-body-min-width-greedy, 0px);
-  overflow-y: var(----px-data-table-scroll-body-overflow-y-greedy, auto);
+.greedy-height-with-scroll.scroll-body {
+  flex: var(--px-data-table-scroll-body-flex-greedy-height-with-scroll, 1);
+  min-width: var(--px-data-table-scroll-body-min-width-greedy-height-with-scroll, 0px);
+  overflow-y: var(--px-data-table-scroll-body-overflow-y-greedy-height-with-scroll, auto);
 }
 
-.greedy.pagination {
-  flex-basis: var(--px-data-table-pagination-flex-basis-greedy, 34px);
-  text-align: var(--px-data-table-pagination-text-align-greedy, right);
+.greedy-height-with-scroll.pagination {
+  flex-basis: var(--px-data-table-pagination-flex-basis-greedy-height-with-scroll, 34px);
+  text-align: var(--px-data-table-pagination-text-align-greedy-height-with-scroll, right);
 }
 
-.greedy.columnChooser {
-  flex-basis: var(--px-data-table-column-chooser-flex-basis-greedy, 30px);
+.greedy-height-with-scroll.columnChooser {
+  flex-basis: var(--px-data-table-column-chooser-flex-basis-greedy-height-with-scroll, 30px);
 }
 
 .sorted-text {

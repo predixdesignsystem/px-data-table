@@ -109,7 +109,7 @@ Custom property | Description | Default
         enable-column-resize="{{enableColumnResize}}"
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
-        greedy="{{greedy}}">
+        greedy-height-with-scroll="{{greedyHeightWithScroll}}">
         <content></content>
       </aha-table>
     </div>
@@ -281,7 +281,7 @@ Custom property | Description | Default
       /**
        * If true, data table will fit greedy on the screen
        */
-      greedy: {
+      greedyHeightWithScroll: {
       	type: Boolean,
         value: false
       }
