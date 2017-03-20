@@ -1,3 +1,7 @@
+v2.0.3
+==================
+* revert 2.0.1 and 2.0.2
+
 v2.0.0
 ==================
 * This release addresses a number of issues (PR #112):
