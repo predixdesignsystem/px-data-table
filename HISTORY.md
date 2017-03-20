@@ -1,7 +1,3 @@
-v2.0.2
-==================
-* fixed display issue with pagination
-
 v2.0.1
 ==================
 * Cutover pagination to px-dropdown
