@@ -1,7 +1,5 @@
-<link rel="import" href="../polymer/polymer.html" />
-<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html" />
-<link rel="import" href="../px-dropdown/px-dropdown.html" />
-<link rel="import" href="../app-localize-behavior/app-localize-behavior.html" />
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
 
 <!--
 Element that provides pagination.
@@ -17,14 +15,19 @@ Element that provides pagination.
   <template>
     <style include="aha-table-styles"></style>
 
-			<span class="pagesize u-mr--">{{localize('Rows per page')}}</span>
-      <px-dropdown id="pageSizeSelect" display-value="10" on-change="_changeDropDown">
-        <px-dropdown-content max-cont-character-width="4" items='[{"key":"1","val":"10"},{"key":"2","val":"20"},{"key":"3","val":"50"},{"key":"4","val":"100"}]'>
-      </px-dropdown>
+			<span class="pagesize">
+				<span class="u-mr--">{{pagesizetitle}}</span>
+				<select id="pageSizeSelect" on-change="_changeDropDown">
+          <option selected>10</option>
+          <option>20</option>
+          <option>50</option>
+          <option>100</option>
+        </select>
+			</span>
 
 			<span class="u-pl+ u-ml+ summary">
 				<span>{{firstItemIndexToDisplay}}</span>-<span>{{lastItemIndexToDisplay}}</span>
-				<span>{{localize('of')}}</span>
+				<span>{{itemoftext}}</span>
 				<span>{{numberOfItems}}</span>
 			</span>
 
@@ -85,19 +88,13 @@ Element that provides pagination.
         notify: true,
         value: 1,
         readOnly: true
-      },
-      language: {
-        type: String
       }
 
     },
 
-    behaviors: [
-      Polymer.AppLocalizeBehavior
-    ],
-
-    attached: function() {
-      this.loadResources(this.resolveUrl('locales.json'));
+    ready: function() {
+      this.set('itemoftext', 'of');
+      this.set('pagesizetitle', 'Rows per page');
     },
 
     _goBackToFirstPage: function() {
@@ -153,6 +150,21 @@ Element that provides pagination.
     },
 
     _updatePageSize: function(size) {
+      var sizelist = [10, 20, 50, 100];
+      var index = sizelist.indexOf(size);
+
+      var parentElem = this.$.pageSizeSelect,
+        optionList = Polymer.dom(parentElem).querySelectorAll("option");
+
+      optionList.forEach(function(option) {
+        if(parseInt(option.value) === parseInt(size)) {
+          option.setAttribute('selected', '');
+          parentElem.selectedIndex = parseInt(index);
+        } else {
+          option.removeAttribute('selected');
+        }
+      });
+
       this._setPageSize(size);
       this._goBackToFirstPage();
     },

@@ -15,7 +15,6 @@
       <!-- in place editing template -->
       <px-edit-cell id="celledit" class$="{{_getEditCellClass(_editing)}}">
         <template is="dom-if" if="{{_isEqual(cellType, 'string')}}">
-          <label for="celleditinput" class="visuallyhidden">Cell Edit Input</label>
           <input id="celleditinput"
                  type="text"
                  class="u-p0 text-input text-input--bare"
@@ -288,7 +287,6 @@
       attached: function() {
         this.toggleClass('td__dropdown', this._dropdownItem);
         this._cellAnchor = this;
-        this.setAttribute('role','gridcell');
       },
       _setDropdownItem: function() {
         //we check if there are any items in dropdownItems, and if there are, this is a dropdown cell.

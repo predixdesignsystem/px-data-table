@@ -9,12 +9,11 @@
  */
 -->
 
-<link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="px-pagination.html"/>
-<link rel="import" href="px-data-table-cell.html"/>
-<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html"/>
-<link rel="import" href="css/aha-table-styles.html"/>
-<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="px-pagination.html">
+<link rel="import" href="px-data-table-cell.html">
+<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="css/aha-table-styles.html">
 
 <dom-module id="aha-table">
   <template>
@@ -23,7 +22,7 @@
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser u-mb-">
-        <px-dropdown display-value="{{localize('Show/Hide Column')}}">
+        <px-dropdown display-value="Show/Hide Column">
           <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
           </px-dropdown-content>
         </px-dropdown>
@@ -33,10 +32,10 @@
 
       <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}">
         <!-- Header -->
-        <div class="tr" role="row">
+        <div class="tr">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <template is="dom-if" if="{{!column.hide}}">
-              <span role="columnheader" class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
+              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
                 <div class="flex header--container">
                   <span
                     class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}"
@@ -68,8 +67,7 @@
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
-                <label for="filterInput" class="visuallyhidden">Filter Input</label>
-                <input id="filterInput" role="textbox" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
+                <input placeholder="Filter" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
               </template>
 
             </span>
@@ -78,7 +76,7 @@
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
-          <div class$="{{_getRowClass(internalRow,striped)}}" role="row">
+          <div class$="{{_getRowClass(internalRow,striped)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <!-- selected column checkbox or radio button -->
@@ -86,12 +84,10 @@
                 <span class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
                   <span class="flex flex--center flex--middle">
                     <template is="dom-if" if="{{!singleSelect}}">
-
-                      <input id="selectCheckbox" role="checkbox" type="checkbox" checked="{{internalRow._selected::change}}"/>
+                      <input type="checkbox" checked="{{internalRow._selected::change}}"/>
                     </template>
                     <template is="dom-if" if="{{singleSelect}}">
-                      <label for="selectRadio" class="visuallyhidden">Row Select</label>
-                      <input id="selectRadio" role="radio" type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
+                      <input type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
                     </template>
                   </span>
                 </span>
@@ -128,12 +124,11 @@
     </div>
     <!-- Pagination controls -->
     <div class="pagination">
-      <px-pagination class$="flex flex--row flex--right flex--middle {{_getPaginationVisibility(hidePaginationControl)}}"
+      <px-pagination class$="{{_getPaginationVisibility(hidePaginationControl)}}"
                      id="pagination"
                      number-of-items="{{numberOfItems}}"
                      page-size="{{pageSize}}"
-                     first-item-index-to-display="{{firstItemIndex}}"
-                     language={{language}}>
+                     first-item-index-to-display="{{firstItemIndex}}">
       </px-pagination>
     </div>
   </template>
@@ -335,14 +330,7 @@
           Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
         }
       },
-      language: {
-        type: String
-      }
     },
-
-    behaviors: [
-      Polymer.AppLocalizeBehavior
-    ],
 
     observers: [
       '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
@@ -365,9 +353,6 @@
     },
     attached: function() {
       this._isAttached = true;
-      this.setAttribute('role','grid');
-      this.loadResources(this.resolveUrl('locales.json'));
-      Polymer.dom(this.$.pagination.root).querySelector('#pageSizeSelect').set('boundTarget',this.scrollBody);
     },
 
     _columnChanged: function(info){
