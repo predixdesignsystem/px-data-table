@@ -787,9 +787,6 @@ document.addEventListener("WebComponentsReady", function() {
   remoteDataFixture3 = document.getElementById('remoteData3');
   remoteDataFixture3.tableData = minidata;
 
-  greedyHeightWithScroll = document.getElementById('greedyHeightWithScroll');
-  greedyHeightWithScroll.tableData = minidata;
-
   runTests();
 });
 
