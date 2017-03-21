@@ -161,6 +161,7 @@
       </px-data-table>
 
       <style>
+        /* remove this by applying the styles conditionally into px-data-table */
         #greedyHeightWithScroll {
           height: 100%;
           width: 100%;
@@ -171,7 +172,7 @@
       </style>
 
       <p>Greedy-height with Scroll</p>
-      <div id="styledContainer" style="flex:1; display:flex; border: 1px solid cyan; height:200px;">
+      <div id="styledContainer" style=" height:300px; border: 1px solid cyan; flex:1; display:flex; ">
         <px-data-table 
           enable-column-resize="true"
           greedy-height-with-scroll="true"
