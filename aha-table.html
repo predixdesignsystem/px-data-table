@@ -122,13 +122,13 @@
         </div>
         <!-- Pagination controls -->
         <div class="pagination">
-          <px-pagination 
-            class$="{{_getPaginationVisibility(hidePaginationControl)}}" 
+          <px-pagination
+            class$="{{_getPaginationVisibility(hidePaginationControl)}}"
             data-remote="{{dataRemote}}"
             first-item-index-to-display="{{firstItemIndex}}"
-            id="pagination" 
+            id="pagination"
             number-of-items="{{_adaptedNumberOfItems}}"
-            page-size="{{pageSize}}" 
+            page-size="{{pageSize}}"
             >
         </px-pagination>
     </div>
@@ -237,7 +237,7 @@
        * Property to set the the total number of entries in the table,
        * assuming that dataRemote is true and the data provided is only
        * for the visible page.
-       * 
+       *
        * Requires dataRemote="true" to take effect
        *
        *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
@@ -247,13 +247,13 @@
       totalEntries: {
         type: Number,
         value: 10,
-        observer: '_calculateAdaptedNumberOfItems' 
+        observer: '_calculateAdaptedNumberOfItems'
       },
       /**
        * Property to set the the remote index of the first item on this page,
        * assuming that dataRemote is true and the data provided is only
        * for the visible page.
-       * 
+       *
        * Requires dataRemote="true" to take effect
        *
        * If on page 2 with a page size of 10, then the first-item-index would be 11.
@@ -270,7 +270,7 @@
        * Property to set the the data paradigm.
        *
        * If this is false, then px-data-table expects all of the data to be provided to it.
-       * 
+       *
        * If this is true, then px-data-table will expect only one page's worth of data to be supplied.
        * This will require other fields to be set, e.g. page-size, total-entries, and first-item-index
        *
@@ -284,10 +284,10 @@
       },
       /**
        * Property to set the page size instead of the default of 10.
-       * 
+       *
        * In data-remote mode, page size may not match count of data provided.
        * Page size could be 50, but only 40 items are provided.
-       * 
+       *
        *      <px-data-table page-size="50" table-data="{{data}}"></px-data-table>
        *
        * @default 10
@@ -302,9 +302,9 @@
       _adaptedNumberOfItems: {
         type: Number,
       },
-      numberOfItems: { 
-        type: Number, 
-        observer: '_calculateAdaptedNumberOfItems' 
+      numberOfItems: {
+        type: Number,
+        observer: '_calculateAdaptedNumberOfItems'
       },
       /**
        * Property to set the visibility of the table pagination controls.
@@ -415,6 +415,27 @@
     },
     attached: function () {
       this._isAttached = true;
+
+      window.addEventListener("load", this._optimizePageForLoad(this));
+    },
+
+    //This function will enable pageSize change at the initial load
+    _optimizePageForLoad: function (aha) {
+      var pagi = Polymer.dom(aha.root).querySelector('#pagination');
+      var th = Polymer.dom(aha.root).querySelector('.tr.aha-table');
+      var scrollBody = Polymer.dom(aha.root).querySelector('.scroll-body.aha-table');
+      var rowHeight = 42;
+
+      var optimizePageSize = Math.floor((Number(scrollBody.offsetHeight) - Number(th.offsetHeight)) / rowHeight);
+      if (optimizePageSize <= 10) {
+        pagi._updatePageSize(10);
+      } else if (10 < optimizePageSize <= 20) {
+        pagi._updatePageSize(20);
+      } else if (20 < optimizePageSize <= 50) {
+        pagi._updatePageSize(50);
+      } else {
+        pagi._updatePageSize(100);
+      }
     },
 
     _columnChanged: function (info) {
@@ -690,7 +711,7 @@
         this.$.pagination.updateDisplay();
         this.set('numberOfItems', this.totalEntries);
       }
-      
+
       this._updateDisplayedRows();
     },
 
@@ -1583,7 +1604,7 @@
     _getFilterHeaderClass: function (column) {
       return column.name === 'insertion-indicator' ? 'td insertion-indicator' : 'td';
     },
-    
+
     _getSortingIcon: function (sortable, column, sortingColumn, descending) {
       var sortingIcon = ' ';
       if(sortable && sortingColumn === column.name) {
@@ -1591,7 +1612,7 @@
       }
       return sortingIcon;
     },
-    
+
     _getSortingClass: function(sortable, column, sortingColumn, descending) {
       var classList = 'sorting fa';
       if(sortable && sortingColumn !== column.name) {
