@@ -33,10 +33,10 @@
 
       <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}">
         <!-- Header -->
-        <div class="tr">
+        <div class="tr" role="row">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <template is="dom-if" if="{{!column.hide}}">
-              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
+              <span role="columnheader" class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
                 <div class="flex header--container">
                   <span
                     class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}"
@@ -61,14 +61,14 @@
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
                 <span class="flex flex--center" hidden$="{{column.hide}}">
                   <template is="dom-if" if="{{!singleSelect}}">
-                    <input id="selectAllCheckbox" type="checkbox" on-change="_clickSelectAll"/>
+                    <input id="selectAllCheckbox" role="checkbox" type="checkbox" on-change="_clickSelectAll"/>
                   </template>
                 </span>
               </template>
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
-                <input placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
+                <input role="textbox" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
               </template>
 
             </span>
@@ -77,7 +77,7 @@
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
-          <div class$="{{_getRowClass(internalRow,striped)}}">
+          <div role="row" class$="{{_getRowClass(internalRow,striped)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <!-- selected column checkbox or radio button -->
@@ -85,10 +85,10 @@
                 <span class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
                   <span class="flex flex--center flex--middle">
                     <template is="dom-if" if="{{!singleSelect}}">
-                      <input type="checkbox" checked="{{internalRow._selected::change}}"/>
+                      <input role="checkbox" type="checkbox" checked="{{internalRow._selected::change}}"/>
                     </template>
                     <template is="dom-if" if="{{singleSelect}}">
-                      <input type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
+                      <input role="radio" type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
                     </template>
                   </span>
                 </span>
@@ -96,6 +96,7 @@
               <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                 <template is="dom-if" if="{{!column.hide}}">
                   <px-data-table-cell
+                      role="gridcell"
                       on-save="_save"
                       row-highlighted="[[internalRow._highlight]]"
                       cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
