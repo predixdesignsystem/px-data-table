@@ -1,3 +1,7 @@
+v2.0.4
+==================
+* fixed column duplication / hiding issues
+
 v2.0.3
 ==================
 * revert 2.0.1 and 2.0.2
