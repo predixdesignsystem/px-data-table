@@ -160,5 +160,28 @@
         >
       </px-data-table>
 
+      <style>
+        #greedyHeightWithScroll {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+        }
+      </style>
+
+      <p>Greedy-height with Scroll</p>
+      <div id="styledContainer" style="flex:1; display:flex; border: 1px solid cyan; height:200px;">
+        <px-data-table 
+          enable-column-resize="true"
+          greedy-height-with-scroll="true"
+          id="greedyHeightWithScroll"
+          page-size="10" 
+          show-column-chooser="true"
+          table-rows="true" 
+          >
+        </px-data-table>
+      </div>
+
   </body>
 </html>
