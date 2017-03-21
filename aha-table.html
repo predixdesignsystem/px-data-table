@@ -622,6 +622,13 @@
       // with filtering/sorting, it's best just to go back to the first page
       this.$.pagination.goToPageNumber(1);
       this._updateDisplayedRows();
+
+      //update selected rows when changing the filter if the select all is enabled
+      selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+      if(selectAllCheckbox !== null && selectAllCheckbox !== undefined){
+        if(selectAllCheckbox.checked)
+          this._setAllRows(true);
+      }
     },
 
     /********** Internal data structure ***********/
@@ -1006,9 +1013,19 @@
     _setAllRows: function(isSelected) {
       var i,
           len;
-      // set all rows selected/unselected
-      for(i = 0, len = this._internalData.length; i < len; i++) {
-        this._setInternalDataAt(this._internalData[i], '_selected', isSelected);
+
+      if(isSelected) {
+      //set selected to true when selecing all for tags shown by filter
+        for(i = 0, len = this._internalData.length; i < len; i++) {
+          if(this.filteredSortedData.includes(this._internalData[i])){
+            this._setInternalDataAt(this._internalData[i], '_selected', isSelected);
+          }
+        }
+      } else {
+        //set selected to false
+        for(i = 0, len = this._internalData.length; i < len; i++) {
+          this._setInternalDataAt(this._internalData[i], '_selected', isSelected);
+        }
       }
 
       // notify viewing rows of change
@@ -1021,7 +1038,9 @@
       if(isSelected) {
         // add everything to selectedRows property
         for(i = 0, len = this._internalData.length; i < len; i++) {
-          this.push('selectedRows', this._internalData[i]);
+          if(this._internalData[i]._selected) {
+            this.push('selectedRows', this._internalData[i]);
+          }
         }
       }
 

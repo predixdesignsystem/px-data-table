@@ -886,6 +886,29 @@ function runTests() {
       lastNameFilter.dispatchEvent(new Event('keyup'));
     });
 
+    test('When selecting all, select only what is filtered', function(done){
+
+      var tb = Polymer.dom(table2Fixture.root).querySelector('aha-table');
+      table2Fixture.tableData = table1Fixture.tableData;
+
+      var filterableTableRoot = document.querySelector('#table2');
+      var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
+      var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
+
+      // Trigger filter edit event and provide a filter value
+      lastNameFilter.value = 'a';
+      lastNameFilter.dispatchEvent(new Event('keyup'));
+
+      var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
+      var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
+
+      var selectionPath = '#dataTable';
+      filterableTableRoot.querySelector("#selectAllCheckbox").checked = true;
+
+      assert.equal(table2Fixture.selectedRows.length < table2Fixture.tableData.length, true, 'selceted row is not less that all rows');
+      done();
+    });
+
     // Spot checks for sorting functionality
     test('Records are sorted correctly when a sortable column header is clicked', function(done) {
       var sortableTableRoot = document.querySelector('#table1');
@@ -1217,7 +1240,7 @@ function runTests() {
       var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
       var selectionPath = '#dataTable :nth-child(3) .td input[type=radio]';
 
-      filtertest.filterable = false;
+      filtertest.filterable = true;
       filtertest.selectable = true;
       filtertest.singleSelect = true;
       flush(function() {
@@ -1227,7 +1250,7 @@ function runTests() {
         done();
       });
     });
-  });
+});
 
   suite('Column show/hide tests', function(){
 
