@@ -13,6 +13,7 @@
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
 <link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="css/aha-table-styles.html">
 
 <dom-module id="aha-table">
@@ -22,8 +23,8 @@
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser u-mb-">
-        <px-dropdown display-value="Show/Hide Column">
-          <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
+        <px-dropdown display-value="{{localize('Show/Hide Column')}}">
+          <px-dropdown-content max-cont-character-width="100" class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
           </px-dropdown-content>
         </px-dropdown>
       </div>
@@ -67,7 +68,7 @@
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
-                <input placeholder="Filter" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
+                <input placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
               </template>
 
             </span>
@@ -129,7 +130,8 @@
                      id="pagination"
                      number-of-items="{{numberOfItems}}"
                      page-size="{{pageSize}}"
-                     first-item-index-to-display="{{firstItemIndex}}">
+                     first-item-index-to-display="{{firstItemIndex}}"
+                     language="{{language}}">
       </px-pagination>
     </div>
   </template>
@@ -137,6 +139,10 @@
 <script>
   Polymer({
     is: 'aha-table',
+
+    behaviors: [
+      Polymer.AppLocalizeBehavior
+    ],
 
     properties: {
       //data: instance of the model data
@@ -354,6 +360,7 @@
     },
     attached: function() {
       this._isAttached = true;
+      this.loadResources(this.resolveUrl('locales.json'));
     },
 
     _columnChanged: function(info){

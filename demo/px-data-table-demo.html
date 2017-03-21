@@ -49,7 +49,8 @@
               table-columns="{{props.tableColumns.value}}"
               table-rows="{{props.tableRows.value}}"
               hide-pagination-control="{{props.hidePaginationControl.value}}"
-              include-all-columns="{{props.includeAllColumns.value}}">
+              include-all-columns="{{props.includeAllColumns.value}}"
+              language="{{props.language.value}}">
               <px-data-table-column name="first" filterable sortable editable></px-data-table-column>
           </px-data-table>
         </div>
@@ -119,6 +120,13 @@
         type: Object,
         defaultValue: [{"first":"Valentine","last":"Meyer","email":"valentinemeyer@scentric.com"},{"first":"Silva","last":"Alexander","email":"silvaalexander@gmail.com"},{"first":"Hopkins","last":"Wong","email":"hopkinswong@hotmail.com"},{"first": "Joe","last": "Sherman","email": "joejoe@yahoo.com"},{"first": "Jane","last": "Bartlett","email": "jane@scentric.com"}],
         inputType: 'code:JSON'
+      },
+
+      language: {
+        type: String,
+        defaultValue: 'en',
+        inputType: 'dropdown',
+        inputChoices: ['de','en','es','fr']
       },
 
       striped: {
