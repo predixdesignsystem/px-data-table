@@ -418,6 +418,27 @@
     },
     attached: function () {
       this._isAttached = true;
+
+      window.addEventListener("load", this._optimizePageForLoad(this));
+    },
+
+    //This function will enable pageSize change at the initial load
+    _optimizePageForLoad: function (aha) {
+      var pagi = Polymer.dom(aha.root).querySelector('#pagination');
+      var th = Polymer.dom(aha.root).querySelector('.tr.aha-table');
+      var scrollBody = Polymer.dom(aha.root).querySelector('.scroll-body.aha-table');
+      var rowHeight = 42;
+
+      var optimizePageSize = Math.floor((Number(scrollBody.offsetHeight) - Number(th.offsetHeight)) / rowHeight);
+      if (optimizePageSize <= 10) {
+        pagi._updatePageSize(10);
+      } else if (10 < optimizePageSize <= 20) {
+        pagi._updatePageSize(20);
+      } else if (20 < optimizePageSize <= 50) {
+        pagi._updatePageSize(50);
+      } else {
+        pagi._updatePageSize(100);
+      }
     },
 
     _columnChanged: function (info) {
