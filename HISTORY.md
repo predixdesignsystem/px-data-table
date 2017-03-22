@@ -1,3 +1,7 @@
+v2.1.1
+==================
+* merge PR #113 to fix issue #86, fixes behavior of select all checkbox with filters
+
 v2.1.0
 ==================
 * re-add a11y and i18n changes from 2.0.1 and 2.0.2
