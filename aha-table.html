@@ -31,7 +31,7 @@
     </template>
     <div class="scroll-body">
 
-      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}">
+      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}" role="grid">
         <!-- Header -->
         <div class="tr" role="row">
           <template is="dom-repeat" items="{{meta}}" as="column">
@@ -54,21 +54,21 @@
         </div>
 
         <!-- Second Header (filter/select all) -->
-        <div class$="{{_getSecondHeaderClass(_enableFilterRow)}}">
+        <div class$="{{_getSecondHeaderClass(_enableFilterRow)}}" role="row">
           <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
-            <span class$="{{_getFilterHeaderClass(column)}}" hidden$="{{column.hide}}">
+            <span class$="{{_getFilterHeaderClass(column)}}" role="gridcell" hidden$="{{column.hide}}">
               <!-- select all checkbox -->
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
                 <span class="flex flex--center" hidden$="{{column.hide}}">
                   <template is="dom-if" if="{{!singleSelect}}">
-                    <input id="selectAllCheckbox" role="checkbox" type="checkbox" on-change="_clickSelectAll"/>
+                    <input id="selectAllCheckbox" role="checkbox" aria-label="Click to select or deselect all rows" type="checkbox" on-change="_clickSelectAll"/>
                   </template>
                 </span>
               </template>
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
-                <input role="textbox" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
+                <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
               </template>
 
             </span>
@@ -82,13 +82,13 @@
             <template is="dom-repeat" items="{{meta}}" as="column">
               <!-- selected column checkbox or radio button -->
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                <span class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
+                <span role="gridcell" class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
                   <span class="flex flex--center flex--middle">
                     <template is="dom-if" if="{{!singleSelect}}">
-                      <input role="checkbox" type="checkbox" checked="{{internalRow._selected::change}}"/>
+                      <input role="checkbox" aria-label="Click to select row" type="checkbox" checked="{{internalRow._selected::change}}"/>
                     </template>
                     <template is="dom-if" if="{{singleSelect}}">
-                      <input role="radio" type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
+                      <input role="checkbox" aria-label="Click to select row" type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
                     </template>
                   </span>
                 </span>
@@ -96,7 +96,6 @@
               <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                 <template is="dom-if" if="{{!column.hide}}">
                   <px-data-table-cell
-                      role="gridcell"
                       on-save="_save"
                       row-highlighted="[[internalRow._highlight]]"
                       cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
