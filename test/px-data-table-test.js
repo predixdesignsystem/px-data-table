@@ -919,8 +919,8 @@ function runTests() {
       flush(function(){
         var editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
             editCellToTheLeft = Polymer.dom(cell.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
-        assert.isFalse(editCell.classList.contains('visuallyhidden'));
-        assert.isTrue(editCellToTheLeft.classList.contains('visuallyhidden'));
+        assert.isFalse(editCell.classList.contains('hidden'));
+        assert.isTrue(editCellToTheLeft.classList.contains('hidden'));
         done();
       });
     });
