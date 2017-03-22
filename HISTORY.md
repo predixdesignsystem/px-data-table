@@ -1,3 +1,7 @@
+v2.1.0
+==================
+* re-add a11y and i18n changes from 2.0.1 and 2.0.2
+
 v2.0.4
 ==================
 * fixed column duplication / hiding issues
