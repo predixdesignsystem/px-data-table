@@ -638,9 +638,8 @@
 
       //update selected rows when changing the filter if the select all is enabled
       selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
-      if(selectAllCheckbox !== null && selectAllCheckbox !== undefined){
-        if(selectAllCheckbox.checked)
-          this._setAllRows(true);
+      if(selectAllCheckbox !== null && selectAllCheckbox !== undefined && selectAllCheckbox.checked){
+          selectAllCheckbox.checked=false;
       }
     },
 
