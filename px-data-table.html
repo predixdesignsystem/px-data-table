@@ -279,10 +279,16 @@ Custom property | Description | Default
         value: false
       },
       /**
-       * If true, data table will fit greedy on the screen
+       * Property to enable greedy table with vertical scroll bar. By enabling
+       * this feature, px-data-table will take full space allocated, and space
+       * will be filled with rows of data. Any rows that can't fit in available
+       * space, there will be vertical scroll allow user to see remaining rows.
+       * For allowing this property work smoothly, container wrapper for
+       * px-data-table needs to have display: flex and flex: 1 define.
        */
       greedyHeightWithScroll: {
       	type: Boolean,
+        reflectToAttribute: true,
         value: false
       }
     },
@@ -291,7 +297,7 @@ Custom property | Description | Default
       return ['flex',
         this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : ''
       ].join(' ');
-    },
+    }
     /**
      * Fired when a cell is clicked in the table. If the cell is not editable or of type 'dropdown',
      * `px-row-click` will also be fired. Cell information is stored in `evt.detail`.
