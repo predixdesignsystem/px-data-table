@@ -1,3 +1,7 @@
+v2.1.2
+==================
+* update dependencies
+
 v2.1.1
 ==================
 * merge PR #113 to fix issue #86, fixes behavior of select all checkbox with filters
