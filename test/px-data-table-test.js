@@ -1,9 +1,10 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture, remoteDataFixture1, remoteDataFixture2, remoteDataFixture3;
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, 
+  additionalDataFixture, updateSelectFixture, remoteDataFixture1, remoteDataFixture2, remoteDataFixture3, 
+  remoteDataFilteringFixture1, remoteDataFilteringFixture2, greedyHeightWithScroll;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
-var data =
-[
+var data =[
   {
     "index": 0,
     "name": "Liz Grimes",
@@ -499,7 +500,8 @@ var data =
     "color": "rgb(218,74,95)"
   }
 ];
-var additionalData = [  {
+var additionalData = [  
+  {
   "index": 26,
   "name": "Cooley Macdonald Two",
   "first": "Aida",
@@ -517,7 +519,7 @@ var additionalData = [  {
   "email": "aidahurley@scentric.com",
   "phone": "(975) 451-3272",
   "color": "rgb(119,239,85)"
-},
+  },
   {
     "index": 27,
     "name": "Snow Blankenship Two",
@@ -575,9 +577,9 @@ var additionalData = [  {
     "phone": "(852) 538-3232",
     "color": "rgb(218,74,95)"
   }
-];
-var minidata =
-[
+  ];
+  var minidata =
+  [
   {
     "first": "Valentine",
     "last": "Meyer",
@@ -751,32 +753,32 @@ var minidata =
 ];
 
 document.addEventListener("WebComponentsReady", function() {
-  table1Fixture = document.getElementById('table1');
-  table1Fixture.tableData = data;
-  table2Fixture = document.getElementById('table2');
-  table2Fixture.tableData = minidata;
+  // table1Fixture = document.getElementById('table1');
+  // table1Fixture.tableData = data;
+  // table2Fixture = document.getElementById('table2');
+  // table2Fixture.tableData = minidata;
 
-  table3Fixture = document.getElementById('table3');
-  table3Fixture.tableData = minidata;
+  // table3Fixture = document.getElementById('table3');
+  // table3Fixture.tableData = minidata;
 
-  table4Fixture = document.getElementById('table4');
-  table4Fixture.tableData = data;
+  // table4Fixture = document.getElementById('table4');
+  // table4Fixture.tableData = data;
 
-  table5Fixture = document.getElementById('myTable');
-  table5Fixture.tableData = data;
+  // table5Fixture = document.getElementById('myTable');
+  // table5Fixture.tableData = data;
 
-  filtertest = document.getElementById('filtertest');
-  filtertest.tableData = minidata;
+  // filtertest = document.getElementById('filtertest');
+  // filtertest.tableData = minidata;
 
-  resetDataFixture = document.getElementById('resetTableWithNewData');
-  resetDataFixture.tableData = minidata;
+  // resetDataFixture = document.getElementById('resetTableWithNewData');
+  // resetDataFixture.tableData = minidata;
 
-  additionalDataFixture = document.getElementById('updateTableWithAdditionalData');
-  additionalDataFixture.tableData = data;
+  // additionalDataFixture = document.getElementById('updateTableWithAdditionalData');
+  // additionalDataFixture.tableData = data;
 
-  updateSelectFixture = document.getElementById('updateTableWithSelection');
-  // use `data.slice()` to avoid breaking `additionalDataFixture` tests
-  updateSelectFixture.tableData = data.slice();
+  // updateSelectFixture = document.getElementById('updateTableWithSelection');
+  // // use `data.slice()` to avoid breaking `additionalDataFixture` tests
+  // updateSelectFixture.tableData = data.slice();
 
   remoteDataFixture1 = document.getElementById('remoteData1');
   remoteDataFixture1.tableData = minidata;
@@ -787,8 +789,14 @@ document.addEventListener("WebComponentsReady", function() {
   remoteDataFixture3 = document.getElementById('remoteData3');
   remoteDataFixture3.tableData = minidata;
 
-  greedyHeightWithScroll = document.getElementById('greedyHeightWithScroll');
-  greedyHeightWithScroll.tableData = minidata;
+  remoteDataFilteringFixture1 = document.getElementById('remoteDataFiltering1');
+  remoteDataFilteringFixture1.tableData = minidata;
+
+  remoteDataFilteringFixture2 = document.getElementById('remoteDataFiltering2');
+  remoteDataFilteringFixture2.tableData = minidata;
+
+  // greedyHeightWithScroll = document.getElementById('greedyHeightWithScroll');
+  // greedyHeightWithScroll.tableData = minidata;
 
   runTests();
 });
@@ -796,6 +804,7 @@ document.addEventListener("WebComponentsReady", function() {
 
 
 function runTests() {
+  /*
   suite('Unit Tests for Data Table', function() {
 
     test('Polymer exists', function() {
@@ -1119,7 +1128,7 @@ function runTests() {
           done();
         });
       });
-    });
+  });
 
   suite('Table data mutations tests', function(){
     //uses table3Fixture - no other tests using this. Adding/removing rows could unsettle other tests if they were using this fixture.
@@ -1414,7 +1423,7 @@ function runTests() {
       });
     });
   });
-
+*/
   suite('Unit Tests for data remote property being `true`', function () {
 
     suite('Page 1', function () {
@@ -1485,7 +1494,6 @@ function runTests() {
       });
 
     });
-
 
     suite('Page 2', function () {
 
@@ -1587,6 +1595,53 @@ function runTests() {
         var paginationSpan = dataTable.querySelector('.summary.style-scope.px-pagination');
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
         assert.equal(paginationTextString, '1-20 of 100', 'Shows correct pagination counts.');
+      });
+
+    });
+
+    suite('Filtering', function () {
+
+      test('Send event with combined filter string for one column', function (done) {
+        
+          var dataTable = document.querySelector('#remoteDataFiltering1');
+          var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
+          var lastNameFilter = dataTable.querySelector(lastNameFilterSelector);
+
+          dataTable.addEventListener('filter-change-intent', (evt) => {
+            assert(true, 'Event is triggered');
+            assert.equal(evt.detail, '[{"name":"last","userEntry":"ab"}]', 'Requesting filter change');
+            done();
+          });
+
+          lastNameFilter.value = 'ab';
+          lastNameFilter.dispatchEvent(new Event('keyup'));
+      });
+
+      test('Send event with combined filter string for all columns', function (done) {
+        
+          var filters = [{name:'first', userEntry:'ab'}, {name:'last', userEntry:'cd'}];
+
+          var dataTable = document.querySelector('#remoteDataFiltering2');
+          var ahaTable = dataTable.querySelector('#dataTable');
+
+          var firstNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(1) > input';
+          var firstNameFilter = dataTable.querySelector(firstNameFilterSelector);
+
+          var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
+          var lastNameFilter = dataTable.querySelector(lastNameFilterSelector);
+
+          var imageFilterSelector = 'div > div.tr.tr--filter > :nth-child(3) > input';
+          var imageFilter = dataTable.querySelector(imageFilterSelector);
+
+          dataTable.addEventListener('filter-change-intent', (evt) => {
+            assert(true, 'Event is triggered');
+            assert.equal(evt.detail, JSON.stringify(filters), 'Requesting filter change on multiple columns');
+            done();
+          });
+
+          ahaTable.filteredColumns = filters;
+          imageFilter.dispatchEvent(new Event('keyup'));
+
       });
 
     });

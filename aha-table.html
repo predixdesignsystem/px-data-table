@@ -942,6 +942,10 @@
 
     /********** Filtering ************/
 
+    _triggerFilterChangeRequest: function () {
+        this.fire('filter-change-intent', JSON.stringify(this.filteredColumns));
+    },
+
     // filter on typed content in header handler
     _filter: function (e) {
       // have to do modelForElement because dom-if cancels out dom-repeat model (https://github.com/Polymer/polymer/issues/1865)
@@ -971,10 +975,16 @@
           }
         }
         if (isNotInFilteredColumnsList) {
-          // add the new column to the filtered list
-          this.filteredColumns.push({ "name": column.name, "userEntry": userEntry });
+          if (userEntry !== "" && userEntry !== undefined && userEntry !== null) {
+            // add the new column to the filtered list
+            this.filteredColumns.push({ "name": column.name, "userEntry": userEntry });
+          }
         }
-        this._filterSortAndUpdateDisplayedTable();
+        if (!this.dataRemote) {
+          this._filterSortAndUpdateDisplayedTable();
+        } else {
+          this._triggerFilterChangeRequest();
+        }
       }
     },
 
