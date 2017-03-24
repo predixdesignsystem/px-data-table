@@ -26,7 +26,7 @@
     "iron-a11y-keys-behavior": "~1.1.9",
     "px-polymer-font-awesome": "^1.1.0",
     "px-validation": "^0.4.0",
-    "px-dropdown": "^2.1.0"
+    "px-dropdown": "^3.1.0"
   },
   "devDependencies": {
     "px-starter-kit-design": "^0.7.0",
