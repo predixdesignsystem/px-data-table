@@ -943,7 +943,10 @@
     /********** Filtering ************/
 
     _triggerFilterChangeRequest: function () {
-        this.fire('filter-change-intent', JSON.stringify(this.filteredColumns));
+        // debouncing so this can be called anytime params are updated
+        this.debounce('_debounceTriggerFilterChangeRequest', function() {
+          this.fire('filter-change-intent', JSON.stringify(this.filteredColumns));
+        }, 300);
     },
 
     // filter on typed content in header handler
