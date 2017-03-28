@@ -753,32 +753,32 @@ var additionalData = [
 ];
 
 document.addEventListener("WebComponentsReady", function() {
-  // table1Fixture = document.getElementById('table1');
-  // table1Fixture.tableData = data;
-  // table2Fixture = document.getElementById('table2');
-  // table2Fixture.tableData = minidata;
+  table1Fixture = document.getElementById('table1');
+  table1Fixture.tableData = data;
+  table2Fixture = document.getElementById('table2');
+  table2Fixture.tableData = minidata;
 
-  // table3Fixture = document.getElementById('table3');
-  // table3Fixture.tableData = minidata;
+  table3Fixture = document.getElementById('table3');
+  table3Fixture.tableData = minidata;
 
-  // table4Fixture = document.getElementById('table4');
-  // table4Fixture.tableData = data;
+  table4Fixture = document.getElementById('table4');
+  table4Fixture.tableData = data;
 
-  // table5Fixture = document.getElementById('myTable');
-  // table5Fixture.tableData = data;
+  table5Fixture = document.getElementById('myTable');
+  table5Fixture.tableData = data;
 
-  // filtertest = document.getElementById('filtertest');
-  // filtertest.tableData = minidata;
+  filtertest = document.getElementById('filtertest');
+  filtertest.tableData = minidata;
 
-  // resetDataFixture = document.getElementById('resetTableWithNewData');
-  // resetDataFixture.tableData = minidata;
+  resetDataFixture = document.getElementById('resetTableWithNewData');
+  resetDataFixture.tableData = minidata;
 
-  // additionalDataFixture = document.getElementById('updateTableWithAdditionalData');
-  // additionalDataFixture.tableData = data;
+  additionalDataFixture = document.getElementById('updateTableWithAdditionalData');
+  additionalDataFixture.tableData = data;
 
-  // updateSelectFixture = document.getElementById('updateTableWithSelection');
-  // // use `data.slice()` to avoid breaking `additionalDataFixture` tests
-  // updateSelectFixture.tableData = data.slice();
+  updateSelectFixture = document.getElementById('updateTableWithSelection');
+  // use `data.slice()` to avoid breaking `additionalDataFixture` tests
+  updateSelectFixture.tableData = data.slice();
 
   remoteDataFixture1 = document.getElementById('remoteData1');
   remoteDataFixture1.tableData = minidata;
@@ -795,8 +795,8 @@ document.addEventListener("WebComponentsReady", function() {
   remoteDataFilteringFixture2 = document.getElementById('remoteDataFiltering2');
   remoteDataFilteringFixture2.tableData = minidata;
 
-  // greedyHeightWithScroll = document.getElementById('greedyHeightWithScroll');
-  // greedyHeightWithScroll.tableData = minidata;
+  greedyHeightWithScroll = document.getElementById('greedyHeightWithScroll');
+  greedyHeightWithScroll.tableData = minidata;
 
   runTests();
 });
@@ -804,7 +804,7 @@ document.addEventListener("WebComponentsReady", function() {
 
 
 function runTests() {
-  /*
+  
   suite('Unit Tests for Data Table', function() {
 
     test('Polymer exists', function() {
@@ -1423,7 +1423,7 @@ function runTests() {
       });
     });
   });
-*/
+
   suite('Unit Tests for data remote property being `true`', function () {
 
     suite('Page 1', function () {
