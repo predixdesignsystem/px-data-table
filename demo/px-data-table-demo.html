@@ -64,7 +64,7 @@
     </px-demo-interactive>
 
     <!-- API Viewer -->
-    <px-demo-api-viewer source="px-data-table"></px-demo-api-viewer>
+    <px-demo-api-viewer source="px-data-table" hide="{{hideLocalize}}"></px-demo-api-viewer>
 
     <!-- Footer -->
     <px-demo-footer></px-demo-footer>
@@ -111,6 +111,12 @@
               hidePaginationControl: false,
               includeAllColumns: true }
           ]
+        }
+      },
+      hideLocalize: {
+      type: Array,
+      value: function() {
+          return ['localize','resources','useKeyIfMissing','formats','pathToResources','loadResources','app-localize-resources-error','app-localize-resources-loaded']
         }
       }
     },

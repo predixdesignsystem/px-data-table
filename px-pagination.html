@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
-<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
+<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
 
 <!--
 Element that provides pagination.
@@ -54,7 +54,7 @@ Element that provides pagination.
     is: 'px-pagination',
 
     behaviors: [
-      Polymer.AppLocalizeBehavior
+      PxLocalizeBehavior
     ],
 
     properties: {
@@ -95,10 +95,6 @@ Element that provides pagination.
         readOnly: true
       }
 
-    },
-
-    attached: function() {
-      this.loadResources(this.resolveUrl('locales.json'));
     },
 
     _goBackToFirstPage: function() {

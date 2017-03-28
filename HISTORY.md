@@ -1,3 +1,7 @@
+v2.1.3
+==================
+* cutover to PxLocalizeBehavior
+
 v2.1.2
 ==================
 * update dependencies

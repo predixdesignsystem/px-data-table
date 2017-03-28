@@ -3,7 +3,7 @@
 <link rel="import" href="px-data-table-column.html">
 <link rel="import" href="px-data-table-highlight.html">
 <link rel="import" href="../px-validation/px-validation.html">
-<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
+<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
 
 
 <!--
@@ -122,7 +122,7 @@ Custom property | Description | Default
     is: 'px-data-table',
 
     behaviors: [
-      Polymer.AppLocalizeBehavior
+      PxLocalizeBehavior
     ],
 
     properties: {
@@ -285,7 +285,7 @@ Custom property | Description | Default
       },
       /**
        * A valid IETF language tag as a string that `app-localize-behavior` will
-       * use to localize this component. Refer to locales.json for currently supported languages.
+       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
        *
        * See https://github.com/PolymerElements/app-localize-behavior for API
        * documentation and more information.
@@ -294,9 +294,6 @@ Custom property | Description | Default
         type: String,
         value: 'en'
       }
-    },
-    attached: function() {
-      this.loadResources(this.resolveUrl('locales.json'));
     }
 
     /**

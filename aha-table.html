@@ -13,7 +13,7 @@
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
 <link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
-<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
+<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
 <link rel="import" href="css/aha-table-styles.html">
 
 <dom-module id="aha-table">
@@ -141,7 +141,7 @@
     is: 'aha-table',
 
     behaviors: [
-      Polymer.AppLocalizeBehavior
+      PxLocalizeBehavior
     ],
 
     properties: {
@@ -360,7 +360,6 @@
     },
     attached: function() {
       this._isAttached = true;
-      this.loadResources(this.resolveUrl('locales.json'));
     },
 
     _columnChanged: function(info){
