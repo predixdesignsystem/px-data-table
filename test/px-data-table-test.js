@@ -1,4 +1,4 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture;
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture, greedyHeightWithScrollFixture;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
@@ -777,6 +777,9 @@ document.addEventListener("WebComponentsReady", function() {
   updateSelectFixture = document.getElementById('updateTableWithSelection');
   // use `data.slice()` to avoid breaking `additionalDataFixture` tests
   updateSelectFixture.tableData = data.slice();
+
+  greedyHeightWithScrollFixture = document.getElementById('greedyHeightWithScroll');
+  greedyHeightWithScrollFixture.tableData = minidata;
 
   runTests();
 });
