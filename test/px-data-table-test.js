@@ -1,6 +1,7 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, 
-  additionalDataFixture, updateSelectFixture, remoteDataFixture1, remoteDataFixture2, remoteDataFixture3, 
-  remoteDataFilteringFixture1, remoteDataFilteringFixture2, greedyHeightWithScroll;
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, 
+resetDataFixture, additionalDataFixture, updateSelectFixture, remoteDataFixture1, remoteDataFixture2, 
+remoteDataFixture3,remoteDataFilteringFixture1, remoteDataFilteringFixture2, greedyHeightWithScrollFixture,
+greedyHeightWithScrollLargeFixture, greedyHeightWithScrollDataRemoteFixture;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
@@ -795,8 +796,14 @@ document.addEventListener("WebComponentsReady", function() {
   remoteDataFilteringFixture2 = document.getElementById('remoteDataFiltering2');
   remoteDataFilteringFixture2.tableData = minidata;
 
-  // greedyHeightWithScroll = document.getElementById('greedyHeightWithScroll');
-  // greedyHeightWithScroll.tableData = minidata;
+  greedyHeightWithScrollFixture = document.getElementById('greedyHeightWithScroll');
+  greedyHeightWithScrollFixture.tableData = minidata;
+
+  greedyHeightWithScrollLargeFixture = document.getElementById('greedyHeightWithScrollLarge');
+  greedyHeightWithScrollLargeFixture.tableData = minidata;
+
+  greedyHeightWithScrollDataRemoteFixture = document.getElementById('greedyHeightWithScrollDataRemote');
+  greedyHeightWithScrollDataRemoteFixture.tableData = minidata;
 
   runTests();
 });
@@ -1599,6 +1606,30 @@ function runTests() {
 
     });
 
+    suite('smart row selection for client or server side pagination', function () {
+      test('_initializeTable for client with small view size', function(done) {
+        var pxTable = document.getElementById('greedyHeightWithScroll');
+        var pageSizeSelect = pxTable.querySelector('#pageSizeSelect');
+        assert.equal(pageSizeSelect.value, 10, 'small view size select page size 10');
+        done();
+      });
+
+      test('_initializeTable for client with large view size', function(done) {
+        var pxTable = document.getElementById('greedyHeightWithScrollLarge');
+        var pageSizeSelect = pxTable.querySelector('#pageSizeSelect');
+        assert.equal(pageSizeSelect.value, 20, 'large view size select closest page size');
+        done();
+      });
+
+       test('_initializeTable for remote data is true', function(done) {
+        var pxTable = document.getElementById('greedyHeightWithScrollDataRemote');
+        var pageSizeSelect = pxTable.querySelector('#pageSizeSelect');
+        assert.equal(pageSizeSelect.value, 10, 'server side pagination send out the closest page size as requested page size');
+        done();
+      });
+
+    });
+
     suite('Filtering', function () {
 
       test('Send event with combined filter string for one column', function (done) {
@@ -1643,7 +1674,6 @@ function runTests() {
           imageFilter.dispatchEvent(new Event('keyup'));
 
       });
-
     });
 
   });
