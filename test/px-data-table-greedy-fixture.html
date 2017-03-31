@@ -1,0 +1,35 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>px-data-table greedy property Demo</title>
+
+    <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <!-- web-component-tester automatically provides local copy of brower.js below
+         for any URL ending with "/web-component-tester/browser.js"
+         when wct is run from the command line -->
+    <script src="../web-component-tester/browser.js"></script>
+    <link rel="import" href="../px-data-table.html" />
+    <link rel="import" href="../../px-theme/px-theme-styles.html">
+    <style include="px-theme-styles" is="custom-style"></style>
+    <script src="px-data-table-greedy-test.js"></script>
+  </head>
+
+  <body>
+      <p>Greedy-height with Scroll</p>
+      <div id="styledContainer" style=" height:300px; border: 1px solid cyan; flex:1; display:flex; flex-direction:column; ">
+        <px-data-table
+          enable-column-resize="true"
+          greedy-height-with-scroll="true"
+          id="greedyHeightWithScroll"
+          page-size="10"
+          show-column-chooser="true"
+          table-rows="true"
+          >
+        </px-data-table>
+
+  </body>
+</html>

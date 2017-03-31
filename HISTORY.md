@@ -1,3 +1,27 @@
+v2.1.3
+==================
+* cutover to PxLocalizeBehavior
+
+v2.1.2
+==================
+* update dependencies
+
+v2.1.1
+==================
+* merge PR #113 to fix issue #86, fixes behavior of select all checkbox with filters
+
+v2.1.0
+==================
+* re-add a11y and i18n changes from 2.0.1 and 2.0.2
+
+v2.0.4
+==================
+* fixed column duplication / hiding issues
+
+v2.0.3
+==================
+* revert 2.0.1 and 2.0.2
+
 v2.0.0
 ==================
 * This release addresses a number of issues (PR #112):

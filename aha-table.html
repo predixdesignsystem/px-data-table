@@ -13,6 +13,7 @@
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
 <link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
 <link rel="import" href="css/aha-table-styles.html">
 
 <dom-module id="aha-table">
@@ -22,20 +23,20 @@
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class$="{{_getColumnChooserClass(greedyHeightWithScroll)}}">
-        <px-dropdown display-value="Show/Hide Column">
-          <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
+        <px-dropdown display-value="{{localize('Show/Hide Column')}}">
+          <px-dropdown-content max-cont-character-width="100" class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
           </px-dropdown-content>
         </px-dropdown>
       </div>
     </template>
     <div class$="{{_getScrollBodyClass(greedyHeightWithScroll)}}">
 
-      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}">
+      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}" role="grid">
         <!-- Header -->
-        <div class="tr">
+        <div class="tr" role="row">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <template is="dom-if" if="{{!column.hide}}">
-              <span class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
+              <span role="columnheader" class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
                 <div class="flex header--container">
                   <span
                     class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}"
@@ -53,21 +54,21 @@
         </div>
 
         <!-- Second Header (filter/select all) -->
-        <div class$="{{_getSecondHeaderClass(_enableFilterRow)}}">
+        <div class$="{{_getSecondHeaderClass(_enableFilterRow)}}" role="row">
           <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
-            <span class$="{{_getFilterHeaderClass(column)}}" hidden$="{{column.hide}}">
+            <span class$="{{_getFilterHeaderClass(column)}}" role="gridcell" hidden$="{{column.hide}}">
               <!-- select all checkbox -->
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
                 <span class="flex flex--center" hidden$="{{column.hide}}">
                   <template is="dom-if" if="{{!singleSelect}}">
-                    <input id="selectAllCheckbox" type="checkbox" on-change="_clickSelectAll"/>
+                    <input id="selectAllCheckbox" role="checkbox" aria-label="Click to select or deselect all rows" type="checkbox" on-change="_clickSelectAll"/>
                   </template>
                 </span>
               </template>
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
-                <input placeholder="Filter" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
+                <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
               </template>
 
             </span>
@@ -76,42 +77,43 @@
         <!-- Data rows -->
         <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
 
-          <div class$="{{_getRowClass(internalRow,striped)}}">
+          <div role="row" class$="{{_getRowClass(internalRow,striped)}}">
             <!-- Data cells -->
             <template is="dom-repeat" items="{{meta}}" as="column">
               <!-- selected column checkbox or radio button -->
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                <span class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
+                <span role="gridcell" class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
                   <span class="flex flex--center flex--middle">
                     <template is="dom-if" if="{{!singleSelect}}">
-                      <input type="checkbox" checked="{{internalRow._selected::change}}"/>
+                      <input role="checkbox" aria-label="Click to select row" type="checkbox" checked="{{internalRow._selected::change}}"/>
                     </template>
                     <template is="dom-if" if="{{singleSelect}}">
-                      <input type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
+                      <input role="checkbox" aria-label="Click to select row" type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
                     </template>
                   </span>
                 </span>
               </template>
               <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-                <px-data-table-cell
-                    hidden$="{{column.hide}}"
-                    on-save="_save"
-                    row-highlighted="[[internalRow._highlight]]"
-                    cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
-                    cell-selected="[[internalRow._selected]]"
-                    on-validate="_handleValidateEvent"
-                    cell-type="{{column.type}}"
-                    dropdown-items="{{column.dropdownItems}}"
-                    dropdown-bounds="{{scrollBody}}"
-                    cell-display-value="{{_readContent(internalRow, column)}}"
-                    cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
-                    cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
-                    cell-editable="{{column.editable}}"
-                    cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
-                    column-name="{{column.name}}"
-                    dropdown-max-character-width="{{column.maxColumnCharacterWidth}}"
-                    on-tap="_clickCell">
-                </px-data-table-cell>
+                <template is="dom-if" if="{{!column.hide}}">
+                  <px-data-table-cell
+                      on-save="_save"
+                      row-highlighted="[[internalRow._highlight]]"
+                      cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
+                      cell-selected="[[internalRow._selected]]"
+                      on-validate="_handleValidateEvent"
+                      cell-type="{{column.type}}"
+                      dropdown-items="{{column.dropdownItems}}"
+                      dropdown-bounds="{{scrollBody}}"
+                      cell-display-value="{{_readContent(internalRow, column)}}"
+                      cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
+                      cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
+                      cell-editable="{{column.editable}}"
+                      cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
+                      column-name="{{column.name}}"
+                      dropdown-max-character-width="{{column.maxColumnCharacterWidth}}"
+                      on-tap="_clickCell">
+                  </px-data-table-cell>
+                </template>
               </template>
             </template>
           </div>
@@ -128,7 +130,8 @@
                      id="pagination"
                      number-of-items="{{numberOfItems}}"
                      page-size="{{pageSize}}"
-                     first-item-index-to-display="{{firstItemIndex}}">
+                     first-item-index-to-display="{{firstItemIndex}}"
+                     language="{{language}}">
       </px-pagination>
     </div>
   </template>
@@ -136,6 +139,10 @@
 <script>
   Polymer({
     is: 'aha-table',
+
+    behaviors: [
+      PxLocalizeBehavior
+    ],
 
     properties: {
       //data: instance of the model data
@@ -420,11 +427,12 @@
               idx = index + 1;
             }
           });
+          this.splice('meta', idx, 0, addedColumn);
         }
         else {
           if(this.selectable) idx += 1;
+          this.splice('meta', idx, 1, addedColumn);
         }
-        this.splice('meta', idx, 0, addedColumn);
       }
       else {
         this.push('meta', addedColumn);
@@ -531,6 +539,7 @@
       }
       else if (newValue === false && this._isAttached && this.getEffectiveChildren(this.$.content).length > 0) {
         this.meta = this.getEffectiveChildren(this.$.content);
+        this._selectableChanged(this.selectable);
       }
     },
 
@@ -625,6 +634,12 @@
       // with filtering/sorting, it's best just to go back to the first page
       this.$.pagination.goToPageNumber(1);
       this._updateDisplayedRows();
+
+      //update selected rows when changing the filter if the select all is enabled
+      selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+      if(selectAllCheckbox !== null && selectAllCheckbox !== undefined && selectAllCheckbox.checked){
+          selectAllCheckbox.checked=false;
+      }
     },
 
     /********** Internal data structure ***********/
@@ -1009,9 +1024,19 @@
     _setAllRows: function(isSelected) {
       var i,
           len;
-      // set all rows selected/unselected
-      for(i = 0, len = this._internalData.length; i < len; i++) {
-        this._setInternalDataAt(this._internalData[i], '_selected', isSelected);
+
+      if(isSelected) {
+      //set selected to true when selecing all for tags shown by filter
+        for(i = 0, len = this._internalData.length; i < len; i++) {
+          if(this.filteredSortedData.includes(this._internalData[i])){
+            this._setInternalDataAt(this._internalData[i], '_selected', isSelected);
+          }
+        }
+      } else {
+        //set selected to false
+        for(i = 0, len = this._internalData.length; i < len; i++) {
+          this._setInternalDataAt(this._internalData[i], '_selected', isSelected);
+        }
       }
 
       // notify viewing rows of change
@@ -1024,7 +1049,9 @@
       if(isSelected) {
         // add everything to selectedRows property
         for(i = 0, len = this._internalData.length; i < len; i++) {
-          this.push('selectedRows', this._internalData[i]);
+          if(this._internalData[i]._selected) {
+            this.push('selectedRows', this._internalData[i]);
+          }
         }
       }
 

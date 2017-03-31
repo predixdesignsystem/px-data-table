@@ -49,8 +49,9 @@
               table-columns="{{props.tableColumns.value}}"
               table-rows="{{props.tableRows.value}}"
               hide-pagination-control="{{props.hidePaginationControl.value}}"
-              include-all-columns="{{props.includeAllColumns.value}}">
-              <px-data-table-column name="first" sortable editable filterable></px-data-table-column>
+              include-all-columns="{{props.includeAllColumns.value}}"
+              language="{{props.language.value}}">
+              <px-data-table-column name="first" filterable sortable editable></px-data-table-column>
           </px-data-table>
         </div>
       </px-demo-component>
@@ -63,7 +64,7 @@
     </px-demo-interactive>
 
     <!-- API Viewer -->
-    <px-demo-api-viewer source="px-data-table"></px-demo-api-viewer>
+    <px-demo-api-viewer source="px-data-table" hide="{{hideLocalize}}"></px-demo-api-viewer>
 
     <!-- Footer -->
     <px-demo-footer></px-demo-footer>
@@ -111,6 +112,12 @@
               includeAllColumns: true }
           ]
         }
+      },
+      hideLocalize: {
+      type: Array,
+      value: function() {
+          return ['localize','resources','useKeyIfMissing','formats','pathToResources','loadResources','app-localize-resources-error','app-localize-resources-loaded']
+        }
       }
     },
 
@@ -119,6 +126,13 @@
         type: Object,
         defaultValue: [{"first":"Valentine","last":"Meyer","email":"valentinemeyer@scentric.com"},{"first":"Silva","last":"Alexander","email":"silvaalexander@gmail.com"},{"first":"Hopkins","last":"Wong","email":"hopkinswong@hotmail.com"},{"first": "Joe","last": "Sherman","email": "joejoe@yahoo.com"},{"first": "Jane","last": "Bartlett","email": "jane@scentric.com"}],
         inputType: 'code:JSON'
+      },
+
+      language: {
+        type: String,
+        defaultValue: 'en',
+        inputType: 'dropdown',
+        inputChoices: ['de','en','es','fr']
       },
 
       striped: {
@@ -183,7 +197,7 @@
 
       lightDomContent: {
         type: String,
-        defaultValue: '<px-data-table-column name="first" sortable editable filterable></px-data-table-column>'
+        defaultValue: '<px-data-table-column name="first"></px-data-table-column>'
       }
 
     }

@@ -889,6 +889,24 @@ function runTests() {
       lastNameFilter.dispatchEvent(new Event('keyup'));
     });
 
+    test('When selecting all, select only what is filtered', function(done){
+
+      var tb = Polymer.dom(table2Fixture.root).querySelector('aha-table');
+
+      var filterableTableRoot = document.querySelector('#table2');
+      var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
+      var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
+
+      var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
+      var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
+
+      var selectionPath = '#dataTable';
+      filterableTableRoot.querySelector("#selectAllCheckbox").checked = true;
+
+      assert.equal(table2Fixture.selectedRows.length < table2Fixture.tableData.length, true, 'selceted row is not less that all rows');
+      done();
+    });
+
     // Spot checks for sorting functionality
     test('Records are sorted correctly when a sortable column header is clicked', function(done) {
       var sortableTableRoot = document.querySelector('#table1');
@@ -922,8 +940,8 @@ function runTests() {
       flush(function(){
         var editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
             editCellToTheLeft = Polymer.dom(cell.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
-        assert.isFalse(editCell.classList.contains('visuallyhidden'));
-        assert.isTrue(editCellToTheLeft.classList.contains('visuallyhidden'));
+        assert.isFalse(editCell.classList.contains('hidden'));
+        assert.isTrue(editCellToTheLeft.classList.contains('hidden'));
         done();
       });
     });
@@ -1230,7 +1248,7 @@ function runTests() {
         done();
       });
     });
-  });
+});
 
   suite('Column show/hide tests', function(){
 

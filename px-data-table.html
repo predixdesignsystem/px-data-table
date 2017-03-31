@@ -3,6 +3,7 @@
 <link rel="import" href="px-data-table-column.html">
 <link rel="import" href="px-data-table-highlight.html">
 <link rel="import" href="../px-validation/px-validation.html">
+<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
 
 
 <!--
@@ -110,6 +111,7 @@ Custom property | Description | Default
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
         greedy-height-with-scroll="{{greedyHeightWithScroll}}">
+        language="{{language}}">
         <content></content>
       </aha-table>
     </div>
@@ -119,6 +121,10 @@ Custom property | Description | Default
 <script>
   Polymer({
     is: 'px-data-table',
+
+    behaviors: [
+      PxLocalizeBehavior
+    ],
 
     properties: {
 
@@ -290,6 +296,18 @@ Custom property | Description | Default
       	type: Boolean,
         reflectToAttribute: true,
         value: false
+      },
+
+       /**
+       * A valid IETF language tag as a string that `app-localize-behavior` will
+       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+       *
+       * See https://github.com/PolymerElements/app-localize-behavior for API
+       * documentation and more information.
+       */
+      language: {
+        type: String,
+        value: 'en'
       }
     },
 
