@@ -20,6 +20,27 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 @import "px-colors-design/_settings.colors.scss";
 @import 'aha-table-sketch.scss';
 
+
+.tr.rows.is-new {
+  background: none;
+  animation: color-me-in 1s; /* other keywords like "infinite alternate" can be useful here */
+}
+
+@keyframes color-me-in {
+  /* You could think of as "step 1" */
+  0% {
+    background: none;
+  }
+  /* You could think of as "step 2" */
+  20% {
+    background: cyan;
+  }
+  /* You could think of as "step 2" */
+  100% {
+    background: none;
+  }
+}
+
 .striped:nth-child(even) {
   background-color: var(--px-data-table-background-color-striped--even, $gray2);
 }

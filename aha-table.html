@@ -20,14 +20,14 @@
         <style include="aha-table-styles"></style>
         <content id="columndefs"></content>
         <template is="dom-if" if="{{showColumnChooser}}">
-            <div class$="{{_getColumnChooserClass(greedyHeightWithScroll)}}">
+            <div class$="flex columnChooser u-mb- {{_getColumnChooserClass(greedyHeightWithScroll)}}">
                 <px-dropdown display-value="Show/Hide Column">
                     <px-dropdown-content class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
                     </px-dropdown-content>
                 </px-dropdown>
             </div>
         </template>
-        <div class$="{{_getScrollBodyClass(greedyHeightWithScroll)}}">
+        <div class$="scroll-body {{_getScrollBodyClass(greedyHeightWithScroll)}}">
           <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}">
           <!-- Header -->
               <div class="tr">
@@ -118,7 +118,7 @@
           </div>
         </div>
         <!-- Pagination controls -->
-        <div class$="{{_getPaginationClass(greedyHeightWithScroll)}}">
+        <div class$="pagination {{_getPaginationClass(greedyHeightWithScroll)}}">
             <px-pagination
                 class$="{{_getPaginationVisibility(hidePaginationControl)}}"
                 data-remote="{{dataRemote}}"
@@ -416,28 +416,41 @@
       var boundHandler = this._columnChanged.bind(this);
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
     },
+
     attached: function () {
       this._isAttached = true;
 
-      window.addEventListener("load", this._optimizePageForLoad(this));
+      window.addEventListener("load", this._initializeTable(this));
+    },
+
+    detached: function () {
+      window.removeEventListener("load", this._initializeTable);
     },
 
     //This function will enable pageSize change at the initial load
-    _optimizePageForLoad: function (aha) {
+    _initializeTable: function (aha) {
       var pagi = Polymer.dom(aha.root).querySelector('#pagination');
       var th = Polymer.dom(aha.root).querySelector('.tr.aha-table');
       var scrollBody = Polymer.dom(aha.root).querySelector('.scroll-body.aha-table');
       var rowHeight = 42;
 
+      var closestPageSize;
+
       var optimizePageSize = Math.floor((Number(scrollBody.offsetHeight) - Number(th.offsetHeight)) / rowHeight);
       if (optimizePageSize <= 10) {
-        pagi._updatePageSize(10);
-      } else if (10 < optimizePageSize <= 20) {
-        pagi._updatePageSize(20);
-      } else if (20 < optimizePageSize <= 50) {
-        pagi._updatePageSize(50);
+        closestPageSize = 10;
+      } else if ((10 < optimizePageSize) &&(optimizePageSize <= 20)) {
+        closestPageSize = 20;
+      } else if ((20 < optimizePageSize) &&(optimizePageSize <= 50)) {
+        closestPageSize = 50;
       } else {
-        pagi._updatePageSize(100);
+        closestPageSize = 100;
+      }
+
+      if (!this.dataRemote) {
+        pagi._updatePageSize(closestPageSize);
+      } else {
+        this.fire('data-table-init', { pageSize: closestPageSize });
       }
     },
 
@@ -801,12 +814,18 @@
     _updateDisplayedRows: function () {
       var fromPage,
         to;
+
       if (this.firstItemIndex !== null && this.firstItemIndex !== undefined &&
         this.pageSize !== null && this.pageSize !== undefined &&
         this.filteredSortedData !== undefined && this.filteredSortedData !== null && !this.hidePaginationControl) {
 
         fromPage = this.firstItemIndex - 1; // pagination is 1-based
         to = fromPage + this.pageSize;
+
+        this.filteredSortedData = this.filteredSortedData.map( row => {
+          row.isNew = true;
+          return row;
+        });
 
         if (this.dataRemote) {
           this.set('displayedRows', this.filteredSortedData);
@@ -815,6 +834,12 @@
         }
 
       } else if (this.filteredSortedData !== undefined && this.filteredSortedData !== null && this.hidePaginationControl) {
+
+        this.filteredSortedData = this.filteredSortedData.map( row => {
+          row.isNew = true;
+          return row;
+        });
+
         this.set('displayedRows', this.filteredSortedData);
       }
     },
@@ -1511,24 +1536,19 @@
 
     _getRowClass: function (row, striped) {
       return ['tr', 'rows',
-        this.striped ? 'striped' : ''
+        this.striped ? 'striped' : '',
+        row.isNew ? 'is-new' : ''
       ].join(' ');
     },
 
     _getPaginationClass: function(greedyHeightWithScroll) {
-      return ['pagination',
-        this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : ''
-      ].join(' ');
+      return this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : '';
     },
     _getScrollBodyClass: function(greedyHeightWithScroll) {
-      return ['scroll-body',
-        this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : ''
-      ].join(' ');
+      return this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : '';
     },
     _getColumnChooserClass: function(greedyHeightWithScroll) {
-      return ['flex columnChooser u-mb-',
-        this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : ''
-      ].join(' ');
+      return this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : '';
     },
 
     _getHighlightValue: function (row, column, high) {
