@@ -39,6 +39,8 @@
 
         <div>
           <px-data-table
+              sorted-column="{{props.sortedColumn.value}}"
+              sort-descending="{{props.sortDescending.value}}"
               table-data="{{props.tableData.value}}"
               striped="{{props.striped.value}}"
               filterable="{{props.filterable.value}}"
@@ -91,6 +93,8 @@
               striped: false,
               filterable: false,
               sortable: false,
+              sortedColumn: '',
+              sortDescending: false,
               selectable: false,
               singleSelect: false,
               showColumnChooser: false,
@@ -99,10 +103,18 @@
               hidePaginationControl: true,
               includeAllColumns: true },
 
+            { configName: "Sorting",
+              sortable: true,
+              sortedColumn: 'first',
+              sortDescending: true
+            },
+
             { configName: "Complex",
               striped: true,
               filterable: true,
               sortable: true,
+              sortedColumn: '',
+              sortDescending: false,
               selectable: true,
               singleSelect: true,
               showColumnChooser: true,
@@ -151,6 +163,22 @@
         type: Boolean,
         defaultValue: false,
         inputType: 'toggle'
+      },
+
+      sortDescending: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+
+      sortedColumn: {
+        type: Array,
+        inputType: 'dropdown',
+        inputChoices: [
+          'first',
+          'last',
+          'email'
+        ]
       },
 
       selectable: {
