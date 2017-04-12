@@ -395,5 +395,81 @@ Custom property | Description | Default
      * @event px-select-all-click
      */
 
+    // ------------------------------
+    // Remote Data Source Events
+    // ------------------------------
+    
+    /**
+     * Fired when the data table initializes
+     * Sends out initialization information (such as suggested page size based on available space)
+     * Only fired if dataRemote==true
+     * 
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-data-table-init", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended page: ", data);
+     * });
+     * // ==> {pageSize:10}
+     * ```
+     * @event px-data-table-init
+     */
+    /**
+     * Fired when the user interaction indicates an intention to change the page
+     * Only fired if dataRemote==true
+     * 
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-page-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended page: ", data);
+     * });
+     * ```
+     * @event px-page-change-intent
+     */
+    /**
+     * Fired when the user interaction indicates an intention to change the page size
+     * Only fired if dataRemote==true
+     * 
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-page-size-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended page size: ", data);
+     * });
+     * ```
+     * @event px-page-size-change-intent
+     */
+    /**
+     * Fired when the user interaction indicates an intention to change the filter
+     * Captures filter data for all filtered columns
+     * Only fired if dataRemote==true
+     * 
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-filter-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended filters: ", JSON.parse(data));
+     * });
+     * // ==> [{name:'columnA',userEntry:'asdf'},{name:'columnB',userEntry:'qwert'}] 
+     * ```
+     * @event px-filter-change-intent
+     */
+    /**
+     * Fired when the user interaction indicates an intention to change the sort
+     * Captures sort data for all sorted columns (currently only single sort allowed through UI)
+     * Only fired if dataRemote==true
+     * 
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-sort-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended sort: ", JSON.parse(data));
+     * });
+     * // ==> [{name:'columnA',direction:'ascending'}] or [{name:'columnB',direction:'descending'}] 
+     * ```
+     * @event px-sort-change-intent
+     */
+
   });
 </script>

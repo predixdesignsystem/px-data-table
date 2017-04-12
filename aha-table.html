@@ -450,7 +450,7 @@
       if (!this.dataRemote) {
         pagi._updatePageSize(closestPageSize);
       } else {
-        this.fire('data-table-init', { pageSize: closestPageSize });
+        this.fire('px-data-table-init', { pageSize: closestPageSize });
       }
     },
 
@@ -845,12 +845,28 @@
     },
 
     /********** Sorting ************/
+
+    /*
+     * Fires a sort change request event
+     * 
+     * Only called if remoteData==true
+     * 
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-sort-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended sort: ", JSON.parse(data));
+     * });
+     * // ==> [{name:'columnA',direction:'ascending'}] or [{name:'columnB',direction:'descending'}] 
+     * ```
+     * @event px-sort-change-intent
+     */
     _triggerSortChangeRequest: function () {
         // debouncing so this can be called anytime params are updated
         this.debounce('_debounceTriggerSortChangeRequest', function() {
           // currently only supports single column sort
           // event interface is set up to handle multi-column sort
-          this.fire('sort-change-intent', !this.sortedColumn ? '[]' : JSON.stringify([{
+          this.fire('px-sort-change-intent', !this.sortedColumn ? '[]' : JSON.stringify([{
             name: this.sortedColumn,
             direction: this.descending ? 'descending' : 'ascending'
           }]));
@@ -982,10 +998,25 @@
 
     /********** Filtering ************/
 
+    /*
+     * Fires a filter change request event
+     * 
+     * Only called if remoteData==true
+     * 
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-filter-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended filters: ", JSON.parse(data));
+     * });
+     * // ==> [{name:'columnA',userEntry:'asdf'},{name:'columnB',userEntry:'qwert'}] 
+     * ```
+     * @event px-filter-change-intent
+     */
     _triggerFilterChangeRequest: function () {
         // debouncing so this can be called anytime params are updated
         this.debounce('_debounceTriggerFilterChangeRequest', function() {
-          this.fire('filter-change-intent', JSON.stringify(this.filteredColumns));
+          this.fire('px-filter-change-intent', JSON.stringify(this.filteredColumns));
         }, 300);
     },
 

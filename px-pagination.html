@@ -238,12 +238,40 @@ Element that provides pagination.
     // BROADCASTING METHODS
     // --------------------
 
+    /*
+     * Fires a page change request event
+     * 
+     * Only called if remoteData==true
+     * 
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-page-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended page: ", data);
+     * });
+     * ```
+     * @event px-page-change-intent
+     */
     _triggerPageChangeRequest: function (intendedPage) {
-      this.fire('page-change-intent', intendedPage);
+      this.fire('px-page-change-intent', intendedPage);
     },
 
+    /*
+     * Fires a page size change request event
+     * 
+     * Only called if remoteData==true
+     * 
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-page-size-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended page size: ", data);
+     * });
+     * ```
+     * @event px-page-size-change-intent
+     */
     _triggerPageSizeChangeRequest: function (intendedPageSize) {
-      this.fire('page-size-change-intent', intendedPageSize);
+      this.fire('px-page-size-change-intent', intendedPageSize);
     },
 
 

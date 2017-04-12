@@ -1473,11 +1473,11 @@ function runTests() {
         assert(page2IconClassList.indexOf('btn--bare') > -1, 'Does not have btn-bare class.');
       });
 
-      test('Clicking Next Page button fires a `page-change-intent` event', function(done) {
+      test('Clicking Next Page button fires a `px-page-change-intent` event', function(done) {
         var dataTable = document.getElementById('remoteData1');
         var pageChangeButton = dataTable.querySelector('.paging.px-pagination .btn--pagination.next');
 
-        dataTable.addEventListener('page-change-intent', (evt) => {
+        dataTable.addEventListener('px-page-change-intent', (evt) => {
           assert(true, 'Event is triggered');
           assert.equal(parseInt(evt.detail,10), 2, 'Requesting page 2');
           done();
@@ -1542,11 +1542,11 @@ function runTests() {
         assert.equal(page2IconClassList.indexOf('btn--bare'), -1, 'Does not have btn-bare class.');
       });
 
-      test('Clicking Previous Page button fires a `page-change-intent` event', function(done) {
+      test('Clicking Previous Page button fires a `px-page-change-intent` event', function(done) {
         var dataTable = document.getElementById('remoteData2');
         var pageChangeButton = dataTable.querySelector('.paging.px-pagination .btn--pagination.previous');
 
-        dataTable.addEventListener('page-change-intent', (evt) => {
+        dataTable.addEventListener('px-page-change-intent', (evt) => {
           assert(true, 'Event is triggered');
           assert.equal(parseInt(evt.detail,10), 1, 'Requesting page 1');
           done();
@@ -1577,12 +1577,12 @@ function runTests() {
 
     suite('Rows per Page Dropdown', function () {
 
-      test('On change, it fires a `page-size-change-intent` event', function(done) {
+      test('On change, it fires a `px-page-size-change-intent` event', function(done) {
         var dataTable = document.getElementById('remoteData3');
         var pageSizeSelectDropdown = dataTable.querySelector('#pageSizeSelect');
         
 
-        dataTable.addEventListener('page-size-change-intent', (evt) => {
+        dataTable.addEventListener('px-page-size-change-intent', (evt) => {
           assert(true, 'Event is triggered');
           assert.equal(parseInt(evt.detail,10), 50, 'Requesting page size of 50');
           done();
@@ -1618,7 +1618,7 @@ function runTests() {
           var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
           var lastNameFilter = dataTable.querySelector(lastNameFilterSelector);
 
-          dataTable.addEventListener('filter-change-intent', (evt) => {
+          dataTable.addEventListener('px-filter-change-intent', (evt) => {
             assert(true, 'Event is triggered');
             assert.equal(evt.detail, '[{"name":"last","userEntry":"ab"}]', 'Requesting filter change');
             done();
@@ -1644,7 +1644,7 @@ function runTests() {
           var imageFilterSelector = 'div > div.tr.tr--filter > :nth-child(3) > input';
           var imageFilter = dataTable.querySelector(imageFilterSelector);
 
-          dataTable.addEventListener('filter-change-intent', (evt) => {
+          dataTable.addEventListener('px-filter-change-intent', (evt) => {
             assert(true, 'Event is triggered');
             assert.equal(evt.detail, JSON.stringify(filters), 'Requesting filter change on multiple columns');
             done();
@@ -1665,7 +1665,7 @@ function runTests() {
           var sortHeadingSelector = 'div > div.tr .th:nth-of-type(2) .column-head.sorted-text-hover';
           var sortHeading = dataTable.querySelector(sortHeadingSelector);
 
-          dataTable.addEventListener('sort-change-intent', (evt) => {
+          dataTable.addEventListener('px-sort-change-intent', (evt) => {
             assert(true, 'Event is triggered');
             assert.equal(evt.detail, '[{"name":"last","direction":"ascending"}]', 'Requesting sort change');
             done();
@@ -1682,7 +1682,7 @@ function runTests() {
 
           sortHeading.dispatchEvent(new Event('click'));
 
-          dataTable.addEventListener('sort-change-intent', (evt) => {
+          dataTable.addEventListener('px-sort-change-intent', (evt) => {
             assert(true, 'Event is triggered');
             assert.equal(evt.detail, '[{"name":"last","direction":"descending"}]', 'Requesting sort change');
             done();
