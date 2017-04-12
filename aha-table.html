@@ -845,6 +845,17 @@
     },
 
     /********** Sorting ************/
+    _triggerSortChangeRequest: function () {
+        // debouncing so this can be called anytime params are updated
+        this.debounce('_debounceTriggerSortChangeRequest', function() {
+          // currently only supports single column sort
+          // event interface is set up to handle multi-column sort
+          this.fire('sort-change-intent', !this.sortedColumn ? '[]' : JSON.stringify([{
+            name: this.sortedColumn,
+            direction: this.descending ? 'descending' : 'ascending'
+          }]));
+        }, 300);
+    },
 
     // sort by header click handler
     _sort: function(e, p) {
@@ -860,7 +871,11 @@
           this.set('descending', false); // always start ascending when click new column
         }
       }
-      this._filterSortAndUpdateDisplayedTable();
+      if (!this.dataRemote) {
+        this._filterSortAndUpdateDisplayedTable();
+      } else {
+        this._triggerSortChangeRequest();
+      }
     },
 
     _sortByColumn: function (rowsToSort) {

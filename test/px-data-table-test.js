@@ -1,9 +1,11 @@
 var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, 
   additionalDataFixture, updateSelectFixture, remoteDataFixture1, remoteDataFixture2, remoteDataFixture3, 
-  remoteDataFilteringFixture1, remoteDataFilteringFixture2, greedyHeightWithScroll;
+  remoteDataFilteringFixture1, remoteDataFilteringFixture2, remoteDataSortingFixture1, remoteDataSortingFixture2, 
+  greedyHeightWithScroll;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
+
 var data =[
   {
     "index": 0,
@@ -500,6 +502,7 @@ var data =[
     "color": "rgb(218,74,95)"
   }
 ];
+
 var additionalData = [  
   {
   "index": 26,
@@ -753,8 +756,10 @@ var additionalData = [
 ];
 
 document.addEventListener("WebComponentsReady", function() {
+
   table1Fixture = document.getElementById('table1');
   table1Fixture.tableData = data;
+
   table2Fixture = document.getElementById('table2');
   table2Fixture.tableData = minidata;
 
@@ -794,6 +799,12 @@ document.addEventListener("WebComponentsReady", function() {
 
   remoteDataFilteringFixture2 = document.getElementById('remoteDataFiltering2');
   remoteDataFilteringFixture2.tableData = minidata;
+
+  remoteDataSortingFixture1 = document.getElementById('remoteDataSorting1');
+  remoteDataSortingFixture1.tableData = minidata;
+
+  remoteDataSortingFixture2 = document.getElementById('remoteDataSorting2');
+  remoteDataSortingFixture2.tableData = minidata;
 
   greedyHeightWithScroll = document.getElementById('greedyHeightWithScroll');
   greedyHeightWithScroll.tableData = minidata;
@@ -1642,6 +1653,43 @@ function runTests() {
           ahaTable.filteredColumns = filters;
           imageFilter.dispatchEvent(new Event('keyup'));
 
+      });
+
+    });
+
+    suite('Sorting', function () {
+
+      test('Send event with combined sort string for one column', function (done) {
+        
+          var dataTable = document.querySelector('#remoteDataSorting1');
+          var sortHeadingSelector = 'div > div.tr .th:nth-of-type(2) .column-head.sorted-text-hover';
+          var sortHeading = dataTable.querySelector(sortHeadingSelector);
+
+          dataTable.addEventListener('sort-change-intent', (evt) => {
+            assert(true, 'Event is triggered');
+            assert.equal(evt.detail, '[{"name":"last","direction":"ascending"}]', 'Requesting sort change');
+            done();
+          });
+
+          sortHeading.dispatchEvent(new Event('click'));
+      });
+
+      test('Send event with combined sort string for one column', function (done) {
+        
+          var dataTable = document.querySelector('#remoteDataSorting2');
+          var sortHeadingSelector = 'div > div.tr .th:nth-of-type(2) .column-head.sorted-text-hover';
+          var sortHeading = dataTable.querySelector(sortHeadingSelector);
+
+          sortHeading.dispatchEvent(new Event('click'));
+
+          dataTable.addEventListener('sort-change-intent', (evt) => {
+            assert(true, 'Event is triggered');
+            assert.equal(evt.detail, '[{"name":"last","direction":"descending"}]', 'Requesting sort change');
+            done();
+          });
+
+          // second click
+          sortHeading.dispatchEvent(new Event('click'));
       });
 
     });

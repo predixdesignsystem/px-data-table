@@ -22,7 +22,7 @@
 
       <h3>Data table demos</h3>
 
-      <!--<p>A very simple data table. Just displays data and has a sortable column.</p>
+      <p>A very simple data table. Just displays data and has a sortable column.</p>
       <px-data-table id="table1" include-all-columns>
         <px-data-table-column name="first" sortable></px-data-table-column>
       </px-data-table>
@@ -127,7 +127,8 @@
       <p>Selection after data update does not contain unreached data</p>
       <px-data-table id="updateTableWithSelection" selectable></px-data-table>
 
--->
+      <hr/>
+
       <p>Remote Data, Page 1 of 10</p>
       <px-data-table
         id="remoteData1"
@@ -145,6 +146,8 @@
         page-size="10"
         >
       </px-data-table>
+
+      <hr/>
 
       <p>Remote Data, Page Size Dopdown</p>
       <px-data-table
@@ -175,8 +178,29 @@
         >
       </px-data-table>
 
+      <hr/>
 
-      <!--<p>Greedy-height with Scroll</p>
+      <p>Remote Data, Sorting</p>
+      <px-data-table
+        id="remoteDataSorting1"
+        total-entries="100"
+        data-remote="true"
+        sortable="true"
+        >
+      </px-data-table>
+
+      <p>Remote Data, Sorting</p>
+      <px-data-table
+        id="remoteDataSorting2"
+        total-entries="100"
+        data-remote="true"
+        sortable="true"
+        >
+      </px-data-table>
+
+      <hr/>
+
+      <p>Greedy-height with Scroll</p>
       <div id="styledContainer" style=" height:300px; border: 1px solid cyan; flex:1; display:flex; flex-direction:column; ">
         <px-data-table
           enable-column-resize="true"
@@ -187,7 +211,7 @@
           table-rows="true"
           >
         </px-data-table>
-      </div>-->
+      </div>
 
 
   </body>
