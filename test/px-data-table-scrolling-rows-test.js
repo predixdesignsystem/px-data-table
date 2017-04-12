@@ -1,4 +1,4 @@
-var greedyHeightWithScrollFixture;
+var scrollingRowsFixture;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
@@ -177,8 +177,8 @@ var minidata =
 ];
 
 document.addEventListener("WebComponentsReady", function() {
-  greedyHeightWithScrollFixture = document.getElementById('greedyHeightWithScroll');
-  greedyHeightWithScrollFixture.tableData = minidata;
+  scrollingRowsFixture = document.getElementById('scrollingRows');
+  scrollingRowsFixture.tableData = minidata;
 
 });
 

@@ -92,7 +92,7 @@ Custom property | Description | Default
   <template>
     <style include="px-data-table-styles"></style>
 
-    <div class$="{{_getFlexClass(greedyHeightWithScroll)}}">
+    <div class$="flex {{_getFlexClass(scrollingRows)}}">
       <aha-table data="{{tableData}}"
         sortable="{{sortable}}"
         filterable="{{filterable}}"
@@ -110,7 +110,7 @@ Custom property | Description | Default
         enable-column-resize="{{enableColumnResize}}"
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
-        greedy-height-with-scroll="{{greedyHeightWithScroll}}">
+        scrolling-rows="{{scrollingRows}}">
         language="{{language}}">
         <content></content>
       </aha-table>
@@ -285,14 +285,14 @@ Custom property | Description | Default
         value: false
       },
       /**
-       * Property to enable greedy table with vertical scroll bar. By enabling
+       * Property to enable table with vertical scroll bar. By enabling
        * this feature, px-data-table will take full space allocated, and space
        * will be filled with rows of data. Any rows that can't fit in available
        * space, there will be vertical scroll allow user to see remaining rows.
        * For allowing this property work smoothly, container wrapper for
-       * px-data-table needs to have display: flex and flex: 1 define.
+       * px-data-table needs to have enough space for scrolling.
        */
-      greedyHeightWithScroll: {
+      scrollingRows: {
       	type: Boolean,
         reflectToAttribute: true,
         value: false
@@ -311,10 +311,8 @@ Custom property | Description | Default
       }
     },
 
-    _getFlexClass: function(greedyHeightWithScroll) {
-      return ['flex',
-        this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : ''
-      ].join(' ');
+    _getFlexClass: function(scrollingRows) {
+      return this.scrollingRows ? 'scrolling-rows' : '';
     }
     /**
      * Fired when a cell is clicked in the table. If the cell is not editable or of type 'dropdown',

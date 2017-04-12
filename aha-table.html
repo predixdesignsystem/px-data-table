@@ -22,14 +22,14 @@
     <content id="columndefs"></content>
 
     <template is="dom-if" if="{{showColumnChooser}}">
-      <div class$="{{_getColumnChooserClass(greedyHeightWithScroll)}}">
+      <div class$="flex columnChooser u-mb- {{_getColumnChooserClass(scrollingRows)}}">
         <px-dropdown display-value="{{localize('Show/Hide Column')}}">
           <px-dropdown-content max-cont-character-width="100" class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
           </px-dropdown-content>
         </px-dropdown>
       </div>
     </template>
-    <div class$="{{_getScrollBodyClass(greedyHeightWithScroll)}}">
+    <div class$="scroll-body {{_getScrollBodyClass(scrollingRows)}}">
 
       <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}" role="grid">
         <!-- Header -->
@@ -125,7 +125,7 @@
       </template>
     </div>
     <!-- Pagination controls -->
-    <div class$="{{_getPaginationClass(greedyHeightWithScroll)}}">
+    <div class$="pagination {{_getPaginationClass(scrollingRows)}}">
       <px-pagination class$="{{_getPaginationVisibility(hidePaginationControl)}}"
                      id="pagination"
                      number-of-items="{{numberOfItems}}"
@@ -185,8 +185,8 @@
         type: Boolean,
         value: false
       },
-      //greedy: if table needs to be greedy
-      greedyHeightWithScroll: {
+      //scrollingRows: if table rows needs to be scrollable
+      scrollingRows: {
         type: Boolean,
         reflectToAttribute: true,
         value: false
@@ -1430,20 +1430,14 @@
       ].join(' ');
     },
 
-    _getPaginationClass: function(greedyHeightWithScroll) {
-      return ['pagination',
-        this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : ''
-      ].join(' ');
+    _getPaginationClass: function(scrollingRows) {
+      return this.scrollingRows ? 'scrolling-rows' : '';
     },
-    _getScrollBodyClass: function(greedyHeightWithScroll) {
-      return ['scroll-body',
-        this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : ''
-      ].join(' ');
+    _getScrollBodyClass: function(scrollingRows) {
+      return this.scrollingRows ? 'scrolling-rows' : '';
     },
-    _getColumnChooserClass: function(greedyHeightWithScroll) {
-      return ['flex columnChooser u-mb-',
-        this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : ''
-      ].join(' ');
+    _getColumnChooserClass: function(scrollingRows) {
+      return this.scrollingRows ? 'scrolling-rows' : '';
     },
 
     _getHighlightValue: function(row, column, high) {
