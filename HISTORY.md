@@ -1,3 +1,7 @@
+v2.1.4
+==================
+* fixed #120
+
 v2.1.3
 ==================
 * cutover to PxLocalizeBehavior

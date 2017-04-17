@@ -426,7 +426,7 @@
       }
     },
     onHtmlChanged: function() {
-      if (!this.html) {
+      if (this.html === undefined) {
         this.html = "";
       }
       this.innerHTML = this.html;
