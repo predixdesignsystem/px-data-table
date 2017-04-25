@@ -5,6 +5,7 @@
     "px-data-table.html"
   ],
   "ignore": [
+    "*.enc",
     "**/.*",
     "bower_components",
     "node_modules",
