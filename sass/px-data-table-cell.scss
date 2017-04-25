@@ -7,16 +7,9 @@
  * with the terms and conditions stipulated in the agreement/contract
  * under which the software has been supplied.
  */
-//
-// Sass for the "sketch" notion of the px-data-table component
-//
-// @author
-//
-/*
-THIS FILE SHOULD CONTAIN ONLY ABSTRACT/'SKETCH' THEME RULES, NOT SPECIFIC TO PREDIX BRANDING
-Predix branding rules go in px-data-table-predix.scss, not in this file.
-*/
+
 // Settings
+@import "px-colors-design/_settings.colors.scss";
 @import "px-defaults-design/_settings.defaults.scss";
 @import "px-mixins-design/_tools.mixins.scss";
 // Generic
@@ -37,7 +30,8 @@ $inuit-enable-table--small: true;
 $inuit-enable-table--large: true;
 $inuit-enable-table--rows: true;
 $inuit-enable-table--columns: true;
-$inuit-table-border-color: var(--px-data-table-border-color,$gray5);
+$inuit-table-border-color: var(--px-data-table-border-color,$gray10);
+$inuit-table-separator-color: var(--px-data-table-border-color,$gray5);
 
 @import "px-tables-design/_base.tables.scss";
 
@@ -45,6 +39,12 @@ $inuit-table-border-color: var(--px-data-table-border-color,$gray5);
 
 
 :host {
+  --px-dropdown-bg-color :$white;
+  --px-dropdown-bg-color--hover: $gray1;
+  --px-dropdown-bg-color--opened: $gray1;
+  --px-dropdown-border-color: transparent;
+  --px-dropdown-border-color--hover: transparent;
+  --px-dropdown-border-color--opened: transparent;
   @extend td;
   display: table-cell;
   vertical-align: middle;
@@ -55,6 +55,49 @@ $inuit-table-border-color: var(--px-data-table-border-color,$gray5);
 
 :host(.td__dropdown) {
   padding: 0!important;
+}
+
+:host(.cell__edit) {
+  background-color: var(--px-data-table-cell-background-color--edit,$inuit-forms-background);
+  border: $inuit-table-border-width double var(--px-data-table-cell-border-color--edit,$primary-default) !important;
+  & input, textarea {
+    outline: none;
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+:host(.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected){
+  border: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, $select-default);
+}
+
+:host(.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row){
+  border-top: $inuit-table-border-width double var(--px-data-table-row-border-top-color--selected, $select-default);
+  border-bottom: $inuit-table-border-width double var(--px-data-table-row-border-bottom-color--selected, $select-default);
+}
+
+:host(.cell--value__highlight--color__high){
+  background-color: var(--cell--value__highlight--color__high, rgba($status-red3, 0.25));
+}
+
+:host(.cell--value__highlight--color__medium){
+  background-color: var(--cell--value__highlight--color__medium, rgba($status-yellow3, 0.25));
+}
+
+:host(.cell--value__highlight--color__low){
+  background-color: var(--cell--value__highlight--color__low, rgba($status-blue3, 0.25));
+}
+
+:host(.selected) {
+  background-color: var(--px-data-table-cell--selected, $select-default);
+  color: var(--px-data-table-cell-text-color--selected, $white);
+  border-top: $inuit-table-border-width double var(--px-data-table-row-border-top-color--selected, $select-default) !important;
+  border-bottom: $inuit-table-border-width double var(--px-data-table-row-border-bottom-color--selected, $select-default) !important;
+
+}
+
+.cell--value--icon__validation-failed {
+  color: var(--px-data-table-cell-text-color-validation--failed, $status-red3);
 }
 
 .viewing {

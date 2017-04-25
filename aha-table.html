@@ -23,9 +23,7 @@
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser u-mb-">
-        <px-dropdown display-value="{{localize('Show/Hide Column')}}">
-          <px-dropdown-content max-cont-character-width="100" class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
-          </px-dropdown-content>
+        <px-dropdown display-value="{{localize('Show/Hide Column')}}" items='{{_columnChooserItems}}' multi hide-selected>
         </px-dropdown>
       </div>
     </template>
@@ -103,7 +101,6 @@
                       on-validate="_handleValidateEvent"
                       cell-type="{{column.type}}"
                       dropdown-items="{{column.dropdownItems}}"
-                      dropdown-bounds="{{scrollBody}}"
                       cell-display-value="{{_readContent(internalRow, column)}}"
                       cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
                       cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
@@ -248,8 +245,7 @@
        */
       pageSize: {
         type: Number,
-        value: 10,
-        observer : '_setPageSize'
+        value: 10
       },
       /**
        * Property to set the visibility of the table pagination controls.
@@ -293,7 +289,9 @@
       },
       _internalData: {
         type: Array,
-        value: function(){return [];}
+        value: function(){
+          return [];
+        }
       },
       /**
        * Array holding the column names in their displayed order
@@ -301,7 +299,9 @@
        */
       _columnChooserItems: {
         type: Array,
-        computed: '_computeColumnChooserItems(meta, meta.*)'
+        value: function() {
+          return [];
+        }
       },
       /**
        * Whether we're currently displaying an insertion column (when dragging columns)
@@ -332,10 +332,8 @@
       },
       //scroll body html element
       scrollBody: {
-        type: HTMLElement,
-        value: function() {
-          Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
-        }
+        type: String,
+        value: '#scrollBodyTableContainer'
       },
     },
 
@@ -343,17 +341,17 @@
       '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
       '_updateDisplayedRows(pageSize)', // when the size of the page changes
       '_dataChanged(data.*)',
-      '_columnChooserChanged(_columnChooserItems.*)',
+      '_computeColumnChooserItems(meta, meta.*)',
       '_computeIfColumnFilterEnabled(meta.splices, filterable, meta.*, selectable, singleSelect)'
     ],
 
     listeners: {
-      'validate': '_handleValidateEvent'
+      'validate': '_handleValidateEvent',
+      'px-dropdown-selection-changed': '_columnChooserChanged'
     },
 
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
-      this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
       if(this.selectable) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
       var boundHandler = this._columnChanged.bind(this);
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
@@ -557,12 +555,12 @@
     _generateMetaFromData: function() {
       for(var prop in this.data[0]) {
         var previousNode,
-          notFound = this.meta.every(function(column, index) {
-            if(column.name === prop) {
-              return false;
-            }
-            return true;
-          });
+            notFound = this.meta.every(function(column, index) {
+              if(column.name === prop) {
+                return false;
+              }
+              return true;
+            });
 
         // if column not found
         if(notFound) {
@@ -582,6 +580,7 @@
         filterable: this.filterable,
         editable: false,
         required: false,
+        hide: false,
         selectAll: isSelectAll,
         validate: function(){ return {'passedValidation': true};}
       });
@@ -711,10 +710,6 @@
     },
 
     /******* Update Displayed rows when major changes ****/
-
-    _setPageSize: function() {
-      this.$.pagination.setPageSize(this.pageSize);
-    },
 
     _updateDisplayedRows: function() {
       var fromPage,
@@ -1323,37 +1318,26 @@
 
     /********* Hide/Show columns *********/
 
-    _columnChooserChanged: function(dropdownItem) {
-
-      //watch for checked changed only
-      if(dropdownItem.path.indexOf('checked') !== -1) {
-
-        //parse index of item that has changed
-        var index = dropdownItem.path.match(/\.#(\d+)./)[1];
-        if(index) {
-          var columnName = dropdownItem.base[index].key,
-              checked = dropdownItem.value;
-
-          if(checked) {
-            this.showColumn(columnName);
-          }
-          else {
-            this.hideColumn(columnName);
-          }
-        }
+    _columnChooserChanged: function(evt) {
+      if(evt.detail.selected) {
+        this.showColumn(evt.detail.key);
+      }
+      else {
+        this.hideColumn(evt.detail.key);
       }
     },
 
-    _computeColumnChooserItems: function(meta) {
-
-      var items = [];
-      meta.forEach(function(column, index) {
-        if(column.name !== '_selected' && column.name !== 'insertion-indicator') {
-          items.push({ key: column.name, val: column.label, checked: !column.hide});
-        }
-      });
-
-      return items;
+    _computeColumnChooserItems: function() {
+      // debounce, since meta and meta.* change very often when building the table
+      this.debounce('computeItems', function() {
+        var items = [];
+        this.meta.forEach(function(column, index) {
+          if(column.name !== '_selected' && column.name !== 'insertion-indicator' && !column.disableHide) {
+            items.push({ key: column.name, val: column.label, selected: !column.hide});
+          }
+        });
+        this.set('_columnChooserItems', items);
+      }, 5);
     },
 
     /**
@@ -1524,7 +1508,7 @@
     _getSortingIcon: function(sortable, column, sortingColumn, descending) {
       var sortingIcon = ' ';
       if(sortable && sortingColumn === column.name) {
-        sortingIcon = descending ? 'fa:fa-caret-down' : 'fa:fa-caret-up';
+        sortingIcon = descending ? 'fa:fa-arrow-down' : 'fa:fa-arrow-up';
       }
       return sortingIcon;
     },

@@ -32,19 +32,14 @@
         <div class="flex__item cell--container">
           <span role="gridcell">
             <px-dropdown
-              value="{{cellValue}}"
-              bound-target="{{dropdownBounds}}"
+              class="px-dropdown-content"
+              selected="{{cellValue}}"
+              select-by="val"
               display-value="{{cellDisplayValue}}"
-              content-anchor="{{_cellAnchor}}"
-              on-change="saveCell">
-              <px-dropdown-content
-                class="px-dropdown-content"
-                extend-dropdown="true"
-                extend-dropdown-by="25"
-                max-cont-character-width="{{dropdownMaxCharacterWidth}}"
-                allow-outside-scroll="true"
-                items="{{dropdownItems}}">
-              </px-dropdown-content>
+              on-px-dropdown-selection-changed="saveCell"
+              allow-outside-scroll="true"
+              button-style="bare"
+              items="{{dropdownItems}}">
             </px-dropdown>
           </span>
         </div>
@@ -134,10 +129,6 @@
           value: function(){return [];},
           notify: true,
           observer: '_setDropdownItem'
-        },
-        dropdownBounds:{
-          type: HTMLElement,
-          value: null
         },
         cellSelected:{
           type: Boolean,
@@ -319,7 +310,7 @@
           Polymer.dom(this.$$('.cell--edit')).querySelector('input,select,textarea').value = value;
         }
         else {
-          value = evt.target.value;
+          value = evt.detail.val;
         }
         this.fire('save', {newValue: value});
       },

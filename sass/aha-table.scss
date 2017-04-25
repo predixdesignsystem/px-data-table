@@ -7,16 +7,9 @@
  * with the terms and conditions stipulated in the agreement/contract
  * under which the software has been supplied.
  */
-//
-// Sass for the "sketch" notion of the px-data-table component
-//
-// @author
-//
-/*
-THIS FILE SHOULD CONTAIN ONLY ABSTRACT/'SKETCH' THEME RULES, NOT SPECIFIC TO PREDIX BRANDING
-Predix branding rules go in px-data-table-predix.scss, not in this file.
-*/
+
 // Settings
+@import "px-colors-design/_settings.colors.scss";
 @import "px-defaults-design/_settings.defaults.scss";
 @import "px-mixins-design/_tools.mixins.scss";
 // Generic
@@ -36,9 +29,10 @@ $inuit-enable-validation-states : true;
 $inuit-enable-table--fixed: true;
 $inuit-enable-table--small: true;
 $inuit-enable-table--large: true;
-$inuit-enable-table--rows: true;
+$inuit-enable-table--cells: true;
 $inuit-enable-table--columns: true;
-$inuit-table-border-color: var(--px-data-table-cell-border-color, $gray5);
+$inuit-table-border-color: var(--px-data-table-cell-border-color, $gray10);
+$inuit-table-separator-color: var(--px-data-table-cell-border-color, $gray5);
 
 @import "px-tables-design/_base.tables.scss";
 
@@ -51,8 +45,24 @@ $inuit-enable-btn--disabled: true;
 
 @import "px-buttons-design/_objects.buttons.scss";
 
-.btn--bare__pagination {
-  width: 32px;
+:host {
+  display: block;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.table {
+  @extend table;
+  display: table !important;
+  margin-bottom: 0rem;
+}
+
+.table--rows {
+  border-top-width: 0;
+}
+
+th {
+  text-align: left;
 }
 
 .th {
@@ -62,20 +72,20 @@ $inuit-enable-btn--disabled: true;
   border-top: 0;
   border-left: 0;
   border-right: 0;
+  font-weight: bold;
+  color: var(--px-data-table-header-text-color, inherit);
+  background-color: var(--px-data-table-header-background-color, inherit);
 }
 
+.table--columns .th {
+  border-right: $inuit-table-border-width solid $inuit-table-border-color;
+}
 
 // making th--no-borders class specific enough to override other table.table.aha-table, etc. selectors
 .th--no-borders.th--no-borders.th--no-borders {
   border-top: 0;
   border-left: 0;
   border-right: 0;
-}
-
-.table {
-  @extend table;
-  display: table !important;
-  margin-bottom: 0rem;
 }
 
 .tr {
@@ -92,29 +102,12 @@ $inuit-enable-btn--disabled: true;
   padding-right: var(--px-data-table-padding-right);
 }
 
-:host {
-  display: block;
-  overflow-x: hidden;
-  width: 100%;
-}
-
-.pagination {
-  float: right;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
 .scroll-body {
   display: block;
   overflow-x: auto;
   overflow-y: hidden;
-  margin-bottom: 1rem;
   padding-left: 1px; /*firefox border collapse fix*/
   padding-right: 1px; /*firefox border collapse fix*/
-}
-
-th {
-  text-align: left;
 }
 
 .column-head {
@@ -130,12 +123,23 @@ label {
   margin: 0;
 }
 
+.sorted-text {
+  color: var(--px-data-table-cell-text-color--sorted, $select-default);
+}
+
 .sorted-text-hover:hover {
+  color: var(--px-data-table-sorted-text--hover, $select-hover);
   cursor: pointer;
 }
 
+.sorted-text iron-icon {
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-left: $inuit-base-spacing-unit--tiny;
+}
+
 .no-results {
-  color: var(--px-data-table-results-text-color--none,$gray6);
+  color: var(--px-data-table-results-text-color--none,$gray8);
   height: 2rem;
   align-items: center;
 }
@@ -177,6 +181,7 @@ label {
   min-width:4px;
   width:4px;
   padding: 0;
+  background-color: var(--px-data-table-insertion-indicator-td-background-color, $primary-default);
 }
 
 .insertion-indicator.insertion-indicator.insertion-indicator {
@@ -185,6 +190,82 @@ label {
   min-width:4px;
   width:4px;
   padding: 0;
+  background-color: var(--px-data-table-insertion-indicator-td-background-color, $primary-default);
+}
+
+.striped:nth-child(even) {
+  background-color: var(--px-data-table-background-color-striped--even, $gray1);
+}
+
+.dragged {
+  color: var(--px-data-table-text-color--dragged, $primary-default);
+}
+
+.text-input--filter {
+  background-color: var(--px-data-table-text-input-background-color--filter, $white);
+}
+
+.text-input--filter::-ms-clear {
+  display: none;
+}
+
+.tr--filter {
+  background-color: var(--px-data-table-tr--filter, $gray4);
+}
+
+.selected-cell__selected.selected-cell__selected {
+  background-color: var(--px-data-table-cell-background-color--selected, $select-default);
+  border: 1px double var(--px-data-table-cell-border-color--selected, $select-default) !important;
+}
+
+.cell--value__validation-failed{
+  border: $inuit-table-border-width double var(--px-data-table-cell-border-validation--failed, $status-red3) !important;
+}
+
+.cell--value__highlight--color__high{
+  background-color: var(--cell--value__highlight--color__high, rgba($status-red3, 0.25));
+}
+
+.cell--value__highlight--color__medium{
+  background-color: var(--cell--value__highlight--color__medium, rgba($status-yellow3, 0.25));
+}
+
+.cell--value__highlight--color__low{
+  background-color: var(--cell--value__highlight--color__low, rgba($status-blue3, 0.25));
+}
+
+.pagination {
+  border-bottom: 1px solid $inuit-table-border-color;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.paginationContainer, .pagesize {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rowsPerPage {
+  color: $gray10;
+}
+
+.btn--bare__pagination {
+  width: 32px;
+}
+
+.btn--pagination:focus {
+  outline: 0;
+}
+
+.btn--pagination--number {
+  background-color: var(--px-data-table-btn-pagination-number-background-color, $select-default);
+  color: var(--px-data-table-btn-pagination-number-text-color,$white);
+  &:hover {
+    background-color: var(--px-data-table-btn-pagination-number-background-color--hover,$select-default);
+    color: var(--px-data-table-btn-pagination-number-text-color--hover, $white);
+  }
 }
 
 // Trumps
