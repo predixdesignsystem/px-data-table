@@ -218,7 +218,8 @@
       //sortedColumn: sorted column name
       sortedColumn: {
         type: String,
-        value: ""
+        value: "",
+        observer: "_filterSortAndUpdateDisplayedTable"
       },
       // the column names that are filtered on
       filteredColumns: {

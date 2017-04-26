@@ -98,6 +98,8 @@ Custom property | Description | Default
         filterable="{{filterable}}"
         striped="{{striped}}"
         table-columns="{{tableColumns}}"
+        sorted-column="{{sortedColumn}}"
+        descending="{{sortDescending}}"
         table-rows="{{tableRows}}"
         selectable="{{selectable}}"
         selected-rows="{{selectedRows}}"
@@ -294,6 +296,21 @@ Custom property | Description | Default
         type: String,
         value: 'en'
       }
+    },
+
+    /**
+     * Sort the selected column on start.
+     */
+    sortedColumn: {
+      type: String,
+    },
+
+    /**
+     * Sort the selected column in descend/ascend order
+     */
+    sortDescending: {
+      type: Boolean,
+      value: true
     }
 
     /**
