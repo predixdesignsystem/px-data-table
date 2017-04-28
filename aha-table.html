@@ -127,6 +127,7 @@
                      id="pagination"
                      number-of-items="{{numberOfItems}}"
                      page-size="{{pageSize}}"
+                     page-size-options="{{pageSizeOptions}}"
                      first-item-index-to-display="{{firstItemIndex}}"
                      language="{{language}}">
       </px-pagination>
@@ -335,6 +336,18 @@
         type: String,
         value: '#scrollBodyTableContainer'
       },
+      /**
+       * Options displayed in the page size dropdown.
+       */
+      pageSizeOptions: {
+        type: Array,
+        value: function() {
+          return [{"key":"1","val":"10"},
+                  {"key":"2","val":"20"},
+                  {"key":"3","val":"50"},
+                  {"key":"4","val":"100"}];
+        }
+      }
     },
 
     observers: [
@@ -1336,6 +1349,8 @@
             items.push({ key: column.name, val: column.label, selected: !column.hide});
           }
         });
+        // TODO: figure out how to clear selectedValues so that this overrides
+        // or splice the new ones into the selectedValues array so they appear by default
         this.set('_columnChooserItems', items);
       }, 5);
     },

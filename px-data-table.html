@@ -110,7 +110,8 @@ Custom property | Description | Default
         enable-column-resize="{{enableColumnResize}}"
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
-        language="{{language}}">
+        language="{{language}}"
+        page-size-options="{{pageSizeOptions}}">
         <content></content>
       </aha-table>
     </div>
@@ -282,6 +283,18 @@ Custom property | Description | Default
       includeAllColumns: {
         type: Boolean,
         value: false
+      },
+      /**
+       * Options displayed in the page size dropdown.
+       */
+      pageSizeOptions: {
+        type: Array,
+        value: function() {
+          return [{"key":"1","val":"10"},
+                  {"key":"2","val":"20"},
+                  {"key":"3","val":"50"},
+                  {"key":"4","val":"100"}];
+        }
       },
       /**
        * A valid IETF language tag as a string that `app-localize-behavior` will
