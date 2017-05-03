@@ -1,10 +1,11 @@
 {
   "name": "px-data-table",
-  "version": "2.0.0",
+  "version": "2.1.5",
   "main": [
     "px-data-table.html"
   ],
   "ignore": [
+    "*.enc",
     "**/.*",
     "bower_components",
     "node_modules",
@@ -26,7 +27,8 @@
     "iron-a11y-keys-behavior": "~1.1.9",
     "px-polymer-font-awesome": "^1.1.0",
     "px-validation": "^0.4.0",
-    "px-dropdown": "^3.1.0"
+    "px-dropdown": "^3.1.0",
+    "px-localize-behavior": "^0.0.3"
   },
   "devDependencies": {
     "px-starter-kit-design": "^0.7.0",

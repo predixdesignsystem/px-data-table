@@ -30,7 +30,7 @@
       <!--dropdown template  -->
       <template is="dom-if" if="{{_isEqual(cellType, 'dropdown')}}">
         <div class="flex__item cell--container">
-          <span>
+          <span role="gridcell">
             <px-dropdown
               value="{{cellValue}}"
               bound-target="{{dropdownBounds}}"
@@ -52,7 +52,7 @@
       <!-- in place editing template -->
       <template is="dom-if" if="{{_isEqual(cellType,'string')}}">
         <div class="flex cell--container">
-          <span id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation, cellDisplayValue)}}">{{cellDisplayValue}}
+          <span role="gridcell" id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation, cellDisplayValue)}}">{{cellDisplayValue}}
             <template is="dom-if" if="{{cellDisplayTooltip}}">
               <px-tooltip
                 orientation="top"
@@ -65,9 +65,9 @@
         </div>
       </template>
       <!-- icon template -->
-      <template is="dom-if" if="{{isNotEqual(cellType, 'dropdown')}}">
+      <template is="dom-if" if="{{cellEditable}}">
         <div class="fa fa-fw cell-status--container">
-          <iron-icon class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
+          <iron-icon id="editicon" role="button" aria-label="Click to edit cell" class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
             icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
           </iron-icon>
           <template is="dom-if" if="{{!cellValidation.passedValidation}}">
@@ -84,7 +84,7 @@
     </span>
     <!-- html content -->
     <template is="dom-if" if="{{_isEqual(cellType,'html')}}">
-      <aha-html-echo html="{{cellDisplayValue}}"></aha-html-echo>
+      <aha-html-echo role="gridcell" html="{{cellDisplayValue}}"></aha-html-echo>
     </template>
   </template>
 </template>
@@ -326,14 +326,14 @@
       _getEditCellClass: function(editing){
         var classList = ['cell--edit'];
         if(!editing){
-          classList.push('visuallyhidden');
+          classList.push('hidden');
         }
         return classList.join(' ');
       },
       _getValueCellClass: function(editing, valid, cellDisplayValue){
         var classList = ['cell--value'];
         if(editing){
-          classList.push('visuallyhidden');
+          classList.push('hidden');
         }
         if (!cellDisplayValue){
           classList.push('cell--value__empty');
@@ -426,7 +426,7 @@
       }
     },
     onHtmlChanged: function() {
-      if (!this.html) {
+      if (this.html === undefined) {
         this.html = "";
       }
       this.innerHTML = this.html;

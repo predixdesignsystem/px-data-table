@@ -33,6 +33,7 @@ Predix branding rules go in px-data-table-predix.scss, not in this file.
 
 @import "px-layout-design/_objects.layout.scss";
 
+$fa-font-path : "../../font-awesome/fonts";
 $inuit-enable-btn--bare           : true;
 @import "px-button-group-design/_objects.button-group.scss";
 @import "px-button-group-design/_objects.button-group.scss";

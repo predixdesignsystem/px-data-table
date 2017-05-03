@@ -3,6 +3,7 @@
 <link rel="import" href="px-data-table-column.html">
 <link rel="import" href="px-data-table-highlight.html">
 <link rel="import" href="../px-validation/px-validation.html">
+<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
 
 
 <!--
@@ -99,9 +100,11 @@ Custom property | Description | Default
         enable-column-resize="{{enableColumnResize}}"
         filterable="{{filterable}}"
         first-item-index="{{firstItemIndex}}"
+        greedy-height-with-scroll="{{greedyHeightWithScroll}}"
         hide-pagination-control="{{hidePaginationControl}}"
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
+        language="{{language}}"
         meta="{{meta}}"
         page-size="{{pageSize}}"
         selectable="{{selectable}}"
@@ -113,7 +116,6 @@ Custom property | Description | Default
         table-columns="{{tableColumns}}"
         table-rows="{{tableRows}}"
         total-entries="{{totalEntries}}"
-        greedy-height-with-scroll="{{greedyHeightWithScroll}}"
         >
         <content></content>
       </aha-table>
@@ -124,6 +126,10 @@ Custom property | Description | Default
 <script>
   Polymer({
     is: 'px-data-table',
+
+    behaviors: [
+      PxLocalizeBehavior
+    ],
 
     properties: {
 
@@ -357,6 +363,18 @@ Custom property | Description | Default
       	type: Boolean,
         reflectToAttribute: true,
         value: false
+      },
+
+      /**
+       * A valid IETF language tag as a string that `app-localize-behavior` will
+       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+       *
+       * See https://github.com/PolymerElements/app-localize-behavior for API
+       * documentation and more information.
+       */
+      language: {
+        type: String,
+        value: 'en'
       }
     },
 

@@ -49,6 +49,8 @@ $inuit-enable-btn--primary: true;
 $inuit-enable-btn--icon: true;
 $inuit-enable-btn--disabled: true;
 
+
+$fa-font-path : "../../font-awesome/fonts";
 @import "px-buttons-design/_objects.buttons.scss";
 
 .btn--bare__pagination {

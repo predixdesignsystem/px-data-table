@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
 
 <!--
 Element that provides pagination.
@@ -16,7 +17,7 @@ Element that provides pagination.
     <style include="aha-table-styles"></style>
 
 			<span class="pagesize">
-				<span class="u-mr--">{{pagesizetitle}}</span>
+				<span class="u-mr--">{{localize('Rows per page')}}</span>
 				<select id="pageSizeSelect" on-change="_changeDropDown">
           <option selected>10</option>
           <option>20</option>
@@ -27,7 +28,7 @@ Element that provides pagination.
 
 			<span class="u-pl+ u-ml+ summary">
 				<span>{{firstItemIndexToDisplay}}</span>-<span>{{lastItemIndexToDisplay}}</span>
-				<span>{{itemoftext}}</span>
+				<span>{{localize('of')}}</span>
 				<span>{{numberOfItems}}</span>
 			</span>
 
@@ -51,6 +52,10 @@ Element that provides pagination.
 <script>
   Polymer({
     is: 'px-pagination',
+
+    behaviors: [
+      PxLocalizeBehavior
+    ],
 
     properties: {
 
@@ -107,6 +112,9 @@ Element that provides pagination.
     // --------------------
     // PUBLIC METHODS
     // --------------------
+    _goBackToFirstPage: function() {
+      this.goToPageNumber(1);
+    },
 
     /**
      * Go to the next page or trigger request to chagne page
