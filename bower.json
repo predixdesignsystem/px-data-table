@@ -38,6 +38,7 @@
     "px-demo": "^1.4.8",
     "px-layout-design": "^0.4.5",
     "px-tables-design": "^1.1.9",
-    "px-button-group-design": "^1.0.6"
+    "px-button-group-design": "^1.0.6",
+    "web-component-tester": "Polymer/web-component-tester#^4.0.0"
   }
 }
