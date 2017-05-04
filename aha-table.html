@@ -148,7 +148,7 @@
                 first-item-index-to-display="{{firstItemIndex}}"
                 id="pagination"
                 language="{{language}}"
-                number-of-items="{{numberOfItems}}"
+                number-of-items="{{_adaptedNumberOfItems}}"
                 page-size="{{pageSize}}"
                 >
             </px-pagination>
@@ -448,39 +448,6 @@
 
     attached: function () {
       this._isAttached = true;
-
-      window.addEventListener("load", this._initializeTable(this));
-    },
-
-    detached: function () {
-      window.removeEventListener("load", this._initializeTable);
-    },
-
-    //This function will enable pageSize change at the initial load
-    _initializeTable: function (aha) {
-      var pagi = Polymer.dom(aha.root).querySelector('#pagination');
-      var th = Polymer.dom(aha.root).querySelector('.tr.aha-table');
-      var scrollBody = Polymer.dom(aha.root).querySelector('.scroll-body.aha-table');
-      var rowHeight = 42;
-
-      var closestPageSize;
-
-      var optimizePageSize = Math.floor((Number(scrollBody.offsetHeight) - Number(th.offsetHeight)) / rowHeight);
-      if (optimizePageSize <= 10) {
-        closestPageSize = 10;
-      } else if ((10 < optimizePageSize) &&(optimizePageSize <= 20)) {
-        closestPageSize = 20;
-      } else if ((20 < optimizePageSize) &&(optimizePageSize <= 50)) {
-        closestPageSize = 50;
-      } else {
-        closestPageSize = 100;
-      }
-
-      if (!this.dataRemote) {
-        pagi._updatePageSize(closestPageSize);
-      } else {
-        this.fire('px-data-table-init', { pageSize: closestPageSize });
-      }
     },
 
     _columnChanged: function (info) {

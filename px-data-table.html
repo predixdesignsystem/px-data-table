@@ -92,7 +92,7 @@ Custom property | Description | Default
   <template>
     <style include="px-data-table-styles"></style>
 
-    <div class$="{{_getFlexClass(greedyHeightWithScroll)}}">
+    <div>
       <aha-table
         data-remote="{{dataRemote}}"
         data="{{tableData}}"
@@ -100,7 +100,6 @@ Custom property | Description | Default
         enable-column-resize="{{enableColumnResize}}"
         filterable="{{filterable}}"
         first-item-index="{{firstItemIndex}}"
-        greedy-height-with-scroll="{{greedyHeightWithScroll}}"
         hide-pagination-control="{{hidePaginationControl}}"
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
@@ -247,7 +246,8 @@ Custom property | Description | Default
        */
       totalEntries: {
         type: Number,
-        value: 10
+        value: 10,
+        notify: true
       },
 
       /**
@@ -265,7 +265,8 @@ Custom property | Description | Default
        */
       firstItemIndex: {
         type: Number,
-        value: 1
+        value: 1,
+        notify: true
       },
 
       /**
@@ -352,20 +353,6 @@ Custom property | Description | Default
       },
 
       /**
-       * Property to enable greedy table with vertical scroll bar. By enabling
-       * this feature, px-data-table will take full space allocated, and space
-       * will be filled with rows of data. Any rows that can't fit in available
-       * space, there will be vertical scroll allow user to see remaining rows.
-       * For allowing this property work smoothly, container wrapper for
-       * px-data-table needs to have display: flex and flex: 1 define.
-       **/
-      greedyHeightWithScroll: {
-      	type: Boolean,
-        reflectToAttribute: true,
-        value: false
-      },
-
-      /**
        * A valid IETF language tag as a string that `app-localize-behavior` will
        * use to localize this component. Refer to px-localize-behavior for currently supported languages.
        *
@@ -376,12 +363,6 @@ Custom property | Description | Default
         type: String,
         value: 'en'
       }
-    },
-
-    _getFlexClass: function(greedyHeightWithScroll) {
-      return ['flex',
-        this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : ''
-      ].join(' ');
     },
 
     /**
