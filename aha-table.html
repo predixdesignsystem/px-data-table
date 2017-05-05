@@ -12,7 +12,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
-<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="../px-icon/px-icon.html">
 <link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
 <link rel="import" href="css/aha-table-styles.html">
 
@@ -29,7 +29,7 @@
     </template>
     <div class="scroll-body">
 
-      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}" role="grid">
+      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableCells, tableColumns)}}" role="grid">
         <!-- Header -->
         <div class="tr" role="row">
           <template is="dom-repeat" items="{{meta}}" as="column">
@@ -57,7 +57,7 @@
             <span class$="{{_getFilterHeaderClass(column)}}" role="gridcell" hidden$="{{column.hide}}">
               <!-- select all checkbox -->
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                <span class="flex flex--center" hidden$="{{column.hide}}">
+                <span class="flex" hidden$="{{column.hide}}">
                   <template is="dom-if" if="{{!singleSelect}}">
                     <input id="selectAllCheckbox" role="checkbox" aria-label="Click to select or deselect all rows" type="checkbox" on-change="_clickSelectAll"/>
                   </template>
@@ -81,7 +81,7 @@
               <!-- selected column checkbox or radio button -->
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
                 <span role="gridcell" class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
-                  <span class="flex flex--center flex--middle">
+                  <span class="flex flex--middle">
                     <template is="dom-if" if="{{!singleSelect}}">
                       <input role="checkbox" aria-label="Click to select row" type="checkbox" checked="{{internalRow._selected::change}}"/>
                     </template>
@@ -107,7 +107,6 @@
                       cell-editable="{{column.editable}}"
                       cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
                       column-name="{{column.name}}"
-                      dropdown-max-character-width="{{column.maxColumnCharacterWidth}}"
                       on-tap="_clickCell">
                   </px-data-table-cell>
                 </template>
@@ -183,8 +182,8 @@
         type: Boolean,
         value: false
       },
-      //tableRows: if table row is striped
-      tableRows: {
+      //tableCells: if table row is striped
+      tableCells: {
         type: Boolean,
         value: false
       },
@@ -1432,17 +1431,17 @@
         doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
         if (highlightObj.value && doHighlight) {
           if(highlightObj.highlightValue === 'low'){
-            highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+            highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
           } else if(highlightObj.highlightValue === 'medium'){
             if (highlightEl.highlightValue === 'high') {
-              highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+              highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
             }
           } else {
-            highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+            highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
           }
         } else if(!highlightObj.value) {
           highlightObj.value = doHighlight;
-          highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+          highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
         }
 
         if (highlightEl.highlightType === 'row') {
@@ -1501,7 +1500,7 @@
       return source === target;
     },
     _getHeaderClass: function(item) {
-      var classList = ['th', 'th--no-borders', 'aha-' + item.name + '-th', 'u-p0'];
+      var classList = ['th', 'aha-' + item.name + '-th', 'u-p0'];
       if(this.sortable && item.sortable) {
         classList.push('sortable');
       }
@@ -1523,19 +1522,19 @@
     _getSortingIcon: function(sortable, column, sortingColumn, descending) {
       var sortingIcon = ' ';
       if(sortable && sortingColumn === column.name) {
-        sortingIcon = descending ? 'fa:fa-arrow-down' : 'fa:fa-arrow-up';
+        sortingIcon = descending ? 'px:arrow-down' : 'px:arrow-up';
       }
       return sortingIcon;
     },
     _getSortingClass: function(sortable, column, sortingColumn, descending) {
-      var classList = 'sorting fa';
+      var classList = 'sorting';
       if(sortable && sortingColumn !== column.name) {
         classList = classList + ' visuallyhidden';
       }
       return classList;
     },
     _getTextSortingClass: function(sortable, column, sortingColumn) {
-      var classList = ['column-head', 'u-m--'];
+      var classList = ['column-head', 'u-mv--', 'u-mh-'];
       if (column.name === '_selected'){
         classList.push('column-head--selected');
       };
@@ -1547,10 +1546,10 @@
       }
       return classList.join(' ');
     },
-    _getTableClass: function(tableRows, tableColumns) {
-      var classList = ['table', 'table--small'];
-      if(tableRows) {
-        classList.push('table--rows');
+    _getTableClass: function(tableCells, tableColumns) {
+      var classList = ['table'];
+      if(tableCells) {
+        classList.push('table--cells');
       }
       if(tableColumns) {
         classList.push('table--columns');

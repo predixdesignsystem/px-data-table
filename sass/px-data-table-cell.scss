@@ -31,7 +31,7 @@ $inuit-enable-table--large: true;
 $inuit-enable-table--rows: true;
 $inuit-enable-table--columns: true;
 $inuit-table-border-color: var(--px-data-table-border-color,$gray10);
-$inuit-table-separator-color: var(--px-data-table-border-color,$gray5);
+$inuit-table-separator-color: var(--px-data-table-separator-color,$gray5);
 
 @import "px-tables-design/_base.tables.scss";
 
@@ -51,10 +51,13 @@ $inuit-table-separator-color: var(--px-data-table-border-color,$gray5);
   ::-ms-clear {
    display: none;
   }
+  max-height: calculateRem(40px);
+  height: calculateRem(40px);
 }
 
 :host(.td__dropdown) {
-  padding: 0!important;
+  padding-top: 0!important;
+  padding-bottom: 0!important;
 }
 
 :host(.cell__edit) {
@@ -72,24 +75,24 @@ $inuit-table-separator-color: var(--px-data-table-border-color,$gray5);
 }
 
 :host(.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row){
-  border-top: $inuit-table-border-width double var(--px-data-table-row-border-top-color--selected, $select-default);
-  border-bottom: $inuit-table-border-width double var(--px-data-table-row-border-bottom-color--selected, $select-default);
+  border-top: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, $select-default);
+  border-bottom: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, $select-default);
 }
 
-:host(.cell--value__highlight--color__high){
-  background-color: var(--cell--value__highlight--color__high, rgba($status-red3, 0.25));
+:host(.px-data-table-highlight--high){
+  background-color: var(--px-data-table-highlight--high, rgba($status-red3, 0.4));
 }
 
-:host(.cell--value__highlight--color__medium){
-  background-color: var(--cell--value__highlight--color__medium, rgba($status-yellow3, 0.25));
+:host(.px-data-table-highlight--medium){
+  background-color: var(--px-data-table-highlight--medium, rgba($status-yellow3, 0.4));
 }
 
-:host(.cell--value__highlight--color__low){
-  background-color: var(--cell--value__highlight--color__low, rgba($status-blue3, 0.25));
+:host(.px-data-table-highlight--low){
+  background-color: var(--px-data-table-highlight--low, rgba($status-blue3, 0.4));
 }
 
 :host(.selected) {
-  background-color: var(--px-data-table-cell--selected, $select-default);
+  background-color: var(--px-data-table-cell-background-color--selected, $select-default);
   color: var(--px-data-table-cell-text-color--selected, $white);
   border-top: $inuit-table-border-width double var(--px-data-table-row-border-top-color--selected, $select-default) !important;
   border-bottom: $inuit-table-border-width double var(--px-data-table-row-border-bottom-color--selected, $select-default) !important;
@@ -101,14 +104,16 @@ $inuit-table-separator-color: var(--px-data-table-border-color,$gray5);
 }
 
 .viewing {
-  max-height: calculateRem(30px);
   overflow: hidden;
   white-space: nowrap;
 }
 
 .ddviewing {
-  max-height: calculateRem(30px);
   white-space: nowrap;
+}
+
+px-dropdown {
+  width: 100%;
 }
 
 $px-data-table-cell-inner-height : calculateRem(18px);
@@ -117,13 +122,13 @@ $px-data-table-cell-inner-height : calculateRem(18px);
   & input {
     max-height: $px-data-table-cell-inner-height;
   }
-  &  input, textarea {
+  &  input {
     border: none;
     outline: none;
     background-color: transparent;
     box-shadow: 0 0 0 0;
   }
-  & input[type=text]:focus, textarea:focus {
+  & input[type=text]:focus {
     box-shadow: 0 0 0 0;
   }
 }

@@ -31,8 +31,8 @@ $inuit-enable-table--small: true;
 $inuit-enable-table--large: true;
 $inuit-enable-table--cells: true;
 $inuit-enable-table--columns: true;
-$inuit-table-border-color: var(--px-data-table-cell-border-color, $gray10);
-$inuit-table-separator-color: var(--px-data-table-cell-border-color, $gray5);
+$inuit-table-border-color: var(--px-data-table-border-color, $gray10);
+$inuit-table-separator-color: var(--px-data-table-separator-color, $gray5);
 
 @import "px-tables-design/_base.tables.scss";
 
@@ -40,6 +40,7 @@ $inuit-table-separator-color: var(--px-data-table-cell-border-color, $gray5);
 
 $inuit-enable-btn--bare: true;
 $inuit-enable-btn--primary: true;
+$inuit-enable-btn--tertiary: true;
 $inuit-enable-btn--icon: true;
 $inuit-enable-btn--disabled: true;
 
@@ -57,8 +58,13 @@ $inuit-enable-btn--disabled: true;
   margin-bottom: 0rem;
 }
 
-.table--rows {
-  border-top-width: 0;
+.table--cells th {
+  border-bottom: 1px solid $inuit-table-border-color;
+}
+
+.table--cells #pagination {
+  border-left: 1px solid $inuit-table-separator-color;
+  border-right: 1px solid $inuit-table-separator-color;
 }
 
 th {
@@ -69,23 +75,14 @@ th {
   @extend th;
   display: table-cell;
   resize: horizontal;
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
   font-weight: bold;
   color: var(--px-data-table-header-text-color, inherit);
   background-color: var(--px-data-table-header-background-color, inherit);
 }
 
-.table--columns .th {
-  border-right: $inuit-table-border-width solid $inuit-table-border-color;
-}
-
-// making th--no-borders class specific enough to override other table.table.aha-table, etc. selectors
-.th--no-borders.th--no-borders.th--no-borders {
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
+iron-icon.sorting {
+  width: 16px;
+  height: 16px;
 }
 
 .tr {
@@ -96,10 +93,13 @@ th {
   @extend td;
   display: table-cell;
   vertical-align: middle;
+}
+
+.table.aha-table .td.td {
   padding-top: var(--px-data-table-padding-top);
   padding-bottom: var(--px-data-table-padding-bottom);
-  padding-left: var(--px-data-table-padding-left);
-  padding-right: var(--px-data-table-padding-right);
+  padding-left: var(--px-data-table-padding-left, $inuit-base-spacing-unit--small);
+  padding-right: var(--px-data-table-padding-right, $inuit-base-spacing-unit--small);
 }
 
 .scroll-body {
@@ -117,6 +117,7 @@ th {
     white-space: nowrap;
     user-select: none;
   }
+  min-height: calculateRem(16px);
 }
 
 label {
@@ -130,12 +131,6 @@ label {
 .sorted-text-hover:hover {
   color: var(--px-data-table-sorted-text--hover, $select-hover);
   cursor: pointer;
-}
-
-.sorted-text iron-icon {
-  width: 0.8rem;
-  height: 0.8rem;
-  margin-left: $inuit-base-spacing-unit--tiny;
 }
 
 .no-results {
@@ -161,10 +156,6 @@ label {
 
 .header--container {
   justify-content: space-between;
-}
-
-.aha-_selected-th {
-  width:100px;
 }
 
 .aha-insertion-indicator-th.aha-insertion-indicator-th.aha-insertion-indicator-th {
@@ -194,7 +185,7 @@ label {
 }
 
 .striped:nth-child(even) {
-  background-color: var(--px-data-table-background-color-striped--even, $gray1);
+  background-color: var(--px-data-table-background-color-striped--even, rgba($black,0.07));
 }
 
 .dragged {
@@ -210,7 +201,12 @@ label {
 }
 
 .tr--filter {
-  background-color: var(--px-data-table-tr--filter, $gray4);
+  background-color: var(--px-data-table-tr--filter, $white);
+}
+
+.tr--filter span.td.td.aha-table {
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .selected-cell__selected.selected-cell__selected {
@@ -222,16 +218,16 @@ label {
   border: $inuit-table-border-width double var(--px-data-table-cell-border-validation--failed, $status-red3) !important;
 }
 
-.cell--value__highlight--color__high{
-  background-color: var(--cell--value__highlight--color__high, rgba($status-red3, 0.25));
+.px-data-table-highlight--high{
+  background-color: var(--px-data-table-highlight--high, rgba($status-red3,0.4));
 }
 
-.cell--value__highlight--color__medium{
-  background-color: var(--cell--value__highlight--color__medium, rgba($status-yellow3, 0.25));
+.px-data-table-highlight--medium{
+  background-color: var(--px-data-table-highlight--medium, rgba($status-yellow3,0.4));
 }
 
-.cell--value__highlight--color__low{
-  background-color: var(--cell--value__highlight--color__low, rgba($status-blue3, 0.25));
+.px-data-table-highlight--low{
+  background-color: var(--px-data-table-highlight--low, rgba($status-blue3,0.4));
 }
 
 .pagination {
@@ -251,21 +247,25 @@ label {
   color: $gray10;
 }
 
-.btn--bare__pagination {
-  width: 32px;
+.paginationContainer .btn {
+  padding-left: calculateRem(7px);
+  padding-right: calculateRem(7px);
+  line-height: calculateRem(22px);
+  height: auto;
 }
 
-.btn--pagination:focus {
-  outline: 0;
+.paginationContainer .btn + .btn {
+  margin-left: calculateRem(6px);
 }
 
-.btn--pagination--number {
-  background-color: var(--px-data-table-btn-pagination-number-background-color, $select-default);
-  color: var(--px-data-table-btn-pagination-number-text-color,$white);
-  &:hover {
-    background-color: var(--px-data-table-btn-pagination-number-background-color--hover,$select-default);
-    color: var(--px-data-table-btn-pagination-number-text-color--hover, $white);
-  }
+.btn#next {
+  padding: 0;
+  margin-left: calculateRem(13px);
+}
+.btn#previous {
+  padding: 0;
+  margin-left: calculateRem(20px);
+  margin-right: calculateRem(7px);
 }
 
 // Trumps

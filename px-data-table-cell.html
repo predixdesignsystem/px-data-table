@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../px-tooltip/px-tooltip.html">
-<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="../px-icon/px-icon.html">
 <link rel="import" href="px-edit-cell.html">
 <link rel="import" href="../px-dropdown/px-dropdown.html">
 
@@ -22,9 +22,6 @@
                  on-input="_cellValueChanged"
                  on-blur="saveCell"
                  value="{{cellValue}}" />
-        </template>
-        <template is="dom-if" if="{{_isEqual(cellType, 'text')}}">
-          <textarea required$="{{column.required}}" on-blur="saveCell">{{cellValue}}</textarea>
         </template>
       </px-edit-cell>
       <!--dropdown template  -->
@@ -146,18 +143,6 @@
           value: function(){
             return {value: false};
           }
-        },
-        /**
-        * the maximum character width the dropdown will be using to determine
-        * when to show tooltips
-        *
-        * @param dropdownMaxCharacterWidth
-        * @type Number
-        * @default 0
-        */
-        dropdownMaxCharacterWidth: {
-          type: Number,
-          value:0
         },
         _showEditIcon:{
           type: Boolean,
@@ -309,8 +294,11 @@
           value = this._undoValue;
           Polymer.dom(this.$$('.cell--edit')).querySelector('input,select,textarea').value = value;
         }
-        else {
+        else if(this._dropdownItem) {
           value = evt.detail.val;
+        }
+        else {
+          value = evt.target.value;
         }
         this.fire('save', {newValue: value});
       },
@@ -337,11 +325,11 @@
       _getCellIcon: function(showEditIcon, editing, valid){
         if(valid) {
           if(showEditIcon) {
-            return 'fa:fa-pencil';
+            return 'px:edit';
           }
         }
         else {
-          return 'fa:fa-exclamation-circle';
+          return 'px:failure';
         }
       },
       _getCellIconClass: function(showEditIcon, editing, valid){
@@ -378,9 +366,9 @@
         }
       },
       _clearHighlight: function(){
-        this.toggleClass('cell--value__highlight--color__high', false);
-        this.toggleClass('cell--value__highlight--color__medium', false);
-        this.toggleClass('cell--value__highlight--color__low', false);
+        this.toggleClass('px-data-table-highlight--high', false);
+        this.toggleClass('px-data-table-highlight--medium', false);
+        this.toggleClass('px-data-table-highlight--low', false);
       }
     });
   </script>

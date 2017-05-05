@@ -12,7 +12,7 @@
 @import "px-colors-design/_settings.colors.scss";
 
 :host{
-  --cell--value__highlight--high--color: rgba($status-red3, 0.25);
-  --cell--value__highlight--medium--color: rgba($status-yellow3, 0.25);
-  --cell--value__highlight--low--color: rgba($status-blue3, 0.25);
+  --cell--value__highlight--high--color: $status-red2;
+  --cell--value__highlight--medium--color: $status-yellow2;
+  --cell--value__highlight--low--color: $status-blue2;
 }

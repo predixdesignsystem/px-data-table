@@ -47,7 +47,7 @@
               single-select="{{props.singleSelect.value}}"
               show-column-chooser="{{props.showColumnChooser.value}}"
               table-columns="{{props.tableColumns.value}}"
-              table-rows="{{props.tableRows.value}}"
+              table-cells="{{props.tableCells.value}}"
               hide-pagination-control="{{props.hidePaginationControl.value}}"
               include-all-columns="{{props.includeAllColumns.value}}"
               language="{{props.language.value}}">
@@ -88,16 +88,7 @@
         value: function(){
           return [
             { configName: "Simple",
-              striped: false,
-              filterable: false,
-              sortable: false,
-              selectable: false,
-              singleSelect: false,
-              showColumnChooser: false,
-              tableColumns: false,
-              tableRows: true,
-              hidePaginationControl: true,
-              includeAllColumns: true },
+              configReset: true },
 
             { configName: "Complex",
               striped: true,
@@ -107,7 +98,7 @@
               singleSelect: true,
               showColumnChooser: true,
               tableColumns: false,
-              tableRows: false,
+              tableCells: false,
               hidePaginationControl: false,
               includeAllColumns: true }
           ]
@@ -177,7 +168,7 @@
         inputType: 'toggle'
       },
 
-      tableRows: {
+      tableCells: {
         type: Boolean,
         defaultValue: false,
         inputType: 'toggle'

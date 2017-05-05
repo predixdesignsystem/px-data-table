@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="../px-icon/px-icon.html">
 <link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
 <link rel="import" href="../px-dropdown/px-dropdown.html"/>
 
@@ -24,25 +24,21 @@ Element that provides pagination.
         <px-dropdown selected="{{pageSize}}" display-value="{{pageSize}}" select-by="val" button-style="bare--primary" items='{{pageSizeOptions}}'></px-dropdown>
 			</span>
 
-      <div>
-        <span class="u-pl+ u-ml+ summary">
-          <span>{{firstItemIndexToDisplay}}</span>-<span>{{lastItemIndexToDisplay}}</span>
+      <div class="paginationContainer u-ml+">
+        <span class="summary">
+          <strong>{{firstItemIndexToDisplay}}-{{lastItemIndexToDisplay}}</strong>
           <span>{{localize('of')}}</span>
           <span>{{numberOfItems}}</span>
         </span>
-        <span class="paging">
-          <button
-            class$="{{_getPageupClass(currentPage)}}"
-            on-click="goToPreviousPage"><iron-icon icon="fa:fa-arrow-left"></iron-icon></button>
-          <span class="pager">
-            <template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
-              <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
-            </template>
-          </span>
-          <button
-            class$="{{_getPagedownClass(currentPage, pageCount)}}"
-            on-click="goToNextPage"><iron-icon icon="fa:fa-arrow-right"></iron-icon></button>
-        </span>
+        <button id="previous" class$="btn {{_getPageupClass(currentPage)}}" on-click="goToPreviousPage">
+          <iron-icon icon="px:arrow-left"></iron-icon>
+        </button>
+        <template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
+          <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
+        </template>
+        <button id="next" class$="btn {{_getPagedownClass(currentPage, pageCount)}}" on-click="goToNextPage">
+          <iron-icon icon="px:arrow-right"></iron-icon>
+        </button>
       </div>
 
     </div>
@@ -159,20 +155,20 @@ Element that provides pagination.
     },
 
     _getPageupClass: function(currentPage) {
-      return [currentPage === 1 ? "btn--disabled" : "", 'btn btn--bare btn--pagination previous'].join(' ');
+      return [currentPage === 1 ? "btn--disabled" : "", 'btn--bare'].join(' ');
     },
 
     _getPagedownClass: function(currentPage, pageCount) {
-      return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", 'btn btn--bare btn--pagination next'].join(' ');
+      return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", 'btn--bare'].join(' ');
     },
 
     _getPagerButtonClass: function(buttonValue, currentPage) {
       var classList = ['btn'];
       if(buttonValue === currentPage) {
-        classList.push('btn--icon', 'u-ml0', 'btn--pagination--number');
+        classList.push('btn--tertiary u-ml');
       }
       else {
-        classList.push('btn--bare', 'u-ml0', 'btn--bare__pagination');
+        classList.push('btn--bare');
       }
       return classList.join(' ');
     },
