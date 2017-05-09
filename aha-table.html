@@ -101,6 +101,7 @@
                       on-validate="_handleValidateEvent"
                       cell-type="{{column.type}}"
                       dropdown-items="{{column.dropdownItems}}"
+                      placeholder="{{column.placeholder}}"
                       cell-display-value="{{_readContent(internalRow, column)}}"
                       cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
                       cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
@@ -749,8 +750,11 @@
           sortingColumn;
       if(column && column.sortable) {
         sortingColumn = column.name;
-        if(sortingColumn === this.sortedColumn) {
+        if(sortingColumn === this.sortedColumn && !this.descending) {
           this.set('descending', !this.descending);
+        }
+        else if(sortingColumn === this.sortedColumn && this.descending) {
+          this.set('sortedColumn', '');
         } else {
           this.set('sortedColumn', sortingColumn);
           this.set('descending', false); // always start ascending when click new column
@@ -965,7 +969,6 @@
         evt.currentTarget.cellValue = this._getInternalDataAt(row, column.name);
         evt.currentTarget.cellDisplayValue = this._readContent(row, column);
         this.data[row.row.dataIndex][column.name] = newValue;
-        // this.notifyPath('data.' + row.row.dataIndex + '.' + column.name, newValue);
 
       }
 
@@ -996,9 +999,11 @@
       if(this.selectable) {
         this._selectRow(row, this.$.recordList.indexForElement(evt.currentTarget));
 
-        // always just make sure selectAll checkbox is unchecked when 1 row is clicked
-        selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
-        selectAllCheckbox.checked = false;
+        if(!this.singleSelect) {
+          // always just make sure selectAll checkbox is unchecked when 1 row is clicked
+          selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+          selectAllCheckbox.checked = false;
+        }
 
         // if sorted row is selected, then it is no longer selected
         if(this.sortedColumn === '_selected') {

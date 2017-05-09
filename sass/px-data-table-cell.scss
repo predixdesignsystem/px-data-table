@@ -39,12 +39,6 @@ $inuit-table-separator-color: var(--px-data-table-separator-color,$gray5);
 
 
 :host {
-  --px-dropdown-bg-color :$white;
-  --px-dropdown-bg-color--hover: $gray1;
-  --px-dropdown-bg-color--opened: $gray1;
-  --px-dropdown-border-color: transparent;
-  --px-dropdown-border-color--hover: transparent;
-  --px-dropdown-border-color--opened: transparent;
   @extend td;
   display: table-cell;
   vertical-align: middle;
@@ -144,6 +138,7 @@ $px-data-table-cell-inner-height : calculateRem(18px);
 
 .cell-status--container {
   margin-left: auto;
+  width: calculateRem(14px);
 }
 
 .cell--status--container--icon {

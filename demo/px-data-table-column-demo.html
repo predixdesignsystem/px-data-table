@@ -45,6 +45,7 @@
                 name="first"
                 type="string"
                 label=""
+                placeholder="First Name"
                 sortable="true"
                 editable="true"
                 filterable="true">
@@ -133,7 +134,7 @@
               label: "First Name",
               filterable: false,
               sortable: false,
-              editable: true,
+              editable: false,
               type: "dropdown",
               dropdownItems: [{"key":"one","val":"Mike"},{"key":"two","val":"Maria"},{"key":"three","val":"Wei"}],
               parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "' hide-pagination-control>", "</px-data-table>"] }
