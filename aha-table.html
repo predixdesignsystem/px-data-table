@@ -641,7 +641,7 @@
       this._updateDisplayedRows();
 
       //update selected rows when changing the filter if the select all is enabled
-      selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+      var selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
       if(selectAllCheckbox !== null && selectAllCheckbox !== undefined && selectAllCheckbox.checked){
           selectAllCheckbox.checked=false;
       }
@@ -965,7 +965,7 @@
         evt.currentTarget.cellValue = this._getInternalDataAt(row, column.name);
         evt.currentTarget.cellDisplayValue = this._readContent(row, column);
         this.data[row.row.dataIndex][column.name] = newValue;
-        this.notifyPath('data.' + row.row.dataIndex + '.' + column.name, newValue);
+        // this.notifyPath('data.' + row.row.dataIndex + '.' + column.name, newValue);
 
       }
 
