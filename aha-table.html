@@ -103,6 +103,7 @@
                       on-validate="_handleValidateEvent"
                       cell-type="{{column.type}}"
                       dropdown-items="{{column.dropdownItems}}"
+                      placeholder="{{column.placeholder}}"
                       dropdown-bounds="{{scrollBody}}"
                       cell-display-value="{{_readContent(internalRow, column)}}"
                       cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
@@ -630,7 +631,7 @@
       this._updateDisplayedRows();
 
       //update selected rows when changing the filter if the select all is enabled
-      selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+      var selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
       if(selectAllCheckbox !== null && selectAllCheckbox !== undefined && selectAllCheckbox.checked){
           selectAllCheckbox.checked=false;
       }

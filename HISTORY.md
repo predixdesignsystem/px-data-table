@@ -1,3 +1,7 @@
+v2.1.6
+==================
+* fixed #128 and added placeholder #107
+
 v2.1.5
 ==================
 * fixed #93 - font-awesome path issue & 404s in certain app configurations
