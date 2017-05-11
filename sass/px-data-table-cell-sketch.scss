@@ -96,6 +96,7 @@ $px-data-table-cell-inner-height : calculateRem(18px);
 
 .cell-status--container {
   margin-left: auto;
+  width: calculateRem(14px);
 }
 
 .cell--status--container--icon {
