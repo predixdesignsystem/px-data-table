@@ -53,11 +53,7 @@
                               on-drop="_dragDropColumnHeader" 
                               on-dragend="_dragEndColumnHeader">
                               <div class="flex header--container">
-                                  <span
-                                      class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}"
-                                      on-tap="_sort">
-                                      {{column.label}}
-                                      <iron-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></iron-icon>
+                                  <span class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}" on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></iron-icon>
                                   </span>
                                   <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                                       <template is="dom-if" if="{{enableColumnResize}}">
