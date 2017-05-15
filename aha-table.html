@@ -23,7 +23,7 @@
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class$="flex columnChooser u-mb- {{_getColumnChooserClass(greedyHeightWithScroll)}}">
-        <px-dropdown display-value="Show/Hide Column">
+        <px-dropdown display-value="{{localize('Show/Hide Column')}}">
           <px-dropdown-content 
             max-cont-character-width="100" 
             class="px-dropdown-content" 
@@ -124,6 +124,7 @@
                     on-save="_save"
                     on-tap="_clickCell"
                     on-validate="_handleValidateEvent"
+                    placeholder="{{column.placeholder}}"
                     row-highlighted="[[internalRow._highlight]]"
                     >
                   </px-data-table-cell>
@@ -135,31 +136,9 @@
         <template is="dom-if" if="{{!displayedRows.length}}">
           <div class="flex flex--center no-results">No Results</div>
         </template>
-        <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-          <template is="dom-if" if="{{!column.hide}}">
-            <px-data-table-cell
-              on-save="_save"
-              row-highlighted="[[internalRow._highlight]]"
-              cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
-              cell-selected="[[internalRow._selected]]"
-              on-validate="_handleValidateEvent"
-              cell-type="{{column.type}}"
-              dropdown-items="{{column.dropdownItems}}"
-              placeholder="{{column.placeholder}}"
-              dropdown-bounds="{{scrollBody}}"
-              cell-display-value="{{_readContent(internalRow, column)}}"
-              cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
-              cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
-              cell-editable="{{column.editable}}"
-              cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
-              column-name="{{column.name}}"
-              dropdown-max-character-width="{{column.maxColumnCharacterWidth}}"
-              on-tap="_clickCell">
-            </px-data-table-cell>
-          </template>
-        </template>
       </div>
     </div>
+    
     <!-- Pagination controls -->
     <div class$="pagination {{_getPaginationClass(greedyHeightWithScroll)}} {{_getPaginationVisibility(hidePaginationControl)}}">
       <px-pagination
