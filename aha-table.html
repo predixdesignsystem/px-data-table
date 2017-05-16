@@ -22,7 +22,7 @@
     <content id="columndefs"></content>
 
     <template is="dom-if" if="{{showColumnChooser}}">
-      <div class$="flex columnChooser u-mb- {{_getColumnChooserClass(greedyHeightWithScroll)}}">
+      <div class$="flex columnChooser u-mb-">
         <px-dropdown display-value="{{localize('Show/Hide Column')}}">
           <px-dropdown-content 
             max-cont-character-width="100" 
@@ -33,7 +33,7 @@
         </px-dropdown>
       </div>
     </template>
-    <div class$="scroll-body {{_getScrollBodyClass(greedyHeightWithScroll)}}">
+    <div class$="scroll-body">
 
       <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}" role="grid">
       <!-- Header -->
@@ -140,7 +140,7 @@
     </div>
 
     <!-- Pagination controls -->
-    <div class$="pagination {{_getPaginationClass(greedyHeightWithScroll)}} {{_getPaginationVisibility(hidePaginationControl)}}">
+    <div class$="pagination {{_getPaginationVisibility(hidePaginationControl)}}">
       <px-pagination
         class$="{{_getPaginationVisibility(hidePaginationControl)}}"
         data-remote="{{dataRemote}}"
@@ -202,12 +202,6 @@
       //striped: if table row is striped
       striped: {
         type: Boolean,
-        value: false
-      },
-      //greedyHeightWithScroll: table will expand in height to fill container
-      greedyHeightWithScroll: {
-        type: Boolean,
-        reflectToAttribute: true,
         value: false
       },
       //tableRows: if table row is striped
@@ -1600,16 +1594,6 @@
         this.striped ? 'striped' : '',
         row.isNew ? 'is-new' : ''
       ].join(' ');
-    },
-
-    _getPaginationClass: function(greedyHeightWithScroll) {
-      return this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : '';
-    },
-    _getScrollBodyClass: function(greedyHeightWithScroll) {
-      return this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : '';
-    },
-    _getColumnChooserClass: function(greedyHeightWithScroll) {
-      return this.greedyHeightWithScroll ? 'greedy-height-with-scroll' : '';
     },
 
     _getHighlightValue: function (row, column, high) {

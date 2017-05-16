@@ -23,14 +23,3 @@ common/abstract rules go in px-data-table-sketch.scss, not in this file.
 @import "px-colors-design/_settings.colors.scss";
 @import 'px-data-table-sketch.scss';
 
-:host[greedy-height-with-scroll] {
-  display: var(--px-data-table-display-greedy-height-with-scroll, flex);
-  flex: var(--px-data-table-flex-greedy-height-with-scroll, 1);
-  flex-direction: var(--px-data-table-flex-direction-greedy-height-with-scroll, column);
-  height: var(--px-data-table-height-greedy-height-with-scroll, 100%);
-  width: var(--px-data-table-width-greedy-height-with-scroll, 100%);
-}
-
-.greedy-height-with-scroll.flex {
-  flex: var(--px-data-table-flex-div-flex-greedy-height-with-scroll, 1);
-}
