@@ -836,13 +836,13 @@ function runTests() {
 
     // Spot checks for correct table structure, cell values and control states
 
-    test('There should be 17 columns in the table1 fixture', function() {
+    test('There should be 17 columns in the myTable fixture', function() {
 
       // Select a div corresponding to a data row in the table
-      var divSelector = '#dataTable > .scroll-body.style-scope.aha-table > div > :nth-child(4)';
-      var divRow = document.querySelector(divSelector);
+      var divSelector = '#dataTable > .scroll-body.aha-table > div > :nth-child(4)';
+      var divRow = table5Fixture.querySelector(divSelector);
       // Select all <span> children of divRow
-      var childSpanSelector = ':nth-child(4) > .td.style-scope.aha-table';
+      var childSpanSelector = ':nth-child(4) > .td.aha-table';
       var columnCount = divRow.querySelectorAll(childSpanSelector).length;
       // There should be 17 such spans
       assert.equal(columnCount, 17);
@@ -854,7 +854,7 @@ function runTests() {
     });
     test('Row count for first table should be 26', function() {
       var fixture = document.getElementById('table1');
-      var selector = '.summary.style-scope.px-pagination :nth-child(4)';
+      var selector = '.summary.px-pagination :nth-child(4)';
       var span = fixture.querySelector(selector);
       assert.equal(span.innerHTML, '26');
     });
@@ -879,12 +879,12 @@ function runTests() {
     // The root element for pagination
     var paginationRoot = document.getElementById('pagination');
     // Selector for page 3 link
-    var span3Selector = '.paging.style-scope.px-pagination > span > :nth-child(3)';
+    var span3Selector = '.paging.px-pagination > span > :nth-child(3)';
     test('Pagination updates when page 3 link is clicked', function(done) {
       // Page 3 link
       var span3 = paginationRoot.querySelector(span3Selector);
       span3.addEventListener('click', function(e) {
-        var startCountSelector = 'span.summary.style-scope.px-pagination > :nth-child(1)';
+        var startCountSelector = 'span.summary.px-pagination > :nth-child(1)';
         // Element that shows starting record number in '<start>-<end> of <total> in Pagination'
         var startCount = paginationRoot.querySelector(startCountSelector);
         // startCount should show '21' when page 3 is clicked
@@ -1108,7 +1108,7 @@ function runTests() {
     });
 
     test('Table shows all data (26 rows) instead of 10.', function(done){
-        var selector = '.summary.style-scope.px-pagination :nth-child(4)';
+        var selector = '.summary.px-pagination :nth-child(4)';
         var span = table5Fixture.querySelector(selector);
         table5Fixture.setAttribute('hide-pagination-control', true);
         flush(function(){
@@ -1464,7 +1464,7 @@ function runTests() {
       });
 
       test('Pagination shows 1-10 of 100', function(){
-        var paginationSpan = document.getElementById('remoteData1').querySelector('.summary.style-scope.px-pagination');
+        var paginationSpan = document.getElementById('remoteData1').querySelector('.summary.px-pagination');
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
         assert.equal(paginationTextString, '1-10 of 100', 'Shows correct pagination counts.');
       });
@@ -1507,7 +1507,7 @@ function runTests() {
         dataTable.firstItemIndex = 11;
         dataTable.totalEntries = 50;
 
-        var paginationSpan = dataTable.querySelector('.summary.style-scope.px-pagination');
+        var paginationSpan = dataTable.querySelector('.summary.px-pagination');
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
         assert.equal(paginationTextString, '11-20 of 50', 'Shows correct pagination counts.');
 
@@ -1533,7 +1533,7 @@ function runTests() {
       });
       
       test('Pagination shows 11-20 of 100', function(){
-        var paginationSpan = document.getElementById('remoteData2').querySelector('.summary.style-scope.px-pagination');
+        var paginationSpan = document.getElementById('remoteData2').querySelector('.summary.px-pagination');
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
         assert.equal(paginationTextString, '11-20 of 100', 'Shows correct pagination counts.');
       });
@@ -1576,7 +1576,7 @@ function runTests() {
         dataTable.firstItemIndex = 1;
         dataTable.totalEntries = 50;
 
-        var paginationSpan = dataTable.querySelector('.summary.style-scope.px-pagination');
+        var paginationSpan = dataTable.querySelector('.summary.px-pagination');
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
         assert.equal(paginationTextString, '1-10 of 50', 'Shows correct pagination counts.');
 
@@ -1617,7 +1617,7 @@ function runTests() {
 
         assert.equal(pageSizeSelectDropdown.selectedIndex, 1); 
 
-        var paginationSpan = dataTable.querySelector('.summary.style-scope.px-pagination');
+        var paginationSpan = dataTable.querySelector('.summary.px-pagination');
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
         assert.equal(paginationTextString, '1-20 of 100', 'Shows correct pagination counts.');
       });
