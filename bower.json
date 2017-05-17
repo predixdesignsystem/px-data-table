@@ -1,10 +1,11 @@
 {
   "name": "px-data-table",
-  "version": "2.1.4",
+  "version": "2.1.6",
   "main": [
     "px-data-table.html"
   ],
   "ignore": [
+    "*.enc",
     "**/.*",
     "bower_components",
     "node_modules",
