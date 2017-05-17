@@ -198,10 +198,6 @@ label {
   background-color: var(--px-data-table-text-input-background-color--filter, $white);
 }
 
-.text-input--filter::-ms-clear {
-  display: none;
-}
-
 .tr--filter {
   background-color: var(--px-data-table-tr--filter, $white);
 }
