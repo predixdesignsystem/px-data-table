@@ -1,3 +1,7 @@
+v3.0.0
+==================
+* replace pxLocalizeBehavior with appLocalizeBehavior for localization
+
 v2.1.7
 ==================
 * fixed filter behavior #79 and #90
