@@ -1,5 +1,5 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, 
-  additionalDataFixture, updateSelectFixture, remoteDataFixture1, remoteDataFixture2, remoteDataFixture3, 
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture,
+  additionalDataFixture, updateSelectFixture, remoteDataFixture1, remoteDataFixture2, remoteDataFixture3,
   remoteDataFilteringFixture1, remoteDataFilteringFixture2, remoteDataSortingFixture1, remoteDataSortingFixture2;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
@@ -502,7 +502,7 @@ var data =[
   }
 ];
 
-var additionalData = [  
+var additionalData = [
   {
   "index": 26,
   "name": "Cooley Macdonald Two",
@@ -811,7 +811,7 @@ document.addEventListener("WebComponentsReady", function() {
 
 
 function runTests() {
-  
+
   suite('Unit Tests for Data Table', function() {
 
     test('Polymer exists', function() {
@@ -840,10 +840,7 @@ function runTests() {
 
       // Select a div corresponding to a data row in the table
       var divSelector = '#dataTable > .scroll-body.aha-table > div > :nth-child(4)';
-      var divRow = table5Fixture.querySelector(divSelector);
-      // Select all <span> children of divRow
-      var childSpanSelector = ':nth-child(4) > .td.aha-table';
-      var columnCount = divRow.querySelectorAll(childSpanSelector).length;
+      var columnCount = table5Fixture.querySelectorAll('aha-table px-data-table-column').length;
       // There should be 17 such spans
       assert.equal(columnCount, 17);
     });
@@ -901,17 +898,17 @@ function runTests() {
       var filterableTableRoot = document.querySelector('#table2');
       var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
       var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
-      lastNameFilter.addEventListener('input', function(e){
+      lastNameFilter.addEventListener('keyup', function(e){
         setTimeout(function() {
           var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
           var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
           assert.equal(secondReturnedRowFirstName.innerHTML.indexOf('Rita') >= 0, true);
           done(); // end the test
-        }, 0);
+        }, 1000);
       });
       // Trigger filter edit event and provide a filter value
       lastNameFilter.value = 'wo';
-      lastNameFilter.dispatchEvent(new Event('input'));
+      lastNameFilter.dispatchEvent(new Event('keyup'));
     });
 
     test('When selecting all, select only what is filtered', function(done){
@@ -1343,6 +1340,10 @@ function runTests() {
       });
       //
       test('hide column through column chooser', function(done){
+        var tb = table5Fixture.querySelector('aha-table'),
+            chooserContent = tb.querySelector('.columnChooser .px-dropdown-content'),
+            ddItems = chooserContent.querySelectorAll('li');
+
         var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
             chooserContent = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown-content'),
             ddItems = Polymer.dom(chooserContent.root).querySelectorAll('li');
@@ -1376,9 +1377,9 @@ function runTests() {
       });
 
       test('Column chooser registers new columns', function(done){
-        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-            chooserContent = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown-content'),
-            ddItems = Polymer.dom(chooserContent.root).querySelectorAll('li');
+        var tb = table5Fixture.querySelector('aha-table'),
+            chooserContent = tb.querySelector('.columnChooser .px-dropdown-content'),
+            ddItems = chooserContent.querySelectorAll('li');
 
         var noItems = ddItems.length;
         var newEl = Polymer.Base.create('px-data-table-column', {'name': 'whatevs', 'filterable': true});
@@ -1473,7 +1474,7 @@ function runTests() {
         var paginationPager = document.getElementById('remoteData1').querySelector('.pager.px-pagination');
         // note: classList does not have prototype Array methods
         var page1IconClassList = paginationPager.children[0].classList.toString().split(' ');
-        assert(page1IconClassList.indexOf('btn--icon') > -1 && page1IconClassList.indexOf('btn--pagination--number') > -1,  
+        assert(page1IconClassList.indexOf('btn--icon') > -1 && page1IconClassList.indexOf('btn--pagination--number') > -1,
           'Has btn-icon and btn--pagination--number classes.');
         assert.equal(page1IconClassList.indexOf('btn--bare'), -1, 'Does not have btn-bare class.');
       });
@@ -1482,7 +1483,7 @@ function runTests() {
         var paginationPager = document.getElementById('remoteData1').querySelector('.pager.px-pagination');
         // note: classList does not have prototype Array methods
         var page2IconClassList = paginationPager.children[1].classList.toString().split(' ');
-        assert(page2IconClassList.indexOf('btn--icon') === -1 && page2IconClassList.indexOf('btn--pagination--number') === -1,  
+        assert(page2IconClassList.indexOf('btn--icon') === -1 && page2IconClassList.indexOf('btn--pagination--number') === -1,
           'Has btn-icon and btn--pagination--number classes.');
         assert(page2IconClassList.indexOf('btn--bare') > -1, 'Does not have btn-bare class.');
       });
@@ -1514,7 +1515,7 @@ function runTests() {
         var paginationPager = dataTable.querySelector('.pager.px-pagination');
         // note: classList does not have prototype Array methods
         var pageNIconClass = paginationPager.children[page - 1].classList.toString().split(' ');
-        assert(pageNIconClass.indexOf('btn--icon') > -1 && pageNIconClass.indexOf('btn--pagination--number') > -1,  
+        assert(pageNIconClass.indexOf('btn--icon') > -1 && pageNIconClass.indexOf('btn--pagination--number') > -1,
           'Page '+page+' is selected.');
       });
 
@@ -1531,7 +1532,7 @@ function runTests() {
             rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
         assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
       });
-      
+
       test('Pagination shows 11-20 of 100', function(){
         var paginationSpan = document.getElementById('remoteData2').querySelector('.summary.px-pagination');
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
@@ -1542,7 +1543,7 @@ function runTests() {
         var paginationPager = document.getElementById('remoteData2').querySelector('.pager.px-pagination');
         // note: classList does not have prototype Array methods
         var page1IconClassList = paginationPager.children[0].classList.toString().split(' ');
-        assert(page1IconClassList.indexOf('btn--icon') === -1 && page1IconClassList.indexOf('btn--pagination--number') === -1,  
+        assert(page1IconClassList.indexOf('btn--icon') === -1 && page1IconClassList.indexOf('btn--pagination--number') === -1,
           'Has btn-icon and btn--pagination--number classes.');
         assert(page1IconClassList.indexOf('btn--bare') > -1, 'Does not have btn-bare class.');
       });
@@ -1551,7 +1552,7 @@ function runTests() {
         var paginationPager = document.getElementById('remoteData2').querySelector('.pager.px-pagination');
         // note: classList does not have prototype Array methods
         var page2IconClassList = paginationPager.children[1].classList.toString().split(' ');
-        assert(page2IconClassList.indexOf('btn--icon') > -1 && page2IconClassList.indexOf('btn--pagination--number') > -1,  
+        assert(page2IconClassList.indexOf('btn--icon') > -1 && page2IconClassList.indexOf('btn--pagination--number') > -1,
           'Has btn-icon and btn--pagination--number classes.');
         assert.equal(page2IconClassList.indexOf('btn--bare'), -1, 'Does not have btn-bare class.');
       });
@@ -1583,7 +1584,7 @@ function runTests() {
         var paginationPager = dataTable.querySelector('.pager.px-pagination');
         // note: classList does not have prototype Array methods
         var pageNIconClass = paginationPager.children[page - 1].classList.toString().split(' ');
-        assert(pageNIconClass.indexOf('btn--icon') > -1 && pageNIconClass.indexOf('btn--pagination--number') > -1,  
+        assert(pageNIconClass.indexOf('btn--icon') > -1 && pageNIconClass.indexOf('btn--pagination--number') > -1,
           'Page '+page+' is selected.');
       });
 
@@ -1594,7 +1595,7 @@ function runTests() {
       test('On change, it fires a `px-page-size-change-intent` event', function(done) {
         var dataTable = document.getElementById('remoteData3');
         var pageSizeSelectDropdown = dataTable.querySelector('#pageSizeSelect');
-        
+
 
         dataTable.addEventListener('px-page-size-change-intent', (evt) => {
           assert(true, 'Event is triggered');
@@ -1604,7 +1605,7 @@ function runTests() {
 
         pageSizeSelectDropdown.selectedIndex = 2;
         // trigger "change" even that would happen naturally in a browser
-        simulateChangeEvent(pageSizeSelectDropdown); 
+        simulateChangeEvent(pageSizeSelectDropdown);
       });
 
 
@@ -1615,7 +1616,7 @@ function runTests() {
         dataTable.pageSize = 20;
         dataTable.totalEntries = 100;
 
-        assert.equal(pageSizeSelectDropdown.selectedIndex, 1); 
+        assert.equal(pageSizeSelectDropdown.selectedIndex, 1);
 
         var paginationSpan = dataTable.querySelector('.summary.px-pagination');
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
@@ -1627,7 +1628,7 @@ function runTests() {
     suite('Filtering', function () {
 
       test('Send event with combined filter string for one column', function (done) {
-        
+
           var dataTable = document.querySelector('#remoteDataFiltering1');
           var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
           var lastNameFilter = dataTable.querySelector(lastNameFilterSelector);
@@ -1643,7 +1644,7 @@ function runTests() {
       });
 
       test('Send event with combined filter string for all columns', function (done) {
-        
+
           var filters = [{name:'first', userEntry:'ab'}, {name:'last', userEntry:'cd'}];
 
           var dataTable = document.querySelector('#remoteDataFiltering2');
@@ -1673,7 +1674,7 @@ function runTests() {
     suite('Sorting', function () {
 
       test('Send event with combined sort string for one column', function (done) {
-        
+
           var dataTable = document.querySelector('#remoteDataSorting1');
           var sortHeadingSelector = 'div > div.tr .th:nth-of-type(2) .column-head.sorted-text-hover';
           var sortHeading = dataTable.querySelector(sortHeadingSelector);
@@ -1688,7 +1689,7 @@ function runTests() {
       });
 
       test('Send event with combined sort string for one column', function (done) {
-        
+
           var dataTable = document.querySelector('#remoteDataSorting2');
           var sortHeadingSelector = 'div > div.tr .th:nth-of-type(2) .column-head.sorted-text-hover';
           var sortHeading = dataTable.querySelector(sortHeadingSelector);
