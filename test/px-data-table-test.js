@@ -1344,10 +1344,6 @@ function runTests() {
             chooserContent = tb.querySelector('.columnChooser .px-dropdown-content'),
             ddItems = chooserContent.querySelectorAll('li');
 
-        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-            chooserContent = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown-content'),
-            ddItems = Polymer.dom(chooserContent.root).querySelectorAll('li');
-
         //column chooser should exists
         assert.isDefined(chooserContent);
 
