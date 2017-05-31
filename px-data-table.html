@@ -3,7 +3,7 @@
 <link rel="import" href="px-data-table-column.html">
 <link rel="import" href="px-data-table-highlight.html">
 <link rel="import" href="../px-validation/px-validation.html">
-<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 
 
 <!--
@@ -106,6 +106,7 @@ Custom property | Description | Default
         language="{{language}}"
         meta="{{meta}}"
         page-size="{{pageSize}}"
+        resources="[[resources]]"
         selectable="{{selectable}}"
         selected-rows="{{selectedRows}}"
         show-column-chooser="{{showColumnChooser}}"
@@ -127,7 +128,7 @@ Custom property | Description | Default
     is: 'px-data-table',
 
     behaviors: [
-      PxLocalizeBehavior
+      Polymer.AppLocalizeBehavior
     ],
 
     properties: {
@@ -353,7 +354,7 @@ Custom property | Description | Default
       },
 
       /**
-       * A valid IETF language tag as a string that `app-localize-behavior` will
+       * A valid IETF language tag as a string that `px-localize-behavior` will
        * use to localize this component. Refer to px-localize-behavior for currently supported languages.
        *
        * See https://github.com/PolymerElements/app-localize-behavior for API
@@ -362,6 +363,26 @@ Custom property | Description | Default
       language: {
         type: String,
         value: 'en'
+      },
+      /**
+      * Use the key for localization if value for  language is missing. Should
+      * always be true for  our components
+      */
+      useKeyIfMissing: {
+        type: Boolean,
+        value: true
+      },
+      /**
+       * Localizable strings for this component
+       */
+      resources: {
+        type: Object,
+        value: function() {
+          return {
+            'en': {
+            }
+          }
+        }
       }
     },
 
@@ -397,12 +418,12 @@ Custom property | Description | Default
     // ------------------------------
     // Remote Data Source Events
     // ------------------------------
-    
+
     /**
      * Fired when the data table initializes
      * Sends out initialization information (such as suggested page size based on available space)
      * Only fired if dataRemote==true
-     * 
+     *
      * Information is stored in `evt.detail`:
      * ```
      * document.getElementById("mytable").addEventListener("px-data-table-init", function(e) {
@@ -416,7 +437,7 @@ Custom property | Description | Default
     /**
      * Fired when the user interaction indicates an intention to change the page
      * Only fired if dataRemote==true
-     * 
+     *
      * Information is stored in `evt.detail`:
      * ```
      * document.getElementById("mytable").addEventListener("px-page-change-intent", function(e) {
@@ -429,7 +450,7 @@ Custom property | Description | Default
     /**
      * Fired when the user interaction indicates an intention to change the page size
      * Only fired if dataRemote==true
-     * 
+     *
      * Information is stored in `evt.detail`:
      * ```
      * document.getElementById("mytable").addEventListener("px-page-size-change-intent", function(e) {
@@ -443,14 +464,14 @@ Custom property | Description | Default
      * Fired when the user interaction indicates an intention to change the filter
      * Captures filter data for all filtered columns
      * Only fired if dataRemote==true
-     * 
+     *
      * Information is stored in `evt.detail`:
      * ```
      * document.getElementById("mytable").addEventListener("px-filter-change-intent", function(e) {
      *   var data = e.detail;
      *   console.log("Intended filters: ", JSON.parse(data));
      * });
-     * // ==> [{name:'columnA',userEntry:'asdf'},{name:'columnB',userEntry:'qwert'}] 
+     * // ==> [{name:'columnA',userEntry:'asdf'},{name:'columnB',userEntry:'qwert'}]
      * ```
      * @event px-filter-change-intent
      */
@@ -458,14 +479,14 @@ Custom property | Description | Default
      * Fired when the user interaction indicates an intention to change the sort
      * Captures sort data for all sorted columns (currently only single sort allowed through UI)
      * Only fired if dataRemote==true
-     * 
+     *
      * Information is stored in `evt.detail`:
      * ```
      * document.getElementById("mytable").addEventListener("px-sort-change-intent", function(e) {
      *   var data = e.detail;
      *   console.log("Intended sort: ", JSON.parse(data));
      * });
-     * // ==> [{name:'columnA',direction:'ascending'}] or [{name:'columnB',direction:'descending'}] 
+     * // ==> [{name:'columnA',direction:'ascending'}] or [{name:'columnB',direction:'descending'}]
      * ```
      * @event px-sort-change-intent
      */

@@ -1,6 +1,6 @@
 {
   "name": "px-data-table",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "main": [
     "px-data-table.html"
   ],
@@ -28,7 +28,7 @@
     "px-polymer-font-awesome": "^1.1.0",
     "px-validation": "^0.4.0",
     "px-dropdown": "^3.1.0",
-    "px-localize-behavior": "^0.0.3"
+    "app-localize-behavior": "^1.0.2"
   },
   "devDependencies": {
     "px-starter-kit-design": "^0.7.0",

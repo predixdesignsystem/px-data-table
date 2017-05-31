@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
-<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 
 <!--
 Element that provides pagination.
@@ -54,7 +54,7 @@ Element that provides pagination.
     is: 'px-pagination',
 
     behaviors: [
-      PxLocalizeBehavior
+      Polymer.AppLocalizeBehavior
     ],
 
     properties: {
@@ -99,7 +99,41 @@ Element that provides pagination.
         type: Number,
         notify: true,
         value: 1,
-        observer: '_conditionallyUpdateDisplay'
+        observer: '_conditionallyUpdateDisplay',
+        readOnly: true
+      },
+      /**
+       * A valid IETF language tag as a string that `px-localize-behavior` will
+       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+       *
+       * See https://github.com/PolymerElements/app-localize-behavior for API
+       * documentation and more information.
+       */
+      language: {
+        type: String,
+        value: 'en'
+      },
+      /**
+      * Use the key for localization if value for  language is missing. Should
+      * always be true for  our components
+      */
+      useKeyIfMissing: {
+        type: Boolean,
+        value: true
+      },
+      /**
+       * Localizable strings for this component
+       */
+      resources: {
+        type: Object,
+        value: function() {
+          return {
+            'en': {
+              'of': 'of',
+              'Rows per page': 'Rows per page'
+            }
+          }
+        }
       }
 
     },
@@ -161,7 +195,7 @@ Element that provides pagination.
     setPageSize: function(size) {
       this._updatePageSize(size);
     },
-    
+
     /**
      * Update the display given current property values
      */
@@ -180,7 +214,7 @@ Element that provides pagination.
           } else {
             this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
           }
-        }  
+        }
 
       // if remote data
       } else {
@@ -209,13 +243,13 @@ Element that provides pagination.
       }
     },
 
-    /* 
+    /*
      * If firstItemIndexToDisplay has changed, then update the display
      * Condition: dataRemote is true
-     * 
-     * If dataRemote is false, calling updateDisplay would 
+     *
+     * If dataRemote is false, calling updateDisplay would
      *   cause a circular update cycle
-     * 
+     *
      * Necessary if dataRemote is true to ensure that the currentPage
      *   and lastItemIndexToDisplay are appropriately updated
      */
@@ -225,13 +259,13 @@ Element that provides pagination.
       }
     },
 
-    /* 
+    /*
      * If pageSize has changed, then update the display
      * Condition: dataRemote is true
-     * 
-     * If dataRemote is false, calling _updatePageSize would 
+     *
+     * If dataRemote is false, calling _updatePageSize would
      *   cause a circular update cycle
-     * 
+     *
      * Necessary if dataRemote is true to ensure that the currentPage
      *   and lastItemIndexToDisplay are appropriately updated
      */
@@ -248,9 +282,9 @@ Element that provides pagination.
 
     /*
      * Fires a page change request event
-     * 
+     *
      * Only called if remoteData==true
-     * 
+     *
      * Information is stored in `evt.detail`:
      * ```
      * document.getElementById("mytable").addEventListener("px-page-change-intent", function(e) {
@@ -266,9 +300,9 @@ Element that provides pagination.
 
     /*
      * Fires a page size change request event
-     * 
+     *
      * Only called if remoteData==true
-     * 
+     *
      * Information is stored in `evt.detail`:
      * ```
      * document.getElementById("mytable").addEventListener("px-page-size-change-intent", function(e) {
@@ -398,7 +432,7 @@ Element that provides pagination.
         this._triggerPageChangeRequest(parseInt(evt.target.textContent));
       }
     }
-    
+
 
   });
 </script>

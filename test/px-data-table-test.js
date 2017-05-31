@@ -901,7 +901,7 @@ function runTests() {
       var filterableTableRoot = document.querySelector('#table2');
       var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
       var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
-      lastNameFilter.addEventListener('keyup', function(e){
+      lastNameFilter.addEventListener('input', function(e){
         setTimeout(function() {
           var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
           var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
@@ -911,7 +911,7 @@ function runTests() {
       });
       // Trigger filter edit event and provide a filter value
       lastNameFilter.value = 'wo';
-      lastNameFilter.dispatchEvent(new Event('keyup'));
+      lastNameFilter.dispatchEvent(new Event('input'));
     });
 
     test('When selecting all, select only what is filtered', function(done){

@@ -13,7 +13,7 @@
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
 <link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
-<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="css/aha-table-styles.html">
 
 <dom-module id="aha-table">
@@ -24,10 +24,10 @@
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class$="flex columnChooser u-mb-">
         <px-dropdown display-value="{{localize('Show/Hide Column')}}">
-          <px-dropdown-content 
-            max-cont-character-width="100" 
-            class="px-dropdown-content" 
-            checkbox-mode="true" 
+          <px-dropdown-content
+            max-cont-character-width="100"
+            class="px-dropdown-content"
+            checkbox-mode="true"
             items='{{_columnChooserItems}}'>
           </px-dropdown-content>
         </px-dropdown>
@@ -39,17 +39,17 @@
       <div class="tr" role="row">
         <template is="dom-repeat" items="{{meta}}" as="column">
           <template is="dom-if" if="{{!column.hide}}">
-            <span 
-              role="columnheader" 
-              class$="{{_getHeaderClass(column)}}" 
-              draggable="{{enableColumnReorder}}" 
-              on-touchstart="_dragStartColumnHeader" 
-              on-touchmove="_touchMoveHeader" 
-              on-touchleave="_dragLeave" 
-              on-touchend="_touchDropColumnHeader" 
-              on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" 
-              on-dragover="_dragOverHeader" 
-              on-drop="_dragDropColumnHeader" 
+            <span
+              role="columnheader"
+              class$="{{_getHeaderClass(column)}}"
+              draggable="{{enableColumnReorder}}"
+              on-touchstart="_dragStartColumnHeader"
+              on-touchmove="_touchMoveHeader"
+              on-touchleave="_dragLeave"
+              on-touchend="_touchDropColumnHeader"
+              on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader"
+              on-dragover="_dragOverHeader"
+              on-drop="_dragDropColumnHeader"
               on-dragend="_dragEndColumnHeader">
               <div class="flex header--container">
                 <span class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}" on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></iron-icon>
@@ -128,6 +128,12 @@
                   >
                 </px-data-table-cell>
               </template>
+
+              <!-- filter entry -->
+              <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
+                <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-input="_filter"/>
+              </template>
+
             </template>
           </template>
         </div>
@@ -138,7 +144,7 @@
     </div>
 
     <!-- Pagination controls -->
-    <div class$="pagination {{_getPaginationVisibility(hidePaginationControl)}}">
+    <div class="pagination">
       <px-pagination
         class$="{{_getPaginationVisibility(hidePaginationControl)}}"
         data-remote="{{dataRemote}}"
@@ -147,6 +153,7 @@
         language="{{language}}"
         number-of-items="{{_adaptedNumberOfItems}}"
         page-size="{{pageSize}}"
+        resources="[[resources]]"
         >
       </px-pagination>
     </div>
@@ -158,7 +165,7 @@
     is: 'aha-table',
 
     behaviors: [
-      PxLocalizeBehavior
+      Polymer.AppLocalizeBehavior
     ],
 
     properties: {
@@ -415,6 +422,39 @@
           Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
         }
       },
+      /**
+       * A valid IETF language tag as a string that `px-localize-behavior` will
+       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+       *
+       * See https://github.com/PolymerElements/app-localize-behavior for API
+       * documentation and more information.
+       */
+      language: {
+        type: String,
+        value: 'en'
+      },
+      /**
+      * Use the key for localization if value for  language is missing. Should
+      * always be true for  our components
+      */
+      useKeyIfMissing: {
+        type: Boolean,
+        value: true
+      },
+      /**
+       * Localizable strings for this component
+       */
+      resources: {
+        type: Object,
+        value: function() {
+          return {
+            'en': {
+              'Show/Hide Column': 'Show/Hide Column',
+              'Filter': 'Filter'
+            }
+          }
+        }
+      }
     },
 
     observers: [
@@ -843,16 +883,16 @@
 
     /*
      * Fires a sort change request event
-     * 
+     *
      * Only called if remoteData==true
-     * 
+     *
      * Information is stored in `evt.detail`:
      * ```
      * document.getElementById("mytable").addEventListener("px-sort-change-intent", function(e) {
      *   var data = e.detail;
      *   console.log("Intended sort: ", JSON.parse(data));
      * });
-     * // ==> [{name:'columnA',direction:'ascending'}] or [{name:'columnB',direction:'descending'}] 
+     * // ==> [{name:'columnA',direction:'ascending'}] or [{name:'columnB',direction:'descending'}]
      * ```
      * @event px-sort-change-intent
      */
@@ -995,16 +1035,16 @@
 
     /*
      * Fires a filter change request event
-     * 
+     *
      * Only called if remoteData==true
-     * 
+     *
      * Information is stored in `evt.detail`:
      * ```
      * document.getElementById("mytable").addEventListener("px-filter-change-intent", function(e) {
      *   var data = e.detail;
      *   console.log("Intended filters: ", JSON.parse(data));
      * });
-     * // ==> [{name:'columnA',userEntry:'asdf'},{name:'columnB',userEntry:'qwert'}] 
+     * // ==> [{name:'columnA',userEntry:'asdf'},{name:'columnB',userEntry:'qwert'}]
      * ```
      * @event px-filter-change-intent
      */
