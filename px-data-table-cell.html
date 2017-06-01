@@ -17,6 +17,7 @@
         <template is="dom-if" if="{{_isEqual(cellType, 'string')}}">
           <input id="celleditinput"
                  type="text"
+                 placeholder="{{placeholder}}"
                  class="u-p0 text-input text-input--bare"
                  required$="{{column.required}}"
                  on-input="_cellValueChanged"
@@ -426,7 +427,7 @@
       }
     },
     onHtmlChanged: function() {
-      if (!this.html) {
+      if (this.html === undefined) {
         this.html = "";
       }
       this.innerHTML = this.html;

@@ -13,7 +13,7 @@
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
 <link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
-<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="css/aha-table-styles.html">
 
 <dom-module id="aha-table">
@@ -68,7 +68,7 @@
 
               <!-- filter entry -->
               <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
-                <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
+                <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-input="_filter"/>
               </template>
 
             </span>
@@ -103,6 +103,7 @@
                       on-validate="_handleValidateEvent"
                       cell-type="{{column.type}}"
                       dropdown-items="{{column.dropdownItems}}"
+                      placeholder="{{column.placeholder}}"
                       dropdown-bounds="{{scrollBody}}"
                       cell-display-value="{{_readContent(internalRow, column)}}"
                       cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
@@ -131,7 +132,8 @@
                      number-of-items="{{numberOfItems}}"
                      page-size="{{pageSize}}"
                      first-item-index-to-display="{{firstItemIndex}}"
-                     language="{{language}}">
+                     language="[[language]]"
+                     resources="[[resources]]">
       </px-pagination>
     </div>
   </template>
@@ -141,7 +143,7 @@
     is: 'aha-table',
 
     behaviors: [
-      PxLocalizeBehavior
+      Polymer.AppLocalizeBehavior
     ],
 
     properties: {
@@ -343,6 +345,39 @@
           Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
         }
       },
+      /**
+       * A valid IETF language tag as a string that `px-localize-behavior` will
+       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+       *
+       * See https://github.com/PolymerElements/app-localize-behavior for API
+       * documentation and more information.
+       */
+      language: {
+        type: String,
+        value: 'en'
+      },
+      /**
+      * Use the key for localization if value for  language is missing. Should
+      * always be true for  our components
+      */
+      useKeyIfMissing: {
+        type: Boolean,
+        value: true
+      },
+      /**
+       * Localizable strings for this component
+       */
+      resources: {
+        type: Object,
+        value: function() {
+          return {
+            'en': {
+              'Show/Hide Column': 'Show/Hide Column',
+              'Filter': 'Filter'
+            }
+          }
+        }
+      }
     },
 
     observers: [
@@ -636,7 +671,7 @@
       this._updateDisplayedRows();
 
       //update selected rows when changing the filter if the select all is enabled
-      selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+      var selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
       if(selectAllCheckbox !== null && selectAllCheckbox !== undefined && selectAllCheckbox.checked){
           selectAllCheckbox.checked=false;
       }

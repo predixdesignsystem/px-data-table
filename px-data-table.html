@@ -3,7 +3,7 @@
 <link rel="import" href="px-data-table-column.html">
 <link rel="import" href="px-data-table-highlight.html">
 <link rel="import" href="../px-validation/px-validation.html">
-<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 
 
 <!--
@@ -110,8 +110,9 @@ Custom property | Description | Default
         enable-column-resize="{{enableColumnResize}}"
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
-        scrolling-rows="{{scrollingRows}}">
-        language="{{language}}">
+        scrolling-rows="{{scrollingRows}}"
+        language="[[language]]"
+        resources="[[resources]]">
         <content></content>
       </aha-table>
     </div>
@@ -123,7 +124,7 @@ Custom property | Description | Default
     is: 'px-data-table',
 
     behaviors: [
-      PxLocalizeBehavior
+      Polymer.AppLocalizeBehavior
     ],
 
     properties: {
@@ -299,7 +300,7 @@ Custom property | Description | Default
       },
 
        /**
-       * A valid IETF language tag as a string that `app-localize-behavior` will
+       * A valid IETF language tag as a string that `px-localize-behavior` will
        * use to localize this component. Refer to px-localize-behavior for currently supported languages.
        *
        * See https://github.com/PolymerElements/app-localize-behavior for API
@@ -308,6 +309,26 @@ Custom property | Description | Default
       language: {
         type: String,
         value: 'en'
+      },
+      /**
+      * Use the key for localization if value for  language is missing. Should
+      * always be true for  our components
+      */
+      useKeyIfMissing: {
+        type: Boolean,
+        value: true
+      },
+      /**
+       * Localizable strings for this component
+       */
+      resources: {
+        type: Object,
+        value: function() {
+          return {
+            'en': {
+            }
+          }
+        }
       }
     },
 

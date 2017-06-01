@@ -1,3 +1,23 @@
+v3.0.0
+==================
+* replace pxLocalizeBehavior with appLocalizeBehavior for localization
+
+v2.1.7
+==================
+* fixed filter behavior #79 and #90
+
+v2.1.6
+==================
+* fixed #128 and added placeholder #107
+
+v2.1.5
+==================
+* fixed #93 - font-awesome path issue & 404s in certain app configurations
+
+v2.1.4
+==================
+* fixed #120
+
 v2.1.3
 ==================
 * cutover to PxLocalizeBehavior
