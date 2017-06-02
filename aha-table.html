@@ -129,11 +129,6 @@
                 </px-data-table-cell>
               </template>
 
-              <!-- filter entry -->
-              <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
-                <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-input="_filter"/>
-              </template>
-
             </template>
           </template>
         </div>
