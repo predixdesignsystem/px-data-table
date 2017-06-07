@@ -9,7 +9,6 @@
  */
 
 // Settings
-@import "px-colors-design/_settings.colors.scss";
 @import "px-defaults-design/_settings.defaults.scss";
 @import "px-mixins-design/_tools.mixins.scss";
 // Generic
@@ -31,8 +30,8 @@ $inuit-enable-table--small: true;
 $inuit-enable-table--large: true;
 $inuit-enable-table--cells: true;
 $inuit-enable-table--columns: true;
-$inuit-table-border-color: var(--px-data-table-border-color, $gray10);
-$inuit-table-separator-color: var(--px-data-table-separator-color, $gray5);
+$inuit-table-border-color: var(--px-data-table-border-color, gray);
+$inuit-table-separator-color: var(--px-data-table-separator-color, gray);
 
 @import "px-tables-design/_base.tables.scss";
 
@@ -127,16 +126,16 @@ label {
 }
 
 .sorted-text {
-  color: var(--px-data-table-cell-text-color--sorted, $select-default);
+  color: var(--px-data-table-cell-text-color--sorted, blue);
 }
 
 .sorted-text-hover:hover {
-  color: var(--px-data-table-sorted-text--hover, $select-hover);
+  color: var(--px-data-table-sorted-text--hover, blue);
   cursor: pointer;
 }
 
 .no-results {
-  color: var(--px-data-table-results-text-color--none,$gray8);
+  color: var(--px-data-table-results-text-color--none, black);
   height: 2rem;
   align-items: center;
 }
@@ -174,7 +173,7 @@ label {
   min-width:4px;
   width:4px;
   padding: 0;
-  background-color: var(--px-data-table-insertion-indicator-td-background-color, $primary-default);
+  background-color: var(--px-data-table-insertion-indicator-td-background-color, blue);
 }
 
 .insertion-indicator.insertion-indicator.insertion-indicator {
@@ -183,55 +182,59 @@ label {
   min-width:4px;
   width:4px;
   padding: 0;
-  background-color: var(--px-data-table-insertion-indicator-td-background-color, $primary-default);
+  background-color: var(--px-data-table-insertion-indicator-td-background-color, blue);
 }
 
 .striped:nth-child(even) {
-  background-color: var(--px-data-table-background-color-striped--even, rgba($black,0.07));
+  background-color: var(--px-data-table-background-color-striped--even, rgba(black,0.07));
 }
 
 .dragged {
-  color: var(--px-data-table-text-color--dragged, $primary-default);
+  color: var(--px-data-table-text-color--dragged, blue);
 }
 
 .text-input--filter {
-  background-color: var(--px-data-table-text-input-background-color--filter, $white);
+  background-color: var(--px-data-table-text-input-background-color--filter, white);
 }
 
 .tr--filter {
-  background-color: var(--px-data-table-tr--filter, $white);
+  background-color: var(--px-data-table-tr--filter, white);
+  height: 40px;
 }
 
 .tr--filter span.td.td.aha-table {
   padding: 0;
 }
 
+.tr--filter #selectAllCheckbox {
+  margin-left: $inuit-base-spacing-unit--small;
+}
+
 .selected-cell__selected.selected-cell__selected {
-  background-color: var(--px-data-table-cell-background-color--selected, $select-default);
-  border: 1px double var(--px-data-table-cell-border-color--selected, $select-default) !important;
+  background-color: var(--px-data-table-cell-background-color--selected, blue);
+  border: 1px double var(--px-data-table-cell-border-color--selected, blue) !important;
 }
 
 .cell--value__validation-failed{
-  border: $inuit-table-border-width double var(--px-data-table-cell-border-validation--failed, $status-red3) !important;
+  border: $inuit-table-border-width double var(--px-data-table-cell-border-validation--failed, red) !important;
 }
 
 .px-data-table-highlight--high{
-  background-color: var(--px-data-table-highlight--high, rgba($status-red3,0.4));
+  background-color: var(--px-data-table-highlight--high, rgba(red,0.4));
 }
 
 .px-data-table-highlight--medium{
-  background-color: var(--px-data-table-highlight--medium, rgba($status-yellow3,0.4));
+  background-color: var(--px-data-table-highlight--medium, rgba(yellow,0.4));
 }
 
 .px-data-table-highlight--low{
-  background-color: var(--px-data-table-highlight--low, rgba($status-blue3,0.4));
+  background-color: var(--px-data-table-highlight--low, rgba(blue,0.4));
 }
 
 .pagination {
   border-bottom: 1px solid $inuit-table-border-color;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  min-height: calculateRem(45px);
 }
 
 .paginationContainer, .pagesize {

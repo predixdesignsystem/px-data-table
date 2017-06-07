@@ -8,11 +8,8 @@
  * under which the software has been supplied.
  */
 
-// Settings
-@import "px-colors-design/_settings.colors.scss";
-
 :host{
-  --cell--value__highlight--high--color: $status-red2;
-  --cell--value__highlight--medium--color: $status-yellow2;
-  --cell--value__highlight--low--color: $status-blue2;
+  --cell--value__highlight--high--color: red;
+  --cell--value__highlight--medium--color: yellow;
+  --cell--value__highlight--low--color: blue;
 }

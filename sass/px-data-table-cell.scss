@@ -9,7 +9,6 @@
  */
 
 // Settings
-@import "px-colors-design/_settings.colors.scss";
 @import "px-defaults-design/_settings.defaults.scss";
 @import "px-mixins-design/_tools.mixins.scss";
 // Generic
@@ -30,8 +29,8 @@ $inuit-enable-table--small: true;
 $inuit-enable-table--large: true;
 $inuit-enable-table--rows: true;
 $inuit-enable-table--columns: true;
-$inuit-table-border-color: var(--px-data-table-border-color,$gray10);
-$inuit-table-separator-color: var(--px-data-table-separator-color,$gray5);
+$inuit-table-border-color: var(--px-data-table-border-color, gray);
+$inuit-table-separator-color: var(--px-data-table-separator-color, gray);
 
 @import "px-tables-design/_base.tables.scss";
 
@@ -56,7 +55,7 @@ $inuit-table-separator-color: var(--px-data-table-separator-color,$gray5);
 
 :host(.cell__edit) {
   background-color: var(--px-data-table-cell-background-color--edit,$inuit-forms-background);
-  border: $inuit-table-border-width double var(--px-data-table-cell-border-color--edit,$primary-default) !important;
+  border: $inuit-table-border-width double var(--px-data-table-cell-border-color--edit,blue) !important;
   & input, textarea {
     outline: none;
     background-color: transparent;
@@ -65,45 +64,45 @@ $inuit-table-separator-color: var(--px-data-table-separator-color,$gray5);
 }
 
 :host(.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected){
-  border: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, $select-default);
+  border: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, blue);
 }
 
 :host(.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row){
-  border-top: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, $select-default);
-  border-bottom: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, $select-default);
+  border-top: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, blue);
+  border-bottom: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, blue);
 }
 
 :host(.px-data-table-highlight--high){
-  background-color: var(--px-data-table-highlight--high, rgba($status-red3, 0.4));
+  background-color: var(--px-data-table-highlight--high, rgba(red, 0.4));
 }
 
 :host(.px-data-table-highlight--medium){
-  background-color: var(--px-data-table-highlight--medium, rgba($status-yellow3, 0.4));
+  background-color: var(--px-data-table-highlight--medium, rgba(yellow, 0.4));
 }
 
 :host(.px-data-table-highlight--low){
-  background-color: var(--px-data-table-highlight--low, rgba($status-blue3, 0.4));
+  background-color: var(--px-data-table-highlight--low, rgba(blue, 0.4));
 }
 
 :host(.selected) {
-  background-color: var(--px-data-table-cell-background-color--selected, $select-default);
-  color: var(--px-data-table-cell-text-color--selected, $white);
-  border-top: $inuit-table-border-width double var(--px-data-table-row-border-top-color--selected, $select-default) !important;
-  border-bottom: $inuit-table-border-width double var(--px-data-table-row-border-bottom-color--selected, $select-default) !important;
+  background-color: var(--px-data-table-cell-background-color--selected, blue);
+  color: var(--px-data-table-cell-text-color--selected, white);
+  border-top: $inuit-table-border-width double var(--px-data-table-row-border-top-color--selected, blue) !important;
+  border-bottom: $inuit-table-border-width double var(--px-data-table-row-border-bottom-color--selected, blue) !important;
 
 }
 
 .cell--value--icon__validation-failed {
-  color: var(--px-data-table-cell-text-color-validation--failed, $status-red3);
+  color: var(--px-data-table-cell-text-color-validation--failed, red);
 }
 
 .viewing {
   overflow: hidden;
-  white-space: nowrap;
+white-space: nowrap;
 }
 
 .ddviewing {
-  white-space: nowrap;
+white-space: nowrap;
 }
 
 px-dropdown {
