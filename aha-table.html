@@ -1019,7 +1019,6 @@
           detail = {"row": row, "column": column},
           selectAllCheckbox;
       if(column.editable || column.type === 'dropdown') return;
-      this.fire('px-row-click', detail); // fire the event after it is marked selected
 
       if(this.selectable) {
         this._selectRow(row, this.$.recordList.indexForElement(evt.currentTarget));
@@ -1033,6 +1032,7 @@
           this.set('sortedColumn', '');
         }
       }
+      this.fire('px-row-click', detail); // fire the event after it is marked selected
     },
     _clickCell: function(evt) {
       var column = evt.model.column,
