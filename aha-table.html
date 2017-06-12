@@ -1024,8 +1024,10 @@
         this._selectRow(row, this.$.recordList.indexForElement(evt.currentTarget));
 
         // always just make sure selectAll checkbox is unchecked when 1 row is clicked
-        selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
-        selectAllCheckbox.checked = false;
+        if(!this.singleSelect) {
+          selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+          selectAllCheckbox.checked = false;
+        }
 
         // if sorted row is selected, then it is no longer selected
         if(this.sortedColumn === '_selected') {
