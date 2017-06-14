@@ -303,7 +303,7 @@
       editCell: function(){
         var editCell = this.$$(".cell--edit"),
             valueCell = this.$$(".cell--value");
-        if (this.cellEditable && this.cellType !=='dropdown') {
+        if (this.cellEditable && (this.cellType !=='dropdown' && this.cellType !== 'html')) {
           this.set('_editing', true);
           this.toggleClass('cell__edit', this._editing);
           this.set('_undoValue', this.$$(".cell--value").innerText);
