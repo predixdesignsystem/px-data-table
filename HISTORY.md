@@ -1,3 +1,11 @@
+v3.0.2
+==================
+* add check for single select
+
+v3.0.1
+==================
+* move px-row-click event
+
 v3.0.0
 ==================
 * replace pxLocalizeBehavior with appLocalizeBehavior for localization
