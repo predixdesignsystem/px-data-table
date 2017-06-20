@@ -136,7 +136,7 @@
         </div>
       </template>
       </div>
-      
+
       <template is="dom-if" if="{{!displayedRows.length}}">
         <div class="flex flex--center no-results">No Results</div>
       </template>
@@ -781,7 +781,7 @@
             cellDataObj[key].value = thisObj[key];
             if (resetDataFlag) {
               cellDataObj[key]._validation = { passedValidation: true };
-            } else {
+            } else if(this._internalData[i].row[key]._validation) {
               cellDataObj[key]._validation = this._internalData[i].row[key]._validation;
             }
           }
