@@ -64,7 +64,8 @@ $inuit-table-separator-color: var(--px-data-table-separator-color, gray);
 }
 
 :host(.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected.cell--value__highlight--selected){
-  border: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, blue);
+  border-top: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, blue);
+  border-bottom: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, blue);
 }
 
 :host(.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row.cell--value__highlight--selected__row){
@@ -87,8 +88,8 @@ $inuit-table-separator-color: var(--px-data-table-separator-color, gray);
 :host(.selected) {
   background-color: var(--px-data-table-cell-background-color--selected, blue);
   color: var(--px-data-table-cell-text-color--selected, white);
-  border-top: $inuit-table-border-width double var(--px-data-table-row-border-top-color--selected, blue) !important;
-  border-bottom: $inuit-table-border-width double var(--px-data-table-row-border-bottom-color--selected, blue) !important;
+  border-top: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, blue) !important;
+  border-bottom: $inuit-table-border-width double var(--px-data-table-cell-border-color--selected, blue) !important;
 
 }
 
@@ -148,8 +149,6 @@ $px-data-table-cell-inner-height : calculateRem(18px);
 }
 
 // Trumps
-@import "inuit-clearfix/_trumps.clearfix.scss";
-
 $inuit-enable-margins--none: true;
 $inuit-enable-margins--small: true;
 $inuit-enable-margins--tiny: true;

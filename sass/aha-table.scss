@@ -213,7 +213,8 @@ label {
 
 .selected-cell__selected.selected-cell__selected {
   background-color: var(--px-data-table-cell-background-color--selected, blue);
-  border: 1px double var(--px-data-table-cell-border-color--selected, blue) !important;
+  border-top: 1px double var(--px-data-table-cell-border-color--selected, blue) !important;
+  border-bottom: 1px double var(--px-data-table-cell-border-color--selected, blue) !important;
 }
 
 .cell--value__validation-failed{
@@ -277,8 +278,6 @@ label {
 }
 
 // Trumps
-@import "inuit-clearfix/_trumps.clearfix.scss";
-
 $inuit-enable-margins--none: true;
 $inuit-enable-margins--small: true;
 $inuit-enable-margins--tiny: true;
