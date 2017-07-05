@@ -1,0 +1,91 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>px-data-table Demo</title>
+
+    <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <!-- web-component-tester automatically provides local copy of brower.js below
+         for any URL ending with "/web-component-tester/browser.js"
+         when wct is run from the command line -->
+    <script src="../web-component-tester/browser.js"></script>
+    <link rel="import" href="../px-data-table.html" />
+    <link rel="import" href="../../px-theme/px-theme-styles.html">
+    <style include="px-theme-styles" is="custom-style"></style>
+    <script src="px-data-table-server-control-test.js"></script>
+  </head>
+
+  <body>
+      <p>Remote Data, Page 1 of 10</p>
+      <px-data-table
+        id="remoteData1"
+        total-entries="100"
+        data-remote="true"
+        >
+      </px-data-table>
+
+      <p>Remote Data, Page 2 of 10</p>
+      <px-data-table
+        id="remoteData2"
+        first-item-index="11"
+        total-entries="100"
+        data-remote="true"
+        page-size="10"
+        >
+      </px-data-table>
+
+      <hr/>
+
+      <p>Remote Data, Page Size Dopdown</p>
+      <px-data-table
+        id="remoteData3"
+        first-item-index="1"
+        total-entries="100"
+        data-remote="true"
+        page-size="10"
+        >
+      </px-data-table>
+
+      <p>Remote Data, Filtering</p>
+      <px-data-table
+        id="remoteDataFiltering1"
+        total-entries="100"
+        data-remote="true"
+        filterable="true"
+        >
+      </px-data-table>
+
+      <p>Remote Data, Filtering</p>
+      <px-data-table
+        id="remoteDataFiltering2"
+        total-entries="100"
+        data-remote="true"
+        filterable="true"
+        >
+      </px-data-table>
+
+      <hr/>
+
+      <p>Remote Data, Sorting</p>
+      <px-data-table
+        id="remoteDataSorting1"
+        total-entries="100"
+        data-remote="true"
+        sortable="true"
+        >
+      </px-data-table>
+
+      <p>Remote Data, Sorting</p>
+      <px-data-table
+        id="remoteDataSorting2"
+        total-entries="100"
+        data-remote="true"
+        sortable="true"
+        >
+      </px-data-table>
+
+  </body>
+</html>
