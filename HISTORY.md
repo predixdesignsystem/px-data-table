@@ -1,3 +1,8 @@
+v3.0.4
+==================
+* remove old component image
+* update README
+
 v3.0.3
 ==================
 * fix #139, #140 (merge #142)
