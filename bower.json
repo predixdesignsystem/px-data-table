@@ -28,7 +28,7 @@
     "px-polymer-font-awesome": "^1.1.0",
     "px-validation": "^0.4.0",
     "px-dropdown": "^3.1.0",
-    "app-localize-behavior": "^1.0.2"
+    "app-localize-behavior": "^2.0.0"
   },
   "devDependencies": {
     "px-starter-kit-design": "^0.7.0",
