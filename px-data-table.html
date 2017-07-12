@@ -3,7 +3,7 @@
 <link rel="import" href="px-data-table-column.html">
 <link rel="import" href="px-data-table-highlight.html">
 <link rel="import" href="../px-validation/px-validation.html">
-<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 
 
 <!--
@@ -104,6 +104,8 @@ Custom property | Description
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
         language="{{language}}"
+        use-key-if-missing="{{useKeyIfMissing}}"
+        resources="{{resources}}"
         page-size-options="{{pageSizeOptions}}">
         <content></content>
       </aha-table>
@@ -116,7 +118,7 @@ Custom property | Description
     is: 'px-data-table',
 
     behaviors: [
-      PxLocalizeBehavior
+      Polymer.AppLocalizeBehavior
     ],
 
     properties: {
@@ -291,7 +293,7 @@ Custom property | Description
       },
       /**
        * A valid IETF language tag as a string that `app-localize-behavior` will
-       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+       * use to localize this component.
        *
        * See https://github.com/PolymerElements/app-localize-behavior for API
        * documentation and more information.
@@ -299,6 +301,27 @@ Custom property | Description
       language: {
         type: String,
         value: 'en'
+      },
+      useKeyIfMissing: {
+        type: Boolean,
+        value: true
+      },
+      /**
+      * A dictionary of strings used within the component for AppLocalizeBehavior
+      * to use, based on the selected `language` property.
+      */
+      resources: {
+        type: Object,
+        value: function() {
+          return {
+            'en': {
+              "of": "of",
+              "Show/Hide Column": "Show/Hide Column",
+              "Filter": "Filter",
+              "Rows per page": "Rows per page"
+            }
+          }
+        }
       }
     }
 

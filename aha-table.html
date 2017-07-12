@@ -12,8 +12,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
-<link rel="import" href="../px-polymer-font-awesome/px-icon-set.html">
-<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
+<link rel="import" href="../px-icon-set/px-icon-set.html">
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="css/aha-table-styles.html">
 
 <dom-module id="aha-table">
@@ -38,7 +38,7 @@
                 <div class="flex header--container">
                   <span
                     class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}"
-                    on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></iron-icon>
+                    on-tap="_sort">{{column.label}}<px-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></px-icon>
                   </span>
                   <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                     <template is="dom-if" if="{{enableColumnResize}}">
@@ -129,7 +129,9 @@
                     page-size="{{pageSize}}"
                     page-size-options="{{pageSizeOptions}}"
                     first-item-index-to-display="{{firstItemIndex}}"
-                    language="{{language}}">
+                    language="{{language}}"
+                    use-key-if-missing="{{useKeyIfMissing}}"
+                    resources="{{resources}}">
       </px-pagination>
     </div>
   </template>
@@ -139,7 +141,7 @@
     is: 'aha-table',
 
     behaviors: [
-      PxLocalizeBehavior
+      Polymer.AppLocalizeBehavior
     ],
 
     properties: {

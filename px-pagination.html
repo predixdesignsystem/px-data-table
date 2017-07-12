@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="../px-polymer-font-awesome/px-icon-set.html">
-<link rel="import" href="../px-localize-behavior/px-localize-behavior.html"/>
+<link rel="import" href="../px-icon-set/px-icon-set.html">
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="../px-dropdown/px-dropdown.html"/>
 
 <!--
@@ -31,13 +31,13 @@ Element that provides pagination.
           <span>{{numberOfItems}}</span>
         </span>
         <button id="previous" class$="btn {{_getPageupClass(currentPage)}}" on-click="goToPreviousPage">
-          <iron-icon icon="px:arrow-left"></iron-icon>
+          <px-icon icon="px:arrow-left"></px-icon>
         </button>
         <template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
           <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
         </template>
         <button id="next" class$="btn {{_getPagedownClass(currentPage, pageCount)}}" on-click="goToNextPage">
-          <iron-icon icon="px:arrow-right"></iron-icon>
+          <px-icon icon="px:arrow-right"></px-icon>
         </button>
       </div>
 
@@ -51,7 +51,7 @@ Element that provides pagination.
     is: 'px-pagination',
 
     behaviors: [
-      PxLocalizeBehavior
+      Polymer.AppLocalizeBehavior
     ],
 
     properties: {

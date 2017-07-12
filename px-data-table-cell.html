@@ -1,6 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../px-tooltip/px-tooltip.html">
-<link rel="import" href="../px-polymer-font-awesome/px-icon-set.html">
+<link rel="import" href="../px-icon-set/px-icon-set.html">
 <link rel="import" href="px-edit-cell.html">
 <link rel="import" href="../px-dropdown/px-dropdown.html">
 
@@ -60,9 +60,9 @@
       <!-- icon template -->
       <template is="dom-if" if="{{cellEditable}}">
         <div class="fa fa-fw cell-status--container">
-          <iron-icon id="editicon" role="button" aria-label="Click to edit cell" class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
+          <px-icon id="editicon" role="button" aria-label="Click to edit cell" class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
             icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
-          </iron-icon>
+          </px-icon>
           <template is="dom-if" if="{{!cellValidation.passedValidation}}">
             <px-tooltip
               class="tooltip-font"
