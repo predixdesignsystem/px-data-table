@@ -349,6 +349,39 @@
                   {"key":"3","val":"50"},
                   {"key":"4","val":"100"}];
         }
+      },
+      /**
+       * A valid IETF language tag as a string that `px-localize-behavior` will
+       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+       *
+       * See https://github.com/PolymerElements/app-localize-behavior for API
+       * documentation and more information.
+       */
+      language: {
+        type: String,
+        value: 'en'
+      },
+      /**
+      * Use the key for localization if value for  language is missing. Should
+      * always be true for  our components
+      */
+      useKeyIfMissing: {
+        type: Boolean,
+        value: true
+      },
+      /**
+       * Localizable strings for this component
+       */
+      resources: {
+        type: Object,
+        value: function() {
+          return {
+            'en': {
+              'Show/Hide Column': 'Show/Hide Column',
+              'Filter': 'Filter'
+            }
+          }
+        }
       }
     },
 
@@ -664,9 +697,10 @@
           if ( Object.prototype.hasOwnProperty.call( thisObj, key ) ) {
             cellDataObj[key] = {};
             cellDataObj[key].value = thisObj[key];
-            if(resetDataFlag){
+            if(resetDataFlag) {
               cellDataObj[key]._validation = {passedValidation: true};
-            }else{
+            }
+            else if(this._internalData[i].row[key]._validation) {
               cellDataObj[key]._validation = this._internalData[i].row[key]._validation;
             }
           }

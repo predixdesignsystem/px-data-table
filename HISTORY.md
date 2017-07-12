@@ -1,3 +1,19 @@
+v3.0.3
+==================
+* fix #139, #140 (merge #142)
+
+v3.0.2
+==================
+* add check for single select
+
+v3.0.1
+==================
+* move px-row-click event
+
+v3.0.0
+==================
+* replace pxLocalizeBehavior with appLocalizeBehavior for localization
+
 v2.1.7
 ==================
 * fixed filter behavior #79 and #90
