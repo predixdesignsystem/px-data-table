@@ -32,7 +32,7 @@
   "devDependencies": {
     "px-theme": "^3.0.0",
     "px-starter-kit-design": "^1.0.0",
-    "iron-ajax": "^1.4.3",
+    "iron-ajax": "^2.0.0",
     "px-toggle-design": "^2.0.0",
     "px-demo": "^2.0.0",
     "px-layout-design": "^1.0.0",
