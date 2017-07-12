@@ -950,8 +950,8 @@ function runTests() {
       cell.click();
 
       flush(function(){
-        assert.equal(getStyle(cell, 'background-color'), 'rgba(0, 0, 0, 0)');
-        assert.oneOf(getStyle(cell, 'border-right-width'), ['1px']);
+        assert.oneOf(getStyle(cell, 'background-color'), ['rgba(0, 0, 0, 0)', 'transparent']);
+        assert.oneOf(getStyle(cell, 'border-right-width'), ['1px', '0.5px']);
         assert.equal(getStyle(cell, 'border-right-style'), 'double');
         assert.equal(getStyle(cell, 'border-right-color'), 'rgb(0, 122, 204)');
         assert.equal(getStyle(cell, 'box-shadow'), 'none');
@@ -1010,7 +1010,8 @@ function runTests() {
       assert.equal(getStyle(dropdown,'display'), 'none');
       button.click();
       setTimeout(function() {
-        assert.equal(getStyle(dropdown, 'display'), 'block');
+
+        assert.notEqual(getStyle(dropdown, 'display'), 'none');
       },50);
       done();
     });
