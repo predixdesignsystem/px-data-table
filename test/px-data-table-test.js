@@ -1334,8 +1334,10 @@ function runTests() {
 
         Polymer.dom(table5Fixture).appendChild(newEl);
         flush(function(){
-          assert.equal(Polymer.dom(selector.root).querySelectorAll('div').length, noItems + 1);
-          done();
+          setTimeout(function() {
+            assert.equal(Polymer.dom(selector.root).querySelectorAll('div').length, noItems + 1);
+            done();
+          }, 200);
         });
     });
   });
