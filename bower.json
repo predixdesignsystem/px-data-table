@@ -25,7 +25,7 @@
     "px-tooltip": "^1.0.0",
     "iron-a11y-keys-behavior": "~1.1.9",
     "px-icon-set": "^2.0.0",
-    "px-validation": "^0.4.0",
+    "px-validation": "^1.0.0",
     "px-dropdown": "^4.0.0",
     "app-localize-behavior": "^2.0.0"
   },
@@ -39,5 +39,8 @@
     "px-tables-design": "^2.0.0",
     "px-button-group-design": "^2.0.0",
     "px-forms-design": "^2.0.0"
+  },
+  "resolutions": {
+    "webcomponentsjs": "^0.7.24"
   }
 }
