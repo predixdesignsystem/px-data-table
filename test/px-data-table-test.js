@@ -883,7 +883,7 @@ function runTests() {
       });
       // Trigger filter edit event and provide a filter value
       lastNameFilter.value = 'wo';
-      lastNameFilter.dispatchEvent(new Event('keyup'));
+      lastNameFilter.dispatchEvent(new Event('input'));
     });
 
     test('When selecting all, select only what is filtered', function(done){
