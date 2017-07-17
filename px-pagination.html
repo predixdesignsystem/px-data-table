@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="../px-icon-set/px-icon-set.html">
+<link rel="import" href="../px-icon-set/px-icon.html">
 <link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="../px-dropdown/px-dropdown.html"/>
 
@@ -31,13 +32,13 @@ Element that provides pagination.
           <span>{{numberOfItems}}</span>
         </span>
         <button id="previous" class$="btn {{_getPageupClass(currentPage)}}" on-click="goToPreviousPage">
-          <px-icon icon="px:arrow-left"></px-icon>
+          <px-icon icon="pxm:arrow-left"></px-icon>
         </button>
         <template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
           <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
         </template>
         <button id="next" class$="btn {{_getPagedownClass(currentPage, pageCount)}}" on-click="goToNextPage">
-          <px-icon icon="px:arrow-right"></px-icon>
+          <px-icon icon="pxm:arrow-right"></px-icon>
         </button>
       </div>
 

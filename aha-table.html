@@ -13,6 +13,7 @@
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
 <link rel="import" href="../px-icon-set/px-icon-set.html">
+<link rel="import" href="../px-icon-set/px-icon.html">
 <link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="css/aha-table-styles.html">
 
@@ -1530,7 +1531,7 @@
     _getSortingIcon: function(sortable, column, sortingColumn, descending) {
       var sortingIcon = ' ';
       if(sortable && sortingColumn === column.name) {
-        sortingIcon = descending ? 'px:arrow-down' : 'px:arrow-up';
+        sortingIcon = descending ? 'pxm:arrow-down' : 'pxm:arrow-up';
       }
       return sortingIcon;
     },

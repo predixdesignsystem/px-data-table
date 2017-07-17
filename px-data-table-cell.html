@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../px-tooltip/px-tooltip.html">
 <link rel="import" href="../px-icon-set/px-icon-set.html">
+<link rel="import" href="../px-icon-set/px-icon.html">
 <link rel="import" href="px-edit-cell.html">
 <link rel="import" href="../px-dropdown/px-dropdown.html">
 
@@ -326,11 +327,11 @@
       _getCellIcon: function(showEditIcon, editing, valid){
         if(valid) {
           if(showEditIcon) {
-            return 'px:edit';
+            return 'pxs:edit';
           }
         }
         else {
-          return 'px:failure';
+          return 'pxs:failure';
         }
       },
       _getCellIconClass: function(showEditIcon, editing, valid){
