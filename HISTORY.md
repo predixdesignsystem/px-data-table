@@ -1,3 +1,7 @@
+v4.0.0
+==================
+* major release for redesign
+
 v3.0.4
 ==================
 * remove old component image
