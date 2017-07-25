@@ -2,7 +2,7 @@
 
 ## Overview
 
-The px-data-table component defines a data table, optionally using a sub-element for advanced column settings.
+`Px-data-table` is a Predix UI component which defines a data table, optionally using a sub-element for advanced column settings.
 
 ## Usage
 
