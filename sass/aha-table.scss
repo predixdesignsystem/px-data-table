@@ -81,9 +81,10 @@ th {
   background-color: var(--px-data-table-header-background-color, inherit);
 }
 
-iron-icon.sorting {
-  width: 16px;
-  height: 16px;
+px-icon.sorting {
+  width: 1rem;
+  height: 1rem;
+  margin-left: 0.3333rem;
 }
 
 .tr {
@@ -130,7 +131,7 @@ label {
 }
 
 .sorted-text-hover:hover {
-  color: var(--px-data-table-sorted-text--hover, blue);
+  color: var(--px-data-table-text-color--hover, blue);
   cursor: pointer;
 }
 

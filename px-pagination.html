@@ -22,7 +22,7 @@ Element that provides pagination.
 
 			<span class="pagesize">
 				<span class="rowsPerPage u-mr--">{{localize('Rows per page')}}</span>
-        <px-dropdown selected="{{pageSize}}" display-value="{{pageSize}}" select-by="val" button-style="bare--primary" items='{{pageSizeOptions}}'></px-dropdown>
+        <px-dropdown selected="{{pageSize}}" display-value="{{pageSize}}" select-by="val" button-style="bare--primary" items='{{pageSizeOptions}}' disable-clear></px-dropdown>
 			</span>
 
       <div class="paginationContainer u-ml+">
@@ -32,13 +32,13 @@ Element that provides pagination.
           <span>{{numberOfItems}}</span>
         </span>
         <button id="previous" class$="btn {{_getPageupClass(currentPage)}}" on-click="goToPreviousPage">
-          <px-icon icon="px-nav:next"></px-icon>
+          <px-icon icon="px-nav:back"></px-icon>
         </button>
         <template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
           <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
         </template>
         <button id="next" class$="btn {{_getPagedownClass(currentPage, pageCount)}}" on-click="goToNextPage">
-          <px-icon icon="px-nav:back"></px-icon>
+          <px-icon icon="px-nav:next"></px-icon>
         </button>
       </div>
 

@@ -1,3 +1,8 @@
+v4.0.1
+==================
+* fix pagination icons & dropdown
+* fix bug with select column
+
 v4.0.0
 ==================
 * major release for redesign
