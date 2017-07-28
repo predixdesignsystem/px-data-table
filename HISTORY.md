@@ -1,3 +1,7 @@
+v3.0.5
+==================
+* fix select behavior
+
 v3.0.4
 ==================
 * remove old component image

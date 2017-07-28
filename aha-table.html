@@ -389,7 +389,6 @@
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
       this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
-      if(this.selectable) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
       var boundHandler = this._columnChanged.bind(this);
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
     },
@@ -398,6 +397,8 @@
     },
 
     _columnChanged: function(info){
+      if(this.selectable && this.meta.length === 0) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
+
       var addedColumns = info.addedNodes.filter(function(node) {
         return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
       });
