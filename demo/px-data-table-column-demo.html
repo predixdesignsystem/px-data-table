@@ -10,7 +10,7 @@
 <link rel="import" href="../../px-demo/px-demo-interactive.html" />
 <link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
 
-<!-- Imports for this componnent -->
+<!-- Imports for this component -->
 <link rel="import" href="../../px-demo/css/px-demo-styles.html" />
 <link rel="import" href="../px-data-table.html" />
 
@@ -38,8 +38,9 @@
       <px-demo-component>
 
         <div>
-          <template is="dom-if" if="{{isSimple(props.label.value)}}">
-            <px-data-table table-data={{tableData}} hide-pagination-control="true">
+          <p>Most of the properties of px-data-table-column can not currently be set dynamically, due to the nature of the component. They should be defined explicitly at the time of table creation, or you should delete and re-add the full px-data-table-column sub-component on change. For a few different preset configurations, see the tabs above.</p>
+          <template is="dom-if" if="{{props.editable.value}}">
+            <px-data-table table-data={{tableData}} hide-pagination-control="true" include-all-columns>
               <px-data-table-column
                 name="first"
                 type="string"
@@ -51,8 +52,8 @@
               </px-data-table-column>
             </px-data-table>
           </template>
-          <template is="dom-if" if="{{!isSimple(props.label.value)}}">
-            <px-data-table table-data={{tableData}} hide-pagination-control="true">
+          <template is="dom-if" if="{{!props.editable.value}}">
+            <px-data-table table-data={{tableData}} hide-pagination-control="true" include-all-columns>
               <px-data-table-column
                 name="first"
                 type="dropdown"
@@ -117,7 +118,6 @@
           ];
           return [
             { configName: "Editable",
-              configShowProps: ['name'],
               name: "first",
               label: "",
               filterable: true,
@@ -128,7 +128,6 @@
               parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "' hide-pagination-control>", "</px-data-table>"] },
 
             { configName: "Dropdown",
-              configShowProps: ['name'],
               name: "first",
               label: "First Name",
               filterable: false,
@@ -142,56 +141,57 @@
       }
     },
 
-    isSimple: function(label) {
-      return label === "";
-    },
-
     demoProps: {
       name: {
         type: String,
         defaultValue: 'first',
         inputType: 'text',
-        inputDisabled: true,
-        inputHelpText: 'Most of the properties of px-data-table-column can not currently be set dynamically, due to the nature of the component. They should be defined explicitly at the time of table creation, or you should delete and re-add the full <px-data-table-column> sub-component on change. For a few different preset configurations, see the tabs above.'
+        inputDisabled: true
       },
 
       type: {
         type: String,
-        defaultValue: 'string'
+        defaultValue: 'string',
+        inputType: 'text',
+        inputDisabled: true
       },
 
       label: {
         type: String,
-        defaultValue: ''
+        defaultValue: '',
+        inputType: 'text',
+        inputDisabled: true
       },
 
       filterable: {
         type: Boolean,
-        defaultValue: false
+        defaultValue: true,
+        inputType: 'toggle',
+        inputDisabled: true
       },
 
       sortable: {
         type: Boolean,
-        defaultValue: false
+        defaultValue: true,
+        inputType: 'toggle',
+        inputDisabled: true
       },
 
       editable: {
         type: Boolean,
-        defaultValue: false
+        defaultValue: true,
+        inputType: 'toggle',
+        inputDisabled: true
       },
 
       dropdownItems: {
         type: Array,
-        defaultValue: function() {
-          return [{"key":"one","val":"Mike"},{"key":"two","val":"Maria"},{"key":"three","val":"Wei"}];
-        }
+        defaultValue: [{"key":"one","val":"Mike"},{"key":"two","val":"Maria"},{"key":"three","val":"Wei"}]
       },
 
       parentComponent: {
         type: Array,
-        defaultValue: function() {
-          return ["<px-data-table>","</px-data-table>"];
-        }
+        defaultValue: ["<px-data-table hide-pagination-control>", "</px-data-table>"]
       }
 
     }

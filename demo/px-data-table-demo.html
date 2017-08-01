@@ -10,7 +10,7 @@
 <link rel="import" href="../../px-demo/px-demo-interactive.html" />
 <link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
 
-<!-- Imports for this componnent -->
+<!-- Imports for this component -->
 <link rel="import" href="../../px-demo/css/px-demo-styles.html" />
 <link rel="import" href="../px-data-table.html" />
 
@@ -45,8 +45,6 @@
               selectable="{{props.selectable.value}}"
               single-select="{{props.singleSelect.value}}"
               show-column-chooser="{{props.showColumnChooser.value}}"
-              table-columns="{{props.tableColumns.value}}"
-              table-cells="{{props.tableCells.value}}"
               hide-pagination-control="{{props.hidePaginationControl.value}}"
               include-all-columns="{{props.includeAllColumns.value}}"
               language="{{props.language.value}}">
@@ -96,8 +94,6 @@
               selectable: true,
               singleSelect: true,
               showColumnChooser: true,
-              tableColumns: false,
-              tableCells: false,
               hidePaginationControl: false,
               includeAllColumns: true }
           ]
@@ -156,18 +152,6 @@
       },
 
       showColumnChooser: {
-        type: Boolean,
-        defaultValue: false,
-        inputType: 'toggle'
-      },
-
-      tableColumns: {
-        type: Boolean,
-        defaultValue: false,
-        inputType: 'toggle'
-      },
-
-      tableCells: {
         type: Boolean,
         defaultValue: false,
         inputType: 'toggle'

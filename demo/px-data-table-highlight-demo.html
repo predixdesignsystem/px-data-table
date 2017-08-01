@@ -10,7 +10,7 @@
 <link rel="import" href="../../px-demo/px-demo-interactive.html" />
 <link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
 
-<!-- Imports for this componnent -->
+<!-- Imports for this component -->
 <link rel="import" href="../../px-demo/css/px-demo-styles.html" />
 <link rel="import" href="../px-data-table.html" />
 
@@ -38,6 +38,7 @@
       <px-demo-component>
 
         <div>
+          <p>Properties for px-data-table-highlight can't be dynamically changed, they must be specified ahead of time. This example illustrates a highlight of type "row" and value of "high" (red, by default). It is associated with the first name column, and uses a method specified in px-example-highlight.html that catches strings starting with "S".</p>
           <px-data-table table-data={{tableData}} hide-pagination-control selectable>
             <px-data-table-column name="first">
               <px-data-table-highlight
@@ -135,8 +136,7 @@
         type: String,
         defaultValue: 'wordBeginsWithLetterS',
         inputType: 'text',
-        inputDisabled: true,
-        inputHelpText: 'Properties for px-data-table-highlight can\'t be dynamically changed, they must be specified ahead of time. This example illustrates a highlight of type "row" and value of "high" (red, by default). It is associated with the first name column, and uses a method specified in px-example-highlight.html that catches strings starting with "S".'
+        inputDisabled: true
       },
 
       import: {

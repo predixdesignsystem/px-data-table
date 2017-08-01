@@ -1,3 +1,7 @@
+v4.0.2
+==================
+* fix bugs
+
 v4.0.1
 ==================
 * fix pagination icons & dropdown
