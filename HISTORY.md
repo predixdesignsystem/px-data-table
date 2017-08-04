@@ -1,3 +1,7 @@
+v4.0.3
+==================
+* fix pagination alignment in IE
+
 v4.0.2
 ==================
 * fix bugs

@@ -20,12 +20,12 @@ Element that provides pagination.
 
     <div class="paginationContainer">
 
-			<span class="pagesize">
+			<span class="pagesize  u-mr+">
 				<span class="rowsPerPage u-mr--">{{localize('Rows per page')}}</span>
         <px-dropdown selected="{{pageSize}}" display-value="{{pageSize}}" select-by="val" button-style="bare--primary" items='{{pageSizeOptions}}' disable-clear></px-dropdown>
 			</span>
 
-      <div class="paginationContainer u-ml+">
+      <div>
         <span class="summary">
           <strong>{{firstItemIndexToDisplay}}-{{lastItemIndexToDisplay}}</strong>
           <span>{{localize('of')}}</span>
