@@ -1,3 +1,7 @@
+v4.0.4
+==================
+* Fix comment for analyzer
+
 v4.0.3
 ==================
 * fix pagination alignment in IE
