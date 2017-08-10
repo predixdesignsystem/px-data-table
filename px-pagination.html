@@ -1,8 +1,9 @@
 <link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="../px-icon-set/px-icon-set.html">
-<link rel="import" href="../px-icon-set/px-icon.html">
+<link rel="import" href="../px-icon-set/px-icon-set.html"/>
+<link rel="import" href="../px-icon-set/px-icon.html"/>
 <link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="../px-dropdown/px-dropdown.html"/>
+<link rel="import" href="css/aha-table-styles.html"/>
 
 <!--
 Element that provides pagination.
@@ -11,9 +12,11 @@ Element that provides pagination.
 
       <px-pagination number-of-items="{{numberOfItems}}" page-size="{{pageSize}}" first-item-index-to-display="{{firstItemIndex}}"></px-pagination>
 
-@demo demo.html
+
+@element px-pagination.html
+@homepage index.html
+@demo index.html
 -->
-<link rel="import" href="css/aha-table-styles.html">
 <dom-module id="px-pagination">
   <template>
     <style include="aha-table-styles"></style>

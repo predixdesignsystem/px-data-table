@@ -1,12 +1,8 @@
-<!--
-    Relative paths assume component is being run from inside an app or another component, where dependencies are flat
-    siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
-    'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs.
--->
 <link rel="import" href="../polymer/polymer.html" />
-
+<link rel="import" href="css/px-data-table-highlight-styles.html">
 
 <!--
+
 Element to define and configure highlighting behavior for a given column (and hence cell or row).
 
 ### Usage
@@ -30,9 +26,8 @@ Custom property | Description | Default
 @element px-data-table-highlight
 @blurb Element to define and configure highlighting behaviour for a given column (and hence cell or row).
 @homepage index.html
-@demo demo.html
+@demo index.html
 -->
-<link rel="import" href="css/px-data-table-highlight-styles.html">
 <dom-module id="px-data-table-highlight">
   <template>
     <style include="px-data-table-highlight-styles"></style>

@@ -1,12 +1,14 @@
 <link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="aha-table.html">
-<link rel="import" href="px-data-table-column.html">
-<link rel="import" href="px-data-table-highlight.html">
-<link rel="import" href="../px-validation/px-validation.html">
+<link rel="import" href="aha-table.html"/>
+<link rel="import" href="px-data-table-column.html"/>
+<link rel="import" href="px-data-table-highlight.html"/>
+<link rel="import" href="../px-validation/px-validation.html"/>
 <link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
+<link rel="import" href="css/px-data-table-styles.html"/>
 
 
 <!--
+
 Element that defines a data table, optionally using a sub-element for advanced column settings.
 Use the dropdown at the top of this screen to see documentation on the `px-data-table-column` and `px-data-table-highlight` sub-components.
 
@@ -78,11 +80,10 @@ Custom property | Description
 `--px-data-table-padding-right` |  The right padding for table cells
 
 
-
+@element px-data-table
+@homepage index.html
 @demo index.html
 -->
-<link rel="import" href="css/px-data-table-styles.html">
-
 <dom-module id="px-data-table">
   <template>
     <style include="px-data-table-styles"></style>
