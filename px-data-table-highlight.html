@@ -85,7 +85,7 @@ Custom property | Description | Default
      * Loads the imported highlight function.
      *
      */
-    ready: function() {
+    attached: function() {
       this.importHref(this.import, function(e) {
         if (this.highlightMethod && window.PxHighlight[this.highlightMethod]){
           this.highlight = window.PxHighlight[this.highlightMethod];

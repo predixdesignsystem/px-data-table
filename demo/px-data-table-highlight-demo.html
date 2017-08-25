@@ -13,6 +13,7 @@
 <!-- Imports for this component -->
 <link rel="import" href="../../px-demo/css/px-demo-styles.html" />
 <link rel="import" href="../px-data-table.html" />
+<link rel="import" href="../px-example-highlight.html" />
 
 <!-- Demo DOM module -->
 <dom-module id="px-data-table-highlight-demo">
@@ -45,7 +46,7 @@
                 highlight-type="row"
                 highlight-value="high"
                 highlight-method="wordBeginsWithLetterS"
-                import="px-example-highlight.html">
+                import="[[_computeRelativeUrl()]]">
               </px-data-table-highlight>
             </px-data-table-column>
             <px-data-table-column name="last"></px-data-table-column>
@@ -116,6 +117,12 @@
       }
     },
 
+    _computeRelativeUrl: function() {
+      var importPath = this.importPath;
+      importPath = importPath.substr(0,importPath.indexOf('demo/'));
+      return importPath + 'px-example-highlight.html';
+    },
+
     demoProps: {
       highlightType: {
         type: String,
@@ -136,11 +143,6 @@
         defaultValue: 'wordBeginsWithLetterS',
         inputType: 'text',
         inputDisabled: true
-      },
-
-      import: {
-        type: String,
-        defaultValue: 'px-example-highlight.html'
       },
 
       lightDomContent: {

@@ -1,5 +1,9 @@
 v4.0.5
 ==================
+* fix highlight demo to calculate path (#149)
+
+v4.0.5
+==================
 * Fix for sub-component demos to refer to shared API docs.
 
 v4.0.4
