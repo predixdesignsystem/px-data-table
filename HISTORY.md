@@ -1,4 +1,4 @@
-v4.0.5
+v4.0.6
 ==================
 * fix highlight demo to calculate path (#149)
 
