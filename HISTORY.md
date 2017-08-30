@@ -1,3 +1,7 @@
+v4.0.7
+==================
+* fix docs
+
 v4.0.6
 ==================
 * fix highlight demo to calculate path (#149)
