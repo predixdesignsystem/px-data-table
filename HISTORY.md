@@ -1,3 +1,7 @@
+v4.0.8
+==================
+* fix padding of html columns (#151) and pagination buttons
+
 v4.0.7
 ==================
 * fix docs
