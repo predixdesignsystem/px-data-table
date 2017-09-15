@@ -717,13 +717,17 @@
     },
 
     _getInternalCellStateAt: function(row, columnName) {
+      return this._getInternalRowStateAt(row, columnName)[columnName] || {};
+    },
+
+    _getInternalRowStateAt: function (row, columnName) {
       if(columnName === '_selected' || columnName === '_filtered') {
         // shadow fields are in root of row in internal data
-        return row[columnName];
+        return row;
       }
       else {
         // the user's data is in the row column of internal data
-        return (row.row[columnName]? row.row[columnName] : {});
+        return row.row;
       }
     },
 
@@ -1438,7 +1442,9 @@
           highlightClass;
 
       highlightElements.forEach(function(highlightEl) {
-        doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
+        var rowState = this._getInternalRowStateAt(row, column.name);
+        var data = this._getInternalDataAt(row, column.name);
+        doHighlight = highlightEl.highlight(data, rowState, column.name);
         if (highlightObj.value && doHighlight) {
           if(highlightObj.highlightValue === 'low'){
             highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
