@@ -47,7 +47,7 @@
       <!-- in place editing template -->
       <template is="dom-if" if="{{_isEqual(cellType,'string')}}">
         <div class="flex cell--container">
-          <span role="gridcell" id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation, cellDisplayValue)}}">{{cellDisplayValue}}
+          <span role="gridcell" id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation, cellDisplayValue)}} no-click">{{cellDisplayValue}}
             <template is="dom-if" if="{{cellDisplayTooltip}}">
               <px-tooltip
                 orientation="top"
@@ -57,6 +57,21 @@
               </px-tooltip>
             </template>
           </span>
+        </div>
+      </template>
+      <!-- link template -->
+      <template is="dom-if" if="{{_isEqual(cellType,'link')}}">
+        <div class="flex cell--container">
+          <a role="gridcell" id="cellvalue" class$="{{_getValueCellClass(_editing, cellValidation.passedValidation, cellDisplayValue)}}">{{cellDisplayValue}}
+            <template is="dom-if" if="{{cellDisplayTooltip}}">
+              <px-tooltip
+                orientation="top"
+                smart-orientation
+                delay="1000"
+                tooltip-message="{{cellValue}}">
+              </px-tooltip>
+            </template>
+          </a>
         </div>
       </template>
       <!-- icon template -->
