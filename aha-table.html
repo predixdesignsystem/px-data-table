@@ -727,6 +727,15 @@
       }
     },
 
+    _getInternalRowStateAt: function (row, columnName) {
+      if(columnName === '_selected' || columnName === '_filtered') {
+        return row;
+      }
+      else {
+        return row.row;
+      }
+    },
+
     /******* Update Displayed rows when major changes ****/
 
     _updateDisplayedRows: function() {
@@ -1438,7 +1447,9 @@
           highlightClass;
 
       highlightElements.forEach(function(highlightEl) {
-        doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
+        var rowState = this._getInternalRowStateAt(row, column.name);
+        var data = this._getInternalDataAt(row, column.name);
+        doHighlight = highlightEl.highlight(data, rowState, column.name);
         if (highlightObj.value && doHighlight) {
           if(highlightObj.highlightValue === 'low'){
             highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
