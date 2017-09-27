@@ -297,7 +297,8 @@
           value = this._undoValue;
           Polymer.dom(this.$$('.cell--edit')).querySelector('input,select,textarea').value = value;
         }
-        else if(this._dropdownItem) {
+        else if(this._dropdownItem && evt.detail.selected === true) {
+          /* Only get dropdown values for select events, not deselect events */
           value = evt.detail.val;
         }
         else {

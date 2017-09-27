@@ -1399,4 +1399,18 @@ function runTests() {
       });
     });
   });
+
+  suite('Unit tests for px-data-table-column dropdown mode', function() {
+    test('Changing a dropdown cell updates the table data', function() {
+      var tableFixture = document.getElementById('tableWithDropdownColumn');
+      var dropdownCell = Polymer.dom(tableFixture.root).querySelector('aha-table').querySelectorAll('px-data-table-cell')[0];
+      var dropdown = Polymer.dom(dropdownCell.root).querySelector('px-dropdown');
+      // Open dropdown
+      dropdown.$.button.click();
+      // Get "Wei" dropdown choice button and select it
+      var weiChoiceButton = Polymer.dom(dropdown.root).querySelector('.dropdown-option[title="Wei"]');
+      weiChoiceButton.click();
+      assert.equal(tableFixture.tableData[0].first, 'Wei', 'Wei should be set as the first name in the first table data entry.');
+    });
+  });
 }
