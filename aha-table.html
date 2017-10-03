@@ -24,7 +24,7 @@
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser u-mb-">
-        <px-dropdown display-value="{{localize('Show/Hide Column')}}" items='{{_columnChooserItems}}' multi hide-selected>
+        <px-dropdown display-value="{{localize('Show/Hide Column')}}" items='{{_columnChooserItems}}' multi hide-selected clear-selections-on-change>
         </px-dropdown>
       </div>
     </template>

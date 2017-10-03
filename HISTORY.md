@@ -1,3 +1,7 @@
+v4.0.13
+==================
+* update to work with latest dropdown
+
 v4.0.12
 ==================
 * fix history
