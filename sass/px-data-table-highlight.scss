@@ -7,13 +7,9 @@
  * with the terms and conditions stipulated in the agreement/contract
  * under which the software has been supplied.
  */
-//
-// Sass for the "sketch" notion of the px-data-table-highlight component
-//
-// @author
-//
-/*
-THIS FILE SHOULD CONTAIN ONLY ABSTRACT/'SKETCH' THEME RULES, NOT SPECIFIC TO PREDIX BRANDING
-Predix branding rules go in px-data-table-predix.scss, not in this file.
-*/
-// Settings
+
+:host{
+  --cell--value__highlight--high--color: red;
+  --cell--value__highlight--medium--color: yellow;
+  --cell--value__highlight--low--color: blue;
+}

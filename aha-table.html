@@ -12,7 +12,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
-<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="../px-icon-set/px-icon-set.html">
+<link rel="import" href="../px-icon-set/px-icon.html">
 <link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="css/aha-table-styles.html">
 
@@ -23,42 +24,28 @@
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser u-mb-">
-        <px-dropdown display-value="{{localize('Show/Hide Column')}}">
-          <px-dropdown-content
-            max-cont-character-width="100"
-            class="px-dropdown-content"
-            checkbox-mode="true"
-            items='{{_columnChooserItems}}'>
-          </px-dropdown-content>
+        <px-dropdown display-value="{{localize('Show/Hide Column')}}" items='{{_columnChooserItems}}' multi hide-selected clear-selections-on-change>
         </px-dropdown>
       </div>
     </template>
 
     <div class="scroll-body">
 
-      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}" role="grid">
-    <!-- Header -->
-      <div class="tr" role="row">
-        <template is="dom-repeat" items="{{meta}}" as="column">
-          <template is="dom-if" if="{{!column.hide}}">
-            <span
-              role="columnheader"
-              class$="{{_getHeaderClass(column)}}"
-              draggable="{{enableColumnReorder}}"
-              on-touchstart="_dragStartColumnHeader"
-              on-touchmove="_touchMoveHeader"
-              on-touchleave="_dragLeave"
-              on-touchend="_touchDropColumnHeader"
-              on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader"
-              on-dragover="_dragOverHeader"
-              on-drop="_dragDropColumnHeader"
-              on-dragend="_dragEndColumnHeader">
-              <div class="flex header--container">
-                <span class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}" on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></iron-icon>
-                </span>
-                <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-                  <template is="dom-if" if="{{enableColumnResize}}">
-                    <div class="header--drag-handle" on-down="_headerResizeMouseDown" on-track="_headerTrack"></div>
+      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableCells, tableColumns)}}" role="grid">
+        <!-- Header -->
+        <div class="tr" role="row">
+          <template is="dom-repeat" items="{{meta}}" as="column">
+            <template is="dom-if" if="{{!column.hide}}">
+              <span role="columnheader" class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
+                <div class="flex header--container">
+                  <span
+                    class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}"
+                    on-tap="_sort">{{column.label}}<px-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></px-icon>
+                  </span>
+                  <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
+                    <template is="dom-if" if="{{enableColumnResize}}">
+                      <div class="header--drag-handle" on-down="_headerResizeMouseDown" on-track="_headerTrack"></div>
+                    </template>
                   </template>
                 </template>
               </div>
@@ -67,37 +54,13 @@
         </template>
       </div>
 
-      <!-- Second Header (filter/select all) -->
-      <div class$="{{_getSecondHeaderClass(_enableFilterRow)}}" role="row">
-        <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
-          <span class$="{{_getFilterHeaderClass(column)}}" role="gridcell" hidden$="{{column.hide}}">
-            <!-- select all checkbox -->
-            <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-              <span class="flex flex--center" hidden$="{{column.hide}}">
-                <template is="dom-if" if="{{!singleSelect}}">
-                  <input id="selectAllCheckbox" role="checkbox" aria-label="Click to select or deselect all rows" type="checkbox" on-change="_clickSelectAll"/>
-                </template>
-              </span>
-            </template>
-
-            <!-- filter entry -->
-            <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
-              <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-paste="_filter" on-keyup="_filter"/>
-            </template>
-
-          </span>
-        </template>
-      </div>
-      <!-- Data rows -->
-      <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
-
-        <div role="row" class$="{{_getRowClass(internalRow,striped)}}">
-          <!-- Data cells -->
-          <template is="dom-repeat" items="{{meta}}" as="column">
-            <!-- selected column checkbox or radio button -->
-            <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-              <span role="gridcell" class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
-                <span class="flex flex--center flex--middle">
+        <!-- Second Header (filter/select all) -->
+        <div class$="{{_getSecondHeaderClass(_enableFilterRow)}}" role="row">
+          <template is="dom-repeat" items="{{meta}}" as="column" id="filterRepeat">
+            <span class$="{{_getFilterHeaderClass(column)}}" role="gridcell" hidden$="{{column.hide}}">
+              <!-- select all checkbox -->
+              <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
+                <span class="flex" hidden$="{{column.hide}}">
                   <template is="dom-if" if="{{!singleSelect}}">
                     <input role="checkbox" aria-label="Click to select row" type="checkbox" checked="{{internalRow._selected::change}}"/>
                   </template>
@@ -131,10 +94,57 @@
                 </px-data-table-cell>
               </template>
 
-            </template>
+              <!-- filter entry -->
+              <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
+                <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-input="_filter" />
+              </template>
+
+            </span>
           </template>
         </div>
-      </template>
+        <!-- Data rows -->
+        <template id="recordList" is="dom-repeat" items="{{displayedRows}}" as="internalRow" strip-whitespace>
+
+          <div role="row" class$="{{_getRowClass(internalRow,striped)}}">
+            <!-- Data cells -->
+            <template is="dom-repeat" items="{{meta}}" as="column">
+              <!-- selected column checkbox or radio button -->
+              <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
+                <span role="gridcell" class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
+                  <span class="flex flex--middle">
+                    <template is="dom-if" if="{{!singleSelect}}">
+                      <input role="checkbox" aria-label="Click to select row" type="checkbox" checked="{{internalRow._selected::change}}"/>
+                    </template>
+                    <template is="dom-if" if="{{singleSelect}}">
+                      <input role="checkbox" aria-label="Click to select row" type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
+                    </template>
+                  </span>
+                </span>
+              </template>
+              <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
+                <template is="dom-if" if="{{!column.hide}}">
+                  <px-data-table-cell
+                      on-save="_save"
+                      row-highlighted="[[internalRow._highlight]]"
+                      cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
+                      cell-selected="[[internalRow._selected]]"
+                      on-validate="_handleValidateEvent"
+                      cell-type="{{column.type}}"
+                      dropdown-items="{{column.dropdownItems}}"
+                      placeholder="{{column.placeholder}}"
+                      cell-display-value="{{_readContent(internalRow, column)}}"
+                      cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
+                      cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
+                      cell-editable="{{column.editable}}"
+                      cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
+                      column-name="{{column.name}}"
+                      on-tap="_clickCell">
+                  </px-data-table-cell>
+                </template>
+              </template>
+            </template>
+          </div>
+        </template>
       </div>
 
       <template is="dom-if" if="{{!displayedRows.length}}">
@@ -144,16 +154,16 @@
 
     <!-- Pagination controls -->
     <div class="pagination">
-      <px-pagination
-        class$="{{_getPaginationVisibility(hidePaginationControl)}}"
-        data-remote="{{dataRemote}}"
-        first-item-index-to-display="{{firstItemIndex}}"
-        id="pagination"
-        language="{{language}}"
-        number-of-items="{{_adaptedNumberOfItems}}"
-        page-size="{{pageSize}}"
-        resources="[[resources]]"
-        >
+      <px-pagination class$="{{_getPaginationVisibility(hidePaginationControl)}}"
+                    id="pagination"
+                    data-remote="{{dataRemote}}"
+                    number-of-items="{{_adaptedNumberOfItems}}"
+                    page-size="{{pageSize}}"
+                    page-size-options="{{pageSizeOptions}}"
+                    first-item-index-to-display="{{firstItemIndex}}"
+                    language="{{language}}"
+                    use-key-if-missing="{{useKeyIfMissing}}"
+                    resources="{{resources}}">
       </px-pagination>
     </div>
   </template>
@@ -208,8 +218,8 @@
         type: Boolean,
         value: false
       },
-      //tableRows: if table row is striped
-      tableRows: {
+      //tableCells: if table row is striped
+      tableCells: {
         type: Boolean,
         value: false
       },
@@ -377,7 +387,9 @@
       },
       _internalData: {
         type: Array,
-        value: function () { return []; }
+        value: function(){
+          return [];
+        }
       },
       /**
        * Array holding the column names in their displayed order
@@ -385,7 +397,9 @@
        */
       _columnChooserItems: {
         type: Array,
-        computed: '_computeColumnChooserItems(meta, meta.*)'
+        value: function() {
+          return [];
+        }
       },
       /**
        * Whether we're currently displaying an insertion column (when dragging columns)
@@ -416,42 +430,19 @@
       },
       //scroll body html element
       scrollBody: {
-        type: HTMLElement,
-        value: function () {
-          Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
-        }
-      },
-      /**
-       * A valid IETF language tag as a string that `px-localize-behavior` will
-       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
-       *
-       * See https://github.com/PolymerElements/app-localize-behavior for API
-       * documentation and more information.
-       */
-      language: {
         type: String,
-        value: 'en'
+        value: '#scrollBodyTableContainer'
       },
       /**
-      * Use the key for localization if value for  language is missing. Should
-      * always be true for  our components
-      */
-      useKeyIfMissing: {
-        type: Boolean,
-        value: true
-      },
-      /**
-       * Localizable strings for this component
+       * Options displayed in the page size dropdown.
        */
-      resources: {
-        type: Object,
+      pageSizeOptions: {
+        type: Array,
         value: function() {
-          return {
-            'en': {
-              'Show/Hide Column': 'Show/Hide Column',
-              'Filter': 'Filter'
-            }
-          }
+          return [{"key":"1","val":"10"},
+                  {"key":"2","val":"20"},
+                  {"key":"3","val":"50"},
+                  {"key":"4","val":"100"}];
         }
       }
     },
@@ -460,18 +451,17 @@
       '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
       '_updateDisplayedRows(pageSize)', // when the size of the page changes
       '_dataChanged(data.*)',
-      '_columnChooserChanged(_columnChooserItems.*)',
+      '_computeColumnChooserItems(meta, meta.*)',
       '_computeIfColumnFilterEnabled(meta.splices, filterable, meta.*, selectable, singleSelect)'
     ],
 
     listeners: {
-      'validate': '_handleValidateEvent'
+      'validate': '_handleValidateEvent',
+      'px-dropdown-selection-changed': '_columnChooserChanged'
     },
 
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
-      this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
-      if(this.selectable) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
       var boundHandler = this._columnChanged.bind(this);
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
     },
@@ -480,8 +470,10 @@
       this._isAttached = true;
     },
 
-    _columnChanged: function (info) {
-      var addedColumns = info.addedNodes.filter(function (node) {
+    _columnChanged: function(info){
+      if(this.selectable && this.meta.length === 0) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
+
+      var addedColumns = info.addedNodes.filter(function(node) {
         return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
       });
       var removedColumns = info.removedNodes.filter(function (node) {
@@ -678,12 +670,12 @@
     _generateMetaFromData: function() {
       for(var prop in this.data[0]) {
         var previousNode,
-          notFound = this.meta.every(function(column, index) {
-            if(column.name === prop) {
-              return false;
-            }
-            return true;
-          });
+            notFound = this.meta.every(function(column, index) {
+              if(column.name === prop) {
+                return false;
+              }
+              return true;
+            });
 
         // if column not found
         if(notFound) {
@@ -702,6 +694,7 @@
         filterable: this.filterable,
         editable: false,
         required: false,
+        hide: false,
         selectAll: isSelectAll,
         validate: function () { return { 'passedValidation': true }; }
       });
@@ -845,6 +838,15 @@
         this.$.pagination.setPageSize(this.pageSize);
     },
 
+    _getInternalRowStateAt: function (row, columnName) {
+      if(columnName === '_selected' || columnName === '_filtered') {
+        return row;
+      }
+      else {
+        return row.row;
+      }
+    },
+
     _updateDisplayedRows: function () {
       var fromPage,
         to;
@@ -914,8 +916,11 @@
         sortingColumn;
       if (column && column.sortable) {
         sortingColumn = column.name;
-        if (sortingColumn === this.sortedColumn) {
+        if(sortingColumn === this.sortedColumn && !this.descending) {
           this.set('descending', !this.descending);
+        }
+        else if(sortingColumn === this.sortedColumn && this.descending) {
+          this.set('sortedColumn', '');
         } else {
           this.set('sortedColumn', sortingColumn);
           this.set('descending', false); // always start ascending when click new column
@@ -1162,7 +1167,6 @@
         evt.currentTarget.cellValue = this._getInternalDataAt(row, column.name);
         evt.currentTarget.cellDisplayValue = this._readContent(row, column);
         this.data[row.row.dataIndex][column.name] = newValue;
-        this.notifyPath('data.' + row.row.dataIndex + '.' + column.name, newValue);
 
       }
 
@@ -1192,8 +1196,8 @@
       if (this.selectable) {
         this._selectRow(row, this.$.recordList.indexForElement(evt.currentTarget));
 
-        // always just make sure selectAll checkbox is unchecked when 1 row is clicked
         if(!this.singleSelect) {
+          // always just make sure selectAll checkbox is unchecked when 1 row is clicked
           selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
           selectAllCheckbox.checked = false;
         }
@@ -1529,37 +1533,28 @@
 
     /********* Hide/Show columns *********/
 
-    _columnChooserChanged: function (dropdownItem) {
-
-      //watch for checked changed only
-      if (dropdownItem.path.indexOf('checked') !== -1) {
-
-        //parse index of item that has changed
-        var index = dropdownItem.path.match(/\.#(\d+)./)[1];
-        if (index) {
-          var columnName = dropdownItem.base[index].key,
-            checked = dropdownItem.value;
-
-          if (checked) {
-            this.showColumn(columnName);
-          }
-          else {
-            this.hideColumn(columnName);
-          }
-        }
+    _columnChooserChanged: function(evt) {
+      if(evt.detail.selected) {
+        this.showColumn(evt.detail.key);
+      }
+      else {
+        this.hideColumn(evt.detail.key);
       }
     },
 
-    _computeColumnChooserItems: function (meta) {
-
-      var items = [];
-      meta.forEach(function (column, index) {
-        if (column.name !== '_selected' && column.name !== 'insertion-indicator') {
-          items.push({ key: column.name, val: column.label, checked: !column.hide });
+    _computeColumnChooserItems: function() {
+      // debounce, since meta and meta.* change very often when building the table
+      this.debounce('computeItems', function() {
+        var items = [];
+        this.meta.forEach(function(column, index) {
+          if(column.name !== '_selected' && column.name !== 'insertion-indicator' && !column.disableHide) {
+            items.push({ key: column.name, val: column.label, selected: !column.hide});
+          }
+        });
+        if (JSON.stringify(this._columnChooserItems) !== JSON.stringify(items)) {
+          this.set('_columnChooserItems', items);
         }
-      });
-
-      return items;
+      }, 5);
     },
 
     _calculateAdaptedNumberOfItems: function () {
@@ -1641,21 +1636,23 @@
         highlightObj = { value: false },
         highlightClass;
 
-      highlightElements.forEach(function (highlightEl) {
-        doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
+      highlightElements.forEach(function(highlightEl) {
+        var rowState = this._getInternalRowStateAt(row, column.name);
+        var data = this._getInternalDataAt(row, column.name);
+        doHighlight = highlightEl.highlight(data, rowState, column.name);
         if (highlightObj.value && doHighlight) {
-          if (highlightObj.highlightValue === 'low') {
-            highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
-          } else if (highlightObj.highlightValue === 'medium') {
+          if(highlightObj.highlightValue === 'low'){
+            highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
+          } else if(highlightObj.highlightValue === 'medium'){
             if (highlightEl.highlightValue === 'high') {
-              highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+              highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
             }
           } else {
-            highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+            highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
           }
         } else if (!highlightObj.value) {
           highlightObj.value = doHighlight;
-          highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+          highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
         }
 
         if (highlightEl.highlightType === 'row') {
@@ -1722,7 +1719,7 @@
     },
 
     _getHeaderClass: function(item) {
-      var classList = ['th', 'th--no-borders', 'aha-' + item.name + '-th', 'u-p0'];
+      var classList = ['th', 'aha-' + item.name + '-th', 'u-p0'];
       if(this.sortable && item.sortable) {
         classList.push('sortable');
       }
@@ -1745,13 +1742,13 @@
     _getSortingIcon: function (sortable, column, sortingColumn, descending) {
       var sortingIcon = ' ';
       if(sortable && sortingColumn === column.name) {
-        sortingIcon = descending ? 'fa:fa-caret-down' : 'fa:fa-caret-up';
+        sortingIcon = descending ? 'px-nav:down' : 'px-nav:up';
       }
       return sortingIcon;
     },
 
     _getSortingClass: function(sortable, column, sortingColumn, descending) {
-      var classList = 'sorting fa';
+      var classList = 'sorting';
       if(sortable && sortingColumn !== column.name) {
         classList = classList + ' visuallyhidden';
       }
@@ -1759,8 +1756,8 @@
     },
 
     _getTextSortingClass: function(sortable, column, sortingColumn) {
-      var classList = ['column-head', 'u-m--'];
-      if (column.name === '_selected') {
+      var classList = ['column-head', 'u-mv--', 'u-mh-'];
+      if (column.name === '_selected'){
         classList.push('column-head--selected');
       };
       if(sortable && column.sortable) {
@@ -1771,10 +1768,10 @@
       }
       return classList.join(' ');
     },
-    _getTableClass: function (tableRows, tableColumns) {
-      var classList = ['table', 'table--small'];
-      if (tableRows) {
-        classList.push('table--rows');
+    _getTableClass: function(tableCells, tableColumns) {
+      var classList = ['table'];
+      if(tableCells) {
+        classList.push('table--cells');
       }
       if (tableColumns) {
         classList.push('table--columns');

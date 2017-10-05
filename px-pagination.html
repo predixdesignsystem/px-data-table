@@ -1,6 +1,9 @@
 <link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="../px-icon-set/px-icon-set.html"/>
+<link rel="import" href="../px-icon-set/px-icon.html"/>
 <link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
+<link rel="import" href="../px-dropdown/px-dropdown.html"/>
+<link rel="import" href="css/aha-table-styles.html"/>
 
 <!--
 Element that provides pagination.
@@ -9,42 +12,40 @@ Element that provides pagination.
 
       <px-pagination number-of-items="{{numberOfItems}}" page-size="{{pageSize}}" first-item-index-to-display="{{firstItemIndex}}"></px-pagination>
 
-@demo demo.html
+
+@element px-pagination.html
+@homepage index.html
+@demo index.html
 -->
-<link rel="import" href="css/aha-table-styles.html">
 <dom-module id="px-pagination">
   <template>
     <style include="aha-table-styles"></style>
 
-			<span class="pagesize">
-				<span class="u-mr--">{{localize('Rows per page')}}</span>
-				<select id="pageSizeSelect" on-change="_changeDropDown">
-          <option selected>10</option>
-          <option>20</option>
-          <option>50</option>
-          <option>100</option>
-        </select>
+    <div class="paginationContainer">
+
+			<span class="pagesize  u-mr+">
+				<span class="rowsPerPage u-mr--">{{localize('Rows per page')}}</span>
+        <px-dropdown selected="{{pageSize}}" display-value="{{pageSize}}" select-by="val" button-style="bare--primary" items='{{pageSizeOptions}}' disable-clear></px-dropdown>
 			</span>
 
-			<span class="u-pl+ u-ml+ summary">
-				<span>{{firstItemIndexToDisplay}}</span>-<span>{{lastItemIndexToDisplay}}</span>
-				<span>{{localize('of')}}</span>
-				<span>{{numberOfItems}}</span>
-			</span>
+      <div>
+        <span class="summary">
+          <strong>{{firstItemIndexToDisplay}}-{{lastItemIndexToDisplay}}</strong>
+          <span>{{localize('of')}}</span>
+          <span>{{numberOfItems}}</span>
+        </span>
+        <button id="previous" class$="btn {{_getPageupClass(currentPage)}}" on-click="goToPreviousPage">
+          <px-icon icon="px-nav:back"></px-icon>
+        </button>
+        <template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
+          <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
+        </template>
+        <button id="next" class$="btn {{_getPagedownClass(currentPage, pageCount)}}" on-click="goToNextPage">
+          <px-icon icon="px-nav:next"></px-icon>
+        </button>
+      </div>
 
-			<span class="paging">
-				<button
-          class$="{{_getPageupClass(currentPage)}}"
-          on-click="goToPreviousPage"><iron-icon icon="fa:fa-angle-left"></iron-icon></button>
-				<span class="pager">
-					<template is="dom-repeat" items="{{_pagerButtons(pageCount, currentPage)}}" as="page">
-            <span on-click="_goToPage" class$="{{_getPagerButtonClass(page.val, currentPage)}}">{{page.val}}</span>
-          </template>
-				</span>
-				<button
-          class$="{{_getPagedownClass(currentPage, pageCount)}}"
-          on-click="goToNextPage"><iron-icon icon="fa:fa-angle-right"></iron-icon></button>
-			</span>
+    </div>
 
   </template>
 </dom-module>
@@ -60,7 +61,7 @@ Element that provides pagination.
     properties: {
 
       /**
-       * The total number of items
+       * The total number of items.
        */
       numberOfItems: {
         type: Number,
@@ -70,14 +71,15 @@ Element that provides pagination.
       },
 
       /**
-       * The size of a page
-       *
+       * The size of a page.
        */
       pageSize: {
         type: Number,
         value: 10,
         notify: true,
         observer: '_conditionallyUpdatePageSize'
+        // observer: '_goBackToFirstPage', // incoming change
+        // notify: true // incoming change
       },
 
       /**
@@ -88,6 +90,19 @@ Element that provides pagination.
       dataRemote: {
         type: Boolean,
         value: false
+      },
+
+      /**
+       * Options displayed in the page size dropdown.
+       */
+      pageSizeOptions: {
+        type: Array,
+        value: function() {
+          return [{"key":"1","val":"10"},
+                  {"key":"2","val":"20"},
+                  {"key":"3","val":"50"},
+                  {"key":"4","val":"100"}];
+        }
       },
 
       /**
@@ -313,6 +328,23 @@ Element that provides pagination.
      */
     _triggerPageSizeChangeRequest: function (intendedPageSize) {
       this.fire('px-page-size-change-intent', intendedPageSize);
+    _getPageupClass: function(currentPage) {
+      return [currentPage === 1 ? "btn--disabled" : "", 'btn--bare'].join(' ');
+    },
+
+    _getPagedownClass: function(currentPage, pageCount) {
+      return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", 'btn--bare'].join(' ');
+    },
+
+    _getPagerButtonClass: function(buttonValue, currentPage) {
+      var classList = ['btn'];
+      if(buttonValue === currentPage) {
+        classList.push('btn--tertiary u-ml');
+      }
+      else {
+        classList.push('btn--bare');
+      }
+      return classList.join(' ');
     },
 
 

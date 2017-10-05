@@ -1,6 +1,6 @@
 {
   "name": "px-data-table",
-  "version": "3.0.3",
+  "version": "4.0.14",
   "main": [
     "px-data-table.html"
   ],
@@ -22,22 +22,27 @@
   ],
   "dependencies": {
     "polymer": "^1.7.0",
-    "px-tooltip": "^0.10.0",
-    "px-theme": "^2.0.1",
-    "iron-a11y-keys-behavior": "~1.1.9",
-    "px-polymer-font-awesome": "^1.1.0",
-    "px-validation": "^0.4.0",
-    "px-dropdown": "^3.1.0",
-    "app-localize-behavior": "^1.0.2"
+    "px-tooltip": "^1.0.0",
+    "iron-a11y-keys-behavior": "^2.0.0",
+    "px-icon-set": "^2.0.0",
+    "px-validation": "^1.0.0",
+    "px-dropdown": "^4.0.0",
+    "app-localize-behavior": "^2.0.0"
   },
   "devDependencies": {
-    "px-starter-kit-design": "^0.7.0",
-    "iron-ajax": "^1.4.3",
-    "px-toggle-design": "^1.1.0",
-    "px-code-design": "^1.1.0",
-    "px-demo": "^1.4.8",
-    "px-layout-design": "^0.4.5",
-    "px-tables-design": "^1.1.9",
-    "px-button-group-design": "^1.0.6"
+    "px-theme": "^3.0.0",
+    "px-starter-kit-design": "^1.0.0",
+    "iron-ajax": "^2.0.0",
+    "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.1",
+    "px-toggle-design": "^2.0.0",
+    "px-demo": "^2.0.0",
+    "px-layout-design": "^1.0.0",
+    "px-tables-design": "^2.0.0",
+    "px-button-group-design": "^2.0.0",
+    "px-forms-design": "^2.0.0"
+  },
+  "resolutions": {
+    "webcomponentsjs": "^0.7.24",
+    "promise-polyfill": "^1.0.0"
   }
 }

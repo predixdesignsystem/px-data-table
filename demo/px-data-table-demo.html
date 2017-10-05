@@ -1,6 +1,5 @@
 <!-- Common imports -->
 <link rel="import" href="../../polymer/polymer.html" />
-<link rel="import" href="../../px-polymer-font-awesome/px-polymer-font-awesome.html" />
 
 <!-- Common demo imports -->
 <link rel="import" href="../../px-demo/px-demo-header.html" />
@@ -10,8 +9,9 @@
 <link rel="import" href="../../px-demo/px-demo-props.html" />
 <link rel="import" href="../../px-demo/px-demo-interactive.html" />
 <link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
+<link rel="import" href="../../px-demo/px-demo-code-editor.html" />
 
-<!-- Imports for this componnent -->
+<!-- Imports for this component -->
 <link rel="import" href="../../px-demo/css/px-demo-styles.html" />
 <link rel="import" href="../px-data-table.html" />
 
@@ -34,6 +34,8 @@
       <!-- Props -->
       <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
+      <px-demo-code-editor props="{{props}}"></px-demo-code-editor>
+
       <!-- Component ---------------------------------------------------------->
       <px-demo-component>
         <template is="dom-if" if="{{!props.dataRemote.value}}">
@@ -46,11 +48,10 @@
               selectable="{{props.selectable.value}}"
               single-select="{{props.singleSelect.value}}"
               show-column-chooser="{{props.showColumnChooser.value}}"
-              table-columns="{{props.tableColumns.value}}"
-              table-rows="{{props.tableRows.value}}"
               hide-pagination-control="{{props.hidePaginationControl.value}}"
-              include-all-columns="{{props.includeAllColumns.value}}">
-              <px-data-table-column name="first" filterable sortable editable></px-data-table-column>
+              include-all-columns="{{props.includeAllColumns.value}}"
+              language="{{props.language.value}}">
+              <px-data-table-column name="first" placeholder="First Name" filterable sortable editable></px-data-table-column>
           </px-data-table>
         </div>
         </template>
@@ -75,7 +76,7 @@
                   first-item-index="{{firstItemIndex}}">
               </px-data-table>
             </div>
-        </template>        
+        </template>
       </px-demo-component>
       <!-- END Component ------------------------------------------------------>
 
@@ -110,17 +111,8 @@
         value: function(){
           return [
             { configName: "Simple",
-              striped: false,
-              filterable: false,
-              sortable: false,
-              selectable: false,
-              singleSelect: false,
-              showColumnChooser: false,
-              tableColumns: false,
-              tableRows: true,
-              hidePaginationControl: true,
-              includeAllColumns: true,
-              dataRemote: false },
+              dataRemote: false,
+              configReset: true },
 
             { configName: "Complex",
               striped: true,
@@ -129,8 +121,6 @@
               selectable: true,
               singleSelect: true,
               showColumnChooser: true,
-              tableColumns: false,
-              tableRows: false,
               hidePaginationControl: false,
               includeAllColumns: true,
               dataRemote: false },
@@ -150,11 +140,11 @@
           ]
         }
       },
-      
+
       hideLocalize: {
       type: Array,
       value: function() {
-          return ['useKeyIfMissing','formats','pathToResources','loadResources','app-localize-resources-error','app-localize-resources-loaded']
+          return ['localize','useKeyIfMissing','formats','pathToResources','loadResources','app-localize-resources-error','app-localize-resources-loaded']
         }
       },
 
@@ -199,6 +189,13 @@
         inputType: 'code:JSON'
       },
 
+      language: {
+        type: String,
+        defaultValue: 'en',
+        inputType: 'text',
+        inputDisabled: true
+      },
+
       striped: {
         type: Boolean,
         defaultValue: false,
@@ -235,18 +232,6 @@
         inputType: 'toggle'
       },
 
-      tableColumns: {
-        type: Boolean,
-        defaultValue: false,
-        inputType: 'toggle'
-      },
-
-      tableRows: {
-        type: Boolean,
-        defaultValue: false,
-        inputType: 'toggle'
-      },
-
       hidePaginationControl: {
         type: Boolean,
         defaultValue: false,
@@ -263,7 +248,7 @@
         type: String,
         defaultValue: '<px-data-table-column name="first" sortable editable filterable></px-data-table-column>'
       },
-      
+
       dataRemote: {
         type: Boolean,
         defaultValue: false,
@@ -277,7 +262,7 @@
         'px-filter-change-intent' : 'pageFilterChangeHandler'
     },
 
-    pageInit: function(evt){ 
+    pageInit: function(evt){
      this.dataForDisplay = this.dataFullSet;
      this.totalEntries = this.dataForDisplay.length;
      this.paginatedDataForDisplay = this.dataForDisplay.slice((this.firstItemIndex - 1), ((this.firstItemIndex -1) + this.pageSize));
@@ -299,7 +284,7 @@
       var filtered = [];
       evtDetail = JSON.parse(evt.detail);
         if(evtDetail.length > 0){
-         var unfiltered = this.dataFullSet; 
+         var unfiltered = this.dataFullSet;
           for(i = 0, len = unfiltered.length; i < len; i++){
             for(j = 0, filterLen = evtDetail.length; j < filterLen; j++ ){
               if(this._defaultFilter(evtDetail[j].userEntry , unfiltered[i][evtDetail[j].name])){
@@ -310,7 +295,7 @@
         this.dataForDisplay = filtered;
       }else{
         this.dataForDisplay = this.dataFullSet;
-      } 
+      }
        this.totalEntries = this.dataForDisplay.length;
        this.firstItemIndex = 1;
     },

@@ -1,12 +1,14 @@
 <link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="aha-table.html">
-<link rel="import" href="px-data-table-column.html">
-<link rel="import" href="px-data-table-highlight.html">
-<link rel="import" href="../px-validation/px-validation.html">
+<link rel="import" href="aha-table.html"/>
+<link rel="import" href="px-data-table-column.html"/>
+<link rel="import" href="px-data-table-highlight.html"/>
+<link rel="import" href="../px-validation/px-validation.html"/>
 <link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
+<link rel="import" href="css/px-data-table-styles.html"/>
 
 
 <!--
+
 Element that defines a data table, optionally using a sub-element for advanced column settings.
 Use the dropdown at the top of this screen to see documentation on the `px-data-table-column` and `px-data-table-highlight` sub-components.
 
@@ -48,51 +50,46 @@ We suggest instead to use events and selectors, for example:
 ### Styling
 The following custom properties are available for styling:
 
-Custom property | Description | Default
-----------------|-------------|----------
-`--px-data-table-border-color` | The table border color | $gray5
-`--px-data-table-header-text-color` | Text color for the header row | `inherit`
-`--px-data-table-header-background-color` | Background color for the header row | `inherit`
-`--px-data-table-cell-border-color` | The cell border color | `$gray5`
-`--px-data-table-cell-border-validation--failed` | The cell border color when validation fails | `$alert-red`
-`--px-data-table-cell-border-color--edit` | The cell border color when in edit mode | `$primary-blue`
-`--px-data-table-cell-border-color--selected` | The cell border color when selected | `$select-blue-default`
-`--px-data-table-cell-background-color--selected` | The cell background color when selected | `$select-blue-default`
-`--px-data-table-cell-background-color--edit` | The cell background color when in edit mode | `$inuit-forms-background`
-`--px-data-table-background-color-striped--even` | The background color of a striped cell (even) | `$gray2`
-`--px-data-table-row-border-top-color--selected` | The row border top color when selected | `$select-blue-default`
-`--px-data-table-row-border-bottom-color--selected` | The row border bottom color when selected | `$select-blue-default`
-`--px-data-table-cell-text-color--selected` | The cell text color when selected | `$white`
-`--px-data-table-cell-text-color-validation--failed` | The cell text color when validation fails | `$alert-red`
-`--px-data-table-cell-text-color--sorted` | The text color in a sorted cell | `$select-blue-default`
-`--px-data-table-cell-border-validation--failed` | The border color of a cell when validation fails | `$alert-red`
-`--px-data-table-results-text-color--none` | The text color the results when there are none | `$gray6`
-`--px-data-table-btn-pagination-number-background-color` | The backgorund color of a pagination btn | `$select-blue-default`
-`--px-data-table-btn-pagination-number-text-color` | The text color of a pagination btn | `$white`
-`--px-data-table-btn-pagination-number-background-color--hover` | The backgorund color of a pagination btn when hovered | `$select-blue-default`
-`--px-data-table-btn-pagination-number-text-color--hover` | The text color of a pagination btn when hovered | `$white`
-`--px-data-table-insertion-indicator-td-background-color` | The background color of an insertion indicator td  | `$primary-blue`
-`--px-data-table-text-input-background-color--filter` | The background color of a filtered input box | `$white`
-`--px-data-table-text-color--dragged` | The text color of a dragged item | `$primary-blue`
-`--cell--value__highlight--color__high` | A high highlight | `rgba($alert-red, 0.25)`
-`--cell--value__highlight--color__medium` | A medium highlight | `rgba($alert-yellow, 0.25)`
-`--cell--value__highlight--color__low` | A low highlight | `rgba($alert-blue, 0.25)`
-`--px-data-table-padding-top` | The top padding for table cells | 5px
-`--px-data-table-padding-bottom` |  The bottom padding for table cells | 5px
-`--px-data-table-padding-left` |  The left padding for table cells | 5px
-`--px-data-table-padding-right` |  The right padding for table cells | 5px
+Custom property | Description
+----------------|-------------
+`--px-data-table-border-color` | The table border color
+`--px-data-table-separator-color` | The table separator color
+`--px-data-table-header-text-color` | The text color of header rows
+`--px-data-table-header-background-color` | The background color of header rows
+`--px-data-table-cell-border-color--edit` | The cell border color when in edit mode
+`--px-data-table-cell-border-color--selected` | The cell border color when selected
+`--px-data-table-cell-border-validation--failed` | The cell border color when validation fails
+`--px-data-table-cell-background-color--selected` | The cell background color when selected
+`--px-data-table-cell-background-color--edit` | The cell background color when in edit mode
+`--px-data-table-background-color-striped--even` | The background color of a striped cell (even)
+`--px-data-table-cell-text-color--selected` | The cell text color when selected
+`--px-data-table-cell-text-color-validation--failed` | The cell text color when validation fails
+`--px-data-table-cell-text-color--sorted` | The text color of a sorted column
+`--px-data-table-cell-text-color--editing` | The text color of a cell in edit mode
+`--px-data-table-results-text-color--none` | The text color for the "no results" message
+`--px-data-table-insertion-indicator-td-background-color` | The color of the insertion indicator for reordering
+`--px-data-table-text-input-background-color--filter` | The background color of a filter input box
+`--px-data-table-text-color--dragged` | The text color of a dragged item
+`--px-data-table-text-color--hover` | The text color of a column header when hovered
+`--px-data-table-highlight--high` | A highlight of value 'high'
+`--px-data-table-highlight--medium` | A highlight of value 'medium'
+`--px-data-table-highlight--low` | A highlight of value 'low'
+`--px-data-table-padding-top` | The top padding for table cells
+`--px-data-table-padding-bottom` |  The bottom padding for table cells
+`--px-data-table-padding-left` |  The left padding for table cells
+`--px-data-table-padding-right` |  The right padding for table cells
 
 
-
+@element px-data-table
+@homepage index.html
 @demo index.html
 -->
-<link rel="import" href="css/px-data-table-styles.html">
-
 <dom-module id="px-data-table">
   <template>
     <style include="px-data-table-styles"></style>
 
-    <div>
+
+    <div class="flex">
       <aha-table
         data-remote="{{dataRemote}}"
         data="{{tableData}}"
@@ -105,17 +102,19 @@ Custom property | Description | Default
         include-all-columns="{{includeAllColumns}}"
         language="{{language}}"
         meta="{{meta}}"
+        page-size-options="{{pageSizeOptions}}"
         page-size="{{pageSize}}"
-        resources="[[resources]]"
+        resources="{{resources}}"
         selectable="{{selectable}}"
         selected-rows="{{selectedRows}}"
         show-column-chooser="{{showColumnChooser}}"
         single-select="{{singleSelect}}"
         sortable="{{sortable}}"
         striped="{{striped}}"
+        table-cells="{{tableCells}}"
         table-columns="{{tableColumns}}"
-        table-rows="{{tableRows}}"
         total-entries="{{totalEntries}}"
+        use-key-if-missing="{{useKeyIfMissing}}"
         >
         <content></content>
       </aha-table>
@@ -203,9 +202,9 @@ Custom property | Description | Default
       },
 
       /**
-       * If true, the table will only appear with horizontal borders.
+       * If true, the table will appear with both horizontal and vertical borders.
        */
-      tableRows: {
+      tableCells: {
         type: Boolean,
         value: false
       },
@@ -354,8 +353,20 @@ Custom property | Description | Default
       },
 
       /**
-       * A valid IETF language tag as a string that `px-localize-behavior` will
-       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+       * Options displayed in the page size dropdown.
+       */
+      pageSizeOptions: {
+        type: Array,
+        value: function() {
+          return [{"key":"1","val":"10"},
+                  {"key":"2","val":"20"},
+                  {"key":"3","val":"50"},
+                  {"key":"4","val":"100"}];
+        }
+      },
+      /**
+       * A valid IETF language tag as a string that `app-localize-behavior` will
+       * use to localize this component.
        *
        * See https://github.com/PolymerElements/app-localize-behavior for API
        * documentation and more information.
@@ -364,22 +375,23 @@ Custom property | Description | Default
         type: String,
         value: 'en'
       },
-      /**
-      * Use the key for localization if value for  language is missing. Should
-      * always be true for  our components
-      */
       useKeyIfMissing: {
         type: Boolean,
         value: true
       },
       /**
-       * Localizable strings for this component
-       */
+      * A dictionary of strings used within the component for AppLocalizeBehavior
+      * to use, based on the selected `language` property.
+      */
       resources: {
         type: Object,
         value: function() {
           return {
             'en': {
+              "of": "of",
+              "Show/Hide Column": "Show/Hide Column",
+              "Filter": "Filter",
+              "Rows per page": "Rows per page"
             }
           }
         }

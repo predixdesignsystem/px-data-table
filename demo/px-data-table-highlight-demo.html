@@ -1,6 +1,5 @@
 <!-- Common imports -->
 <link rel="import" href="../../polymer/polymer.html" />
-<link rel="import" href="../../px-polymer-font-awesome/px-polymer-font-awesome.html" />
 
 <!-- Common demo imports -->
 <link rel="import" href="../../px-demo/px-demo-header.html" />
@@ -11,9 +10,10 @@
 <link rel="import" href="../../px-demo/px-demo-interactive.html" />
 <link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
 
-<!-- Imports for this componnent -->
+<!-- Imports for this component -->
 <link rel="import" href="../../px-demo/css/px-demo-styles.html" />
 <link rel="import" href="../px-data-table.html" />
+<link rel="import" href="../px-example-highlight.html" />
 
 <!-- Demo DOM module -->
 <dom-module id="px-data-table-highlight-demo">
@@ -39,13 +39,14 @@
       <px-demo-component>
 
         <div>
+          <p>Properties for px-data-table-highlight can't be dynamically changed, they must be specified ahead of time. This example illustrates a highlight of type "row" and value of "high" (red, by default). It is associated with the first name column, and uses a method specified in px-example-highlight.html that catches strings starting with "S".</p>
           <px-data-table table-data={{tableData}} hide-pagination-control selectable>
             <px-data-table-column name="first">
               <px-data-table-highlight
                 highlight-type="row"
                 highlight-value="high"
                 highlight-method="wordBeginsWithLetterS"
-                import="px-example-highlight.html">
+                import="[[_computeRelativeUrl()]]">
               </px-data-table-highlight>
             </px-data-table-column>
             <px-data-table-column name="last"></px-data-table-column>
@@ -63,8 +64,7 @@
     </px-demo-interactive>
 
     <!-- API Viewer -->
-    <px-demo-api-viewer source="px-data-table-highlight"></px-demo-api-viewer>
-
+    <px-demo-api-viewer api-source-file-path="px-data-table/px-data-table-api.json" source="px-data-table-highlight"></px-demo-api-viewer>
     <!-- Footer -->
     <px-demo-footer></px-demo-footer>
 
@@ -117,32 +117,32 @@
       }
     },
 
-    demoProps: {
-      highlightMethod: {
-        type: String,
-        defaultValue: 'wordBeginsWithLetterS',
-        inputType: 'text',
-        inputDisabled: true,
-        inputHelpText: 'Properties for px-data-table-highlight can\'t be dynamically changed, they must be specified ahead of time. This example illustrates a highlight of type "row" and value of "high" (red, by default). It is associated with the first name column, and uses a method specified in px-example-highlight.html that catches strings starting with "S".'
-      },
+    _computeRelativeUrl: function() {
+      var importPath = this.importPath;
+      importPath = importPath.substr(0,importPath.indexOf('demo/'));
+      return importPath + 'px-example-highlight.html';
+    },
 
+    demoProps: {
       highlightType: {
         type: String,
         defaultValue: 'row',
-        inputType: 'dropdown',
-        inputChoices: ['row','cell']
+        inputType: 'text',
+        inputDisabled: true,
       },
 
       highlightValue: {
         type: String,
         defaultValue: 'high',
-        inputType: 'dropdown',
-        inputChoices: ['low','medium','high']
+        inputType: 'text',
+        inputDisabled: true,
       },
 
-      import: {
+      highlightMethod: {
         type: String,
-        defaultValue: 'px-example-highlight.html'
+        defaultValue: 'wordBeginsWithLetterS',
+        inputType: 'text',
+        inputDisabled: true
       },
 
       lightDomContent: {

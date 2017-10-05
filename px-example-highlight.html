@@ -1,12 +1,12 @@
 <script>
     PxHighlight = {
-    isLongString: function isLongString(value) {
+    isLongString: function isLongString(value, row, column) {
       return ((value.length > 6) ? true : false);
     },
-    wordBeginsWithLetterS: function wordBeginsWithLetterS(value) {
+    wordBeginsWithLetterS: function wordBeginsWithLetterS(value, row, column) {
       return ((value[0] === 'S') ? true : false);
     },
-    wordBeginsWithLetterJ: function wordBeginsWithLetterS(value) {
+    wordBeginsWithLetterJ: function wordBeginsWithLetterS(value, row, column) {
       return ((value[0] === 'J') ? true : false);
     }
   };
