@@ -36,7 +36,7 @@
 
       <!-- Component ---------------------------------------------------------->
       <px-demo-component>
-
+        <template is="dom-if" if="{{!props.dataRemote.value}}">
         <div>
           <px-data-table
               table-data="{{props.tableData.value}}"
@@ -53,6 +53,29 @@
               <px-data-table-column name="first" filterable sortable editable></px-data-table-column>
           </px-data-table>
         </div>
+        </template>
+        <template is="dom-if" if="{{props.dataRemote.value}}">
+            <div>
+              <px-data-table
+                  id="demoRemoteTable"
+                  table-data="{{paginatedDataForDisplay}}"
+                  striped="{{props.striped.value}}"
+                  filterable="{{props.filterable.value}}"
+                  sortable="{{props.sortable.value}}"
+                  selectable="{{props.selectable.value}}"
+                  single-select="{{props.singleSelect.value}}"
+                  show-column-chooser="{{props.showColumnChooser.value}}"
+                  table-columns="{{props.tableColumns.value}}"
+                  table-rows="{{props.tableRows.value}}"
+                  hide-pagination-control="{{props.hidePaginationControl.value}}"
+                  include-all-columns="{{props.includeAllColumns.value}}"
+                  data-remote="{{props.dataRemote.value}}"
+                  total-entries="{{totalEntries}}"
+                  page-size="{{pageSize}}"
+                  first-item-index="{{firstItemIndex}}">
+              </px-data-table>
+            </div>
+        </template>        
       </px-demo-component>
       <!-- END Component ------------------------------------------------------>
 
@@ -96,7 +119,8 @@
               tableColumns: false,
               tableRows: true,
               hidePaginationControl: true,
-              includeAllColumns: true },
+              includeAllColumns: true,
+              dataRemote: false },
 
             { configName: "Complex",
               striped: true,
@@ -108,15 +132,63 @@
               tableColumns: false,
               tableRows: false,
               hidePaginationControl: false,
-              includeAllColumns: true }
+              includeAllColumns: true,
+              dataRemote: false },
+
+            { configName: "Remote",
+              striped: true,
+              filterable: true,
+              sortable: true,
+              selectable: false,
+              singleSelect: true,
+              showColumnChooser: true,
+              tableColumns: false,
+              tableRows: false,
+              hidePaginationControl: false,
+              includeAllColumns: false,
+              dataRemote: true },
           ]
         }
       },
+      
       hideLocalize: {
       type: Array,
       value: function() {
           return ['useKeyIfMissing','formats','pathToResources','loadResources','app-localize-resources-error','app-localize-resources-loaded']
         }
+      },
+
+      dataFullSet: {
+        type: Array,
+        value : [{"first":"Isabel","last":"Conrad","email":"isabelconrad@scentric.com"},{"first":"Jocelyn","last":"Wooten","email":"jocelynwooten@scentric.com"},{"first":"Valentine","last":"Meyer","email":"valentinemeyer@scentric.com"},{"first":"Silva","last":"Alexander","email":"silvaalexander@scentric.com"},{"first":"Hopkins","last":"Wong","email":"hopkinswong@scentric.com"},{"first":"Harriet","last":"Sherman","email":"harrietsherman@scentric.com"},{"first":"Stacie","last":"Bartlett","email":"staciebartlett@scentric.com"},{"first":"Charlene","last":"Stevens","email":"charlenestevens@scentric.com"},{"first":"Reyes","last":"Hartman","email":"reyeshartman@scentric.com"},{"first":"Alissa","last":"Duncan","email":"alissaduncan@scentric.com"},{"first":"Christina","last":"Craft","email":"christinacraft@scentric.com"},{"first":"Burt","last":"Landry","email":"burtlandry@scentric.com"},{"first":"Baldwin","last":"Hammond","email":"baldwinhammond@scentric.com"},{"first":"Laverne","last":"Hampton","email":"lavernehampton@scentric.com"},{"first":"Kirsten","last":"Chang","email":"kirstenchang@scentric.com"},{"first":"Mercado","last":"Hancock","email":"mercadohancock@scentric.com"},{"first":"Obrien","last":"Bruce","email":"obrienbruce@scentric.com"},{"first":"Pearl","last":"Moran","email":"pearlmoran@scentric.com"},{"first":"Underwood","last":"Barton","email":"underwoodbarton@scentric.com"},{"first":"Solomon","last":"Lloyd","email":"solomonlloyd@scentric.com"},{"first":"Lyons","last":"Stevenson","email":"lyonsstevenson@scentric.com"},{"first":"Swanson","last":"Richardson","email":"swansonrichardson@scentric.com"},{"first":"Aida","last":"Hurley","email":"aidahurley@scentric.com"},{"first":"Mccormick","last":"Jensen","email":"mccormickjensen@scentric.com"},{"first":"Ramona","last":"Meyers","email":"ramonameyers@scentric.com"},{"first":"Sharp","last":"Lindsay","email":"sharplindsay@scentric.com"},{"first":"Dina","last":"Robbins","email":"dinarobbins@scentric.com"},{"first":"Franco","last":"Carrillo","email":"francocarrillo@scentric.com"},{"first":"Guadalupe","last":"Odom","email":"guadalupeodom@scentric.com"},{"first":"Mcguire","last":"Kerr","email":"mcguirekerr@scentric.com"},{"first":"Giles","last":"Miller","email":"gilesmiller@scentric.com"},{"first":"Norton","last":"Carr","email":"nortoncarr@scentric.com"},{"first":"Marcie","last":"Rose","email":"marcierose@scentric.com"},{"first":"Loraine","last":"Castro","email":"lorainecastro@scentric.com"},{"first":"Fry","last":"Harmon","email":"fryharmon@scentric.com"},{"first":"Cooper","last":"Sampson","email":"coopersampson@scentric.com"},{"first":"Rosa","last":"Velazquez","email":"rosavelazquez@scentric.com"},{"first":"Claire","last":"Jefferson","email":"clairejefferson@scentric.com"},{"first":"Frieda","last":"Butler","email":"friedabutler@scentric.com"},{"first":"Juliana","last":"Gutierrez","email":"julianagutierrez@scentric.com"},{"first":"Mallory","last":"Gross","email":"mallorygross@scentric.com"},{"first":"Elsie","last":"Hahn","email":"elsiehahn@scentric.com"},{"first":"Hayes","last":"Ball","email":"hayesball@scentric.com"},{"first":"Baker","last":"Slater","email":"bakerslater@scentric.com"},{"first":"Martha","last":"Knight","email":"marthaknight@scentric.com"},{"first":"Slater","last":"Erickson","email":"slatererickson@scentric.com"},{"first":"Beck","last":"Potts","email":"beckpotts@scentric.com"},{"first":"Pugh","last":"Douglas","email":"pughdouglas@scentric.com"},{"first":"Margo","last":"Hodges","email":"margohodges@scentric.com"},{"first":"Polly","last":"Mitchell","email":"pollymitchell@scentric.com"},{"first":"Brown","last":"Perkins","email":"brownperkins@scentric.com"},{"first":"Janette","last":"Cherry","email":"janettecherry@scentric.com"},{"first":"Florine","last":"Hobbs","email":"florinehobbs@scentric.com"},{"first":"Farley","last":"Santos","email":"farleysantos@scentric.com"},{"first":"Gray","last":"Paul","email":"graypaul@scentric.com"},{"first":"Roman","last":"Dunlap","email":"romandunlap@scentric.com"},{"first":"Meyer","last":"Blackburn","email":"meyerblackburn@scentric.com"},{"first":"Schwartz","last":"Garcia","email":"schwartzgarcia@scentric.com"},{"first":"Thornton","last":"Sykes","email":"thorntonsykes@scentric.com"},{"first":"Webb","last":"Maddox","email":"webbmaddox@scentric.com"},{"first":"Cathleen","last":"Nichols","email":"cathleennichols@scentric.com"},{"first":"Ila","last":"Bentley","email":"ilabentley@scentric.com"},{"first":"Warner","last":"Blair","email":"warnerblair@scentric.com"},{"first":"Garcia","last":"Carter","email":"garciacarter@scentric.com"},{"first":"Bowen","last":"Olson","email":"bowenolson@scentric.com"},{"first":"Kidd","last":"Sanders","email":"kiddsanders@scentric.com"},{"first":"Deanne","last":"Casey","email":"deannecasey@scentric.com"},{"first":"Hardin","last":"Thornton","email":"hardinthornton@scentric.com"},{"first":"Taylor","last":"Irwin","email":"taylorirwin@scentric.com"},{"first":"Stone","last":"Watson","email":"stonewatson@scentric.com"},{"first":"Avery","last":"Knox","email":"averyknox@scentric.com"},{"first":"Cathryn","last":"Rodgers","email":"cathrynrodgers@scentric.com"},{"first":"Head","last":"Cohen","email":"headcohen@scentric.com"},{"first":"Simone","last":"Whitfield","email":"simonewhitfield@scentric.com"},{"first":"Sue","last":"Cotton","email":"suecotton@scentric.com"},{"first":"Olson","last":"Burch","email":"olsonburch@scentric.com"},{"first":"Powell","last":"Nunez","email":"powellnunez@scentric.com"},{"first":"Orr","last":"Buchanan","email":"orrbuchanan@scentric.com"},{"first":"Helena","last":"Lynch","email":"helenalynch@scentric.com"},{"first":"Beatriz","last":"Case","email":"beatrizcase@scentric.com"},{"first":"Jenifer","last":"Contreras","email":"jenifercontreras@scentric.com"},{"first":"Pittman","last":"Powers","email":"pittmanpowers@scentric.com"},{"first":"Kelli","last":"Gallagher","email":"kelligallagher@scentric.com"},{"first":"Moss","last":"English","email":"mossenglish@scentric.com"},{"first":"Marcia","last":"Farmer","email":"marciafarmer@scentric.com"},{"first":"Dennis","last":"Hill","email":"dennishill@scentric.com"},{"first":"Miranda","last":"Garner","email":"mirandagarner@scentric.com"},{"first":"Isabella","last":"Fry","email":"isabellafry@scentric.com"},{"first":"Stephens","last":"Bender","email":"stephensbender@scentric.com"},{"first":"Tracie","last":"Pate","email":"traciepate@scentric.com"},{"first":"Georgina","last":"Cardenas","email":"georginacardenas@scentric.com"},{"first":"Carissa","last":"Castillo","email":"carissacastillo@scentric.com"},{"first":"Delacruz","last":"Hunt","email":"delacruzhunt@scentric.com"},{"first":"Claudette","last":"Walters","email":"claudettewalters@scentric.com"},{"first":"Trisha","last":"Chavez","email":"trishachavez@scentric.com"},{"first":"Desiree","last":"Sullivan","email":"desireesullivan@scentric.com"},{"first":"Guthrie","last":"May","email":"guthriemay@scentric.com"},{"first":"Althea","last":"Quinn","email":"altheaquinn@scentric.com"},{"first":"Hester","last":"Santana","email":"hestersantana@scentric.com"},{"first":"Garner","last":"Kirk","email":"garnerkirk@scentric.com"}]
+      },
+
+      dataForDisplay : {
+        type: Array,
+        value: '',
+        observer : 'paginateData'
+      },
+
+      paginatedDataForDisplay: {
+        type: Array,
+        value: '',
+        notify: true
+      },
+
+      firstItemIndex: {
+        type: Number,
+        value: 1,
+        notify: true
+      },
+
+      pageSize: {
+        type: Number,
+        value: 10
+      },
+
+      totalEntries : {
+        type: Number,
+        value: 100
       }
     },
 
@@ -189,10 +261,71 @@
 
       lightDomContent: {
         type: String,
-        defaultValue: '<px-data-table-column name="first"></px-data-table-column>'
+        defaultValue: '<px-data-table-column name="first" sortable editable filterable></px-data-table-column>'
+      },
+      
+      dataRemote: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+    	    }
+    },
+    listeners : {
+        'px-data-table-init' : 'pageInit',
+        'px-page-change-intent' : 'pageChangeHandler',
+        'px-page-size-change-intent' : 'pageSizeChangeHandler',
+        'px-filter-change-intent' : 'pageFilterChangeHandler'
+    },
+
+    pageInit: function(evt){ 
+     this.dataForDisplay = this.dataFullSet;
+     this.totalEntries = this.dataForDisplay.length;
+     this.paginatedDataForDisplay = this.dataForDisplay.slice((this.firstItemIndex - 1), ((this.firstItemIndex -1) + this.pageSize));
+    },
+
+    pageChangeHandler : function(evt){
+        let newFirstItemIndex =  ((evt.detail - 1) * this.pageSize + 1)  || 1;
+        this.firstItemIndex = newFirstItemIndex;
+        this.paginatedDataForDisplay = this.dataForDisplay.slice((newFirstItemIndex - 1), ((newFirstItemIndex -1) + this.pageSize));
+    },
+
+    pageSizeChangeHandler: function(evt){
+      this.pageSize = evt.detail;
+      this.firstItemIndex = 1;
+      this.paginatedDataForDisplay = this.dataForDisplay.slice((this.firstItemIndex - 1), ((this.firstItemIndex -1) + this.pageSize));
+    },
+
+    pageFilterChangeHandler: function(evt){
+      var filtered = [];
+      evtDetail = JSON.parse(evt.detail);
+        if(evtDetail.length > 0){
+         var unfiltered = this.dataFullSet; 
+          for(i = 0, len = unfiltered.length; i < len; i++){
+            for(j = 0, filterLen = evtDetail.length; j < filterLen; j++ ){
+              if(this._defaultFilter(evtDetail[j].userEntry , unfiltered[i][evtDetail[j].name])){
+                filtered.push(unfiltered[i]);
+              }
+            }
+          }
+        this.dataForDisplay = filtered;
+      }else{
+        this.dataForDisplay = this.dataFullSet;
+      } 
+       this.totalEntries = this.dataForDisplay.length;
+       this.firstItemIndex = 1;
+    },
+
+    _defaultFilter: function (searchString, cellValue) {
+      if (searchString === undefined || searchString === null || searchString === "") {
+        return true;
       }
+      if (cellValue) {
+        return (cellValue.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
+      }
+    },
 
+    paginateData: function(){
+       this.paginatedDataForDisplay = this.dataForDisplay.slice((this.firstItemIndex - 1), (this.firstItemIndex + this.pageSize));
     }
-
   });
 </script>
