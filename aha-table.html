@@ -571,6 +571,9 @@
 
     _generateMetaFromData: function() {
       var newMeta = [];
+      if(this._selectedColumnExists() && this.meta[0].name === '_selected') {
+        newMeta.push(this.meta[0]);
+      }
       for(var prop in this.data[0]) {
         var colInfo = this._generateMetaForColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1));
         newMeta.push(colInfo);
