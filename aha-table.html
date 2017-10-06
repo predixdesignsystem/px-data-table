@@ -570,21 +570,23 @@
 
 
     _generateMetaFromData: function() {
+      var newMeta = [];
       for(var prop in this.data[0]) {
-        var previousNode,
-            notFound = this.meta.every(function(column, index) {
-              if(column.name === prop) {
-                return false;
-              }
-              return true;
-            });
+        // var previousNode,
+        //     notFound = this.meta.every(function(column, index) {
+        //       if(column.name === prop) {
+        //         return false;
+        //       }
+        //       return true;
+        //     });
 
-        // if column not found
-        if(notFound) {
+        // // if column not found
+        // if(notFound) {
           var colInfo = this._generateMetaForColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1));
-          this.push('meta', colInfo);
-        }
+          newMeta.push(colInfo);
+        // }
       }
+      this.set('meta', newMeta);
     },
 
 
