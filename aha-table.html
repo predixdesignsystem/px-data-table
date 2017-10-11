@@ -746,7 +746,7 @@
         this.filteredSortedData !== undefined && this.filteredSortedData !== null && !this.hidePaginationControl) {
 
         fromPage = this.firstItemIndex - 1; // pagination is 1-based
-        to = fromPage + this.pageSize;
+        to = fromPage + parseInt(this.pageSize, 10);
 
         this.set('displayedRows', this.filteredSortedData.slice(fromPage, to));
 

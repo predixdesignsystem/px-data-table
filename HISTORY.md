@@ -1,3 +1,7 @@
+v4.0.15
+==================
+* fix #164 pagination bug
+
 v4.0.14
 ==================
 * fix #160 and remove infinite loop issue
