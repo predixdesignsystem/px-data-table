@@ -535,7 +535,7 @@
             return true;
           }
         });
-        if(this._cellChanged(this._readContent(this._internalData[index], column), changeRec.value)){
+        if(column != null && this._cellChanged(this._readContent(this._internalData[index], column), changeRec.value)){
           this._handleValidateEvent(evt);
         }
       }
