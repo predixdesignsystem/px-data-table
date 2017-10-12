@@ -6,9 +6,5 @@ bower_components
 reports
 css/noprefix
 npm-debug.log
-<<<<<<< HEAD
 coverage
 .vscode
-=======
-.vscode
->>>>>>> master
