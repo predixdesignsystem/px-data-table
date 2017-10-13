@@ -914,7 +914,7 @@ function runTests() {
           var tb = Polymer.dom(sortableTableRoot.root).querySelector('aha-table'),
               lastNameRow = Polymer.dom(tb.root).querySelectorAll('.aha-last-td');
 
-          assert.include(lastNameRow[9].textContent, 'Wooten');
+          assert.include(lastNameRow[lastNameRow.length - 1].textContent, 'Wooten');
           done(); // end the test
         }, 0);
       });
@@ -936,7 +936,7 @@ function runTests() {
 
       flush(function(){
         var editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
-            editCellToTheLeft = Polymer.dom(cell.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
+            editCellToTheLeft = Polymer.dom(cell.parentElement.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
         assert.isFalse(editCell.classList.contains('hidden'));
         assert.isTrue(editCellToTheLeft.classList.contains('hidden'));
         done();
@@ -1214,7 +1214,7 @@ function runTests() {
       flush(function() {
         var selectionEls = Polymer.dom(filterInnerTable.root).querySelectorAll(selectionPath);
         assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
-        assert.equal(selectionEls.length, 10);
+        assert.equal(selectionEls.length, 11);
         done();
       });
     });

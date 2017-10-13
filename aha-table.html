@@ -61,10 +61,10 @@
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
                 <span class="flex" hidden$="{{column.hide}}">
                   <template is="dom-if" if="{{!singleSelect}}">
-                    <input role="checkbox" aria-label="Click to select row" type="checkbox" checked="{{internalRow._selected::change}}"/>
+                    <input role="checkbox" id="selectAllCheckbox" aria-label="Click to select row" type="checkbox" checked="{{internalRow._selected::change}}"/>
                   </template>
                   <template is="dom-if" if="{{singleSelect}}">
-                    <input role="checkbox" aria-label="Click to select row" type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
+                    <input role="checkbox" id="selectAllCheckbox" aria-label="Click to select row" type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
                   </template>
                 </span>
               </template>
