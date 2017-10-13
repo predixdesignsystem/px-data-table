@@ -7,11 +7,7 @@
       ]
    },
     "sauce": {
-      "sauceSeleniumAddress": "3.26.203.223:4445/wd/hub",
-      "sauceSeleniumUseHttp": true,
-      "sauceTunnelIdentifier": "webHmi",
-      "name": "SOMETHING-NEW-Chrome61-Windows10",
-      "disabled": false,
+      "disabled": true,
       "browsers": [
         {
           "browserName": "microsoftedge",
@@ -32,6 +28,7 @@
     }
   },
   "suites": [
-    "test/px-data-table-test-set.html"
+    "test/px-data-table-fixture.html",
+    "test/px-data-table-cell-fixture.html"
   ]
 }
