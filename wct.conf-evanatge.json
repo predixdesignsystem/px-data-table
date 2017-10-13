@@ -11,7 +11,7 @@
       "accessKey": "758f7c99-8651-43f4-a777-313ffcea7673",
       "name": "test-with-new-tunnel",
       "tunnelId": "evans-tunnel",
-      "disabled": true,
+      "disabled": false,
       "browsers": [
         {
           "browserName": "microsoftedge",
