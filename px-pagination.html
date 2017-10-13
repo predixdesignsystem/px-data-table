@@ -58,6 +58,10 @@ Element that provides pagination.
       Polymer.AppLocalizeBehavior
     ],
 
+    listeners: {
+      'selected-changed': '_handleDropdownChange'
+    },
+
     properties: {
 
       /**
@@ -431,12 +435,8 @@ Element that provides pagination.
     // TEMPLATE HELPERS
     // --------------------
 
-    _changeDropDown: function(e) {
-      if (!this.dataRemote) {
-        this._updatePageSize(parseInt(e.target.value));
-      } else {
-        this._triggerPageSizeChangeRequest(e.target.value);
-      }
+    _handleDropdownChange: function(e) {
+      this._triggerPageSizeChangeRequest(e.target.value || e.target.selected);
     },
 
     _getPagedownClass: function(currentPage, pageCount) {

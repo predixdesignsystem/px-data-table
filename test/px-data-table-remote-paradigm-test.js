@@ -804,26 +804,24 @@ function runTests() {
       });
 
       test('Page 1 should be selected', function(){
-        var paginationPager = document.getElementById('remoteData1').querySelector('.pager.px-pagination');
+        var paginationPager = document.getElementById('remoteData1').querySelector('.px-pagination');
         // note: classList does not have prototype Array methods
         var page1IconClassList = paginationPager.children[0].classList.toString().split(' ');
-        assert(page1IconClassList.indexOf('btn--icon') > -1 && page1IconClassList.indexOf('btn--pagination--number') > -1,
-          'Has btn-icon and btn--pagination--number classes.');
-        assert.equal(page1IconClassList.indexOf('btn--bare'), -1, 'Does not have btn-bare class.');
+        assert.equal(document.getElementById('remoteData1').querySelector('.px-pagination .btn--icon.btn--pagination--number').textContent, '1',
+          '"1" is the selected page in the pagination component');
       });
 
       test('Page 2 should NOT be selected', function(){
-        var paginationPager = document.getElementById('remoteData1').querySelector('.pager.px-pagination');
+        var paginationPager = document.getElementById('remoteData1').querySelector('.px-pagination');
         // note: classList does not have prototype Array methods
         var page2IconClassList = paginationPager.children[1].classList.toString().split(' ');
-        assert(page2IconClassList.indexOf('btn--icon') === -1 && page2IconClassList.indexOf('btn--pagination--number') === -1,
-          'Has btn-icon and btn--pagination--number classes.');
-        assert(page2IconClassList.indexOf('btn--bare') > -1, 'Does not have btn-bare class.');
+        assert.equal(document.getElementById('remoteData1').querySelectorAll('.px-pagination .btn--icon.btn--pagination--number').length, 1,
+          'No other page number is selected');
       });
 
       test('Clicking Next Page button fires a `px-page-change-intent` event', function(done) {
         var dataTable = document.getElementById('remoteData1');
-        var pageChangeButton = dataTable.querySelector('.paging.px-pagination .btn--pagination.next');
+        var pageChangeButton = dataTable.querySelector('.px-pagination .btn--pagination.next');
 
         dataTable.addEventListener('px-page-change-intent', (evt) => {
           assert(true, 'Event is triggered');
@@ -845,11 +843,11 @@ function runTests() {
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
         assert.equal(paginationTextString, '11-20 of 50', 'Shows correct pagination counts.');
 
-        var paginationPager = dataTable.querySelector('.pager.px-pagination');
+        var paginationPager = dataTable.querySelector('.px-pagination');
         // note: classList does not have prototype Array methods
         var pageNIconClass = paginationPager.children[page - 1].classList.toString().split(' ');
-        assert(pageNIconClass.indexOf('btn--icon') > -1 && pageNIconClass.indexOf('btn--pagination--number') > -1,
-          'Page '+page+' is selected.');
+        assert.equal(document.getElementById('remoteData1').querySelector('.px-pagination .btn--icon.btn--pagination--number').textContent, '2',
+          'Page 2 is selected');
       });
 
     });
@@ -872,27 +870,25 @@ function runTests() {
         assert.equal(paginationTextString, '11-20 of 100', 'Shows correct pagination counts.');
       });
 
-      test('Page 1 should NOT be selected', function(){
-        var paginationPager = document.getElementById('remoteData2').querySelector('.pager.px-pagination');
+      test('Page 2 should be selected', function(){
+        var paginationPager = document.getElementById('remoteData2').querySelector('.px-pagination');
         // note: classList does not have prototype Array methods
         var page1IconClassList = paginationPager.children[0].classList.toString().split(' ');
-        assert(page1IconClassList.indexOf('btn--icon') === -1 && page1IconClassList.indexOf('btn--pagination--number') === -1,
-          'Has btn-icon and btn--pagination--number classes.');
-        assert(page1IconClassList.indexOf('btn--bare') > -1, 'Does not have btn-bare class.');
+        assert.equal(document.getElementById('remoteData2').querySelector('.px-pagination .btn--icon.btn--pagination--number').textContent, '2',
+          '"1" is the selected page in the pagination component');
       });
 
-      test('Page 2 should be selected', function() {
-        var paginationPager = document.getElementById('remoteData2').querySelector('.pager.px-pagination');
+      test('Page 1 should NOT be selected', function(){
+        var paginationPager = document.getElementById('remoteData2').querySelector('.px-pagination');
         // note: classList does not have prototype Array methods
         var page2IconClassList = paginationPager.children[1].classList.toString().split(' ');
-        assert(page2IconClassList.indexOf('btn--icon') > -1 && page2IconClassList.indexOf('btn--pagination--number') > -1,
-          'Has btn-icon and btn--pagination--number classes.');
-        assert.equal(page2IconClassList.indexOf('btn--bare'), -1, 'Does not have btn-bare class.');
+        assert.equal(document.getElementById('remoteData2').querySelectorAll('.px-pagination .btn--icon.btn--pagination--number').length, 1,
+          'No other page number is selected');
       });
 
       test('Clicking Previous Page button fires a `px-page-change-intent` event', function(done) {
         var dataTable = document.getElementById('remoteData2');
-        var pageChangeButton = dataTable.querySelector('.paging.px-pagination .btn--pagination.previous');
+        var pageChangeButton = dataTable.querySelector('.px-pagination .btn--pagination.previous');
 
         dataTable.addEventListener('px-page-change-intent', (evt) => {
           assert(true, 'Event is triggered');
@@ -914,11 +910,11 @@ function runTests() {
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
         assert.equal(paginationTextString, '1-10 of 50', 'Shows correct pagination counts.');
 
-        var paginationPager = dataTable.querySelector('.pager.px-pagination');
+        var paginationPager = dataTable.querySelector('.px-pagination');
         // note: classList does not have prototype Array methods
         var pageNIconClass = paginationPager.children[page - 1].classList.toString().split(' ');
-        assert(pageNIconClass.indexOf('btn--icon') > -1 && pageNIconClass.indexOf('btn--pagination--number') > -1,
-          'Page '+page+' is selected.');
+        assert.equal(document.getElementById('remoteData2').querySelector('.px-pagination .btn--icon.btn--pagination--number').textContent, '1',
+          'Page 1 is selected');
       });
 
     });
@@ -927,29 +923,31 @@ function runTests() {
 
       test('On change, it fires a `px-page-size-change-intent` event', function(done) {
         var dataTable = document.getElementById('remoteData3');
-        var pageSizeSelectDropdown = dataTable.querySelector('#pageSizeSelect');
+        var pageSizeSelectDropdown = dataTable.querySelector('.pagination px-pagination#pagination px-dropdown');
 
 
         dataTable.addEventListener('px-page-size-change-intent', (evt) => {
           assert(true, 'Event is triggered');
-          assert.equal(parseInt(evt.detail,10), 50, 'Requesting page size of 50');
+          var val = typeof evt.detail === "string" ? parseInt(evt.detail,10) : evt.detail;
+          assert.equal(val, 10, 'Requesting page size of 10');
           done();
         });
 
-        pageSizeSelectDropdown.selectedIndex = 2;
-        // trigger "change" even that would happen naturally in a browser
-        simulateChangeEvent(pageSizeSelectDropdown);
+        // because this a px-* component, you can't mutate the selected item with js
+        // so we have to expect the value to be what is currently selected
+        // this could be improved by changing the dropdown value with clicks
+        pageSizeSelectDropdown.fire('selected-changed');
       });
 
 
       test('Updates value accordingly when value is passed in', function() {
         var dataTable = document.getElementById('remoteData3');
-        var pageSizeSelectDropdown = dataTable.querySelector('#pageSizeSelect');
+        var pageSizeSelectDropdown = dataTable.querySelector('.pagination px-pagination#pagination px-dropdown');
 
         dataTable.pageSize = 20;
         dataTable.totalEntries = 100;
 
-        assert.equal(pageSizeSelectDropdown.selectedIndex, 1);
+        assert.equal(pageSizeSelectDropdown.selected, 20);
 
         var paginationSpan = dataTable.querySelector('.summary.px-pagination');
         var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
@@ -973,7 +971,7 @@ function runTests() {
           });
 
           lastNameFilter.value = 'ab';
-          lastNameFilter.dispatchEvent(new Event('keyup'));
+          lastNameFilter.dispatchEvent(new Event('input'));
       });
 
       test('Send event with combined filter string for all columns', function (done) {
@@ -999,7 +997,7 @@ function runTests() {
           });
 
           ahaTable.filteredColumns = filters;
-          imageFilter.dispatchEvent(new Event('keyup'));
+          imageFilter.dispatchEvent(new Event('input'));
 
       });
     });
@@ -1057,7 +1055,7 @@ function simulateChangeEvent(el)
     else
     {
         var evObj = document.createEvent('MouseEvents');
-        evObj.initMouseEvent('change', true, true, window, 1, 12, 345, 7, 220, false, false, true, false, 0, null );
+        evObj.initMouseEvent('selected-change', true, true, window, 1, 12, 345, 7, 220, false, false, true, false, 0, null );
         el.dispatchEvent(evObj);
     }
 }

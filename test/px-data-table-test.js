@@ -821,7 +821,7 @@ function runTests() {
     });
     test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function() {
       var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
-          cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[4];
+          cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[5];
       assert.include(cell.textContent, 'Rita Lopez');
     });
     test('Row count for first table should be 26', function() {
@@ -833,7 +833,7 @@ function runTests() {
     // Spot checks for correct values in table cells and controls'
     test('First Name displays only first 10 characters  if length of the text is greater than 10 characters and elipse at the right', function() {
       var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-          cell = Polymer.dom(tb.root).querySelectorAll('.aha-first-td')[0];
+          cell = Polymer.dom(tb.root).querySelectorAll('.aha-first-td')[1];
       assert.include(cell.textContent, 'Isabel lon…');
     });
     test('Email displays only last 10 characters displayed if length of the text is greater than 10 characters', function() {
@@ -1403,7 +1403,7 @@ function runTests() {
   suite('Unit tests for px-data-table-column dropdown mode', function() {
     test('Changing a dropdown cell updates the table data', function() {
       var tableFixture = document.getElementById('tableWithDropdownColumn');
-      var dropdownCell = Polymer.dom(tableFixture.root).querySelector('aha-table').querySelectorAll('px-data-table-cell')[0];
+      var dropdownCell = Polymer.dom(tableFixture.root).querySelector('aha-table').querySelectorAll('px-data-table-cell')[1];
       var dropdown = Polymer.dom(dropdownCell.root).querySelector('px-dropdown');
       // Open dropdown
       dropdown.$.button.click();
