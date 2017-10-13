@@ -328,6 +328,8 @@ Element that provides pagination.
      */
     _triggerPageSizeChangeRequest: function (intendedPageSize) {
       this.fire('px-page-size-change-intent', intendedPageSize);
+    },
+
     _getPageupClass: function(currentPage) {
       return [currentPage === 1 ? "btn--disabled" : "", 'btn--bare'].join(' ');
     },

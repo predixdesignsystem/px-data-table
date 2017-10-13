@@ -1,5 +1,5 @@
 {
-  "verbose": false,
+  "verbose": true,
   "plugins": {
     "local": {
       "browsers": [
@@ -11,7 +11,7 @@
       "accessKey": "758f7c99-8651-43f4-a777-313ffcea7673",
       "name": "test-with-new-tunnel",
       "tunnelId": "evans-tunnel",
-      "disabled": false,
+      "disabled": true,
       "browsers": [
         {
           "browserName": "microsoftedge",
@@ -32,6 +32,7 @@
     }
   },
   "suites": [
-    "test/px-data-table-test-set.html"
+      "test/px-data-table-fixture.html",
+      "test/px-data-table-cell-fixture.html"
   ]
 }

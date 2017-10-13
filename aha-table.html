@@ -835,7 +835,9 @@
     /******* Update Displayed rows when major changes ****/
 
     _setPageSize: function () {
+      if (this.$.pagination) {
         this.$.pagination.setPageSize(this.pageSize);
+      }
     },
 
     _getInternalRowStateAt: function (row, columnName) {
