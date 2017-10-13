@@ -1,10 +1,9 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture,
-  additionalDataFixture, updateSelectFixture;
+var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
-
-var data =[
+var data =
+[
   {
     "index": 0,
     "name": "Liz Grimes",
@@ -500,9 +499,7 @@ var data =[
     "color": "rgb(218,74,95)"
   }
 ];
-
-var additionalData = [
-  {
+var additionalData = [  {
   "index": 26,
   "name": "Cooley Macdonald Two",
   "first": "Aida",
@@ -520,7 +517,7 @@ var additionalData = [
   "email": "aidahurley@scentric.com",
   "phone": "(975) 451-3272",
   "color": "rgb(119,239,85)"
-  },
+},
   {
     "index": 27,
     "name": "Snow Blankenship Two",
@@ -578,9 +575,9 @@ var additionalData = [
     "phone": "(852) 538-3232",
     "color": "rgb(218,74,95)"
   }
-  ];
-  var minidata =
-  [
+];
+var minidata =
+[
   {
     "first": "Valentine",
     "last": "Meyer",
@@ -754,10 +751,8 @@ var additionalData = [
 ];
 
 document.addEventListener("WebComponentsReady", function() {
-
   table1Fixture = document.getElementById('table1');
   table1Fixture.tableData = data;
-
   table2Fixture = document.getElementById('table2');
   table2Fixture.tableData = minidata;
 
@@ -789,7 +784,6 @@ document.addEventListener("WebComponentsReady", function() {
 
 
 function runTests() {
-
   suite('Unit Tests for Data Table', function() {
 
     test('Polymer exists', function() {
@@ -814,11 +808,14 @@ function runTests() {
 
     // Spot checks for correct table structure, cell values and control states
 
-    test('There should be 17 columns in the myTable fixture', function() {
+    test('There should be 17 columns in the table1 fixture', function() {
 
       // Select a div corresponding to a data row in the table
-      var divSelector = '#dataTable > .scroll-body.aha-table > div > :nth-child(4)';
-      var columnCount = table5Fixture.querySelectorAll('aha-table px-data-table-column').length;
+      var divSelector = '#dataTable > .scroll-body.style-scope.aha-table > div > :nth-child(4)';
+      var divRow = document.querySelector(divSelector);
+      // Select all <span> children of divRow
+      var childSpanSelector = ':nth-child(4) > .td.style-scope.aha-table';
+      var columnCount = divRow.querySelectorAll(childSpanSelector).length;
       // There should be 17 such spans
       assert.equal(columnCount, 17);
     });
@@ -859,7 +856,7 @@ function runTests() {
       // Page 3 link
       var span3 = paginationRoot.querySelector(span3Selector);
       span3.addEventListener('click', function(e) {
-        var startCountSelector = 'span.summary.px-pagination > :nth-child(1)';
+        var startCountSelector = 'span.summary.style-scope.px-pagination > :nth-child(1)';
         // Element that shows starting record number in '<start>-<end> of <total> in Pagination'
         var startCount = paginationRoot.querySelector(startCountSelector);
         // startCount should show '21' when page 3 is clicked
@@ -876,17 +873,17 @@ function runTests() {
       var filterableTableRoot = document.querySelector('#table2');
       var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
       var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
-      lastNameFilter.addEventListener('keyup', function(e){
+      lastNameFilter.addEventListener('input', function(e){
         setTimeout(function() {
           var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
           var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
           assert.equal(secondReturnedRowFirstName.innerHTML.indexOf('Rita') >= 0, true);
           done(); // end the test
-        }, 1000);
+        }, 0);
       });
       // Trigger filter edit event and provide a filter value
       lastNameFilter.value = 'wo';
-      lastNameFilter.dispatchEvent(new Event('keyup'));
+      lastNameFilter.dispatchEvent(new Event('input'));
     });
 
     test('When selecting all, select only what is filtered', function(done){
@@ -1101,7 +1098,7 @@ function runTests() {
           done();
         });
       });
-  });
+    });
 
   suite('Table data mutations tests', function(){
     //uses table3Fixture - no other tests using this. Adding/removing rows could unsettle other tests if they were using this fixture.
@@ -1221,7 +1218,7 @@ function runTests() {
         done();
       });
     });
-  });
+});
 
   suite('Column show/hide tests', function(){
 
@@ -1416,5 +1413,4 @@ function runTests() {
       assert.equal(tableFixture.tableData[0].first, 'Wei', 'Wei should be set as the first name in the first table data entry.');
     });
   });
-
 }

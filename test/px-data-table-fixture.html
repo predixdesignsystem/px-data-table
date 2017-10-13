@@ -11,7 +11,7 @@
     <!-- web-component-tester automatically provides local copy of brower.js below
          for any URL ending with "/web-component-tester/browser.js"
          when wct is run from the command line -->
-    <script src="../bower_components/web-component-tester/browser.js"></script>
+    <script src="../web-component-tester/browser.js"></script>
     <link rel="import" href="../px-data-table.html" />
     <link rel="import" href="../../px-theme/px-theme-styles.html">
     <style include="px-theme-styles" is="custom-style"></style>
@@ -80,6 +80,7 @@
         <px-data-table-column name="city"></px-data-table-column>
         <px-data-table-column name="state"></px-data-table-column>
         <px-data-table-column name="zip"></px-data-table-column>
+        <!-- <px-data-table-column name="country"></px-data-table-column> -->
         <px-data-table-column name="country"
           type="dropdown"
           editable
@@ -111,6 +112,9 @@
         <px-data-table-column name="first"></px-data-table-column>
       </px-data-table>
       <hr>
+
+      <!-- <p>Hide pagination controls and show all data instead of first 10.</p>
+      <px-data-table hide-pagination-control id="table6"></px-data-table> -->
 
       <template is="dom-bind" id="app">
         <px-data-table id="domrepeat" table-data="{{minidata}}">
