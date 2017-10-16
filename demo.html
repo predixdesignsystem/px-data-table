@@ -6,173 +6,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>px-data-table Demo</title>
 
-    <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../promise-polyfill/promise-polyfill-lite.html">
 
     <link rel="import" href="px-data-table.html" />
     <link rel="import" href="../iron-ajax/iron-ajax.html" />
 
     <link rel="import" href="../px-theme/px-theme-styles.html">
-    <style include="px-theme-styles" is="custom-style"></style>
+    <custom-style>
+      <style include="px-theme-styles" is="custom-style"></style>
+    </custom-style>
 
   </head>
 
   <body unresolved>
-    <template is="dom-bind">
-      <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
-      <iron-ajax id="test" url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
+    <dom-bind>
+      <template>
+        <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
+        <iron-ajax id="test" url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
 
-      <h3>Data table demos</h3>
+        <h3>Data table demos</h3>
 
-      <p>A very simple data table.  Just displays data and has sortable columns.</p>
-      <px-data-table show-column-chooser enable-column-resize enable-column-reorder hide-pagination-control table-data="{{minidata}}"></px-data-table>
-
-
-      <p>Filterable columns and selectable rows.</p>
-      <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
+        <p>A very simple data table.  Just displays data and has sortable columns.</p>
+        <px-data-table show-column-chooser enable-column-resize enable-column-reorder hide-pagination-control table-data="{{minidata}}"></px-data-table>
 
 
-      <p>Display as columns instead of a grid.</p>
-      <px-data-table table-columns table-data="{{data}}"></px-data-table>
+        <p>Filterable columns and selectable rows.</p>
+        <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
 
 
-      <p>Display as rows instead of a grid.</p>
-      <px-data-table table-rows enable-column-reorder table-data="{{data}}"></px-data-table>
+        <p>Display as columns instead of a grid.</p>
+        <px-data-table table-columns table-data="{{data}}"></px-data-table>
 
 
-      <h3>Very customized data table</h3>
+        <p>Display as rows instead of a grid.</p>
+        <px-data-table table-rows enable-column-reorder table-data="{{data}}"></px-data-table>
 
-      <div>
-        Filtering
-        <ul>
-          <li>First column: custom filtering function - filters on an entire word in the First column</li>
-          <li>Color column: custom filtering function - on the button text in the Color column</li>
-        </ul>
-      </div>
 
-      <div>
-        Sorting
-        <ul>
-          <li>Selected column: groups all selected columns at the beginning or end</li>
-          <li>First and Last columns: default sorting alphanumerically</li>
-          <li>Email column: custom sorting function - by the email domain (gmail, hotmail, yahoo)</li>
-        </ul>
-      </div>
+        <h3>Very customized data table</h3>
 
-      <div>
-        Truncation and ellipsis
-        <ul>
-          <li>Image column: left ellipsis, 40 characters maximum</li>
-          <li>Date column: right ellipsis, 25 characters maximum</li>
-        </ul>
-      </div>
+        <div>
+          Filtering
+          <ul>
+            <li>First column: custom filtering function - filters on an entire word in the First column</li>
+            <li>Color column: custom filtering function - on the button text in the Color column</li>
+          </ul>
+        </div>
 
-      <div>
-        Html rendering
-        <ul>
-          <li>Color column</li>
-        </ul>
-      </div>
+        <div>
+          Sorting
+          <ul>
+            <li>Selected column: groups all selected columns at the beginning or end</li>
+            <li>First and Last columns: default sorting alphanumerically</li>
+            <li>Email column: custom sorting function - by the email domain (gmail, hotmail, yahoo)</li>
+          </ul>
+        </div>
 
-      <div>
-        Interacting with selecting rows
-        <ul>
-          <li>there are <span>{{mySelectedRows.length}}</span> rows selected</li>
-          <li>you can <button onclick="logSelectedRows()">console.log the selected rows</button></li>
-          <li>listen for px-row-click events from the table, which can be used by taking action on the row</li>
-        </ul>
-      </div>
+        <div>
+          Truncation and ellipsis
+          <ul>
+            <li>Image column: left ellipsis, 40 characters maximum</li>
+            <li>Date column: right ellipsis, 25 characters maximum</li>
+          </ul>
+        </div>
 
-      <px-data-table id="mytable" hide-pagination-control selected-rows="{{mySelectedRows}}" enable-column-resizing enable-column-reorder show-column-chooser filterable selectable table-data="{{minidata}}">
-        <px-data-table-column
-          name="first"
-          filterable
-          sortable
-          editable
-          filter-function-name="myTableCustomFunctions.filterWholeWord"
-          disable-hide>
-          <px-validation>
-            <px-validator validation-method="isNumber" import="../px-validation/px-example-validator.html"></px-validator>
-          </px-validation>
-          <px-data-table-highlight highlight-type="cell" highlight-value="medium" highlight-method="wordBeginsWithLetterJ" import="px-example-highlight.html"></px-data-table-highlight>
-          <px-data-table-highlight highlight-type="row" highlight-value="high" highlight-method="isLongString" import="px-example-highlight.html"></px-data-table-highlight>
-          <px-data-table-highlight highlight-type="cell" highlight-value="low" highlight-method="wordBeginsWithLetterS" import="px-example-highlight.html"></px-data-table-highlight>
-        </px-data-table-column>
-        <px-data-table-column
-          name="last"
-          editable
-          sortable>
-        </px-data-table-column>
-        <px-data-table-column
-          name="email"
-          editable
-          sort-function-name="myTableCustomFunctions.sortByEmailDomain"
-          sortable>
-        </px-data-table-column>
-        <px-data-table-column
-          name="country"
-          type="dropdown"
-          editable
-          max-column-character-width="14"
-          dropdown-items='["United Kingdom", "United States of America", "Germany", "Chad", "Seychelles", "Uruguay"]'>
-        </px-data-table-column>
-        <px-data-table-column
-          name="color"
-    			type="html"
-          filterable
-          filter-function-name="myTableCustomFunctions.filterMarkupVal">
-        </px-data-table-column>
-        <px-data-table-column
-          name="image"
-          max-column-character-width="40"
-          ellipsis-clip-position="left">
-        </px-data-table-column>
-        <px-data-table-column
-          name="date"
-          max-column-character-width="25"
-          ellipsis-clip-position="right">
-        </px-data-table-column>
-      </px-data-table>
+        <div>
+          Html rendering
+          <ul>
+            <li>Color column</li>
+          </ul>
+        </div>
 
-      <script>
+        <div>
+          Interacting with selecting rows
+          <ul>
+            <li>there are <span>{{mySelectedRows.length}}</span> rows selected</li>
+            <li>you can <button onclick="logSelectedRows()">console.log the selected rows</button></li>
+            <li>listen for px-row-click events from the table, which can be used by taking action on the row</li>
+          </ul>
+        </div>
 
-        window.myTableCustomFunctions = {
-          sortByEmailDomain: function(a, b) {
-            var aDomain = a.value.substring(a.value.indexOf("@")+1, a.value.indexOf("."));
-            var bDomain = b.value.substring(b.value.indexOf("@")+1, b.value.indexOf("."));
-            return this.descending ? (aDomain < bDomain ? 1 : -1) : (aDomain > bDomain ? 1 : -1);
-          },
-          filterMarkupVal: function(searchString, cellValue) {
-            var lhs = cellValue.slice(cellValue.indexOf('>') + 1);
-            var content = lhs.substr(0, lhs.indexOf('<'));
+        <px-data-table id="mytable" hide-pagination-control selected-rows="{{mySelectedRows}}" enable-column-resizing enable-column-reorder show-column-chooser filterable selectable table-data="{{minidata}}">
+          <px-data-table-column
+            name="first"
+            filterable
+            sortable
+            editable
+            filter-function-name="myTableCustomFunctions.filterWholeWord"
+            disable-hide>
+            <px-validation>
+              <px-validator validation-method="isNumber" import="../px-validation/px-example-validator.html"></px-validator>
+            </px-validation>
+            <px-data-table-highlight highlight-type="cell" highlight-value="medium" highlight-method="wordBeginsWithLetterJ" import="px-example-highlight.html"></px-data-table-highlight>
+            <px-data-table-highlight highlight-type="row" highlight-value="high" highlight-method="isLongString" import="px-example-highlight.html"></px-data-table-highlight>
+            <px-data-table-highlight highlight-type="cell" highlight-value="low" highlight-method="wordBeginsWithLetterS" import="px-example-highlight.html"></px-data-table-highlight>
+          </px-data-table-column>
+          <px-data-table-column
+            name="last"
+            editable
+            sortable>
+          </px-data-table-column>
+          <px-data-table-column
+            name="email"
+            editable
+            sort-function-name="myTableCustomFunctions.sortByEmailDomain"
+            sortable>
+          </px-data-table-column>
+          <px-data-table-column
+            name="country"
+            type="dropdown"
+            editable
+            max-column-character-width="14"
+            dropdown-items='["United Kingdom", "United States of America", "Germany", "Chad", "Seychelles", "Uruguay"]'>
+          </px-data-table-column>
+          <px-data-table-column
+            name="color"
+      			type="html"
+            filterable
+            filter-function-name="myTableCustomFunctions.filterMarkupVal">
+          </px-data-table-column>
+          <px-data-table-column
+            name="image"
+            max-column-character-width="40"
+            ellipsis-clip-position="left">
+          </px-data-table-column>
+          <px-data-table-column
+            name="date"
+            max-column-character-width="25"
+            ellipsis-clip-position="right">
+          </px-data-table-column>
+        </px-data-table>
 
-            return (content.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
-          },
-          filterWholeWord: function(searchString, cellValue) {
-            if(searchString === undefined || searchString === null || searchString === "") {
-              return true;
+        <script>
+
+          window.myTableCustomFunctions = {
+            sortByEmailDomain: function(a, b) {
+              var aDomain = a.value.substring(a.value.indexOf("@")+1, a.value.indexOf("."));
+              var bDomain = b.value.substring(b.value.indexOf("@")+1, b.value.indexOf("."));
+              return this.descending ? (aDomain < bDomain ? 1 : -1) : (aDomain > bDomain ? 1 : -1);
+            },
+            filterMarkupVal: function(searchString, cellValue) {
+              var lhs = cellValue.slice(cellValue.indexOf('>') + 1);
+              var content = lhs.substr(0, lhs.indexOf('<'));
+
+              return (content.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
+            },
+            filterWholeWord: function(searchString, cellValue) {
+              if(searchString === undefined || searchString === null || searchString === "") {
+                return true;
+              }
+              return (searchString.toString().toLowerCase() === cellValue.toString().toLowerCase());
             }
-            return (searchString.toString().toLowerCase() === cellValue.toString().toLowerCase());
+          };
+
+          function logSelectedRows() {
+            var selectedRows = document.getElementById("mytable").selectedRows;
+            console.log("Get all selected rows:", selectedRows);
           }
-        };
 
-        function logSelectedRows() {
-          var selectedRows = document.getElementById("mytable").selectedRows;
-          console.log("Get all selected rows:", selectedRows);
-        }
+          document.addEventListener('WebComponentsReady', function() {
 
-        document.addEventListener('WebComponentsReady', function() {
-
-          document.getElementById("mytable").addEventListener("px-row-click", function(e) {
-            var clickedRow = e.detail.row;
-            console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
+            document.getElementById("mytable").addEventListener("px-row-click", function(e) {
+              var clickedRow = e.detail.row;
+              console.log("Row clicked", clickedRow, " _selected: ", clickedRow._selected);
+            });
           });
-        });
 
 
-      </script>
+        </script>
 
-    </template>
+      </template>
+    </dom-bind>
   </body>
 
 </html>

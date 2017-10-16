@@ -20,7 +20,7 @@
 <dom-module id="aha-table">
   <template>
     <style include="aha-table-styles"></style>
-    <content id="columndefs"></content>
+    <slot id="columndefs"></slot>
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class="flex columnChooser u-mb-">
