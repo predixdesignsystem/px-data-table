@@ -6,3 +6,6 @@ bower_components
 reports
 css/noprefix
 npm-debug.log
+coverage
+.vscode
+wct.conf-*

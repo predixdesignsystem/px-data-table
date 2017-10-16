@@ -88,28 +88,34 @@ Custom property | Description
   <template>
     <style include="px-data-table-styles"></style>
 
+
     <div class="flex">
-      <aha-table data="{{tableData}}"
-        sortable="{{sortable}}"
-        filterable="{{filterable}}"
-        striped="{{striped}}"
-        table-columns="{{tableColumns}}"
-        table-cells="{{tableCells}}"
-        selectable="{{selectable}}"
-        selected-rows="{{selectedRows}}"
-        single-select="{{singleSelect}}"
-        meta="{{meta}}"
-        page-size="{{pageSize}}"
-        hide-pagination-control="{{hidePaginationControl}}"
-        show-column-chooser="{{showColumnChooser}}"
+      <aha-table
+        data-remote="{{dataRemote}}"
+        data="{{tableData}}"
         enable-column-reorder="{{enableColumnReorder}}"
         enable-column-resize="{{enableColumnResize}}"
+        filterable="{{filterable}}"
+        first-item-index="{{firstItemIndex}}"
+        hide-pagination-control="{{hidePaginationControl}}"
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
         language="{{language}}"
-        use-key-if-missing="{{useKeyIfMissing}}"
+        meta="{{meta}}"
+        page-size-options="{{pageSizeOptions}}"
+        page-size="{{pageSize}}"
         resources="{{resources}}"
-        page-size-options="{{pageSizeOptions}}">
+        selectable="{{selectable}}"
+        selected-rows="{{selectedRows}}"
+        show-column-chooser="{{showColumnChooser}}"
+        single-select="{{singleSelect}}"
+        sortable="{{sortable}}"
+        striped="{{striped}}"
+        table-cells="{{tableCells}}"
+        table-columns="{{tableColumns}}"
+        total-entries="{{totalEntries}}"
+        use-key-if-missing="{{useKeyIfMissing}}"
+        >
         <content></content>
       </aha-table>
     </div>
@@ -228,7 +234,70 @@ Custom property | Description
       },
 
       /**
+       * Property to set the the total number of entries in the table,
+       * assuming that dataRemote is true and the data provided is only
+       * for the visible page.
+       *
+       * Requires dataRemote="true" to take effect
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default 10
+       */
+      totalEntries: {
+        type: Number,
+        value: 10,
+        notify: true
+      },
+
+      /**
+       * Property to set the the remote index of the first item on this page,
+       * assuming that dataRemote is true and the data provided is only
+       * for the visible page.
+       *
+       * Requires dataRemote="true" to take effect
+       *
+       * If on page 2 with a page size of 10, then the first-item-index would be 11.
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default 1
+       */
+      firstItemIndex: {
+        type: Number,
+        value: 1,
+        notify: true
+      },
+
+      /**
+       * Property to set the the data paradigm.
+       *
+       * Local means all data is local.
+       * Remote means that only one page's worth of data is local.
+       *
+       * If this is false, then px-data-table expects all of the data to be provided to it.
+       *
+       * If this is true, then px-data-table will expect only one page's worth of data to be supplied.
+       * This will require other fields to be set, e.g. page-size, total-entries, and first-item-index
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      dataRemote: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
        * The default page size (number of visible rows) used in the pagination controls.
+       *
+       * Even in data-remote mode, page size may not match count of data provided.
+       * Page size could be 50, but only 40 items are provided.
+       *
+       *      <px-data-table page-size="50" table-data="{{data}}"></px-data-table>
+       *
+       * @default 10
        */
       pageSize: {
         type: Number,
@@ -282,6 +351,7 @@ Custom property | Description
         type: Boolean,
         value: false
       },
+
       /**
        * Options displayed in the page size dropdown.
        */
@@ -326,7 +396,7 @@ Custom property | Description
           }
         }
       }
-    }
+    },
 
     /**
      * Fired when a cell is clicked in the table. If the cell is not editable or of type 'dropdown',
@@ -355,6 +425,82 @@ Custom property | Description
      * });
      * ```
      * @event px-select-all-click
+     */
+
+    // ------------------------------
+    // Remote Data Source Events
+    // ------------------------------
+
+    /**
+     * Fired when the data table initializes
+     * Sends out initialization information (such as suggested page size based on available space)
+     * Only fired if dataRemote==true
+     *
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-data-table-init", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended page: ", data);
+     * });
+     * // ==> {pageSize:10}
+     * ```
+     * @event px-data-table-init
+     */
+    /**
+     * Fired when the user interaction indicates an intention to change the page
+     * Only fired if dataRemote==true
+     *
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-page-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended page: ", data);
+     * });
+     * ```
+     * @event px-page-change-intent
+     */
+    /**
+     * Fired when the user interaction indicates an intention to change the page size
+     * Only fired if dataRemote==true
+     *
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-page-size-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended page size: ", data);
+     * });
+     * ```
+     * @event px-page-size-change-intent
+     */
+    /**
+     * Fired when the user interaction indicates an intention to change the filter
+     * Captures filter data for all filtered columns
+     * Only fired if dataRemote==true
+     *
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-filter-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended filters: ", JSON.parse(data));
+     * });
+     * // ==> [{name:'columnA',userEntry:'asdf'},{name:'columnB',userEntry:'qwert'}]
+     * ```
+     * @event px-filter-change-intent
+     */
+    /**
+     * Fired when the user interaction indicates an intention to change the sort
+     * Captures sort data for all sorted columns (currently only single sort allowed through UI)
+     * Only fired if dataRemote==true
+     *
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-sort-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended sort: ", JSON.parse(data));
+     * });
+     * // ==> [{name:'columnA',direction:'ascending'}] or [{name:'columnB',direction:'descending'}]
+     * ```
+     * @event px-sort-change-intent
      */
 
   });
