@@ -32,28 +32,34 @@ Second, import the component to your application with the following tag in your 
 Finally, use the component in your application:
 
 ```html
-Minimum:
+Minimum - Client-Side Sort/Filter/Pagination:
 
-    <px-data-table table-data="{{data}}"></px-data-table>
-
-Advanced:
-
-    <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
-
-    <px-data-table selected-rows="{{mySelectedItems}}" filterable selectable striped table-data="{{data}}">
-      <px-data-table-column
-        name="first"
-        sortable
-        filter-function-name="myTableCustomFunctions.filterWholeWord"
-        sort-function-name="myTableCustomFunctions.sortByEmailDomain">
-      </px-data-table-column>
-      <px-data-table-column name="last" ...></px-data-table-column>
-      <px-data-table-column name="color" ...></px-data-table-column>
-      <px-data-table-column name="date" ...></px-data-table-column>
+    <px-data-table
+      table-data="{{data}}"
+      >
     </px-data-table>
+
+Minimum - Server-Side Sort/Filter/Pagination:
+
+    <px-data-table
+      table-data="{{data}}"
+      remote-data="true"
+      >
+    </px-data-table>
+
 ```
 
-Integrating with other frameworks (ex: Angular):
+### Client Side Sort/Filter/Pagination
+
+For more details and complex examples: [Client-Side Data Reference](docs/client-side-data.md)
+
+
+### Server Side Sort/Filter/Pagination
+
+For more details and complex examples: [Server-Side Data Reference](docs/server-side-data.md)
+
+
+### Integrating with other frameworks (ex: Angular):
 
 You may not be able to use 2-way binding with the objects/arrays in other frameworks such as Angular.
 
@@ -74,6 +80,7 @@ $scope.doSomethingWithSelectedRows = function() {
 ```
 
 You may also want to prevent your data from auto-synching with your model. If so, we've written up a [little explanation] to help you with that.
+
 
 ## Documentation
 

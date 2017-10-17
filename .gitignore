@@ -7,3 +7,4 @@ reports
 .yo-rc.json
 bower_components-*/
 bower-*.json
+wct.conf-*
