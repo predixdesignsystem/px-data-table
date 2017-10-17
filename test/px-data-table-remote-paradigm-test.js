@@ -923,8 +923,8 @@ function runTests() {
 
       test('On change, it fires a `px-page-size-change-intent` event', function(done) {
         var dataTable = document.getElementById('remoteData3');
-        var pageSizeSelectDropdown = dataTable.querySelector('.pagination px-pagination#pagination px-dropdown');
-
+        var paginationElement = dataTable.querySelector('.pagination px-pagination#pagination');
+        // var pageSizeSelectDropdown = dataTable.querySelector('.pagination px-pagination#pagination px-dropdown');
 
         dataTable.addEventListener('px-page-size-change-intent', (evt) => {
           assert(true, 'Event is triggered');
@@ -933,10 +933,22 @@ function runTests() {
           done();
         });
 
+        // TODO: figure out how to trigger this on the pageSizeSelectDropdown
+        // can't currently trigger a bubbling event (in IE11 only) on the dropdown that bubbles to px-pagination
+        //   because simulated events are strictly {bubbles:false} with readonly on that property
+        // simulateEvent(pageSizeSelectDropdown, 'selected-changed');
+
+        // ATTEMPTS
+        // pageSizeSelectDropdown.fire('selected-changed', 'dummyParam', {cancelable: true});
+        // var selectedChangedEvt = new Event('selected-changed');
+        // pageSizeSelectDropdown.dispatchEvent(selectedChangedEvt);
+
         // because this a px-* component, you can't mutate the selected item with js
         // so we have to expect the value to be what is currently selected
         // this could be improved by changing the dropdown value with clicks
-        pageSizeSelectDropdown.fire('selected-changed');
+        paginationElement.value = 10;
+        simulateEvent(paginationElement, 'selected-changed', {target:{value:10}});
+
       });
 
 
@@ -1045,17 +1057,16 @@ function runTests() {
 
 
 // HELPER FUNCTIONS
+function simulateEvent(el, eventNameString, detail) {
+  let customEvent = null;
+  try {
+    customEvent = new Event(eventNameString, { "bubbles": true });
+  } catch (error) {
+    customEvent = document.createEvent("Event");
+    let bubbles = true;
+    let cancelable = false;
+    customEvent.initEvent(eventNameString, bubbles, cancelable);
+  }
 
-function simulateChangeEvent(el)
-{
-    if (document.all)
-    {
-        el.change();
-    }
-    else
-    {
-        var evObj = document.createEvent('MouseEvents');
-        evObj.initMouseEvent('selected-change', true, true, window, 1, 12, 345, 7, 220, false, false, true, false, 0, null );
-        el.dispatchEvent(evObj);
-    }
+  el.dispatchEvent(customEvent, detail);
 }

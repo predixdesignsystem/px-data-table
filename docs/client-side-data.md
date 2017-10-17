@@ -1,6 +1,8 @@
+# Client-Side Sort/Filter/Pagination
 
-Advanced - Client Side Sort/Filter/Pagination:
+## Advanced
 
+```html
     <px-data-table
       selected-rows="{{mySelectedItems}}"
       filterable
@@ -19,3 +21,4 @@ Advanced - Client Side Sort/Filter/Pagination:
       <px-data-table-column name="color" ...></px-data-table-column>
       <px-data-table-column name="date" ...></px-data-table-column>
     </px-data-table>
+```
