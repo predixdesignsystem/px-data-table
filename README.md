@@ -32,15 +32,33 @@ Second, import the component to your application with the following tag in your 
 Finally, use the component in your application:
 
 ```html
-Minimum:
+Minimum - Client Side Sort/Filter/Pagination:
 
-    <px-data-table table-data="{{data}}"></px-data-table>
+    <px-data-table
+      table-data="{{data}}"
+      >
+    </px-data-table>
 
-Advanced:
+Minimum - Server Side Sort/Filter/Pagination:
 
-    <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
+    <px-data-table
+      table-data="{{data}}"
+      remote-data="true"
+      >
+    </px-data-table>
 
-    <px-data-table selected-rows="{{mySelectedItems}}" filterable selectable striped table-data="{{data}}">
+
+
+Advanced - Server Side Sort/Filter/Pagination (__remote data__):
+
+    <px-data-table
+      selected-rows="{{mySelectedItems}}"
+      filterable
+      selectable
+      striped
+      table-data="{{data}}"
+      remote-data="true"
+      >
       <px-data-table-column
         name="first"
         sortable
@@ -51,6 +69,9 @@ Advanced:
       <px-data-table-column name="color" ...></px-data-table-column>
       <px-data-table-column name="date" ...></px-data-table-column>
     </px-data-table>
+
+
+
 ```
 
 Integrating with other frameworks (ex: Angular):
@@ -74,6 +95,10 @@ $scope.doSomethingWithSelectedRows = function() {
 ```
 
 You may also want to prevent your data from auto-synching with your model. If so, we've written up a [little explanation] to help you with that.
+
+### Client Side Sort/Filter/Pagination
+
+### Server Side Sort/Filter/Pagination
 
 ## Documentation
 
