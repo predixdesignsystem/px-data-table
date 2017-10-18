@@ -928,7 +928,7 @@ function runTests() {
 
         dataTable.addEventListener('px-page-size-change-intent', (evt) => {
           assert(true, 'Event is triggered');
-          var val = typeof evt.detail === "string" ? parseInt(evt.detail,10) : evt.detail;
+          var val = _typeofComparison(evt.detail, "string") ? parseInt(evt.detail,10) : evt.detail;
           assert.equal(val, 10, 'Requesting page size of 10');
           done();
         });
@@ -947,7 +947,8 @@ function runTests() {
         // so we have to expect the value to be what is currently selected
         // this could be improved by changing the dropdown value with clicks
         paginationElement.value = 10;
-        simulateEvent(paginationElement, 'selected-changed', {target:{value:10}});
+        // simulateEvent(paginationElement, 'selected-changed', {target:{value:10}});
+        paginationElement.dispatchEvent(new Event('selected-changed'), {target:{value:10}});
 
       });
 
@@ -1069,4 +1070,11 @@ function simulateEvent(el, eventNameString, detail) {
   }
 
   el.dispatchEvent(customEvent, detail);
+}
+
+/**
+ * required by IE11
+ */
+function _typeofComparison (val, comparator) {
+  return (typeof val === comparator || false);
 }

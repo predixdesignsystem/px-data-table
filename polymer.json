@@ -1,0 +1,5 @@
+{
+  "builds": [{
+    "preset": "es5-bundled"
+  }]
+}

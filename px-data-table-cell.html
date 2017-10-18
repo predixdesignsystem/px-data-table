@@ -209,13 +209,13 @@
       * @param target String / Number
       */
       _isEqual: function(source, target) {
-        if (!Array.isArray(target) || typeof target !== 'object') {
+        if (!Array.isArray(target) || !this._typeofComparison(target, 'object')) {
           return source === target;
         }
         return;
       },
       isNotEqual: function(source, target) {
-        if (!Array.isArray(target) || typeof target !== 'object') {
+        if (!Array.isArray(target) || !this._typeofComparison(target, 'object')) {
           return source !== target;
         }
         return;
@@ -251,7 +251,7 @@
 
         classList = (this.cellType ==='dropdown') ? ['flex', 'ddviewing'] : ['flex', 'viewing'];
 
-        if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+        if(datum === null || datum === undefined || !this._typeofComparison(datum, 'string') && datum.trim().length === 0) {
           classList.push('empty');
         }
         return classList.join(' ');
@@ -373,6 +373,12 @@
         this.toggleClass('px-data-table-highlight--high', false);
         this.toggleClass('px-data-table-highlight--medium', false);
         this.toggleClass('px-data-table-highlight--low', false);
+      },
+      /**
+       * required by IE11
+       */
+      _typeofComparison: function (val, comparator) {
+        return (typeof val === comparator || false);
       }
     });
   </script>
