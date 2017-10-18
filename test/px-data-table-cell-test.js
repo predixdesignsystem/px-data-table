@@ -25,9 +25,9 @@ document.addEventListener("WebComponentsReady", function() {
       var e = {'target':{value:'xxxx'}};
       inputEl.value = 'xxxx';
 
-      flush(function(){
+      setTimeout(function(){
         cell.saveCell(e);
-      });
+      },100);
 
       // function hoisting means this is defined before the test is executed
       function assertFunction(evt){
