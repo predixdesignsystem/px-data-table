@@ -1,6 +1,6 @@
 {
   "name": "px-data-table",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "main": [
     "px-data-table.html"
   ],
@@ -39,7 +39,8 @@
     "px-layout-design": "^1.0.0",
     "px-tables-design": "^2.0.0",
     "px-button-group-design": "^2.0.0",
-    "px-forms-design": "^2.0.0"
+    "px-forms-design": "^2.0.0",
+    "web-component-tester": "^6.3.0"
   },
   "resolutions": {
     "webcomponentsjs": "^0.7.24",
