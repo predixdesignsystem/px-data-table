@@ -39,7 +39,8 @@
     "px-layout-design": "^1.0.0",
     "px-tables-design": "^2.0.0",
     "px-button-group-design": "^2.0.0",
-    "px-forms-design": "^2.0.0"
+    "px-forms-design": "^2.0.0",
+    "web-component-tester": "^6.3.0"
   },
   "resolutions": {
     "webcomponentsjs": "^0.7.24",
