@@ -2,13 +2,15 @@
 
 ## Advanced Example
 
+In the following example `serverResponse` is an object that is updated upon the response of a server.
+
 ```html
+
     <px-data-table
-      selected-rows="{{mySelectedItems}}"
-      filterable
-      selectable
-      striped
-      table-data="{{data}}"
+      id="remoteDataTable"
+      total-entries="{{serverResponse.totalRecordsCount}}"
+      first-item-index="{{serverResponse.recordIndexOfSubset}}"
+      table-data="{{serverResponse.dataSubset}}"
       remote-data="true"
       >
       <px-data-table-column
@@ -17,71 +19,75 @@
         filter-function-name="myTableCustomFunctions.filterWholeWord"
         sort-function-name="myTableCustomFunctions.sortByEmailDomain">
       </px-data-table-column>
-      <px-data-table-column name="last" ...></px-data-table-column>
-      <px-data-table-column name="color" ...></px-data-table-column>
-      <px-data-table-column name="date" ...></px-data-table-column>
+      <px-data-table-column name="last"></px-data-table-column>
+      <px-data-table-column name="color"></px-data-table-column>
+      <px-data-table-column name="date"></px-data-table-column>
     </px-data-table>
 ```
 
 ## Usage
 
-For container element ContainerEl, create the following event listeners and request new data based on the user-intended change. Upon receiving updated data, update the variable bound to the `table-data` attribute.
+For container element `ContainerEl`, create the following event listeners and request new data based on the user-intended change. Upon receiving updated data, update the variables bound to the `table-data`, `total-entries`, and `first-item-index` attributes.
 
 ### Events
 
+For full descriptions, run `gulp serve` and check out the [demo page](../demo/index.html).
+
 - `px-data-table-init`
-  - Fired when the data table initializes.
-  - Sends out initialization information (such as suggested page size based on available space)
-  - Only fired if dataRemote==true
-  - Information is stored in `evt.detail`:
-    ```javascript
-        document.getElementById("mytable").addEventListener("px-data-table-init", function(e) {
-          var data = e.detail;
-          console.log("Intended page: ", data);
-        });
-        // ==> {pageSize:10}
-    ```
 - `px-page-change-intent`
-  - Fired when the user interaction indicates an intention to change the page
-  - Only fired if dataRemote==true
-  - Information is stored in `evt.detail`:
-    ```javascript
-    document.getElementById("mytable").addEventListener("px-page-change-intent", function(e) {
-      var data = e.detail;
-      console.log("Intended page: ", data);
-    });
-    ```
 - `px-page-size-change-intent`
-  - Fired when the user interaction indicates an intention to change the page size
-  - Only fired if dataRemote==true
-  - Information is stored in `evt.detail`:
-    ```javascript
-    document.getElementById("mytable").addEventListener("px-page-size-change-intent", function(e) {
-      var data = e.detail;
-      console.log("Intended page size: ", data);
-    });
-    ```
 - `px-filter-change-intent`
-  - Fired when the user interaction indicates an intention to change the filter
-  - Captures filter data for all filtered columns
-  - Only fired if dataRemote==true
-  - Information is stored in `evt.detail`:
-    ```javascript
-    document.getElementById("mytable").addEventListener("px-filter-change-intent", function(e) {
-      var data = e.detail;
-      console.log("Intended filters: ", JSON.parse(data));
-    });
-    // ==> [{name:'columnA',userEntry:'asdf'},{name:'columnB',userEntry:'qwert'}]
-    ```
-- `px-sort-change-intent`
-  - Fired when the user interaction indicates an intention to change the sort
-  - Captures sort data for all sorted columns (currently only single sort allowed through UI)
-  - Only fired if dataRemote==true
-  - Information is stored in `evt.detail`:
-    ```javascript
-    document.getElementById("mytable").addEventListener("px-sort-change-intent", function(e) {
-      var data = e.detail;
-      console.log("Intended sort: ", JSON.parse(data));
-    });
-    // ==> [{name:'columnA',direction:'ascending'}] or [{name:'columnB',direction:'descending'}]
-    ```
+- `px-sort-change-intent`s
+
+
+## Example Usage
+
+### Markup
+
+```html
+  <div id="dataTableController">
+    <px-data-table
+      id="remoteDataTable"
+      total-entries="{{remoteData.totalRecordsCount}}"
+      first-item-index="{{remoteData.recordIndexOfSubset}}"
+      table-data="{{remoteData.dataSubset}}"
+      remote-data="true"
+      >
+      <px-data-table-column name="last"></px-data-table-column>
+    </px-data-table>
+  </div>
+```
+
+### Data Binding
+
+```javascript
+  var rdt = document.getElementById('remoteDataTable');
+
+  rdt.remoteData = {
+    totalRecordsCount: 0,
+    recordIndexOfSubset: 0,
+    dataSubset: []
+  };
+
+  rdt.addEventListener('px-page-change-intent', (evt) => {
+    composeFetchRequest({page: evt.detail});
+  });
+
+  function composeFetchRequest(options) {
+    fetchNewData('/someUrl', objToUrlParams(options));
+  }
+
+  function handleNewDataReceived (serverResponse) {
+    rdt.remoteData = {
+      totalRecordsCount: serverResponse.totalRecordsCount,
+      recordIndexOfSubset: serverResponse.recordIndexOfSubset,
+      dataSubset: serverResponse.dataSubset
+    };
+  }
+
+  function objToUrlParams (params) {
+    return Object.keys(params).map(function(k) {
+        return encodeURIComponent(k) + '=' + encodeURIComponent(a[k])
+    }).join('&');
+  }
+```

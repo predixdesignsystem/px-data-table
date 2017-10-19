@@ -42,12 +42,32 @@ Minimum - Client-Side Sort/Filter/Pagination:
 Minimum - Server-Side Sort/Filter/Pagination:
 
     <px-data-table
-      table-data="{{data}}"
+      total-entries="100"
+      first-item-index="11"
+      table-data="{{dataSubset}}"
       remote-data="true"
       >
     </px-data-table>
 
 ```
+
+### Client-Side VS Server-Side Data Paradigms
+
+There are two main paradigms for the source of data in a table.
+
+In a *Client-Side* model, the browser makes one request for the _complete set_ of data.
+This means that sorting, filtering, and pagination all happen in memory on the client.
+While this produces snappy tables with reasonably sized data sets, it can lead to a sluggish UI
+for larger data sets. This works great with data sets that don't change frequently,
+since the full payload would have to be resent for every update.
+
+In a *Server-Side* model, the browser makes a request for a _subset_ of data for a particular page.
+Sorting, filtering, and pagination requests will have to be made to a service for a new _subset_ of data
+that matches the user's intended criteria. This prevents the browser from being overwhelmed with excessively
+large data sets by only exposing one page's worth of data at a time. This is ideal for larger data sets or
+where it is preferable to make multiple small requests instead of fewer larger requests. Due to the increased
+frequency of requests, the UI is more likely to display data in sync with the server.
+
 
 ### Client Side Sort/Filter/Pagination
 
