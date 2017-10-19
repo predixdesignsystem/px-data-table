@@ -604,7 +604,7 @@
         this._generateMetaFromData();
       }
 
-      if (typeof this._internalData !== "undefined" && this._internalData.length === 0) {
+      if ( !this._typeofComparison(this._internalData, "undefined") && this._internalData.length === 0) {
         this._internalData = this._initializeInternalData();
       } else {
         this._internalData = this._refreshInternalData();
@@ -952,7 +952,7 @@
             }
             return {
               index: i,
-              value: typeof v === "string" ? v.toLowerCase() : v
+              value: this._typeofComparison(v, "string") ? v.toLowerCase() : v
             };
           }, this)
           .sort(sortFunction.bind(this))
@@ -1671,7 +1671,7 @@
 
     _readContent: function (row, column) {
       var datum = this._getInternalDataAt(row, column.name);
-      if (datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+      if (datum === null || datum === undefined || this._typeofComparison(datum, 'string') && datum.trim().length === 0) {
         return ""; // return empty string if no data
       }
 
@@ -1684,7 +1684,7 @@
       var datum = this._getInternalDataAt(row, column.name),
         maxColWidth = column.maxColumnCharacterWidth;
 
-      if (maxColWidth === 0 || datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+      if (maxColWidth === 0 || datum === null || datum === undefined || this._typeofComparison(datum, 'string') && datum.trim().length === 0) {
         return false;
       }
       if (maxColWidth !== undefined && maxColWidth !== null) {
@@ -1805,6 +1805,13 @@
       this._enableFilterRow = meta && (this.selectable && !this.singleSelect || filterable && this.meta.some(function(val){
         return this._isFilterableColumn(val);
       }.bind(this)));
+    },
+
+    /**
+     * required by IE11
+     */
+    _typeofComparison: function (val, comparator) {
+      return (typeof val === comparator || false);
     }
   });
 
