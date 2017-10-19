@@ -1,23 +1,32 @@
 document.addEventListener("WebComponentsReady", function() {
-  suite('Unit Tests for Data Table Cell', function() {
-    var cell = null,
-        editCell = null,
-        inputEl = null;
 
-    setup(function() {
+  runTests();
+});
+
+function runTests() {
+  suite('Data Table Cell', function() {
+
+    var cell = null;
+
+    setup(function(done) {
       cell = Polymer.dom(document).querySelector('px-data-table-cell');
-      editCell = Polymer.dom(cell.root).querySelector('px-edit-cell');
-      inputEl = Polymer.dom(editCell).querySelector('input');
+      this.timeout(10*1000); // adding table data may take a while
+      flush(function () { done(); });
     });
 
-    teardown(function() {
+    teardown(function (done) {
+      flush(function () { done(); });
     });
 
     test('Check cell element exists', function() {
       assert.isTrue(cell !== null);
+      assert.isTrue(true);
     });
 
     test('Check edit updates model data', function(done){
+
+      var editCell = Polymer.dom(cell.root).querySelector('px-edit-cell');
+      var inputEl = Polymer.dom(editCell).querySelector('input');
 
       cell.addEventListener('save', assertFunction );
 
@@ -25,9 +34,9 @@ document.addEventListener("WebComponentsReady", function() {
       var e = {'target':{value:'xxxx'}};
       inputEl.value = 'xxxx';
 
-      setTimeout(function(){
+      flush(function(){
         cell.saveCell(e);
-      },100);
+      });
 
       // function hoisting means this is defined before the test is executed
       function assertFunction(evt){
@@ -40,4 +49,4 @@ document.addEventListener("WebComponentsReady", function() {
       }
     });
   });
-});
+}
