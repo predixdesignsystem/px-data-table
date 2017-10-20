@@ -19,6 +19,43 @@
 <dom-module id="px-data-table-demo">
   <template>
     <style include="px-demo-styles" is="custom-style"></style>
+    <style>
+      #toaster {
+        position: fixed;
+        top: 0;
+        right: 0;
+        margin-left: 7px;
+        width: 70%;
+        border: 1px solid #c5d1d8;
+        background: #fff;
+        padding: 2em;
+        margin-right: 1em;
+        margin-top: 7px;
+        max-width: 45em;
+        z-index: 1;
+      }
+      .toaster--action-container {
+        text-align: right;
+        margin-top: 1em;
+      }
+      .toaster--title {
+        font-weight: bold;
+      }
+      .toaster--detail {
+        white-space: pre-wrap;       /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+      }
+      .toaster--message {
+        max-width: 30em;
+        line-height: 1.5em;
+      }
+      .toaster--message--label {
+        font-style: italic;
+      }
+    </style>
 
     <!-- Header -->
     <px-demo-header
@@ -77,6 +114,18 @@
               </px-data-table>
             </div>
         </template>
+        <div id="toaster" hidden="{{_toast.isHidden}}">
+          <div class="toaster--title">{{_toast.title}}</div>
+          <pre class="toaster--detail">evt.type: {{_toast.event}}</pre>
+          <pre class="toaster--detail">evt.detail: {{_toast.detail}}</pre>
+          <div class="toaster--message">
+            <span class="toaster--message--label">To update table: </span>
+            <span>{{_toast.message}}</span>
+          </div>
+          <div class="toaster--action-container">
+              <button class="btn" on-tap="_hideToast">Close</button>
+          </div>
+        </div>
       </px-demo-component>
       <!-- END Component ------------------------------------------------------>
 
@@ -134,12 +183,12 @@
               filterable: true,
               sortable: true,
               selectable: false,
-              singleSelect: true,
-              showColumnChooser: true,
+              singleSelect: false,
+              showColumnChooser: false,
               tableColumns: false,
               tableRows: false,
               hidePaginationControl: false,
-              includeAllColumns: false,
+              includeAllColumns: true,
               dataRemote: true },
           ]
         }
@@ -171,6 +220,16 @@
       totalEntries : {
         type: Number,
         value: 100
+      },
+
+      _toast: {
+        type: Object,
+        value: {
+          detail: '',
+          isHidden: true,
+          message: '',
+          title: ''
+        }
       }
     },
 
@@ -267,25 +326,59 @@
       this.dataForDisplay = dataFullSet.slice(0,10);
 
       if (this.dataForDisplay.length > this.pageSize) {
-        alert('The number of items passed to the grid exceeds the number of rows expected. The controller of the data (external to the px-data-table) must pass in rational properties. e.g. If row count is set to 10, then it should send 10 items unless there are less than 10 in the entire data set.');
+        this.set('_toast', {
+          isHidden: false,
+          message: 'The number of items passed to the grid exceeds the number of rows expected. The controller of the data (external to the px-data-table) must pass in rational properties. e.g. If row count is set to 10, then it should send 10 items unless there are less than 10 in the entire data set.',
+          title: 'Edge Case Detected'
+        });
       }
 
     },
 
+    _hideToast: function () {
+      this.set('_toast', Object.assign({}, this._toast, {
+        isHidden: true
+      }));
+    },
+
     pageChangeHandler : function(evt){
-      alert('Container element trapped px-data-table event `px-page-change-intent`. Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex. Evt.detail: '+evt.detail+'.');
+      this.set('_toast', {
+        detail: evt.detail,
+        event: 'px-page-change-intent',
+        isHidden: false,
+        message: 'Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex.',
+        title: 'Page Change Event Detected'
+      });
     },
 
     pageSizeChangeHandler: function(evt){
-      alert('Container element trapped px-data-table event `px-page-size-change-intent`. Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex. Evt.detail: '+evt.detail+'.');
+      this.set('_toast', {
+        detail: evt.detail,
+        event: 'px-page-size-change-intent',
+        isHidden: false,
+        message: 'Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex.',
+        title: 'Page Size Change Detected'
+      });
     },
 
     pageFilterChangeHandler: function(evt){
-      alert('Container element trapped px-data-table event `px-filter-change-intent`. Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex. Evt.detail: '+evt.detail+'.');
+      this.set('_toast', {
+        detail: evt.detail,
+        event: 'px-filter-change-intent',
+        isHidden: false,
+        message: 'Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex.',
+        title: 'Page Filter Change Detected'
+      });
     },
 
     pageSortChangeHandler: function(evt){
-      alert('Container element trapped px-data-table event `px-sort-change-intent`. Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex. Evt.detail: '+evt.detail+'.');
+      this.set('_toast', {
+        detail: evt.detail,
+        event: 'px-sort-change-intent',
+        isHidden: false,
+        message: 'Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex.',
+        title: 'Page Filter Change Detected'
+      });
     }
 
   });

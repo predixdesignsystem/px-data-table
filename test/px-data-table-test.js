@@ -852,7 +852,7 @@ function runTests() {
       });
       test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function(done) {
         var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
-            cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[5];
+            cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[4];
         flush(function () {
           assert.include(cell.textContent, 'Rita Lopez');
           done();
@@ -1520,7 +1520,7 @@ function runTests() {
         flush(function() {
           var selectionEls = Polymer.dom(filterInnerTable.root).querySelectorAll(selectionPath);
           assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
-          assert.equal(selectionEls.length, 11);
+          assert.equal(selectionEls.length, 10);
           done();
         });
       });
@@ -1551,7 +1551,7 @@ function runTests() {
       suite('Unit tests for px-data-table-column dropdown mode', function() {
         test('Changing a dropdown cell updates the table data', function() {
           var tableFixture = currentTableFixture;
-          var dropdownCell = Polymer.dom(tableFixture.root).querySelector('aha-table').querySelectorAll('px-data-table-cell')[1];
+          var dropdownCell = Polymer.dom(tableFixture.root).querySelector('aha-table').querySelectorAll('px-data-table-cell')[0];
           var dropdown = Polymer.dom(dropdownCell.root).querySelector('px-dropdown');
           // Open dropdown
           dropdown.$.button.click();
