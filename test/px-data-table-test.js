@@ -1277,9 +1277,9 @@ function runTests() {
             //verify order, 'index' should be last
             effChild = tb.getEffectiveChildren();
             headers = Polymer.dom(tb.root).querySelectorAll('.th');
-            assert.equal(effChild[effChild.length-1].name, 'index');
-            assert.equal(tb.meta[tb.meta.length-1].name, 'index');
-            assert.equal(headers[headers.length-1].textContent.trim(), 'Index');
+            assert.equal(effChild[effChild.length].name, 'index');
+            assert.equal(tb.meta[tb.meta.length].name, 'index');
+            assert.equal(headers[headers.length].textContent.trim(), 'Index');
 
             done();
           },100);
