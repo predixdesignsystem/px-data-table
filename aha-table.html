@@ -31,7 +31,7 @@
 
     <div class="scroll-body">
 
-      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableCells, tableColumns)}}" role="grid">
+      <div id="scrollBodyTableContainer" class$="table {{_getTableClass(tableCells, tableColumns)}}" role="grid">
         <!-- Header -->
         <div class="tr" role="row">
           <template is="dom-repeat" items="{{meta}}" as="column">
@@ -1750,14 +1750,14 @@
       return classList.join(' ');
     },
     _getTableClass: function(tableCells, tableColumns) {
-      var classList = ['table'];
+      var classArray = [];
       if(tableCells) {
-        classList.push('table--cells');
+        classArray.push('table--cells');
       }
       if (tableColumns) {
-        classList.push('table--columns');
+        classArray.push('table--columns');
       }
-      return classList.join(' ');
+      return classArray.join(' ');
     },
     _getPaginationVisibility: function (hidePaginationControl) {
       return (hidePaginationControl ? "visuallyhidden" : "");
