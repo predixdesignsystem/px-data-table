@@ -1,4 +1,3 @@
-var table1Fixture, table2Fixture, table3Fixture, table4Fixture, table5Fixture, filtertest, resetDataFixture, additionalDataFixture, updateSelectFixture;
 var getStyle = function (el, style){
   return window.getComputedStyle( el, null ).getPropertyValue( style );
 };
@@ -751,32 +750,6 @@ var minidata =
 ];
 
 document.addEventListener("WebComponentsReady", function() {
-  table1Fixture = document.getElementById('table1');
-  table1Fixture.tableData = data;
-  table2Fixture = document.getElementById('table2');
-  table2Fixture.tableData = minidata;
-
-  table3Fixture = document.getElementById('table3');
-  table3Fixture.tableData = minidata;
-
-  table4Fixture = document.getElementById('table4');
-  table4Fixture.tableData = data;
-
-  table5Fixture = document.getElementById('myTable');
-  table5Fixture.tableData = data;
-
-  filtertest = document.getElementById('filtertest');
-  filtertest.tableData = minidata;
-
-  resetDataFixture = document.getElementById('resetTableWithNewData');
-  resetDataFixture.tableData = minidata;
-
-  additionalDataFixture = document.getElementById('updateTableWithAdditionalData');
-  additionalDataFixture.tableData = data;
-
-  updateSelectFixture = document.getElementById('updateTableWithSelection');
-  // use `data.slice()` to avoid breaking `additionalDataFixture` tests
-  updateSelectFixture.tableData = data.slice();
 
   runTests();
 });
@@ -786,631 +759,876 @@ document.addEventListener("WebComponentsReady", function() {
 function runTests() {
   suite('Unit Tests for Data Table', function() {
 
+    var currentTableFixture;
+
+    setup(function () {
+      currentTableFixture = null;
+    });
+
+    teardown(function () {
+      currentTableFixture = null;
+    });
+
     test('Polymer exists', function() {
       assert.isTrue(Polymer !== null);
     });
-    test('table1 fixture is created', function() {
-      assert.isTrue(document.getElementById('table1') !== null);
-    });
 
-    test('table2 fixture is created', function() {
-      assert.isTrue(document.getElementById('table2') !== null);
-    });
-    test('table3 fixture is created', function() {
-      assert.isTrue(document.getElementById('table3') !== null);
-    });
-    test('table4 fixture is created', function() {
-      assert.isTrue(document.getElementById('table4') !== null);
-    });
-    test('myTable fixture is created', function() {
-      assert.isTrue(document.getElementById('myTable') !== null);
-    });
 
-    // Spot checks for correct table structure, cell values and control states
 
-    test('There should be 17 columns in the table1 fixture', function() {
 
-      // Select a div corresponding to a data row in the table
-      var divSelector = '#dataTable > .scroll-body.style-scope.aha-table > div > :nth-child(4)';
-      var divRow = document.querySelector(divSelector);
-      // Select all <span> children of divRow
-      var childSpanSelector = ':nth-child(4) > .td.style-scope.aha-table';
-      var columnCount = divRow.querySelectorAll(childSpanSelector).length;
-      // There should be 17 such spans
-      assert.equal(columnCount, 17);
-    });
-    test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function() {
-      var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
-          cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[5];
-      assert.include(cell.textContent, 'Rita Lopez');
-    });
-    test('Row count for first table should be 26', function() {
-      var fixture = document.getElementById('table1');
-      var selector = '.summary.style-scope.px-pagination :nth-child(3)';
-      var span = fixture.querySelector(selector);
-      assert.equal(span.innerHTML, '26');
-    });
-    // Spot checks for correct values in table cells and controls'
-    test('First Name displays only first 10 characters  if length of the text is greater than 10 characters and elipse at the right', function() {
-      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-          cell = Polymer.dom(tb.root).querySelectorAll('.aha-first-td')[1];
-      assert.include(cell.textContent, 'Isabel lon…');
-    });
-    test('Email displays only last 10 characters displayed if length of the text is greater than 10 characters', function() {
-      var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-image-td';
-      var span = table5Fixture.querySelector(selector);
-      assert.equal(span.innerHTML.indexOf('…/twitter/enda/73.jpg') >= 0, true);
-    });
-    test('Address displays total 10 characters with ellipse in the center if length of the text is greater than 10 characters', function() {
-      var selector = '#dataTable > div.scroll-body div:nth-child(3) > .aha-address-td';
-      var span = table5Fixture.querySelector(selector);
-      assert.equal(span.innerHTML.indexOf('3 Vis…Place') >= 0, true);
-    });
 
-    // Spot checks for event upon interaction with pagination controls
-    // The root element for pagination
-    var paginationRoot = document.getElementById('pagination');
-    // Selector for page 3 link
-    var span3Selector = '.px-pagination > .px-pagination > :nth-child(5)';
-    test('Pagination updates when page 3 link is clicked', function(done) {
-      // Page 3 link
-      var span3 = paginationRoot.querySelector(span3Selector);
-      span3.addEventListener('click', function(e) {
-        var startCountSelector = 'span.summary.style-scope.px-pagination > :nth-child(1)';
-        // Element that shows starting record number in '<start>-<end> of <total> in Pagination'
-        var startCount = paginationRoot.querySelector(startCountSelector);
-        // startCount should show '21' when page 3 is clicked
-        assert.equal(startCount.innerHTML, '21-26');
-        // End the test
-        done();
-      });
-      // Trigger the CLICK event on page 3 link
-      span3.click();
-    });
+    // ------------------------------------------
+    // Table 1 Tests
+    // ------------------------------------------
+    suite('table1 tests', function () {
 
-    // Spot checks for filtering functionality
-    test('Matching records are returned when filter text is entered', function(done) {
-      var filterableTableRoot = document.querySelector('#table2');
-      var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
-      var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
-      lastNameFilter.addEventListener('input', function(e){
-        setTimeout(function() {
-          var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
-          var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
-          assert.equal(secondReturnedRowFirstName.innerHTML.indexOf('Rita') >= 0, true);
-          done(); // end the test
-        }, 0);
-      });
-      // Trigger filter edit event and provide a filter value
-      lastNameFilter.value = 'wo';
-      lastNameFilter.dispatchEvent(new Event('input'));
-    });
-
-    test('When selecting all, select only what is filtered', function(done){
-
-      var tb = Polymer.dom(table2Fixture.root).querySelector('aha-table');
-
-      var filterableTableRoot = document.querySelector('#table2');
-      var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
-      var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
-
-      var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
-      var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
-
-      var selectionPath = '#dataTable';
-      filterableTableRoot.querySelector("#selectAllCheckbox").checked = true;
-
-      assert.equal(table2Fixture.selectedRows.length < table2Fixture.tableData.length, true, 'selceted row is not less that all rows');
-      done();
-    });
-
-    // Spot checks for sorting functionality
-    test('Records are sorted correctly when a sortable column header is clicked', function(done) {
-      var sortableTableRoot = document.querySelector('#table1');
-      var firstNameHeaderSelector = '.aha-first-th > div > span';
-      var firstNameHeader = sortableTableRoot.querySelector(firstNameHeaderSelector);
-      firstNameHeader.addEventListener('click', function(e){
-        setTimeout(function() {
-          var tb = Polymer.dom(sortableTableRoot.root).querySelector('aha-table'),
-              lastNameRow = Polymer.dom(tb.root).querySelectorAll('.aha-last-td');
-
-          assert.include(lastNameRow[lastNameRow.length - 1].textContent, 'Wooten');
-          done(); // end the test
-        }, 0);
-      });
-      // Trigger a click on the First Name column header
-      firstNameHeader.click();
-    });
-
-    test('Table font is GE Inspira Sans', function(done){
-      var tableFontFam = getStyle(table1Fixture, 'font-family');
-      assert.include(tableFontFam, 'GE Inspira Sans');
-      done();
-    });
-
-    test('Clicking on an editable cell switches to edit mode', function(done){
-      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-          cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
-
-      cell.click();
-
-      flush(function(){
-        var editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
-            editCellToTheLeft = Polymer.dom(cell.parentElement.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
-        assert.isFalse(editCell.classList.contains('hidden'));
-        assert.isTrue(editCellToTheLeft.classList.contains('hidden'));
-        done();
-      });
-    });
-
-    test('Clicking on an editable cell has the correct style', function(done){
-      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-          cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
-
-      cell.click();
-
-      flush(function(){
-        assert.oneOf(getStyle(cell, 'background-color'), ['rgba(0, 0, 0, 0)', 'transparent']);
-        assert.oneOf(getStyle(cell, 'border-right-width'), ['1px', '0.5px']);
-        assert.equal(getStyle(cell, 'border-right-style'), 'double');
-        assert.equal(getStyle(cell, 'border-right-color'), 'rgb(0, 122, 204)');
-        assert.equal(getStyle(cell, 'box-shadow'), 'none');
-
-        done();
-      });
-    });
-
-    test('Test that the presence of the hide-pagination-control property hide these controls', function(done){
-      var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
-          paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
-
-      assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
-      done();
-    });
-
-    test('Test that the hide-pagination-control property can be programmatically controlled', function(done){
-      var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
-          paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
-
-      tb.hidePaginationControl = false;
-      assert.isFalse(paginationControl.classList.contains('visuallyhidden'));
-      tb.hidePaginationControl = true;
-      assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
-      done();
-    });
-
-    test('Check consistent border-collapse fixing 1px padding on each side of table', function(done){
-      var tb = Polymer.dom(table4Fixture.root).querySelector('aha-table'),
-          tableScrollBody = Polymer.dom(tb.root).querySelector('.scroll-body');
-      assert.equal(getStyle(tableScrollBody, 'padding-right'), '1px');
-      assert.equal(getStyle(tableScrollBody, 'padding-left'), '1px');
-      done();
-    });
-
-    test('_findMetaIndexFromColumnElement function returns 4 for email column', function(done){
-      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-          emailColumn = tb.children[3];
-      assert.equal(tb._findMetaIndexFromColumnElement(emailColumn), 4);
-      done();
-    });
-
-    test('_findMetaIndexFromColumnElement function returns 4 for email column', function(done){
-      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-          emailColumn = tb.children[3];
-      assert.equal(tb._findMetaIndexFromColumnElement(emailColumn), 4);
-      done();
-    });
-
-    test('dropdown opens on click', function(done){
-      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-          px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
-          px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
-          button = px_dropdown.$.button,
-          dropdown = px_dropdown.$.dropdown;
-      assert.equal(getStyle(dropdown,'display'), 'none');
-      button.click();
-      setTimeout(function() {
-
-        assert.notEqual(getStyle(dropdown, 'display'), 'none');
-      },50);
-      done();
-    });
-    test('items passed into dropdown are the ones shown', function(done){
-      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-          px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
-          px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
-          dropdown = Polymer.dom(px_dropdown.root).querySelector('#dropdown'),
-          selector = Polymer.dom(dropdown).querySelector('iron-selector'),
-          firstDiv = Polymer.dom(selector.root).querySelector('div');
-      assert.include(firstDiv.textContent, 'United');
-      done();
-    });
-
-  });
-
-  suite('Data table column manipulation tests', function() {
-    // var tableWithColumnRepeat = document.getElementById('domrepeat');
-    var tableWithColumnRepeat = document.getElementById('domrepeat');
-    test('px-data-table-column elements added dynamically force the table to update and add the new column', function(done){
-      var tb = Polymer.dom(tableWithColumnRepeat.root).querySelector('aha-table');
-
-      assert.equal(tableWithColumnRepeat.nodeName, "PX-DATA-TABLE");
-      var noCols = tableWithColumnRepeat.getEffectiveChildren().length;
-      var noHeaderElements = Polymer.dom(tb.root).querySelectorAll(".th").length;
-      var newEl = Polymer.Base.create('px-data-table-column', {'name': 'boolean', 'filterable': true});
-
-      Polymer.dom(tableWithColumnRepeat).appendChild(newEl);
-      flush(function(){
-        assert.equal(tableWithColumnRepeat.getEffectiveChildren().length, noCols + 1);
-        assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements + 1);
-        done();
+      setup(function (done) {
+        currentTableFixture = document.getElementById('table1');
+        currentTableFixture.tableData = data;
+        this.timeout(20*1000); // adding table data may take a while
+        flush(function () { done(); });
       });
 
-    });
+      teardown(function () { });
 
-  });
-
-  suite('Additional unit tests for when hide-pagination-control is used.', function(){
-
-    test('Pagination controls are not displayed.', function(done){
-        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table');
-        var paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
-        table5Fixture.setAttribute('hide-pagination-control', true);
-        flush(function(){
-          assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
-          done();
-        });
-    });
-
-  });
-
-  suite('Column reordering', function(){
-
-      test('Moving a column through drag and drop', function(done){
-        //simulate moving column 'index' to column 'color'
-        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-            dragStart = new Event('dragstart'),
-            drop = new Event('drop'),
-            startElem = Polymer.dom(tb.root).querySelector('.aha-index-th'),
-            stopElem  = Polymer.dom(tb.root).querySelector('.aha-color-th'),
-            effChild = tb.getEffectiveChildren(),
-            headers = Polymer.dom(tb.root).querySelectorAll('.th');
-
-
-        //do all checks in light dom + shadow dom + meta
-        //make sure 'index' is first
-        assert.equal(effChild[0].name, 'index');
-        assert.equal(tb.meta[1].name, 'index');
-        assert.equal(headers[1].textContent.trim(), 'Index');
-
-        //try moving the column
-        startElem.dispatchEvent(dragStart);
-        stopElem.dispatchEvent(drop);
-
-        flush(function(){
-          //verify order, 'index' should be last
-          effChild = tb.getEffectiveChildren();
-          headers = Polymer.dom(tb.root).querySelectorAll('.th');
-          assert.equal(effChild[effChild.length-1].name, 'index');
-          assert.equal(tb.meta[tb.meta.length-1].name, 'index');
-          assert.equal(headers[headers.length-1].textContent.trim(), 'Index');
-
-          done();
-        });
-      });
-    });
-
-  suite('Table data mutations tests', function(){
-    //uses table3Fixture - no other tests using this. Adding/removing rows could unsettle other tests if they were using this fixture.
-
-    test('Test table has 10 visible rows', function(done){
-      var tb = Polymer.dom(table3Fixture.root).querySelector('aha-table');
-      assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
-      done();
-    });
-
-    test('Setting table-data to empty array removes all rows from table', function(done){
-      var tb = Polymer.dom(table3Fixture.root).querySelector('aha-table');
-      var tableData = table3Fixture.tableData;
-      assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
-
-      table3Fixture.tableData = [];
-      flush(function(){
-        assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 0);
-        table3Fixture.tableData = tableData;
-        flush(function(){
-          assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
+      test('fixture is created', function(done) {
+        flush(function () {
+          assert.isTrue(currentTableFixture !== null);
           done();
         });
       });
 
-    });
+      suite('pagination suite', function () {
 
-    test('Modifying data with selected rows updates `selectedRows`', function(done){
-      var tableData = updateSelectFixture.tableData;
-      assert.equal(updateSelectFixture.selectedRows.length, 0);
+        setup(function (done) {
+          currentTableFixture = document.getElementById('table1');
+          currentTableFixture.tableData = data;
+          this.timeout(20*1000); // adding table data may take a while
+          flush(function () { done(); });
+        });
 
-      // select the checkbox on the first row (the first one is global selector!)
-      var firstRowCheckbox = updateSelectFixture.querySelectorAll("input[type=checkbox]")[1];
+        teardown(function () { });
 
-      // click on the checkbox to select the row
-      firstRowCheckbox.click();
-      flush(function(){
-        assert.equal(updateSelectFixture.selectedRows.length, 1);
-
-        // update table data. every operation will work.
-        updateSelectFixture.push("tableData", tableData[0]);
-        flush(function(){
-          // de-select the row
-          firstRowCheckbox.click();
-
-          flush(function() {
-            assert.equal(updateSelectFixture.selectedRows.length, 0);
+        test('fixture is created', function(done) {
+          flush(function () {
+            assert.isTrue(currentTableFixture !== null);
             done();
           });
         });
-      });
-    });
 
-  });
+        // Selector for page 3 link
+        var span3Selector = '.px-pagination > .px-pagination > :nth-child(5)';
 
-  suite('Table filtering tests', function() {
-    var tb = Polymer.dom(filtertest.root).querySelector("aha-table");
+        test('Pagination updates when page 3 link is clicked', function(done) {
+          var paginationRoot = currentTableFixture.querySelector('#pagination');
 
-    test('Filter header row should not be visible by default', function(done){
-      var filterRowEl = Polymer.dom(tb.root).querySelector('.tr--filter');
-      flush(function(){
-        assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
-        done();
-      });
-    });
-
-    test('When table set to filterable but no child columns are, filter row should be hidden', function(done){
-      var filterInnerTable = Polymer.dom(filtertest.root).querySelector("aha-table");
-      var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
-
-      filtertest.filterable = true;
-
-      assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter should have hidden class');
-      done();
-    });
-
-    test('When table set to filterable and a child column is set to filterable, filter row should be visible', function(done){
-      var filterInnerTable = Polymer.dom(filtertest.root).querySelector("aha-table");
-      var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
-
-      var colEl = filtertest.getEffectiveChildren()[0];
-
-      filterInnerTable.set('meta.0.filterable', true);
-      filtertest.filterable = true;
-
-      assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
-      done();
-    });
-
-    test('When table set to selectable, filter row should be visible', function(done){
-      var filterInnerTable = Polymer.dom(filtertest.root).querySelector("aha-table");
-      var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
-      var selectionPath = '#dataTable :nth-child(3) .td input[type=checkbox]';
-      filtertest.filterable = false;
-      filtertest.selectable = true;
-      filtertest.singleSelect = false;
-      flush(function() {
-        var selectionEls = Polymer.dom(filterInnerTable.root).querySelectorAll(selectionPath);
-        assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
-        assert.equal(selectionEls.length, 11);
-        done();
-      });
-    });
-
-    test('When table set to singleSelect, selection column should switch to radio buttons', function(done){
-      var filterInnerTable = Polymer.dom(filtertest.root).querySelector("aha-table");
-      var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
-      var selectionPath = '#dataTable :nth-child(3) .td input[type=radio]';
-
-      filtertest.filterable = false;
-      filtertest.selectable = true;
-      filtertest.singleSelect = true;
-      flush(function() {
-        var selectionEls = Polymer.dom(filterInnerTable.root).querySelectorAll(selectionPath);
-        assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
-        assert.equal(selectionEls.length, 11);
-        done();
-      });
-    });
-});
-
-  suite('Column show/hide tests', function(){
-
-      var countHidden = function(headers) {
-        var hiddenNumber = 0;
-        headers.forEach(function(header, index) {
-          if(header.style.display === 'none') {
-            hiddenNumber++;
-          }
+          // Page 3 link
+          var span3 = paginationRoot.querySelector(span3Selector);
+          span3.addEventListener('click', function(e) {
+            var startCountSelector = 'span.summary.style-scope.px-pagination > :nth-child(1)';
+            // Element that shows starting record number in '<start>-<end> of <total> in Pagination'
+            var startCount = paginationRoot.querySelector(startCountSelector);
+            // startCount should show '21' when page 3 is clicked
+            assert.equal(startCount.innerHTML, '21-26');
+            // End the test
+            done();
+          });
+          // Trigger the CLICK event on page 3 link
+          span3.click();
         });
-        return hiddenNumber;
-      };
 
-      test('show column already shown', function(done){
-        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table');
+      });
 
-        assert.equal(table5Fixture.nodeName, "PX-DATA-TABLE");
-        var headers = Polymer.dom(tb.root).querySelectorAll(".th");
-        var hiddenNumber = 0;
+      test('There should be 17 columns in the table1 fixture', function(done) {
 
-        //make sure no headers are hidden
-        assert.equal(countHidden(headers), 0);
-        //and we have as many headers as column defs
-        assert.equal(tb.meta.length, headers.length);
-
-        //should already be shown so no diff
-        tb.showColumn('email');
-        flush(function(){
-
-          headers = Polymer.dom(tb.root).querySelectorAll(".th");
-
-          //make sure no headers are hidden
-          assert.equal(countHidden(headers), 0);
-          assert.equal(tb.meta.length, headers.length);
+        // Select a div corresponding to a data row in the table
+        var divRow = currentTableFixture.querySelector('#dataTable .rows');
+        var columnCount = divRow.querySelectorAll('.cell--value.px-data-table-cell').length;
+        // There should be 17 such spans
+        flush(function () {
+          assert.equal(columnCount, 17);
+          done();
+        })
+      });
+      test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function(done) {
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[4];
+        flush(function () {
+          assert.include(cell.textContent, 'Rita Lopez');
+          done();
+        });
+      });
+      test('Row count for first table should be 26', function(done) {
+        var fixture = currentTableFixture;
+        var selector = '.summary.style-scope.px-pagination :nth-child(3)';
+        var span = fixture.querySelector(selector);
+        flush(function () {
+          assert.equal(span.innerHTML, '26');
           done();
         });
       });
 
-      test('hide then show column already shown', function(done){
-        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table');
+      // Spot checks for sorting functionality
+      test('Records are sorted correctly when a sortable column header is clicked', function(done) {
+        var sortableTableRoot = currentTableFixture;
+        var firstNameHeaderSelector = '.aha-first-th > div > span';
+        var firstNameHeader = sortableTableRoot.querySelector(firstNameHeaderSelector);
+        firstNameHeader.addEventListener('click', function(e){
+          setTimeout(function() {
+            var tb = Polymer.dom(sortableTableRoot.root).querySelector('aha-table'),
+                lastNameRow = Polymer.dom(tb.root).querySelectorAll('.aha-last-td');
 
-        assert.equal(table5Fixture.nodeName, "PX-DATA-TABLE");
-        var headers = Polymer.dom(tb.root).querySelectorAll(".th");
+            assert.include(lastNameRow[lastNameRow.length - 1].textContent, 'Wooten');
+            done(); // end the test
+          }, 0);
+        });
+        // Trigger a click on the First Name column header
+        firstNameHeader.click();
+      });
 
-        //make sure no headers are hidden
-        assert.equal(countHidden(headers), 0);
-        //and we have as many headers as column defs
-        assert.equal(tb.meta.length, headers.length);
+      test('Table font is GE Inspira Sans', function(done){
+        var tableFontFam = getStyle(currentTableFixture, 'font-family');
+        assert.include(tableFontFam, 'GE Inspira Sans');
+        done();
+      });
 
-        //should already be shown so no diff
-        tb.hideColumn('email');
+    });
+
+    suite('Data table column manipulation tests', function() {
+
+      setup(function (done) {
+        currentTableFixture = document.getElementById('table1');
+        currentTableFixture.tableData = Object.apply({},data);
+        this.timeout(20*1000); // adding table data may take a while
+        flush(function () { done(); });
+      });
+
+      teardown(function () { });
+
+      test('fixture is created', function(done) {
+        flush(function () {
+          assert.isTrue(currentTableFixture !== null);
+          done();
+        });
+      });
+
+      // var tableWithColumnRepeat = document.getElementById('domrepeat');
+      test('px-data-table-column elements added dynamically force the table to update and add the new column', function(done){
+        var tableWithColumnRepeat = currentTableFixture;
+        var tb = tableWithColumnRepeat.querySelector('aha-table');
+
+        assert.equal(tableWithColumnRepeat.nodeName, "PX-DATA-TABLE");
+        var noCols = tableWithColumnRepeat.getEffectiveChildren().length;
+        var noHeaderElements = Polymer.dom(tb.root).querySelectorAll(".th").length;
+        var newEl = Polymer.Base.create('px-data-table-column', {'name': 'boolean', 'filterable': true});
+
+        Polymer.dom(tableWithColumnRepeat).appendChild(newEl);
         flush(function(){
+          assert.equal(tableWithColumnRepeat.getEffectiveChildren().length, noCols + 1);
+          assert.equal(Polymer.dom(tb.root).querySelectorAll(".th").length, noHeaderElements + 1);
+          done();
+        });
 
-          headers = Polymer.dom(tb.root).querySelectorAll(".th");
-          //make sure 1 is hidden
-          assert.equal(countHidden(headers), 1);
+      });
 
+    });
+
+    suite('Unit Tests for page size property', function () {
+
+      setup(function (done) {
+        currentTableFixture = document.getElementById('table1');
+        currentTableFixture.tableData = data;
+        this.timeout(20*1000); // adding table data may take a while
+        flush(function () { done(); });
+      });
+
+      teardown(function () { });
+
+      test('fixture is created', function(done) {
+        assert.isTrue(currentTableFixture !== null);
+        done();
+      });
+
+      test('Default pagination size is 10', function(){
+        assert.equal(currentTableFixture.pageSize, 10, 'Default page size should be 10 rows.');
+      });
+
+      test('Default rows displayed size is 10', function(){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            rowCount = tb.querySelectorAll('.rows').length;
+        assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
+      });
+
+      test('Switching pageSize property to 20 should make table re-render', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            rowCount = tb.querySelectorAll('.rows').length;
+        assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
+
+        currentTableFixture.pageSize = 20;
+        flush(function(){
+          var newRowCount = tb.querySelectorAll('.rows').length;
+          assert.equal(newRowCount, 20, 'Default rows displayed should be 20 rows.');
+          done();
+        });
+      });
+    });
+
+    // ------------------------------------------
+    // Table 2 Tests
+    // ------------------------------------------
+    suite('table2 tests', function () {
+
+      setup(function (done) {
+        currentTableFixture = document.getElementById('table2');
+        currentTableFixture.tableData = minidata;
+        this.timeout(20*1000); // adding table data may take a while
+        flush(function () { done(); });
+      });
+
+      teardown(function () {});
+
+      test('fixture is created', function(done) {
+        flush(function () {
+          assert.isTrue(currentTableFixture !== null);
+          done();
+        });
+      });
+
+      test('When selecting all, select only what is filtered', function(done){
+
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table');
+
+        var filterableTableRoot = currentTableFixture;
+        var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
+        var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
+
+        var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
+        var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
+
+        var selectionPath = '#dataTable';
+        filterableTableRoot.querySelector("#selectAllCheckbox").checked = true;
+
+        assert.equal(currentTableFixture.selectedRows.length < currentTableFixture.tableData.length, true, 'selceted row is not less that all rows');
+        done();
+      });
+
+      // Spot checks for filtering functionality
+      test('Matching records are returned when filter text is entered', function(done) {
+        var filterableTableRoot = currentTableFixture;
+        var lastNameFilterSelector = 'div > div.tr.tr--filter > :nth-child(2) > input';
+        var lastNameFilter = filterableTableRoot.querySelector(lastNameFilterSelector);
+        lastNameFilter.addEventListener('input', function(e){
+          setTimeout(function() {
+            var secondReturnedRowFirstNameSelector = '#dataTable :nth-child(4) .aha-first-td';
+            var secondReturnedRowFirstName = filterableTableRoot.querySelector(secondReturnedRowFirstNameSelector);
+            assert.equal(secondReturnedRowFirstName.innerHTML.indexOf('Rita') >= 0, true);
+            done(); // end the test
+          }, 0);
+        });
+        // Trigger filter edit event and provide a filter value
+        lastNameFilter.value = 'wo';
+        lastNameFilter.dispatchEvent(new Event('input'));
+      });
+
+    });
+
+
+    // ------------------------------------------
+    // table3 Tests
+    // ------------------------------------------
+    suite('table3 tests - Table data mutations tests', function () {
+
+      setup(function (done) {
+        currentTableFixture = document.getElementById('table3');
+        currentTableFixture.tableData = minidata;
+        this.timeout(20*1000); // adding table data may take a while
+        flush(function () { done(); });
+      });
+
+      teardown(function () { });
+
+      test('fixture is created', function(done) {
+        flush(function () {
+          assert.isTrue(currentTableFixture !== null);
+          done();
+        });
+      });
+
+      test('Test table has 10 visible rows', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table');
+        assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
+        done();
+      });
+
+      test('Setting table-data to empty array removes all rows from table', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table');
+        var tableData = currentTableFixture.tableData;
+        assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
+
+        currentTableFixture.tableData = [];
+        flush(function(){
+          assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 0);
+          currentTableFixture.tableData = tableData;
+          flush(function(){
+            assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
+            done();
+          });
+        });
+
+      });
+
+    });
+
+
+    // ------------------------------------------
+    // table4 Tests
+    // ------------------------------------------
+    suite('table4 tests', function () {
+
+      setup(function (done) {
+        currentTableFixture = document.getElementById('table4');
+        currentTableFixture.tableData = minidata;
+        this.timeout(30*1000); // adding table data may take a while
+        flush(function () { done(); });
+      });
+
+      teardown(function () { });
+
+      test('fixture is created', function(done) {
+        assert.isTrue(currentTableFixture !== null);
+        done();
+      });
+
+      test('Test that the presence of the hide-pagination-control property hide these controls', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
+
+        assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
+        done();
+      });
+
+      test('Test that the hide-pagination-control property can be programmatically controlled', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
+
+        tb.hidePaginationControl = false;
+        assert.isFalse(paginationControl.classList.contains('visuallyhidden'));
+        tb.hidePaginationControl = true;
+        assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
+        done();
+      });
+
+      test('Check consistent border-collapse fixing 1px padding on each side of table', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            tableScrollBody = Polymer.dom(tb.root).querySelector('.scroll-body');
+        assert.equal(getStyle(tableScrollBody, 'padding-right'), '1px');
+        assert.equal(getStyle(tableScrollBody, 'padding-left'), '1px');
+        done();
+      });
+
+
+    });
+
+
+    // ------------------------------------------
+    // table5 Tests
+    // ------------------------------------------
+    suite('table5 tests', function () {
+
+      setup(function (done) {
+        currentTableFixture = document.getElementById('table5');
+        currentTableFixture.tableData = data;
+        this.timeout(20*1000); // adding table data may take a while
+        flush(function () { done(); });
+      });
+
+      teardown(function () { });
+
+      test('fixture is created', function(done) {
+        assert.isTrue(currentTableFixture !== null);
+        done();
+      });
+
+      test('Clicking on an editable cell switches to edit mode', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
+
+        cell.click();
+
+        flush(function(){
+          var editCell = Polymer.dom(cell.root).querySelector('.cell--edit.px-data-table-cell'),
+              editCellToTheLeft = Polymer.dom(cell.parentElement.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
+          assert.isFalse(editCell.classList.contains('hidden'));
+          assert.isTrue(editCellToTheLeft.classList.contains('hidden'));
+          done();
+        });
+      });
+
+      test('Clicking on an editable cell has the correct style', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            cell = Polymer.dom(tb.root).querySelectorAll('.aha-last-td')[0];
+
+        cell.click();
+
+        flush(function(){
+          assert.oneOf(getStyle(cell, 'background-color'), ['rgba(0, 0, 0, 0)', 'transparent']);
+          assert.oneOf(getStyle(cell, 'border-right-width'), ['1px', '0.5px']);
+          assert.equal(getStyle(cell, 'border-right-style'), 'double');
+          assert.equal(getStyle(cell, 'border-right-color'), 'rgb(0, 122, 204)');
+          assert.equal(getStyle(cell, 'box-shadow'), 'none');
+
+          done();
+        });
+      });
+
+      test('_findMetaIndexFromColumnElement function returns 4 for email column', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            emailColumn = tb.children[3];
+        assert.equal(tb._findMetaIndexFromColumnElement(emailColumn), 4);
+        done();
+      });
+
+      test('_findMetaIndexFromColumnElement function returns 4 for email column', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            emailColumn = tb.children[3];
+        assert.equal(tb._findMetaIndexFromColumnElement(emailColumn), 4);
+        done();
+      });
+
+      test('dropdown opens on click', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
+            px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
+            button = px_dropdown.$.button,
+            dropdown = px_dropdown.$.dropdown;
+        assert.equal(getStyle(dropdown,'display'), 'none');
+        button.click();
+        setTimeout(function() {
+
+          assert.notEqual(getStyle(dropdown, 'display'), 'none');
+        },50);
+        done();
+      });
+
+      test('items passed into dropdown are the ones shown', function(done){
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+            px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
+            px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
+            dropdown = Polymer.dom(px_dropdown.root).querySelector('#dropdown'),
+            selector = Polymer.dom(dropdown).querySelector('iron-selector'),
+            firstDiv = Polymer.dom(selector.root).querySelector('div');
+        assert.include(firstDiv.textContent, 'United');
+        done();
+      });
+
+      suite('Additional unit tests for when hide-pagination-control is used.', function(){
+
+        test('Pagination controls are not displayed.', function(done){
+            var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table');
+            var paginationControl = Polymer.dom(tb.root).querySelector('px-pagination');
+            currentTableFixture.setAttribute('hide-pagination-control', true);
+            flush(function(){
+              assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
+              done();
+            });
+        });
+
+      });
+
+      suite('Column reordering', function(){
+
+        var updateSelectFixture;
+
+        setup(function (done) {
+          updateSelectFixture = document.getElementById('updateSelectFixture');
+          updateSelectFixture.tableData = data;
+
+          currentTableFixture = document.getElementById('table5');
+          currentTableFixture.tableData = data;
+
+          this.timeout(20*1000); // adding table data may take a while
+          flush(function () { done(); });
+        });
+
+        teardown(function () { });
+
+        test('Moving a column through drag and drop', function(done){
+          //simulate moving column 'index' to column 'color'
+          var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+              dragStart = new Event('dragstart'),
+              drop = new Event('drop'),
+              startElem = tb.querySelector('.aha-index-th'),
+              stopElem  = tb.querySelector('.aha-color-th'),
+              effChild = tb.getEffectiveChildren(),
+              headers = Polymer.dom(tb.root).querySelectorAll('.th');
+
+
+          //do all checks in light dom + shadow dom + meta
+          //make sure 'index' is first
+          assert.equal(effChild[0].name, 'index');
+          assert.equal(tb.meta[1].name, 'index');
+          assert.equal(headers[1].textContent.trim(), 'Index');
+
+          //try moving the column
+          startElem.dispatchEvent(dragStart);
+          stopElem.dispatchEvent(drop);
+
+          setTimeout(function(){
+            //verify order, 'index' should be last
+            effChild = tb.getEffectiveChildren();
+            headers = Polymer.dom(tb.root).querySelectorAll('.th');
+            assert.equal(effChild[effChild.length-1].name, 'index');
+            assert.equal(tb.meta[tb.meta.length-1].name, 'index');
+            assert.equal(headers[headers.length-1].textContent.trim(), 'Index');
+
+            done();
+          },100);
+        });
+
+        test('Modifying data with selected rows updates `selectedRows`', function(done){
+          var tableData = updateSelectFixture.tableData;
+          assert.equal(updateSelectFixture.selectedRows.length, 0);
+
+          // select the checkbox on the first row (the first one is global selector!)
+          var firstRowCheckbox = updateSelectFixture.querySelectorAll("input[type=checkbox]")[1];
+
+          // click on the checkbox to select the row
+          firstRowCheckbox.click();
+          flush(function(){
+            assert.equal(updateSelectFixture.selectedRows.length, 1);
+
+            // update table data. every operation will work.
+            updateSelectFixture.push("tableData", tableData[0]);
+            flush(function(){
+              // de-select the row
+              firstRowCheckbox.click();
+
+              flush(function() {
+                assert.equal(updateSelectFixture.selectedRows.length, 0);
+                done();
+              });
+            });
+          });
+        });
+
+      });
+
+      suite('Column show/hide tests', function(){
+
+        var countHidden = function(headers) {
+          var hiddenNumber = 0;
+          headers.forEach(function(header, index) {
+            if(header.style.display === 'none') {
+              hiddenNumber++;
+            }
+          });
+          return hiddenNumber;
+        };
+
+        test('show column already shown', function(done){
+          var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table');
+
+          assert.equal(currentTableFixture.nodeName, "PX-DATA-TABLE");
+          var headers = Polymer.dom(tb.root).querySelectorAll(".th");
+          var hiddenNumber = 0;
+
+          //make sure no headers are hidden
+          assert.equal(countHidden(headers), 0);
+          //and we have as many headers as column defs
+          assert.equal(tb.meta.length, headers.length);
+
+          //should already be shown so no diff
           tb.showColumn('email');
-          flush(function() {
+          flush(function(){
 
-            //make sure none are hidden
+            headers = Polymer.dom(tb.root).querySelectorAll(".th");
+
+            //make sure no headers are hidden
             assert.equal(countHidden(headers), 0);
             assert.equal(tb.meta.length, headers.length);
             done();
           });
         });
-      });
-      //
-      test('hide column through column chooser', function(done){
-        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-            chooser = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown'),
-            dropdown = Polymer.dom(chooser.root).querySelector('#dropdown'),
-            selector = Polymer.dom(dropdown).querySelector('#selector'),
-            ddItems = Polymer.dom(selector.root).querySelectorAll('div');
 
-        //column chooser should exists
-        assert.isDefined(chooser);
+        test('hide then show column already shown', function(done){
+          var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table');
 
-        //third column is shown
-        assert.isTrue(ddItems[3].classList.contains('iron-selected'));
-        var columnLabel = ddItems[3].val;
-
-        //change the state of the dropdown item
-        ddItems[3].click();
-        flush(function(){
-
+          assert.equal(currentTableFixture.nodeName, "PX-DATA-TABLE");
           var headers = Polymer.dom(tb.root).querySelectorAll(".th");
-          assert.equal(countHidden(headers), 1);
 
-          //cick again
-          ddItems[3].click();
+          //make sure no headers are hidden
+          assert.equal(countHidden(headers), 0);
+          //and we have as many headers as column defs
+          assert.equal(tb.meta.length, headers.length);
+
+          //should already be shown so no diff
+          tb.hideColumn('email');
           flush(function(){
 
             headers = Polymer.dom(tb.root).querySelectorAll(".th");
-            assert.equal(countHidden(headers), 0);
-            //double check we've been reinserted at the same place, check header 3 + 1 to account for "select" column
-            assert.equal(columnLabel, Polymer.dom(tb.root).querySelectorAll(".th")[4].textContent.trim());
+            //make sure 1 is hidden
+            assert.equal(countHidden(headers), 1);
 
-            done();
+            tb.showColumn('email');
+            flush(function() {
+
+              //make sure none are hidden
+              assert.equal(countHidden(headers), 0);
+              assert.equal(tb.meta.length, headers.length);
+              done();
+            });
           });
+        });
+        //
+        test('hide column through column chooser', function(done){
+          var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+              chooser = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown'),
+              dropdown = Polymer.dom(chooser.root).querySelector('#dropdown'),
+              selector = Polymer.dom(dropdown).querySelector('#selector'),
+              ddItems = Polymer.dom(selector.root).querySelectorAll('div');
+
+          //column chooser should exists
+          assert.isDefined(chooser);
+
+          //third column is shown
+          assert.isTrue(ddItems[3].classList.contains('iron-selected'));
+          var columnLabel = ddItems[3].val;
+
+          //change the state of the dropdown item
+          ddItems[3].click();
+          flush(function(){
+
+            var headers = Polymer.dom(tb.root).querySelectorAll(".th");
+            assert.equal(countHidden(headers), 1);
+
+            //cick again
+            ddItems[3].click();
+            flush(function(){
+
+              headers = Polymer.dom(tb.root).querySelectorAll(".th");
+              assert.equal(countHidden(headers), 0);
+              //double check we've been reinserted at the same place, check header 3 + 1 to account for "select" column
+              assert.equal(columnLabel, Polymer.dom(tb.root).querySelectorAll(".th")[4].textContent.trim());
+
+              done();
+            });
+          });
+        });
+
+        test('Column chooser registers new columns', function(done){
+          var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+              chooser = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown'),
+              dropdown = Polymer.dom(chooser.root).querySelector('#dropdown'),
+              selector = Polymer.dom(dropdown).querySelector('#selector'),
+              ddItems = Polymer.dom(selector.root).querySelectorAll('div');
+
+          var noItems = ddItems.length;
+          var newEl = Polymer.Base.create('px-data-table-column', {'name': 'whatevs', 'filterable': true});
+
+          Polymer.dom(currentTableFixture).appendChild(newEl);
+          flush(function(){
+            setTimeout(function() {
+              assert.equal(Polymer.dom(selector.root).querySelectorAll('div').length, noItems + 1);
+              done();
+            }, 200);
+          });
+        });
+
+      });
+
+    });
+
+
+    // ------------------------------------------
+    // filtertest Tests
+    // ------------------------------------------
+    suite('filtertest tests - Table filtering tests', function () {
+
+      var tb = null;
+
+      setup(function (done) {
+        currentTableFixture = document.getElementById('filtertest');
+        currentTableFixture.tableData = minidata;
+        tb = Polymer.dom(currentTableFixture.root).querySelector("aha-table");
+        this.timeout(20*1000); // adding table data may take a while
+        flush(function () { done(); });
+      });
+
+      teardown(function () { });
+
+      test('fixture is created', function(done) {
+        flush(function () {
+          assert.isTrue(currentTableFixture !== null);
+          done();
         });
       });
 
-      test('Column chooser registers new columns', function(done){
-        var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-            chooser = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown'),
-            dropdown = Polymer.dom(chooser.root).querySelector('#dropdown'),
-            selector = Polymer.dom(dropdown).querySelector('#selector'),
-            ddItems = Polymer.dom(selector.root).querySelectorAll('div');
-
-        var noItems = ddItems.length;
-        var newEl = Polymer.Base.create('px-data-table-column', {'name': 'whatevs', 'filterable': true});
-
-        Polymer.dom(table5Fixture).appendChild(newEl);
+      test('Filter header row should not be visible by default', function(done){
+        var filterRowEl = Polymer.dom(tb.root).querySelector('.tr--filter');
         flush(function(){
-          setTimeout(function() {
-            assert.equal(Polymer.dom(selector.root).querySelectorAll('div').length, noItems + 1);
-            done();
-          }, 200);
+          assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
+          done();
         });
-    });
-  });
+      });
 
-  suite('Unit Tests for updating the data for Data Table', function () {
+      test('When table set to filterable but no child columns are, filter row should be hidden', function(done){
+        var filterInnerTable = Polymer.dom(currentTableFixture.root).querySelector("aha-table");
+        var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
 
-    test('Setting table-data to different set of data removes all rows from table and sets the new data', function (done) {
-      var tb = Polymer.dom(resetDataFixture.root).querySelector('aha-table');
-      var tableData = resetDataFixture.tableData;
-      assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
+        currentTableFixture.filterable = true;
 
-      resetDataFixture.tableData = [];
-      flush(function () {
-        assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 0);
-        resetDataFixture.tableData = data;
-        flush(function () {
-          assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 26);
+        assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter should have hidden class');
+        done();
+      });
+
+      test('When table set to filterable and a child column is set to filterable, filter row should be visible', function(done){
+        var filterInnerTable = Polymer.dom(currentTableFixture.root).querySelector("aha-table");
+        var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
+
+        var colEl = currentTableFixture.getEffectiveChildren()[0];
+
+        filterInnerTable.set('meta.0.filterable', true);
+        currentTableFixture.filterable = true;
+
+        assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
+        done();
+      });
+
+      test('When table set to selectable, filter row should be visible', function(done){
+        var filterInnerTable = Polymer.dom(currentTableFixture.root).querySelector("aha-table");
+        var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
+        var selectionPath = '#dataTable :nth-child(3) .td input[type=checkbox]';
+        currentTableFixture.filterable = false;
+        currentTableFixture.selectable = true;
+        currentTableFixture.singleSelect = false;
+        flush(function() {
+          var selectionEls = Polymer.dom(filterInnerTable.root).querySelectorAll(selectionPath);
+          assert.isFalse(filterRowEl.classList.contains('hidden'), 'tr--filter row should not have hidden class');
+          assert.equal(selectionEls.length, 11);
+          done();
+        });
+      });
+
+      test('When table set to singleSelect, selection column should switch to radio buttons', function(done){
+        var filterInnerTable = Polymer.dom(currentTableFixture.root).querySelector("aha-table");
+        var filterRowEl = Polymer.dom(filterInnerTable.root).querySelector('.tr--filter');
+        var selectionPath = '#dataTable :nth-child(3) .td input[type=radio]';
+
+        currentTableFixture.filterable = false;
+        currentTableFixture.selectable = true;
+        currentTableFixture.singleSelect = true;
+        flush(function() {
+          var selectionEls = Polymer.dom(filterInnerTable.root).querySelectorAll(selectionPath);
+          assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
+          assert.equal(selectionEls.length, 10);
           done();
         });
       });
 
     });
 
-    test('Adding another set of data to the table-data', function (done) {
-      var tb = Polymer.dom(additionalDataFixture.root).querySelector('aha-table');
-      var tableData = additionalDataFixture.tableData;
-      assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 26);
 
-      additionalDataFixture.tableData = tableData.concat(additionalData);
-      flush(function () {
-        assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 30);
-        done();
+    // ------------------------------------------
+    // tableWithDropdownColumn Tests
+    // ------------------------------------------
+    suite('tableWithDropdownColumn tests', function () {
+
+      setup(function (done) {
+        currentTableFixture = document.getElementById('tableWithDropdownColumn');
+        this.timeout(20*1000); // adding table data may take a while
+        flush(function () { done(); });
       });
-    });
-  });
 
-  suite('Unit Tests for page size property', function () {
+      teardown(function () { });
 
-    test('Default pagination size is 10', function(){
-      assert.equal(table1Fixture.pageSize, 10, 'Default page size should be 10 rows.');
-    });
-
-    test('Default rows displayed size is 10', function(){
-      var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
-          rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
-      assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
-    });
-
-    test('Switching pageSize property to 20 should make table re-render', function(done){
-      var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
-          rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
-      assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
-
-      table1Fixture.pageSize = 20;
-      flush(function(){
-        var newRowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
-        assert.equal(newRowCount, 20, 'Default rows displayed should be 20 rows.');
-        done();
+      test('fixture is created', function(done) {
+        flush(function () {
+          assert.isTrue(currentTableFixture !== null);
+          done();
+        });
       });
-    });
-  });
 
-  suite('Unit tests for px-data-table-column dropdown mode', function() {
-    test('Changing a dropdown cell updates the table data', function() {
-      var tableFixture = document.getElementById('tableWithDropdownColumn');
-      var dropdownCell = Polymer.dom(tableFixture.root).querySelector('aha-table').querySelectorAll('px-data-table-cell')[1];
-      var dropdown = Polymer.dom(dropdownCell.root).querySelector('px-dropdown');
-      // Open dropdown
-      dropdown.$.button.click();
-      // Get "Wei" dropdown choice button and select it
-      var weiChoiceButton = Polymer.dom(dropdown.root).querySelector('.dropdown-option[title="Wei"]');
-      weiChoiceButton.click();
-      assert.equal(tableFixture.tableData[0].first, 'Wei', 'Wei should be set as the first name in the first table data entry.');
+      suite('Unit tests for px-data-table-column dropdown mode', function() {
+        test('Changing a dropdown cell updates the table data', function() {
+          var tableFixture = currentTableFixture;
+          var dropdownCell = Polymer.dom(tableFixture.root).querySelector('aha-table').querySelectorAll('px-data-table-cell')[0];
+          var dropdown = Polymer.dom(dropdownCell.root).querySelector('px-dropdown');
+          // Open dropdown
+          dropdown.$.button.click();
+          // Get "Wei" dropdown choice button and select it
+          var weiChoiceButton = Polymer.dom(dropdown.root).querySelector('.dropdown-option[title="Wei"]');
+          weiChoiceButton.click();
+          assert.equal(tableFixture.tableData[0].first, 'Wei', 'Wei should be set as the first name in the first table data entry.');
+        });
+      });
+
     });
+
+
+
+    // ------------------------------------------
+    // resetTableWithNewData Tests
+    // ------------------------------------------
+    suite('resetTableWithNewData tests - Unit Tests for updating the data for Data Table', function () {
+
+      var tb = null,
+        additionalDataFixture;
+
+      setup(function (done) {
+        currentTableFixture = document.getElementById('resetTableWithNewData');
+        currentTableFixture.tableData = minidata;
+
+        additionalDataFixture = document.getElementById('updateTableWithAdditionalData');
+        additionalDataFixture.tableData = data;
+
+        tb = Polymer.dom(currentTableFixture.root).querySelector("aha-table");
+        this.timeout(20*1000); // adding table data may take a while
+        flush(function () { done(); });
+      });
+
+      teardown(function () { });
+
+      test('fixture is created', function(done) {
+        flush(function () {
+          assert.isTrue(currentTableFixture !== null);
+          done();
+        });
+      });
+
+      test('Setting table-data to different set of data removes all rows from table and sets the new data', function (done) {
+        var tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table');
+        var tableData = currentTableFixture.tableData;
+        assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 10);
+
+        currentTableFixture.tableData = [];
+        flush(function () {
+          assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length, 0);
+          currentTableFixture.tableData = data;
+          flush(function () {
+            assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length - 1, 26);
+            done();
+          });
+        });
+
+      });
+
+      test('Adding another set of data to the table-data', function (done) {
+        var tb = Polymer.dom(additionalDataFixture.root).querySelector('aha-table');
+        var tableData = additionalDataFixture.tableData;
+        assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length - 1, 26);
+
+        additionalDataFixture.tableData = [];
+        flush(function () {
+          additionalDataFixture.tableData = tableData.concat(additionalData);
+          flush(function () {
+            assert.equal(Polymer.dom(tb.root).querySelectorAll('.rows').length - 1, 30);
+            done();
+          });
+        });
+      });
+
+    });
+
+
   });
 }

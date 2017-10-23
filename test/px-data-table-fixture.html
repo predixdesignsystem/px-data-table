@@ -4,14 +4,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>px-data-table Demo</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>px-data-table Tests</title>
 
     <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <!-- web-component-tester automatically provides local copy of brower.js below
          for any URL ending with "/web-component-tester/browser.js"
          when wct is run from the command line -->
-    <script src="../web-component-tester/browser.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
     <link rel="import" href="../px-data-table.html" />
     <link rel="import" href="../../px-theme/px-theme-styles.html">
     <style include="px-theme-styles" is="custom-style"></style>
@@ -57,7 +58,7 @@
         <li>... and you can receive px-row-click events from the table, which can be used by taking action on the row</li>
       </ul>
 
-      <px-data-table id="myTable" filterable selectable striped show-column-chooser enable-column-reorder>
+      <px-data-table id="table5" filterable selectable striped show-column-chooser enable-column-reorder>
         <px-data-table-column name="index"></px-data-table-column>
         <px-data-table-column name="name"></px-data-table-column>
         <px-data-table-column
@@ -129,7 +130,7 @@
       </script>
 
       <p>Selection after data update does not contain unreached data</p>
-      <px-data-table id="updateTableWithSelection" selectable></px-data-table>
+      <px-data-table id="updateSelectFixture" selectable></px-data-table>
 
       <p>Changing dropdown items works correctly</p>
       <px-data-table

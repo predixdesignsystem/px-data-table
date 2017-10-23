@@ -31,7 +31,7 @@
 
     <div class$="scroll-body {{_getScrollBodyClass(scrollingRows)}}">
 
-      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableCells, tableColumns)}}" role="grid">
+      <div id="scrollBodyTableContainer" class$="table {{_getTableClass(tableCells, tableColumns)}}" role="grid">
         <!-- Header -->
         <div class="tr" role="row">
           <template is="dom-repeat" items="{{meta}}" as="column">
@@ -61,41 +61,14 @@
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
                 <span class="flex" hidden$="{{column.hide}}">
                   <template is="dom-if" if="{{!singleSelect}}">
-                    <input role="checkbox" id="selectAllCheckbox" aria-label="Click to select row" type="checkbox" checked="{{internalRow._selected::change}}"/>
-                  </template>
-                  <template is="dom-if" if="{{singleSelect}}">
-                    <input role="checkbox" id="selectAllCheckbox" aria-label="Click to select row" type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
+                    <input id="selectAllCheckbox" role="checkbox" aria-label="Click to select or deselect all rows" type="checkbox" on-change="_clickSelectAll"/>
                   </template>
                 </span>
               </template>
-              <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
-                <template is="dom-if" if="{{!column.hide}}">
-                  <px-data-table-cell
-                    cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
-                    cell-display-value="{{_readContent(internalRow, column)}}"
-                    cell-editable="{{column.editable}}"
-                    cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
-                    cell-selected="[[internalRow._selected]]"
-                    cell-type="{{column.type}}"
-                    cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
-                    cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
-                    column-name="{{column.name}}"
-                    dropdown-bounds="{{scrollBody}}"
-                    dropdown-items="{{column.dropdownItems}}"
-                    dropdown-max-character-width="{{column.maxColumnCharacterWidth}}"
-                    on-save="_save"
-                    on-tap="_clickCell"
-                    on-validate="_handleValidateEvent"
-                    placeholder="{{column.placeholder}}"
-                    row-highlighted="[[internalRow._highlight]]"
-                    >
-                  </px-data-table-cell>
-                </template>
 
-                <!-- filter entry -->
-                <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
-                  <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-input="_filter" />
-                </template>
+              <!-- filter entry -->
+              <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
+                <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-input="_filter" />
               </template>
             </span>
           </template>
@@ -340,11 +313,21 @@
         value: 10,
         observer: '_setPageSize'
       },
-      // when dataRemote is true, then this reflects the total count on observer
-      // and numberOfItems reflects count of items in table
+
+      /**
+       * When dataRemote is true, then this reflects the total count on observer
+       * and numberOfItems reflects count of items in tableProperty to track the number of items in the table
+       */
       _adaptedNumberOfItems: {
         type: Number,
       },
+
+      /**
+       * Property to track the number of items in the table
+       *
+       * Without dataRemote==true, this will be the total number of items
+       * With dataRemote==true this will either be the page size or the number of items if less than the page size
+       */
       numberOfItems: {
         type: Number,
         observer: '_calculateAdaptedNumberOfItems'
@@ -610,7 +593,7 @@
         this._generateMetaFromData();
       }
 
-      if (typeof this._internalData !== "undefined" && this._internalData.length === 0) {
+      if ( !this._typeofComparison(this._internalData, "undefined") && this._internalData.length === 0) {
         this._internalData = this._initializeInternalData();
       } else {
         this._internalData = this._refreshInternalData();
@@ -958,7 +941,7 @@
             }
             return {
               index: i,
-              value: typeof v === "string" ? v.toLowerCase() : v
+              value: this._typeofComparison(v, "string") ? v.toLowerCase() : v
             };
           }, this)
           .sort(sortFunction.bind(this))
@@ -1687,7 +1670,7 @@
 
     _readContent: function (row, column) {
       var datum = this._getInternalDataAt(row, column.name);
-      if (datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+      if (datum === null || datum === undefined || this._typeofComparison(datum, 'string') && datum.trim().length === 0) {
         return ""; // return empty string if no data
       }
 
@@ -1700,7 +1683,7 @@
       var datum = this._getInternalDataAt(row, column.name),
         maxColWidth = column.maxColumnCharacterWidth;
 
-      if (maxColWidth === 0 || datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+      if (maxColWidth === 0 || datum === null || datum === undefined || this._typeofComparison(datum, 'string') && datum.trim().length === 0) {
         return false;
       }
       if (maxColWidth !== undefined && maxColWidth !== null) {
@@ -1783,14 +1766,14 @@
       return classList.join(' ');
     },
     _getTableClass: function(tableCells, tableColumns) {
-      var classList = ['table'];
+      var classArray = [];
       if(tableCells) {
-        classList.push('table--cells');
+        classArray.push('table--cells');
       }
       if (tableColumns) {
-        classList.push('table--columns');
+        classArray.push('table--columns');
       }
-      return classList.join(' ');
+      return classArray.join(' ');
     },
     _getPaginationVisibility: function (hidePaginationControl) {
       return (hidePaginationControl ? "visuallyhidden" : "");
@@ -1821,6 +1804,13 @@
       this._enableFilterRow = meta && (this.selectable && !this.singleSelect || filterable && this.meta.some(function(val){
         return this._isFilterableColumn(val);
       }.bind(this)));
+    },
+
+    /**
+     * required by IE11
+     */
+    _typeofComparison: function (val, comparator) {
+      return (typeof val === comparator || false);
     }
   });
 

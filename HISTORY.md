@@ -1,3 +1,11 @@
+v5.0.2
+==================
+* fixing selecting and filtering + documentation updates (https://github.com/PredixDev/px-data-table/pull/168)
+
+v5.0.1
+==================
+* test fixes and migrating to WCT 6.x
+
 v5.0.0
 ==================
 * remote data source support. https://github.com/PredixDev/px-data-table/pull/126
