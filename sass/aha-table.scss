@@ -1,0 +1,318 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+// Settings
+@import "px-defaults-design/_settings.defaults.scss";
+@import "px-mixins-design/_tools.mixins.scss";
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+@import "px-helpers-design/_generic.helpers.scss";
+// Base
+@import "px-flexbox-design/_base.flexbox.scss";
+@import "px-viewport-design/_base.viewport.scss";
+
+$inuit-enable-input--tiny: true;
+$inuit-enable-text-input--bare: true;
+$inuit-enable-validation-states : true;
+
+@import "px-forms-design/_base.forms.scss";
+
+$inuit-enable-table--fixed: true;
+$inuit-enable-table--small: true;
+$inuit-enable-table--large: true;
+$inuit-enable-table--cells: true;
+$inuit-enable-table--columns: true;
+$inuit-table-border-color: var(--px-data-table-border-color, gray);
+$inuit-table-separator-color: var(--px-data-table-separator-color, gray);
+
+@import "px-tables-design/_base.tables.scss";
+
+@import "px-layout-design/_objects.layout.scss";
+
+$inuit-enable-btn--bare: true;
+$inuit-enable-btn--primary: true;
+$inuit-enable-btn--tertiary: true;
+$inuit-enable-btn--icon: true;
+$inuit-enable-btn--disabled: true;
+
+
+$fa-font-path : "../../font-awesome/fonts";
+@import "px-buttons-design/_objects.buttons.scss";
+
+:host {
+  display: block;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.table {
+  @extend table;
+  display: table !important;
+  margin-bottom: 0rem;
+}
+
+.table--cells th {
+  border-bottom: 1px solid $inuit-table-border-color;
+}
+
+.table--cells #pagination {
+  border-left: 1px solid $inuit-table-separator-color;
+  border-right: 1px solid $inuit-table-separator-color;
+}
+
+th {
+  text-align: left;
+}
+
+.th {
+  @extend th;
+  display: table-cell;
+  resize: horizontal;
+  font-weight: bold;
+  color: var(--px-data-table-header-text-color, inherit);
+  background-color: var(--px-data-table-header-background-color, inherit);
+}
+
+px-icon.sorting {
+  width: 1rem;
+  height: 1rem;
+  margin-left: 0.3333rem;
+}
+
+.tr {
+  display: table-row;
+}
+
+.td.td {
+  @extend td;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.td.td[hidden] {
+  display: none;
+}
+
+.table.aha-table .td.td {
+  padding-top: var(--px-data-table-padding-top);
+  padding-bottom: var(--px-data-table-padding-bottom);
+  padding-left: var(--px-data-table-padding-left, $inuit-base-spacing-unit--small);
+  padding-right: var(--px-data-table-padding-right, $inuit-base-spacing-unit--small);
+}
+
+.scroll-body {
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-left: 1px; /*firefox border collapse fix*/
+  padding-right: 1px; /*firefox border collapse fix*/
+}
+
+.column-head {
+  white-space: pre-line;
+  user-select: none;
+  &--selected {
+    white-space: nowrap;
+    user-select: none;
+  }
+  min-height: calculateRem(16px);
+}
+
+label {
+  margin: 0;
+}
+
+.sorted-text {
+  color: var(--px-data-table-cell-text-color--sorted, blue);
+}
+
+.sorted-text-hover:hover {
+  color: var(--px-data-table-text-color--hover, blue);
+  cursor: pointer;
+}
+
+.no-results {
+  color: var(--px-data-table-results-text-color--none, black);
+  height: 2rem;
+  align-items: center;
+}
+
+.columnChooser {
+  flex-direction: row-reverse;
+  margin-right: 2px;
+}
+
+.moveable {
+  cursor: move;
+}
+
+.header--drag-handle {
+  cursor: col-resize;
+  width: 15px;
+  min-height: 100%;
+}
+
+.header--container {
+  justify-content: space-between;
+}
+
+.aha-insertion-indicator-th.aha-insertion-indicator-th.aha-insertion-indicator-th {
+  border: none;
+  max-width:4px;
+  min-width:4px;
+  width:4px;
+  padding: 0;
+}
+
+.table .aha-insertion-indicator-td {
+  border: none;
+  max-width:4px;
+  min-width:4px;
+  width:4px;
+  padding: 0;
+  background-color: var(--px-data-table-insertion-indicator-td-background-color, blue);
+}
+
+.insertion-indicator.insertion-indicator.insertion-indicator {
+  border:none;
+  max-width:4px;
+  min-width:4px;
+  width:4px;
+  padding: 0;
+  background-color: var(--px-data-table-insertion-indicator-td-background-color, blue);
+}
+
+.striped:nth-child(even) {
+  background-color: var(--px-data-table-background-color-striped--even, rgba(black,0.07));
+}
+
+:host[scrolling-rows] {
+  display: var(--px-data-table-aha-table-display-scrolling-rows, flex);
+  flex: var(--px-data-table-aha-table-flex-scrolling-rows, 1);
+  flex-direction: var(--px-data-table-aha-table-flex-direction-scrolling-rows, column);
+}
+
+.scrolling-rows.scroll-body {
+  flex: var(--px-data-table-scroll-body-flex-scrolling-rows, 1);
+  min-width: var(--px-data-table-scroll-body-min-width-scrolling-rows, 0px);
+  overflow-y: var(--px-data-table-scroll-body-overflow-y-scrolling-rows, auto);
+}
+
+.scrolling-rows.pagination {
+  flex-basis: var(--px-data-table-pagination-flex-basis-scrolling-rows, 34px);
+  text-align: var(--px-data-table-pagination-text-align-scrolling-rows, right);
+}
+
+.scrolling-rows.columnChooser {
+  flex-basis: var(--px-data-table-column-chooser-flex-basis-scrolling-rows, 30px);
+}
+
+.dragged {
+  color: var(--px-data-table-text-color--dragged, blue);
+}
+
+.text-input--filter {
+  background-color: var(--px-data-table-text-input-background-color--filter, white);
+  border: none;
+}
+
+.tr--filter {
+  background-color: var(--px-data-table-tr--filter, white);
+  height: 40px;
+}
+
+.tr--filter span.td.td.aha-table {
+  padding: 0;
+}
+
+.tr--filter #selectAllCheckbox {
+  margin-left: $inuit-base-spacing-unit--small;
+}
+
+.selected-cell__selected.selected-cell__selected {
+  background-color: var(--px-data-table-cell-background-color--selected, blue);
+  border-top: 1px double var(--px-data-table-cell-border-color--selected, blue) !important;
+  border-bottom: 1px double var(--px-data-table-cell-border-color--selected, blue) !important;
+}
+
+.cell--value__validation-failed{
+  border: $inuit-table-border-width double var(--px-data-table-cell-border-validation--failed, red) !important;
+}
+
+.px-data-table-highlight--high{
+  background-color: var(--px-data-table-highlight--high, rgba(red,0.4));
+}
+
+.px-data-table-highlight--medium{
+  background-color: var(--px-data-table-highlight--medium, rgba(yellow,0.4));
+}
+
+.px-data-table-highlight--low{
+  background-color: var(--px-data-table-highlight--low, rgba(blue,0.4));
+}
+
+.pagination {
+  border-bottom: 1px solid $inuit-table-border-color;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+.paginationContainer, .pagesize {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.rowsPerPage {
+  color: $gray10;
+}
+
+.paginationContainer px-dropdown {
+  line-height: calculateRem(30px);
+}
+
+.paginationContainer .btn {
+  padding-left: calculateRem(7px);
+  padding-right: calculateRem(7px);
+  line-height: calculateRem(22px);
+  height: auto;
+  min-width: 0;
+}
+
+.paginationContainer .btn + .btn {
+  margin-left: calculateRem(6px);
+}
+
+.btn#next {
+  padding: 0;
+  margin-left: calculateRem(13px);
+}
+.btn#previous {
+  padding: 0;
+  margin-left: calculateRem(20px);
+  margin-right: calculateRem(7px);
+}
+
+// Trumps
+$inuit-enable-margins--none: true;
+$inuit-enable-margins--small: true;
+$inuit-enable-margins--tiny: true;
+$inuit-enable-margins--large: true;
+$inuit-enable-paddings--none: true;
+$inuit-enable-paddings--small: true;
+$inuit-enable-paddings--large: true;
+$inuit-enable-paddings--none: true;
+@import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
+@import "px-widths-responsive-design/_trumps.widths-responsive.scss";

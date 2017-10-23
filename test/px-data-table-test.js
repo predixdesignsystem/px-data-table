@@ -821,19 +821,19 @@ function runTests() {
     });
     test('Value of 5th data row 2nd column of first table should be "Rita Lopez"', function() {
       var tb = Polymer.dom(table1Fixture.root).querySelector('aha-table'),
-          cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[4];
+          cell = Polymer.dom(tb.root).querySelectorAll('.aha-name-td')[5];
       assert.include(cell.textContent, 'Rita Lopez');
     });
     test('Row count for first table should be 26', function() {
       var fixture = document.getElementById('table1');
-      var selector = '.summary.style-scope.px-pagination :nth-child(4)';
+      var selector = '.summary.style-scope.px-pagination :nth-child(3)';
       var span = fixture.querySelector(selector);
       assert.equal(span.innerHTML, '26');
     });
     // Spot checks for correct values in table cells and controls'
     test('First Name displays only first 10 characters  if length of the text is greater than 10 characters and elipse at the right', function() {
       var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-          cell = Polymer.dom(tb.root).querySelectorAll('.aha-first-td')[0];
+          cell = Polymer.dom(tb.root).querySelectorAll('.aha-first-td')[1];
       assert.include(cell.textContent, 'Isabel lon…');
     });
     test('Email displays only last 10 characters displayed if length of the text is greater than 10 characters', function() {
@@ -851,7 +851,7 @@ function runTests() {
     // The root element for pagination
     var paginationRoot = document.getElementById('pagination');
     // Selector for page 3 link
-    var span3Selector = '.paging.style-scope.px-pagination > span > :nth-child(3)';
+    var span3Selector = '.px-pagination > .px-pagination > :nth-child(5)';
     test('Pagination updates when page 3 link is clicked', function(done) {
       // Page 3 link
       var span3 = paginationRoot.querySelector(span3Selector);
@@ -860,7 +860,7 @@ function runTests() {
         // Element that shows starting record number in '<start>-<end> of <total> in Pagination'
         var startCount = paginationRoot.querySelector(startCountSelector);
         // startCount should show '21' when page 3 is clicked
-        assert.equal(startCount.innerHTML, '21');
+        assert.equal(startCount.innerHTML, '21-26');
         // End the test
         done();
       });
@@ -914,7 +914,7 @@ function runTests() {
           var tb = Polymer.dom(sortableTableRoot.root).querySelector('aha-table'),
               lastNameRow = Polymer.dom(tb.root).querySelectorAll('.aha-last-td');
 
-          assert.include(lastNameRow[9].textContent, 'Wooten');
+          assert.include(lastNameRow[lastNameRow.length - 1].textContent, 'Wooten');
           done(); // end the test
         }, 0);
       });
@@ -936,7 +936,7 @@ function runTests() {
 
       flush(function(){
         var editCell = Polymer.dom(cell.root).querySelector('px-edit-cell'),
-            editCellToTheLeft = Polymer.dom(cell.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
+            editCellToTheLeft = Polymer.dom(cell.parentElement.parentElement.querySelector('.aha-first-td').root).querySelector('px-edit-cell');
         assert.isFalse(editCell.classList.contains('hidden'));
         assert.isTrue(editCellToTheLeft.classList.contains('hidden'));
         done();
@@ -950,11 +950,11 @@ function runTests() {
       cell.click();
 
       flush(function(){
-        assert.equal(getStyle(cell, 'background-color'), 'rgb(226, 232, 237)');
+        assert.oneOf(getStyle(cell, 'background-color'), ['rgba(0, 0, 0, 0)', 'transparent']);
         assert.oneOf(getStyle(cell, 'border-right-width'), ['1px', '0.5px']);
         assert.equal(getStyle(cell, 'border-right-style'), 'double');
-        assert.equal(getStyle(cell, 'border-right-color'), 'rgb(62, 135, 232)');
-        assert.oneOf(getStyle(cell, 'box-shadow'), ['rgb(216, 224, 229) 0px 0px 0px 1px inset', 'inset 0px 0px 0px 1px #d8e0e5']);
+        assert.equal(getStyle(cell, 'border-right-color'), 'rgb(0, 122, 204)');
+        assert.equal(getStyle(cell, 'box-shadow'), 'none');
 
         done();
       });
@@ -1005,41 +1005,24 @@ function runTests() {
       var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
           px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
           px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
-          dropcell = px_dropdown.$.dropcell,
-          content = Polymer.dom(px_dropdown).querySelector('px-dropdown-content'),
-          dropdown = content.$.dropdown;
+          button = px_dropdown.$.button,
+          dropdown = px_dropdown.$.dropdown;
       assert.equal(getStyle(dropdown,'display'), 'none');
-      dropcell.click();
-      assert.equal(getStyle(dropdown, 'display'), 'block');
+      button.click();
+      setTimeout(function() {
+
+        assert.notEqual(getStyle(dropdown, 'display'), 'none');
+      },50);
       done();
     });
     test('items passed into dropdown are the ones shown', function(done){
       var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
           px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
           px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
-          dropcell = px_dropdown.$.dropcell,
-          content = Polymer.dom(px_dropdown).querySelector('px-dropdown-content'),
-          dropdown = content.$.dropdown,
-          firstLi = Polymer.dom(dropdown).querySelector('li');
-      assert.include(firstLi.textContent, 'United');
-      done();
-    });
-
-    test('Tooltip dom-if sees the text is too long, and is included in the dom', function(done){
-      var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-          px_dropdown_cell = Polymer.dom(tb.root).querySelector('.td__dropdown'),
-          px_dropdown = Polymer.dom(px_dropdown_cell.root).querySelector('px-dropdown'),
-          dropcell = px_dropdown.$.dropcell,
-          content = Polymer.dom(px_dropdown).querySelector('px-dropdown-content'),
-          dropdown = content.$.dropdown,
-          lis = Polymer.dom(dropdown).querySelectorAll('li'),
-          tooltip = Polymer.dom(lis[0]).querySelector('px-tooltip'),
-          undefinedTooltip = Polymer.dom(lis[1]).querySelector('px-tooltip');
-
-      // first item is long, and has a tooltip
-      expect(tooltip).to.not.be.undefined;
-      //second item does not.
-      expect(undefinedTooltip).to.be.null;
+          dropdown = Polymer.dom(px_dropdown.root).querySelector('#dropdown'),
+          selector = Polymer.dom(dropdown).querySelector('iron-selector'),
+          firstDiv = Polymer.dom(selector.root).querySelector('div');
+      assert.include(firstDiv.textContent, 'United');
       done();
     });
 
@@ -1075,16 +1058,6 @@ function runTests() {
         table5Fixture.setAttribute('hide-pagination-control', true);
         flush(function(){
           assert.isTrue(paginationControl.classList.contains('visuallyhidden'));
-          done();
-        });
-    });
-
-    test('Table shows all data (26 rows) instead of 10.', function(done){
-        var selector = '.summary.style-scope.px-pagination :nth-child(4)';
-        var span = table5Fixture.querySelector(selector);
-        table5Fixture.setAttribute('hide-pagination-control', true);
-        flush(function(){
-          assert.equal(span.innerHTML, '26');
           done();
         });
     });
@@ -1241,7 +1214,7 @@ function runTests() {
       flush(function() {
         var selectionEls = Polymer.dom(filterInnerTable.root).querySelectorAll(selectionPath);
         assert.isTrue(filterRowEl.classList.contains('hidden'), 'tr--filter row should have hidden class');
-        assert.equal(selectionEls.length, 10);
+        assert.equal(selectionEls.length, 11);
         done();
       });
     });
@@ -1316,25 +1289,27 @@ function runTests() {
       //
       test('hide column through column chooser', function(done){
         var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-            chooserContent = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown-content'),
-            ddItems = Polymer.dom(chooserContent.root).querySelectorAll('li');
+            chooser = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown'),
+            dropdown = Polymer.dom(chooser.root).querySelector('#dropdown'),
+            selector = Polymer.dom(dropdown).querySelector('#selector'),
+            ddItems = Polymer.dom(selector.root).querySelectorAll('div');
 
         //column chooser should exists
-        assert.isDefined(chooserContent);
+        assert.isDefined(chooser);
 
         //third column is shown
-        assert.isTrue(chooserContent.items[3].checked);
-        var columnLabel = chooserContent.items[3].val;
+        assert.isTrue(ddItems[3].classList.contains('iron-selected'));
+        var columnLabel = ddItems[3].val;
 
         //change the state of the dropdown item
-        ddItems[0].click();
+        ddItems[3].click();
         flush(function(){
 
           var headers = Polymer.dom(tb.root).querySelectorAll(".th");
           assert.equal(countHidden(headers), 1);
 
           //cick again
-          ddItems[0].click();
+          ddItems[3].click();
           flush(function(){
 
             headers = Polymer.dom(tb.root).querySelectorAll(".th");
@@ -1349,16 +1324,20 @@ function runTests() {
 
       test('Column chooser registers new columns', function(done){
         var tb = Polymer.dom(table5Fixture.root).querySelector('aha-table'),
-            chooserContent = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown-content'),
-            ddItems = Polymer.dom(chooserContent.root).querySelectorAll('li');
+            chooser = Polymer.dom(tb.root).querySelector('.columnChooser px-dropdown'),
+            dropdown = Polymer.dom(chooser.root).querySelector('#dropdown'),
+            selector = Polymer.dom(dropdown).querySelector('#selector'),
+            ddItems = Polymer.dom(selector.root).querySelectorAll('div');
 
         var noItems = ddItems.length;
         var newEl = Polymer.Base.create('px-data-table-column', {'name': 'whatevs', 'filterable': true});
 
         Polymer.dom(table5Fixture).appendChild(newEl);
         flush(function(){
-          assert.equal(Polymer.dom(chooserContent.root).querySelectorAll('li').length, noItems + 1);
-          done();
+          setTimeout(function() {
+            assert.equal(Polymer.dom(selector.root).querySelectorAll('div').length, noItems + 1);
+            done();
+          }, 200);
         });
     });
   });
@@ -1418,6 +1397,20 @@ function runTests() {
         assert.equal(newRowCount, 20, 'Default rows displayed should be 20 rows.');
         done();
       });
+    });
+  });
+
+  suite('Unit tests for px-data-table-column dropdown mode', function() {
+    test('Changing a dropdown cell updates the table data', function() {
+      var tableFixture = document.getElementById('tableWithDropdownColumn');
+      var dropdownCell = Polymer.dom(tableFixture.root).querySelector('aha-table').querySelectorAll('px-data-table-cell')[1];
+      var dropdown = Polymer.dom(dropdownCell.root).querySelector('px-dropdown');
+      // Open dropdown
+      dropdown.$.button.click();
+      // Get "Wei" dropdown choice button and select it
+      var weiChoiceButton = Polymer.dom(dropdown.root).querySelector('.dropdown-option[title="Wei"]');
+      weiChoiceButton.click();
+      assert.equal(tableFixture.tableData[0].first, 'Wei', 'Wei should be set as the first name in the first table data entry.');
     });
   });
 }

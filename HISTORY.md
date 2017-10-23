@@ -1,3 +1,89 @@
+v5.0.0
+==================
+* remote data source support. https://github.com/PredixDev/px-data-table/pull/126
+
+v4.0.15
+==================
+* fix #164 pagination bug
+
+v4.0.14
+==================
+* fix #160 and remove infinite loop issue
+
+v4.0.13
+==================
+* update to work with latest dropdown
+
+v4.0.12
+==================
+* fix history
+
+v4.0.11
+==================
+* merge #157
+
+v4.0.10
+==================
+* merge #155
+
+v4.0.9
+==================
+* fix pagination (#152)
+
+v4.0.8
+==================
+* fix padding of html columns (#151) and pagination buttons
+
+v4.0.7
+==================
+* fix docs
+
+v4.0.6
+==================
+* fix highlight demo to calculate path (#149)
+
+v4.0.5
+==================
+* Fix for sub-component demos to refer to shared API docs.
+
+v4.0.4
+==================
+* Fix comment for analyzer
+
+v4.0.3
+==================
+* fix pagination alignment in IE
+
+v4.0.2
+==================
+* fix bugs
+
+v4.0.1
+==================
+* fix pagination icons & dropdown
+* fix bug with select column
+
+v4.0.0
+==================
+* major release for redesign
+
+v3.0.4
+==================
+* remove old component image
+* update README
+
+v3.0.3
+==================
+* fix #139, #140 (merge #142)
+
+v3.0.2
+==================
+* add check for single select
+
+v3.0.1
+==================
+* move px-row-click event
+
 v3.0.0
 ==================
 * replace pxLocalizeBehavior with appLocalizeBehavior for localization

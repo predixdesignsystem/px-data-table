@@ -7,6 +7,7 @@
     <title>px-data-table Demo</title>
 
     <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../promise-polyfill/promise-polyfill-lite.html">
 
     <link rel="import" href="px-data-table.html" />
     <link rel="import" href="../iron-ajax/iron-ajax.html" />
@@ -26,22 +27,18 @@
       <p>A very simple data table.  Just displays data and has sortable columns.</p>
       <px-data-table show-column-chooser enable-column-resize enable-column-reorder hide-pagination-control table-data="{{minidata}}"></px-data-table>
 
-      <hr>
 
       <p>Filterable columns and selectable rows.</p>
       <px-data-table filterable selectable table-data="{{data}}"></px-data-table>
 
-      <hr>
 
       <p>Display as columns instead of a grid.</p>
       <px-data-table table-columns table-data="{{data}}"></px-data-table>
 
-      <hr>
 
       <p>Display as rows instead of a grid.</p>
       <px-data-table table-rows enable-column-reorder table-data="{{data}}"></px-data-table>
 
-      <hr>
 
       <h3>Very customized data table</h3>
 
@@ -92,7 +89,8 @@
           filterable
           sortable
           editable
-          filter-function-name="myTableCustomFunctions.filterWholeWord">
+          filter-function-name="myTableCustomFunctions.filterWholeWord"
+          disable-hide>
           <px-validation>
             <px-validator validation-method="isNumber" import="../px-validation/px-example-validator.html"></px-validator>
           </px-validation>

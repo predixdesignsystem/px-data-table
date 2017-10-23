@@ -12,7 +12,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="px-pagination.html">
 <link rel="import" href="px-data-table-cell.html">
-<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="../px-icon-set/px-icon-set.html">
+<link rel="import" href="../px-icon-set/px-icon.html">
 <link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="css/aha-table-styles.html">
 
@@ -23,15 +24,14 @@
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class$="flex columnChooser u-mb- {{_getColumnChooserClass(scrollingRows)}}">
-        <px-dropdown display-value="{{localize('Show/Hide Column')}}">
-          <px-dropdown-content max-cont-character-width="100" class="px-dropdown-content" checkbox-mode="true" items='{{_columnChooserItems}}'>
-          </px-dropdown-content>
+        <px-dropdown display-value="{{localize('Show/Hide Column')}}" items='{{_columnChooserItems}}' multi hide-selected clear-selections-on-change>
         </px-dropdown>
       </div>
     </template>
+
     <div class$="scroll-body {{_getScrollBodyClass(scrollingRows)}}">
 
-      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableRows, tableColumns)}}" role="grid">
+      <div id="scrollBodyTableContainer" class$="{{_getTableClass(tableCells, tableColumns)}}" role="grid">
         <!-- Header -->
         <div class="tr" role="row">
           <template is="dom-repeat" items="{{meta}}" as="column">
@@ -40,7 +40,7 @@
                 <div class="flex header--container">
                   <span
                     class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}"
-                    on-tap="_sort">{{column.label}}<iron-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></iron-icon>
+                    on-tap="_sort">{{column.label}}<px-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></px-icon>
                   </span>
                   <template is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
                     <template is="dom-if" if="{{enableColumnResize}}">
@@ -59,18 +59,44 @@
             <span class$="{{_getFilterHeaderClass(column)}}" role="gridcell" hidden$="{{column.hide}}">
               <!-- select all checkbox -->
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
-                <span class="flex flex--center" hidden$="{{column.hide}}">
+                <span class="flex" hidden$="{{column.hide}}">
                   <template is="dom-if" if="{{!singleSelect}}">
-                    <input id="selectAllCheckbox" role="checkbox" aria-label="Click to select or deselect all rows" type="checkbox" on-change="_clickSelectAll"/>
+                    <input role="checkbox" id="selectAllCheckbox" aria-label="Click to select row" type="checkbox" checked="{{internalRow._selected::change}}"/>
+                  </template>
+                  <template is="dom-if" if="{{singleSelect}}">
+                    <input role="checkbox" id="selectAllCheckbox" aria-label="Click to select row" type="radio" name="selected" checked="{{internalRow._selected::change}}"/>
                   </template>
                 </span>
               </template>
+              <template id="cellRepeat" is="dom-if" if="{{!_isEqual(column.type, 'selected')}}">
+                <template is="dom-if" if="{{!column.hide}}">
+                  <px-data-table-cell
+                    cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
+                    cell-display-value="{{_readContent(internalRow, column)}}"
+                    cell-editable="{{column.editable}}"
+                    cell-highlighted="[[_getHighlightValue(internalRow, column, column.highlightdefined)]]"
+                    cell-selected="[[internalRow._selected]]"
+                    cell-type="{{column.type}}"
+                    cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
+                    cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
+                    column-name="{{column.name}}"
+                    dropdown-bounds="{{scrollBody}}"
+                    dropdown-items="{{column.dropdownItems}}"
+                    dropdown-max-character-width="{{column.maxColumnCharacterWidth}}"
+                    on-save="_save"
+                    on-tap="_clickCell"
+                    on-validate="_handleValidateEvent"
+                    placeholder="{{column.placeholder}}"
+                    row-highlighted="[[internalRow._highlight]]"
+                    >
+                  </px-data-table-cell>
+                </template>
 
-              <!-- filter entry -->
-              <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
-                <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-input="_filter"/>
+                <!-- filter entry -->
+                <template is="dom-if" if="{{_isFilterableColumn(column, filterable)}}">
+                  <input role="textbox" aria-label="Enter text to filter column" placeholder="{{localize('Filter')}}" class="text-input text-input--filter" type="text" on-input="_filter" />
+                </template>
               </template>
-
             </span>
           </template>
         </div>
@@ -83,7 +109,7 @@
               <!-- selected column checkbox or radio button -->
               <template is="dom-if" if="{{_isEqual(column.type, 'selected')}}">
                 <span role="gridcell" class$="{{_getSelectedCellClass(internalRow._selected, internalRow._highlight)}}" hidden$="{{column.hide}}" on-tap="_clickRow">
-                  <span class="flex flex--center flex--middle">
+                  <span class="flex flex--middle">
                     <template is="dom-if" if="{{!singleSelect}}">
                       <input role="checkbox" aria-label="Click to select row" type="checkbox" checked="{{internalRow._selected::change}}"/>
                     </template>
@@ -104,14 +130,12 @@
                       cell-type="{{column.type}}"
                       dropdown-items="{{column.dropdownItems}}"
                       placeholder="{{column.placeholder}}"
-                      dropdown-bounds="{{scrollBody}}"
                       cell-display-value="{{_readContent(internalRow, column)}}"
                       cell-value="{{_getInternalDataAt(internalRow, column.name)}}"
                       cell-display-tooltip="{{_shouldClipDatumString(internalRow, column)}}"
                       cell-editable="{{column.editable}}"
                       cell-validation="{{_getInternalCellValidationStateAt(internalRow, column.name)}}"
                       column-name="{{column.name}}"
-                      dropdown-max-character-width="{{column.maxColumnCharacterWidth}}"
                       on-tap="_clickCell">
                   </px-data-table-cell>
                 </template>
@@ -125,18 +149,23 @@
         <div class="flex flex--center no-results">No Results</div>
       </template>
     </div>
+
     <!-- Pagination controls -->
     <div class$="pagination {{_getPaginationClass(scrollingRows)}}">
       <px-pagination class$="{{_getPaginationVisibility(hidePaginationControl)}}"
-                     id="pagination"
-                     number-of-items="{{numberOfItems}}"
-                     page-size="{{pageSize}}"
-                     first-item-index-to-display="{{firstItemIndex}}"
-                     language="[[language]]"
-                     resources="[[resources]]">
+                    id="pagination"
+                    data-remote="{{dataRemote}}"
+                    number-of-items="{{_adaptedNumberOfItems}}"
+                    page-size="{{pageSize}}"
+                    page-size-options="{{pageSizeOptions}}"
+                    first-item-index-to-display="{{firstItemIndex}}"
+                    language="{{language}}"
+                    use-key-if-missing="{{useKeyIfMissing}}"
+                    resources="{{resources}}">
       </px-pagination>
     </div>
   </template>
+
 </dom-module>
 <script>
   Polymer({
@@ -151,21 +180,21 @@
       data: {
         type: Array,
         notify: true,
-        value: function() {
+        value: function () {
           return [];
         }
       },
       //meta: instance of the model meta
       meta: {
         type: Array,
-        value: function() {
+        value: function () {
           return [];
         }
       },
       //selected: all selected row will be referenced here.  Really only readable.
       selectedRows: {
         type: Array,
-        value: function() {
+        value: function () {
           return [];
         },
         notify: true
@@ -193,8 +222,8 @@
         reflectToAttribute: true,
         value: false
       },
-      //tableRows: if table row is striped
-      tableRows: {
+      //tableCells: if table row is striped
+      tableCells: {
         type: Boolean,
         value: false
       },
@@ -231,14 +260,14 @@
       // the column names that are filtered on
       filteredColumns: {
         type: Array,
-        value: function() {
+        value: function () {
           return [];
         }
       },
       //all rows that are currently displayed on the page (visible right now)
       displayedRows: {
         type: Array,
-        value: function() {
+        value: function () {
           return [];
         }
       },
@@ -248,7 +277,59 @@
         value: false
       },
       /**
+       * Property to set the the total number of entries in the table,
+       * assuming that dataRemote is true and the data provided is only
+       * for the visible page.
+       *
+       * Requires dataRemote="true" to take effect
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      totalEntries: {
+        type: Number,
+        value: 10,
+        observer: '_calculateAdaptedNumberOfItems'
+      },
+      /**
+       * Property to set the the remote index of the first item on this page,
+       * assuming that dataRemote is true and the data provided is only
+       * for the visible page.
+       *
+       * Requires dataRemote="true" to take effect
+       *
+       * If on page 2 with a page size of 10, then the first-item-index would be 11.
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      firstItemIndex: {
+        type: Number,
+        value: 1
+      },
+      /**
+       * Property to set the the data paradigm.
+       *
+       * If this is false, then px-data-table expects all of the data to be provided to it.
+       *
+       * If this is true, then px-data-table will expect only one page's worth of data to be supplied.
+       * This will require other fields to be set, e.g. page-size, total-entries, and first-item-index
+       *
+       *      <px-data-table data-remote="true" page-size total-entries="100"  first-item-index="0" table-data="{{data}}"></px-data-table>
+       *
+       * @default false
+       */
+      dataRemote: {
+        type: Boolean,
+        value: false
+      },
+      /**
        * Property to set the page size instead of the default of 10.
+       *
+       * In data-remote mode, page size may not match count of data provided.
+       * Page size could be 50, but only 40 items are provided.
        *
        *      <px-data-table page-size="50" table-data="{{data}}"></px-data-table>
        *
@@ -257,7 +338,16 @@
       pageSize: {
         type: Number,
         value: 10,
-        observer : '_setPageSize'
+        observer: '_setPageSize'
+      },
+      // when dataRemote is true, then this reflects the total count on observer
+      // and numberOfItems reflects count of items in table
+      _adaptedNumberOfItems: {
+        type: Number,
+      },
+      numberOfItems: {
+        type: Number,
+        observer: '_calculateAdaptedNumberOfItems'
       },
       /**
        * Property to set the visibility of the table pagination controls.
@@ -288,7 +378,7 @@
        */
       enableColumnReorder: {
         type: Boolean,
-        value:false
+        value: false
       },
       /**
        * Property to enable resizing of column headers through click and drag
@@ -301,7 +391,9 @@
       },
       _internalData: {
         type: Array,
-        value: function(){return [];}
+        value: function(){
+          return [];
+        }
       },
       /**
        * Array holding the column names in their displayed order
@@ -309,7 +401,9 @@
        */
       _columnChooserItems: {
         type: Array,
-        computed: '_computeColumnChooserItems(meta, meta.*)'
+        value: function() {
+          return [];
+        }
       },
       /**
        * Whether we're currently displaying an insertion column (when dragging columns)
@@ -340,42 +434,19 @@
       },
       //scroll body html element
       scrollBody: {
-        type: HTMLElement,
-        value: function() {
-          Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
-        }
-      },
-      /**
-       * A valid IETF language tag as a string that `px-localize-behavior` will
-       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
-       *
-       * See https://github.com/PolymerElements/app-localize-behavior for API
-       * documentation and more information.
-       */
-      language: {
         type: String,
-        value: 'en'
+        value: '#scrollBodyTableContainer'
       },
       /**
-      * Use the key for localization if value for  language is missing. Should
-      * always be true for  our components
-      */
-      useKeyIfMissing: {
-        type: Boolean,
-        value: true
-      },
-      /**
-       * Localizable strings for this component
+       * Options displayed in the page size dropdown.
        */
-      resources: {
-        type: Object,
+      pageSizeOptions: {
+        type: Array,
         value: function() {
-          return {
-            'en': {
-              'Show/Hide Column': 'Show/Hide Column',
-              'Filter': 'Filter'
-            }
-          }
+          return [{"key":"1","val":"10"},
+                  {"key":"2","val":"20"},
+                  {"key":"3","val":"50"},
+                  {"key":"4","val":"100"}];
         }
       }
     },
@@ -384,43 +455,45 @@
       '_updateDisplayedRows(firstItemIndex)', // when the first item to display changes
       '_updateDisplayedRows(pageSize)', // when the size of the page changes
       '_dataChanged(data.*)',
-      '_columnChooserChanged(_columnChooserItems.*)',
+      '_computeColumnChooserItems(meta, meta.*)',
       '_computeIfColumnFilterEnabled(meta.splices, filterable, meta.*, selectable, singleSelect)'
     ],
 
     listeners: {
-      'validate': '_handleValidateEvent'
+      'validate': '_handleValidateEvent',
+      'px-dropdown-selection-changed': '_columnChooserChanged'
     },
 
     ready: function() {
       this.addEventListener('px-data-table-highlight-loaded', this._highlightLoaded.bind(this));
-      this.scrollBody = Polymer.dom(this.root).querySelector('#scrollBodyTableContainer');
-      if(this.selectable) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
       var boundHandler = this._columnChanged.bind(this);
       this._observer = Polymer.dom(this.$.columndefs).observeNodes(boundHandler);
     },
-    attached: function() {
+
+    attached: function () {
       this._isAttached = true;
     },
 
     _columnChanged: function(info){
+      if(this.selectable && this.meta.length === 0) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
+
       var addedColumns = info.addedNodes.filter(function(node) {
         return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
       });
-      var removedColumns = info.removedNodes.filter(function(node) {
+      var removedColumns = info.removedNodes.filter(function (node) {
         return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
       });
 
       if(addedColumns.length > 0) {
 
-        for(var i = 0; i < addedColumns.length; i++) {
+        for (var i = 0; i < addedColumns.length; i++) {
 
           // default the type of the column to a string
-          if(!addedColumns[i].type) {
+          if (!addedColumns[i].type) {
             addedColumns[i].type = 'string';
           }
 
-          if(!addedColumns[i]['label']) {
+          if (!addedColumns[i]['label']) {
             var name = addedColumns[i]['name'] || '';
             addedColumns[i].label = name.charAt(0).toUpperCase() + name.slice(1);
           }
@@ -429,9 +502,9 @@
         }
       }
 
-      removedColumns.forEach(function(columnToRemove){
-        this.meta.forEach(function(column, idx){
-          if (columnToRemove === column){
+      removedColumns.forEach(function (columnToRemove) {
+        this.meta.forEach(function (column, idx) {
+          if (columnToRemove === column) {
             this.splice('meta', idx, 1);
           }
         }.bind(this));
@@ -442,23 +515,23 @@
     _addColumn: function(addedColumn) {
       //meta needs to reflect the order in light dom. Find the node just before this one
       var previousNode,
-          notFound = this.getEffectiveChildren().every(function(column, index) {
-            if(column.name === addedColumn.name) {
-              return false;
-            }
+        notFound = this.getEffectiveChildren().every(function (column, index) {
+          if (column.name === addedColumn.name) {
+            return false;
+          }
 
-            previousNode = column;
-            return true;
-          });
+          previousNode = column;
+          return true;
+        });
 
       //if column found
-      if(!notFound) {
+      if (!notFound) {
 
         var idx = 0;
         //make sure we insert in the right place
-        if(previousNode) {
-          this.meta.forEach(function(column, index) {
-            if(column.name === previousNode.name) {
+        if (previousNode) {
+          this.meta.forEach(function (column, index) {
+            if (column.name === previousNode.name) {
               idx = index + 1;
             }
           });
@@ -478,24 +551,24 @@
       return this.meta && this.meta[0] && this.meta[0].name === '_selected';
     },
 
-    _highlightLoaded: function(evt){
+    _highlightLoaded: function (evt) {
       evt = Polymer.dom(evt);
       var column = this._findFirstMatchingElementNameFromEventPath(evt, "PX-DATA-TABLE-COLUMN");
 
       column._highLightElLoadedCount += 1;
       if (column._highLightElLoadedCount === Polymer.dom(column).querySelectorAll('px-data-table-highlight').length) {
         var columnIndex = this._findMetaIndexFromColumnElement(column);
-        if (columnIndex > 0){
+        if (columnIndex > 0) {
           this.set('meta.' + columnIndex + '.highlightdefined', true);
         }
       }
     },
 
-    _findMetaIndexFromColumnElement: function(columnElement){
+    _findMetaIndexFromColumnElement: function (columnElement) {
       var columnIndex = -1;
-      this.meta.some (
-        function(item, idx){
-          if(item === columnElement){
+      this.meta.some(
+        function (item, idx) {
+          if (item === columnElement) {
             columnIndex = idx;
             return true;
           }
@@ -504,9 +577,9 @@
       return columnIndex;
     },
 
-    _findFirstMatchingElementNameFromEventPath: function(evt, nodeName){
+    _findFirstMatchingElementNameFromEventPath: function (evt, nodeName) {
       var el;
-      evt.path.some(function(node){
+      evt.path.some(function (node) {
         if (node.nodeName === nodeName) {
           el = node;
           return true;
@@ -515,17 +588,17 @@
       return el;
     },
 
-    _dataChanged: function(changeRec) {
-      if(this.data === undefined || this.data === null || (!this._isAttached && changeRec.base.length === 0)) {
+    _dataChanged: function (changeRec) {
+      if (this.data === undefined || this.data === null || (!this._isAttached && changeRec.base.length === 0)) {
         this._internalData = [];
         return;
       }
 
       //wait for us to be attached before processing data changes
       //debounce it as well
-      if(!this._isAttached) {
+      if (!this._isAttached) {
         var _this = this;
-        this.debounce('attach', function() {
+        this.debounce('attach', function () {
           _this._dataChanged(changeRec);
         }, 10);
         return;
@@ -537,12 +610,12 @@
         this._generateMetaFromData();
       }
 
-      if(typeof this._internalData !== "undefined" && this._internalData.length === 0){
+      if (typeof this._internalData !== "undefined" && this._internalData.length === 0) {
         this._internalData = this._initializeInternalData();
-      } else{
+      } else {
         this._internalData = this._refreshInternalData();
       }
-      this.selectedRows = this._internalData.filter(function(it){
+      this.selectedRows = this._internalData.filter(function (it) {
         return it._selected === true;
       });
 
@@ -553,19 +626,23 @@
       if (pathNumber.test(changeRec.path)) {
         var index = pathNumber.exec(changeRec.path)[0].slice(1);
         var pathPieces = changeRec.path.split('.'),
-            columnName = pathPieces[pathPieces.length-1],
-            column;
-        this.meta.some(function(columnEl){
+          columnName = pathPieces[pathPieces.length - 1],
+          column;
+        this.meta.some(function (columnEl) {
           if (columnEl.name === columnName) {
             column = columnEl;
             return true;
           }
         });
-        if(this._cellChanged(this._readContent(this._internalData[index], column), changeRec.value)){
+        if (this._cellChanged(this._readContent(this._internalData[index], column), changeRec.value)) {
           this._handleValidateEvent(evt);
         }
       }
 
+    },
+
+    _getNumberOfItems: function (numberOfItems,totalEntries,dataRemote) {
+      return dataRemote ? totalEntries : numberOfItems;
     },
 
     _includeAllColumnsChanged: function(newValue) {
@@ -580,12 +657,11 @@
 
     _selectableChanged: function(newSelectable) {
       // if meta is already defined and then selectable is set, we need to backfill the meta with the _selected column
-      if(newSelectable === true && this.meta !== null && this.meta !== undefined && this.meta.length > 0) {
-        this.splice('meta',0,0, this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
-      } else if(newSelectable === false && this.meta !== null && this.meta !== undefined && this.meta.length > 0 && this.meta[0].name === "_selected"){
+      if (newSelectable === true && this.meta !== null && this.meta !== undefined && this.meta.length > 0) {
+        this.splice('meta', 0, 0, this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
+      } else if (newSelectable === false && this.meta !== null && this.meta !== undefined && this.meta.length > 0 && this.meta[0].name === "_selected") {
         this.shift('meta');
       }
-
     },
 
     _singleSelectChanged: function() {
@@ -598,12 +674,12 @@
     _generateMetaFromData: function() {
       for(var prop in this.data[0]) {
         var previousNode,
-          notFound = this.meta.every(function(column, index) {
-            if(column.name === prop) {
-              return false;
-            }
-            return true;
-          });
+            notFound = this.meta.every(function(column, index) {
+              if(column.name === prop) {
+                return false;
+              }
+              return true;
+            });
 
         // if column not found
         if(notFound) {
@@ -613,8 +689,7 @@
       }
     },
 
-
-    _generateMetaForColumn: function(prop, type, isSelectAll, label) {
+    _generateMetaForColumn: function (prop, type, isSelectAll, label) {
       return Polymer.Base.create('px-data-table-column', {
         name: prop,
         label: label,
@@ -623,51 +698,61 @@
         filterable: this.filterable,
         editable: false,
         required: false,
+        hide: false,
         selectAll: isSelectAll,
-        validate: function(){ return {'passedValidation': true};}
+        validate: function () { return { 'passedValidation': true }; }
       });
     },
 
     /********** Filter/Sort main function *************/
 
-    _filterSortAndUpdateDisplayedTable: function() {
+    _filterSortAndUpdateDisplayedTable: function () {
       var i,
-          index,
-          count= 0,
-          self = this,
-          len;
+        index,
+        count = 0,
+        self = this,
+        len;
 
       // start at original data source (shadow fields, _selected and _filtered are still set)
       this.filteredSortedData = this._internalData;
 
       // reset back to unfiltered
       // leave _selected as is since selected rows should stay selected
-      for(i = 0, len = this._internalData.length; i < len; i++) {
+      for (i = 0, len = this._internalData.length; i < len; i++) {
         this._setInternalDataAt(this._internalData[i], '_filtered', false);
       }
 
-      // sort
-      if(this.sortedColumn) {
-        this.filteredSortedData = this._sortByColumn(this.filteredSortedData);
-      }
+      if (!this.dataRemote) {
+        // If remote, all sorting/filtering is done on server
 
-      // filter
-      for(index in this.filteredColumns) {
-        this.filteredSortedData = this._filterByColumn(this.filteredColumns[index].name,
-          this.filteredColumns[index].userEntry, this.filteredSortedData);
-      }
-
-      // count total number of rows
-      self = this;
-      this._internalData.forEach(function(row) {
-        if(!self._getInternalCellStateAt(row, '_filtered')) {
-          count++;
+        // sort
+        if (this.sortedColumn) {
+          this.filteredSortedData = this._sortByColumn(this.filteredSortedData);
         }
-      });
-      this.set('numberOfItems', count);
 
-      // with filtering/sorting, it's best just to go back to the first page
-      this.$.pagination.goToPageNumber(1);
+        // filter
+        for (index in this.filteredColumns) {
+          this.filteredSortedData = this._filterByColumn(this.filteredColumns[index].name,
+            this.filteredColumns[index].userEntry, this.filteredSortedData);
+        }
+
+        // count total number of rows
+        self = this;
+        this._internalData.forEach(function (row) {
+          if (!self._getInternalCellStateAt(row, '_filtered')) {
+            count++;
+          }
+        });
+
+        this.set('numberOfItems', count);
+
+        // with filtering/sorting, it's best just to go back to the first page
+        this.$.pagination.goToPageNumber(1);
+      } else {
+        this.$.pagination.updateDisplay();
+        this.set('numberOfItems', this.totalEntries);
+      }
+
       this._updateDisplayedRows();
 
       //update selected rows when changing the filter if the select all is enabled
@@ -679,21 +764,21 @@
 
     /********** Internal data structure ***********/
 
-    _refreshInternalData: function(resetDataState){
+    _refreshInternalData: function (resetDataState) {
       var _internalData = [],
-          i,
-          len;
-      for(i = 0, len = this.data.length; i < len; i++) {
+        i,
+        len;
+      for (i = 0, len = this.data.length; i < len; i++) {
         var thisObj = this.data[i],
-            cellDataObj = {dataIndex: i },
-            resetDataFlag = resetDataState || i >= this._internalData.length;
-        for ( var key in thisObj ) {
-          if ( Object.prototype.hasOwnProperty.call( thisObj, key ) ) {
+          cellDataObj = { dataIndex: i },
+          resetDataFlag = resetDataState || i >= this._internalData.length;
+        for (var key in thisObj) {
+          if (Object.prototype.hasOwnProperty.call(thisObj, key)) {
             cellDataObj[key] = {};
             cellDataObj[key].value = thisObj[key];
-            if(resetDataFlag){
-              cellDataObj[key]._validation = {passedValidation: true};
-            }else{
+            if (resetDataFlag) {
+              cellDataObj[key]._validation = { passedValidation: true };
+            } else if(this._internalData[i].row[key]._validation) {
               cellDataObj[key]._validation = this._internalData[i].row[key]._validation;
             }
           }
@@ -702,20 +787,20 @@
           row: cellDataObj,
           _filtered: (resetDataFlag ? false : this._internalData[i]._filtered),
           _selected: (resetDataFlag ? false : this._internalData[i]._selected),
-          _highlight: (resetDataFlag ? {value:false, highlightColor: ''} : this._internalData[i]._highlight)
+          _highlight: (resetDataFlag ? { value: false, highlightColor: '' } : this._internalData[i]._highlight)
         });
       }
       return _internalData;
     },
 
-    _initializeInternalData: function() {
+    _initializeInternalData: function () {
       // make internal data structure with shadow fields
       return this._refreshInternalData(true);
     },
 
     // set helper method so we don't have to sprinkle logic of this internal data structure throughout
-    _setInternalDataAt: function(row, columnName, value) {
-      if(columnName === '_selected' || columnName === '_filtered' || columnName === '_highlight') {
+    _setInternalDataAt: function (row, columnName, value) {
+      if (columnName === '_selected' || columnName === '_filtered' || columnName === '_highlight') {
         // shadow fields are in root of row in internal data
         this.set('displayedRows.' + this.displayedRows.indexOf(row) + '.' + columnName, value);
         row[columnName] = value;
@@ -728,88 +813,147 @@
     },
 
     // get helper method so we don't have to sprinkle logic of this internal data structure throughout
-    _getInternalDataAt: function(row, columnName) {
+    _getInternalDataAt: function (row, columnName) {
       return this._getInternalCellStateAt(row, columnName).value;
     },
 
-    _getInternalCellValidationStateAt: function(row, columnName) {
+    _getInternalCellValidationStateAt: function (row, columnName) {
       return this._getInternalCellStateAt(row, columnName)._validation;
     },
 
-    _setInternalCellValidationStateAt: function(row, columnName, value) {
+    _setInternalCellValidationStateAt: function (row, columnName, value) {
       row.row[columnName]._validation = value;
     },
 
-    _getInternalCellStateAt: function(row, columnName) {
-      if(columnName === '_selected' || columnName === '_filtered') {
+    _getInternalCellStateAt: function (row, columnName) {
+      if (columnName === '_selected' || columnName === '_filtered') {
         // shadow fields are in root of row in internal data
         return row[columnName];
       }
       else {
         // the user's data is in the row column of internal data
-        return (row.row[columnName]? row.row[columnName] : {});
+        return (row.row[columnName] ? row.row[columnName] : {});
       }
     },
 
     /******* Update Displayed rows when major changes ****/
 
-    _setPageSize: function() {
+    _setPageSize: function () {
       this.$.pagination.setPageSize(this.pageSize);
     },
 
-    _updateDisplayedRows: function() {
+    _getInternalRowStateAt: function (row, columnName) {
+      if(columnName === '_selected' || columnName === '_filtered') {
+        return row;
+      }
+      else {
+        return row.row;
+      }
+    },
+
+    _updateDisplayedRows: function () {
       var fromPage,
-          to;
-      if(this.firstItemIndex !== null && this.firstItemIndex !== undefined &&
+        to;
+
+      if (this.firstItemIndex !== null && this.firstItemIndex !== undefined &&
         this.pageSize !== null && this.pageSize !== undefined &&
         this.filteredSortedData !== undefined && this.filteredSortedData !== null && !this.hidePaginationControl) {
 
         fromPage = this.firstItemIndex - 1; // pagination is 1-based
-        to = fromPage + this.pageSize;
+        to = fromPage + parseInt(this.pageSize, 10);
 
-        this.set('displayedRows', this.filteredSortedData.slice(fromPage, to));
+        this.filteredSortedData = this.filteredSortedData.map( row => {
+          row.isNew = true;
+          return row;
+        });
+
+        if (this.dataRemote) {
+          this.set('displayedRows', this.filteredSortedData);
+        } else {
+          this.set('displayedRows', this.filteredSortedData.slice(fromPage, to));
+        }
 
       } else if (this.filteredSortedData !== undefined && this.filteredSortedData !== null && this.hidePaginationControl) {
+
+        this.filteredSortedData = this.filteredSortedData.map( row => {
+          row.isNew = true;
+          return row;
+        });
+
         this.set('displayedRows', this.filteredSortedData);
       }
     },
 
     /********** Sorting ************/
 
+    /*
+     * Fires a sort change request event
+     *
+     * Only called if remoteData==true
+     *
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-sort-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended sort: ", JSON.parse(data));
+     * });
+     * // ==> [{name:'columnA',direction:'ascending'}] or [{name:'columnB',direction:'descending'}]
+     * ```
+     * @event px-sort-change-intent
+     */
+    _triggerSortChangeRequest: function () {
+        // debouncing so this can be called anytime params are updated
+        this.debounce('_debounceTriggerSortChangeRequest', function() {
+          // currently only supports single column sort
+          // event interface is set up to handle multi-column sort
+          this.fire('px-sort-change-intent', !this.sortedColumn ? '[]' : JSON.stringify([{
+            name: this.sortedColumn,
+            direction: this.descending ? 'descending' : 'ascending'
+          }]));
+        }, 300);
+    },
+
     // sort by header click handler
     _sort: function(e, p) {
       if(!this.sortable) return;
       var column = e.model.column,
-          sortingColumn;
-      if(column && column.sortable) {
+        sortingColumn;
+      if (column && column.sortable) {
         sortingColumn = column.name;
-        if(sortingColumn === this.sortedColumn) {
+        if(sortingColumn === this.sortedColumn && !this.descending) {
           this.set('descending', !this.descending);
+        }
+        else if(sortingColumn === this.sortedColumn && this.descending) {
+          this.set('sortedColumn', '');
         } else {
           this.set('sortedColumn', sortingColumn);
           this.set('descending', false); // always start ascending when click new column
         }
       }
-      this._filterSortAndUpdateDisplayedTable();
+      if (!this.dataRemote) {
+        this._filterSortAndUpdateDisplayedTable();
+      } else {
+        this._triggerSortChangeRequest();
+      }
     },
 
-    _sortByColumn: function(rowsToSort) {
+    _sortByColumn: function (rowsToSort) {
 
       var sortFunction = this._getSortFunction(),
-          sortedRows;
+        sortedRows;
       // sorting map: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Sorting_maps
       sortedRows =
         rowsToSort
-          .map(function(e, i) {
+          .map(function (e, i) {
             var v;
-            if(this.sortedColumn === '_selected'){
+            if (this.sortedColumn === '_selected') {
               v = this._getInternalCellStateAt(e, this.sortedColumn);
-            } else{
+            } else {
               v = this._getInternalDataAt(e, this.sortedColumn);
             }
 
             // call internal state function...
-            if(undefined === v || null === v) {
+            if (undefined === v || null === v) {
               v = '';
             }
             return {
@@ -818,26 +962,26 @@
             };
           }, this)
           .sort(sortFunction.bind(this))
-          .map(function(e) {
+          .map(function (e) {
             return rowsToSort[e.index];
           });
 
       return sortedRows;
     },
 
-    _getSortFunction: function() {
+    _getSortFunction: function () {
       var sortFunction;
 
-      if (this.sortedColumn !== '_selected'){
+      if (this.sortedColumn !== '_selected') {
         // use custom sort function if there is one
-        this.meta.forEach(function(obj) {
-          if(this.sortedColumn === obj.name) {
+        this.meta.forEach(function (obj) {
+          if (this.sortedColumn === obj.name) {
             sortFunction = this._resolveFunctionOnWindow("sort-function-name", obj);
           }
         }, this);
       }
-      if(!sortFunction) {
-        if(this.sortedColumn === "_selected") {
+      if (!sortFunction) {
+        if (this.sortedColumn === "_selected") {
           sortFunction = this._defaultSortSelected;
         }
         else {
@@ -848,26 +992,26 @@
       return sortFunction;
     },
 
-    _resolveFunctionOnWindow: function(columnAttributeName, columnObj) {
+    _resolveFunctionOnWindow: function (elAttributeName, elObj) {
       var customFunction = window,
-          customFunctionFullPath,
-          i,
-          customFunctionRef = columnObj[columnAttributeName];
+        customFunctionFullPath,
+        i,
+        customFunctionRef = elObj[elAttributeName];
 
-      if(customFunctionRef === null || customFunctionRef === undefined) {
-        if (columnObj instanceof HTMLElement){
-          customFunctionRef = columnObj.attributes[columnAttributeName];
+      if (customFunctionRef === null || customFunctionRef === undefined) {
+        if (elObj instanceof HTMLElement) {
+          customFunctionRef = elObj.attributes[elAttributeName];
         }
-        if (customFunctionRef === null || customFunctionRef === undefined){
+        if (customFunctionRef === null || customFunctionRef === undefined) {
           return null;
         }
       }
 
       customFunctionFullPath = customFunctionRef.value.split(".");
 
-      for(i in customFunctionFullPath) {
+      for (i in customFunctionFullPath) {
         customFunction = customFunction[customFunctionFullPath[i]];
-        if(customFunction === undefined) {
+        if (customFunction === undefined) {
           console.warn("px-data-table: Custom function was used, but was not found on window. Is the path correct?");
           return null;
         }
@@ -897,8 +1041,30 @@
 
     /********** Filtering ************/
 
+    /*
+     * Fires a filter change request event
+     *
+     * Only called if remoteData==true
+     *
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-filter-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended filters: ", JSON.parse(data));
+     * });
+     * // ==> [{name:'columnA',userEntry:'asdf'},{name:'columnB',userEntry:'qwert'}]
+     * ```
+     * @event px-filter-change-intent
+     */
+    _triggerFilterChangeRequest: function () {
+        // debouncing so this can be called anytime params are updated
+        this.debounce('_debounceTriggerFilterChangeRequest', function() {
+          this.fire('px-filter-change-intent', JSON.stringify(this.filteredColumns));
+        }, 300);
+    },
+
     // filter on typed content in header handler
-    _filter: function(e) {
+    _filter: function (e) {
       // have to do modelForElement because dom-if cancels out dom-repeat model (https://github.com/Polymer/polymer/issues/1865)
       var column = this.$.filterRepeat.modelForElement(e.target).column,
         userEntry,
@@ -906,15 +1072,15 @@
         index,
         filteredColumn;
 
-      if(column && column.filterable) {
+      if (column && column.filterable) {
         userEntry = e.target.value;
         isNotInFilteredColumnsList = true;
 
-        for(index in this.filteredColumns) {
+        for (index in this.filteredColumns) {
           filteredColumn = this.filteredColumns[index];
-          if(filteredColumn.name === column.name) {
+          if (filteredColumn.name === column.name) {
             isNotInFilteredColumnsList = false;
-            if(userEntry === "" || userEntry === undefined || userEntry === null) {
+            if (userEntry === "" || userEntry === undefined || userEntry === null) {
               // don't filter on this column anymore
               this.filteredColumns.splice(index, 1);
             }
@@ -925,130 +1091,137 @@
 
           }
         }
-        if(isNotInFilteredColumnsList) {
-          // add the new column to the filtered list
-          this.filteredColumns.push({"name": column.name, "userEntry": userEntry});
+        if (isNotInFilteredColumnsList) {
+          if (userEntry !== "" && userEntry !== undefined && userEntry !== null) {
+            // add the new column to the filtered list
+            this.filteredColumns.push({ "name": column.name, "userEntry": userEntry });
+          }
         }
-        this._filterSortAndUpdateDisplayedTable();
+        if (!this.dataRemote) {
+          this._filterSortAndUpdateDisplayedTable();
+        } else {
+          this._triggerFilterChangeRequest();
+        }
       }
     },
 
-    _filterByColumn: function(columnName, userEntry, rowsToFilter) {
+    _filterByColumn: function (columnName, userEntry, rowsToFilter) {
       var filterFunction = this._getFilterFunction(columnName),
-          i,
-          len,
-          matched,
-          self = this,
-          filteredRows;
+        i,
+        len,
+        matched,
+        self = this,
+        filteredRows;
 
-      for(i = 0, len = rowsToFilter.length; i < len; i++) {
+      for (i = 0, len = rowsToFilter.length; i < len; i++) {
         // if it's not filtered already
-        if(rowsToFilter[i]._filtered === false) {
+        if (rowsToFilter[i]._filtered === false) {
           matched = filterFunction(userEntry, this._getInternalDataAt(rowsToFilter[i], columnName));
-          if(!matched) {
+          if (!matched) {
             this._setInternalDataAt(rowsToFilter[i], '_filtered', true);
           }
         }
       }
 
-      this.filtered = rowsToFilter.some(function(row) {
+      this.filtered = rowsToFilter.some(function (row) {
         return self._getInternalCellStateAt(row, '_filtered');
       });
 
-      filteredRows = rowsToFilter.filter(function(r) {
+      filteredRows = rowsToFilter.filter(function (r) {
         return !self._getInternalCellStateAt(r, '_filtered');
       });
       return filteredRows;
     },
 
-    _getFilterFunction: function(columnName) {
+    _getFilterFunction: function (columnName) {
       var filterFunction;
 
       // use custom filter function if there is one
-      this.meta.forEach(function(obj) {
-        if(columnName === obj.name) {
+      this.meta.forEach(function (obj) {
+        if (columnName === obj.name) {
           filterFunction = this._resolveFunctionOnWindow('filter-function-name', obj);
         }
       }, this);
 
-      if(!filterFunction) {
+      if (!filterFunction) {
         filterFunction = this._defaultFilter;
       }
 
       return filterFunction;
     },
 
-    _defaultFilter: function(searchString, cellValue) {
-      if(searchString === undefined || searchString === null || searchString === "") {
+    _defaultFilter: function (searchString, cellValue) {
+      if (searchString === undefined || searchString === null || searchString === "") {
         return true;
       }
-      if(cellValue){
+      if (cellValue) {
         return (cellValue.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
       }
     },
 
-    _save: function(evt) {
+    _save: function (evt) {
       var row = evt.model.internalRow,
-          column = evt.model.column,
-          newValue = evt.detail.newValue;
+        column = evt.model.column,
+        newValue = evt.detail.newValue;
 
-      if(row){
-        this.fire('before-save', {"event": evt, "row" : row, "column" : column});
+      if (row) {
+        this.fire('before-save', { "event": evt, "row": row, "column": column });
 
         this._setInternalDataAt(row, column.name, newValue);
         evt.currentTarget.cellValue = this._getInternalDataAt(row, column.name);
         evt.currentTarget.cellDisplayValue = this._readContent(row, column);
         this.data[row.row.dataIndex][column.name] = newValue;
-        this.notifyPath('data.' + row.row.dataIndex + '.' + column.name, newValue);
 
       }
 
-			if (column.required && !evt.target.validity.valid) {
-				this.fire('after-invalid', {"event": evt, "row" : row, "column" : column});
-			}
-			this.fire('after-save', {"event": evt, "row" : row, "column" : column});
+      if (column.required && !evt.target.validity.valid) {
+        this.fire('after-invalid', { "event": evt, "row": row, "column": column });
+      }
+      this.fire('after-save', { "event": evt, "row": row, "column": column });
 
-		},
-    _cellChanged: function(oldValue, newValue){
+    },
+    _cellChanged: function (oldValue, newValue) {
       return (oldValue !== newValue);
     },
-    _handleValidateEvent: function(evt){
+    _handleValidateEvent: function (evt) {
       var column = evt.model.column,
-          validationObj = column.validate(evt.detail.newValue);
+        validationObj = column.validate(evt.detail.newValue);
 
       evt.currentTarget.cellValidation = validationObj;
       this._setInternalCellValidationStateAt(evt.model.internalRow, column.name, validationObj);
     },
-    _clickRow: function(evt) {
+    _clickRow: function (evt) {
       var column = evt.model.column,
           row = evt.model.internalRow,
           detail = {"row": row, "column": column},
           selectAllCheckbox;
       if(column.editable || column.type === 'dropdown') return;
-      this.fire('px-row-click', detail); // fire the event after it is marked selected
 
-      if(this.selectable) {
+      if (this.selectable) {
         this._selectRow(row, this.$.recordList.indexForElement(evt.currentTarget));
 
-        // always just make sure selectAll checkbox is unchecked when 1 row is clicked
-        selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
-        selectAllCheckbox.checked = false;
+        if(!this.singleSelect) {
+          // always just make sure selectAll checkbox is unchecked when 1 row is clicked
+          selectAllCheckbox = Polymer.dom(this.root).querySelector("#selectAllCheckbox");
+          selectAllCheckbox.checked = false;
+        }
 
         // if sorted row is selected, then it is no longer selected
-        if(this.sortedColumn === '_selected') {
+        if (this.sortedColumn === '_selected') {
           this.set('sortedColumn', '');
         }
       }
+      this.fire('px-row-click', detail); // fire the event after it is marked selected
     },
-    _clickCell: function(evt) {
+    _clickCell: function (evt) {
       var column = evt.model.column,
           row = evt.model.internalRow,
           detail = {"row": row, "column": column, "rowIndex":this.$.recordList.indexForElement(evt.currentTarget)};
       this._clickRow(evt);
       this.fire('px-cell-click', detail); // fire the event after it is marked selected
     },
-    _clickSelectAll: function(e) {
-      if(e.target.checked) {
+    _clickSelectAll: function (e) {
+      if (e.target.checked) {
         this._setAllRows(true); // selected
       }
       else {
@@ -1056,7 +1229,7 @@
       }
     },
 
-    _setAllRows: function(isSelected) {
+    _setAllRows: function (isSelected) {
       var i,
           len;
 
@@ -1075,13 +1248,13 @@
       }
 
       // notify viewing rows of change
-      for(i = 0, len = this.displayedRows.length; i < len; i++) {
+      for (i = 0, len = this.displayedRows.length; i < len; i++) {
         this.notifyPath('displayedRows.' + i + '._selected', this.displayedRows[i]._selected);
       }
 
       // remove everything from user-facing selectedRows property
       this.splice('selectedRows', 0, this.selectedRows.length);
-      if(isSelected) {
+      if (isSelected) {
         // add everything to selectedRows property
         for(i = 0, len = this._internalData.length; i < len; i++) {
           if(this._internalData[i]._selected) {
@@ -1090,14 +1263,14 @@
         }
       }
 
-      this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")");
+      this.set('meta.0.label', "Selected (" + this.selectedRows.length + ")");
       this.fire('px-select-all-click', this.selectedRows);
 
     },
 
-    _selectRow: function(row, indexInDisplayedRows) {
+    _selectRow: function (row, indexInDisplayedRows) {
       this.fire('before-select', row);
-      if(this.selectedRows.indexOf(row) > -1) {
+      if (this.selectedRows.indexOf(row) > -1) {
         row._selected = false;
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
         this.splice('selectedRows', this.selectedRows.indexOf(row), 1);
@@ -1108,20 +1281,20 @@
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
         this.push('selectedRows', row);
       }
-      this.set('meta.0.label', "Selected (" + this.selectedRows.length+ ")");
+      this.set('meta.0.label', "Selected (" + this.selectedRows.length + ")");
       this.fire('after-select', row);
     },
 
     /******** Drag and drop ********/
 
-    _dragDropColumnHeader: function(evt) {
-      if(this.enableColumnReorder) {
+    _dragDropColumnHeader: function (evt) {
+      if (this.enableColumnReorder) {
         this._dropColumnHeader(this._findHeaderFromChild(evt.target));
       }
     },
 
-    _touchDropColumnHeader: function(evt) {
-      if(this.enableColumnReorder) {
+    _touchDropColumnHeader: function (evt) {
+      if (this.enableColumnReorder) {
         this._removeDragFromSourceHeader();
         var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
         target = this._findHeaderFromChild(target);
@@ -1130,39 +1303,39 @@
       }
     },
 
-    _dropColumnHeader: function(target) {
+    _dropColumnHeader: function (target) {
 
       //find the target we're actually interested in: the header
       var srcName = this._columnDragged,
-          toMove,
-          regex,
-          targetName,
-          targetColumn,
-          columns,
-          parent;
+        toMove,
+        regex,
+        targetName,
+        targetColumn,
+        columns,
+        parent;
 
       regex = target.classList.toString().match(/.*aha-(.*)-th/);
       targetName = (regex && regex.length > 1) ? regex[1] : null;
 
-      if(targetName != null) {
+      if (targetName != null) {
 
         //Allow drop if target != moving column
-        if(targetName !== srcName) {
+        if (targetName !== srcName) {
           columns = this.getEffectiveChildren();
 
-          columns.forEach(function(column) {
+          columns.forEach(function (column) {
             //how not to base that on text?
-            if(column.name === srcName) {
+            if (column.name === srcName) {
               toMove = column;
             }
-            if(column.name === targetName) {
+            if (column.name === targetName) {
               targetColumn = column;
             }
           });
 
           //allow drop on selected only if this is not the first (not including
           //selected) column. Otherwise no need to do anything
-          if(toMove && targetName !== '_selected' || toMove !== columns[0]) {
+          if (toMove && targetName !== '_selected' || toMove !== columns[0]) {
             parent = Polymer.dom(toMove).parentNode;
             //remove and insert in the right place
             Polymer.dom(parent).removeChild(toMove);
@@ -1170,7 +1343,7 @@
 
             //if the target is the 'selected' column just add column at the beginning
             //because 'selected' is not in the light dom
-            if(targetName === '_selected') {
+            if (targetName === '_selected') {
               Polymer.dom(parent).insertBefore(toMove, columns[0]);
             }
             else {
@@ -1187,14 +1360,14 @@
       this._removeInsertionDisplay();
     },
 
-    _dragOverHeader: function(evt) {
-      if(this.enableColumnReorder) {
+    _dragOverHeader: function (evt) {
+      if (this.enableColumnReorder) {
 
         var target = this._findHeaderFromChild(evt.target);
 
         //if we're not actually dragging over the
         //insertion indicator.
-        if(!target.classList.contains('aha-insertion-indicator-th')) {
+        if (!target.classList.contains('aha-insertion-indicator-th')) {
 
           //allow
           evt.preventDefault();
@@ -1203,15 +1376,15 @@
       }
     },
 
-    _touchMoveHeader: function(evt) {
-      if(this.enableColumnReorder) {
+    _touchMoveHeader: function (evt) {
+      if (this.enableColumnReorder) {
 
         var target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
         target = this._findHeaderFromChild(target);
 
         //if we're not actually dragging over the
         //insertion indicator.
-        if(!target.classList.contains('aha-insertion-indicator-th')) {
+        if (!target.classList.contains('aha-insertion-indicator-th')) {
 
           this._allowColumnDrop(target, target !== this._findHeaderFromChild(evt.target));
         }
@@ -1219,41 +1392,41 @@
     },
 
 
-    _allowColumnDrop: function(target, moveIndicator) {
+    _allowColumnDrop: function (target, moveIndicator) {
 
       //manage the insertion indicator
-      if(moveIndicator) {
+      if (moveIndicator) {
 
         //the indicator is already shown, and has been requested to be dismissed.
         //instead move it to the position we want IF it is different from
         //the current one. Othewr wise just leave it and cancel the dismissal.
         this.set('_requestInsertionIndicatorRemoval', false);
         var targetIdx,
-            indicatorIdx,
-            regex = target.classList.toString().match(/.*aha-(.*)-th/),
-            targetName = (regex && regex.length > 1) ? regex[1] : null;
+          indicatorIdx,
+          regex = target.classList.toString().match(/.*aha-(.*)-th/),
+          targetName = (regex && regex.length > 1) ? regex[1] : null;
 
         //don't bother doing more if the target doesn't seem genuine
-        if(targetName != null) {
-          this.meta.forEach(function(column, index) {
+        if (targetName != null) {
+          this.meta.forEach(function (column, index) {
 
-            if(column.name === targetName) {
+            if (column.name === targetName) {
               targetIdx = index;
             }
-            else if(column.name === 'insertion-indicator') {
+            else if (column.name === 'insertion-indicator') {
               indicatorIdx = index;
             }
           });
 
           //check against undefined cause the value can genuinely be 0
-          if(targetIdx !== undefined && (targetIdx + 1) !== indicatorIdx) {
+          if (targetIdx !== undefined && (targetIdx + 1) !== indicatorIdx) {
 
             //remove
             var indicator = this.splice('meta', indicatorIdx, 1)[0];
 
             //if the target idx was bigger than the indicator reduce it by 1 to
             //account for the removal of the indicator we just did
-            if(targetIdx + 1 > indicatorIdx) {
+            if (targetIdx + 1 > indicatorIdx) {
               targetIdx--;
             }
 
@@ -1262,18 +1435,18 @@
           }
         }
       }
-      else if(!this._displayingInsertion) {
+      else if (!this._displayingInsertion) {
 
         //Just add the indicator
         var regex = target.classList.toString().match(/.*aha-(.*)-th/),
-            targetName = (regex && regex.length > 1) ? regex[1] : null;
+          targetName = (regex && regex.length > 1) ? regex[1] : null;
 
-        if(targetName !== null) {
+        if (targetName !== null) {
           //the indicator is not displayed, just insert it at the right place
           var targetIdx;
-          this.meta.forEach(function(column, index) {
+          this.meta.forEach(function (column, index) {
 
-            if(column.name === targetName) {
+            if (column.name === targetName) {
               targetIdx = index;
             }
           });
@@ -1283,23 +1456,23 @@
           insertCol.filterable = false;
           insertCol.sortable = false;
 
-          this.splice('meta', targetIdx + 1, 0,  insertCol);
+          this.splice('meta', targetIdx + 1, 0, insertCol);
           this.set('_displayingInsertion', true);
         }
       }
     },
 
-    _dragLeave: function(evt) {
+    _dragLeave: function (evt) {
       this._removeInsertionDisplay();
     },
 
-    _dragEndColumnHeader: function(evt) {
+    _dragEndColumnHeader: function (evt) {
 
       //make sure the collumn we were dragging doesn't show as dragged anymore
       this._removeDragFromSourceHeader();
     },
 
-    _removeInsertionDisplay: function() {
+    _removeInsertionDisplay: function () {
 
       var _this = this;
       this.set('_requestInsertionIndicatorRemoval', true);
@@ -1307,16 +1480,16 @@
       //use a timeout so we can cancel the removal if the indicator needs
       //to be displayed somewhere else i the enar future (100ms). Makes dragging
       //smoother
-      window.setTimeout(function() {
-        if(_this.enableColumnReorder &&
+      window.setTimeout(function () {
+        if (_this.enableColumnReorder &&
           _this._displayingInsertion &&
           _this._requestInsertionIndicatorRemoval) {
 
           //actually remove column showing the insertion point
           var insertionColIdx;
-          _this.meta.forEach(function(column, index) {
+          _this.meta.forEach(function (column, index) {
 
-            if(column.name === 'insertion-indicator') {
+            if (column.name === 'insertion-indicator') {
               insertionColIdx = index;
             }
           });
@@ -1328,10 +1501,10 @@
       }, 100);
     },
 
-    _dragStartColumnHeader: function(evt) {
+    _dragStartColumnHeader: function (evt) {
 
       var target = this._findHeaderFromChild(evt.target);
-      if(this.enableColumnReorder && target.classList.contains('moveable')) {
+      if (this.enableColumnReorder && target.classList.contains('moveable')) {
 
         //parse column name
         var name = target.classList.toString().match(/.*aha-(.*)-th/)[1];
@@ -1340,9 +1513,9 @@
         target.classList.add('dragged');
 
         //mobile
-        if(evt.changedTouches){
+        if (evt.changedTouches) {
 
-           //prevent default so it won't scroll the table while dragging
+          //prevent default so it won't scroll the table while dragging
           evt.preventDefault();
 
           //show indicator right now to make it more obvious something is happening
@@ -1354,57 +1527,52 @@
       }
     },
 
-    _removeDragFromSourceHeader: function() {
+    _removeDragFromSourceHeader: function () {
 
       var src = Polymer.dom(this.root).querySelector('.dragged');
-      if(src) {
+      if (src) {
         src.classList.remove('dragged');
       }
     },
 
     /********* Hide/Show columns *********/
 
-    _columnChooserChanged: function(dropdownItem) {
-
-      //watch for checked changed only
-      if(dropdownItem.path.indexOf('checked') !== -1) {
-
-        //parse index of item that has changed
-        var index = dropdownItem.path.match(/\.#(\d+)./)[1];
-        if(index) {
-          var columnName = dropdownItem.base[index].key,
-              checked = dropdownItem.value;
-
-          if(checked) {
-            this.showColumn(columnName);
-          }
-          else {
-            this.hideColumn(columnName);
-          }
-        }
+    _columnChooserChanged: function(evt) {
+      if(evt.detail.selected) {
+        this.showColumn(evt.detail.key);
+      }
+      else {
+        this.hideColumn(evt.detail.key);
       }
     },
 
-    _computeColumnChooserItems: function(meta) {
-
-      var items = [];
-      meta.forEach(function(column, index) {
-        if(column.name !== '_selected' && column.name !== 'insertion-indicator') {
-          items.push({ key: column.name, val: column.label, checked: !column.hide});
+    _computeColumnChooserItems: function() {
+      // debounce, since meta and meta.* change very often when building the table
+      this.debounce('computeItems', function() {
+        var items = [];
+        this.meta.forEach(function(column, index) {
+          if(column.name !== '_selected' && column.name !== 'insertion-indicator' && !column.disableHide) {
+            items.push({ key: column.name, val: column.label, selected: !column.hide});
+          }
+        });
+        if (JSON.stringify(this._columnChooserItems) !== JSON.stringify(items)) {
+          this.set('_columnChooserItems', items);
         }
-      });
+      }, 5);
+    },
 
-      return items;
+    _calculateAdaptedNumberOfItems: function () {
+      this.set('_adaptedNumberOfItems', this.dataRemote ? this.totalEntries : this.numberOfItems);
     },
 
     /**
      * Hide the column which name matches columnName
      */
-    hideColumn: function(columnName) {
+    hideColumn: function (columnName) {
 
       //find column within content
-      this.meta.forEach(function(column, index) {
-        if(column.name === columnName) {
+      this.meta.forEach(function (column, index) {
+        if (column.name === columnName) {
 
           column.hide = true;
           this.notifyPath('meta.' + index + '.hide', true);
@@ -1416,10 +1584,10 @@
      * show the column which name matches columnName if it has been hidden
      * previously
      */
-    showColumn: function(columnName) {
+    showColumn: function (columnName) {
 
-      this.meta.forEach(function(column, index) {
-        if(column.name === columnName) {
+      this.meta.forEach(function (column, index) {
+        if (column.name === columnName) {
 
           column.hide = false;
           this.notifyPath('meta.' + index + '.hide', false);
@@ -1432,12 +1600,12 @@
     /**
      * Called when tracking a header resize
      */
-    _headerTrack: function(evt) {
+    _headerTrack: function (evt) {
 
       //find header
       var target = this._findHeaderFromChild(evt.target);
 
-      if(target !== this) {
+      if (target !== this) {
         target.style.width = (this._headerInitialSize + evt.detail.dx) + 'px';
       }
     },
@@ -1445,11 +1613,11 @@
     /**
      * Called when initiating a header resize
      */
-    _headerResizeMouseDown : function(evt) {
+    _headerResizeMouseDown: function (evt) {
       var target = this._findHeaderFromChild(evt.target),
-          currentSize;
+        currentSize;
 
-      if(target !== this) {
+      if (target !== this) {
         currentSize = target.getBoundingClientRect();
 
         this._headerInitialSize = currentSize.width;
@@ -1459,9 +1627,10 @@
     },
     /******** Display table helpers (classes, dom-if functions, etc.) *************/
 
-    _getRowClass: function(row,striped) {
+    _getRowClass: function (row, striped) {
       return ['tr', 'rows',
-        this.striped ? 'striped' : ''
+        this.striped ? 'striped' : '',
+        row.isNew ? 'is-new' : ''
       ].join(' ');
     },
 
@@ -1475,72 +1644,80 @@
       return this.scrollingRows ? 'scrolling-rows' : '';
     },
 
-    _getHighlightValue: function(row, column, high) {
+    _getHighlightValue: function (row, column, high) {
       var highlightElements = Polymer.dom(column).querySelectorAll('px-data-table-highlight'),
-          doHighlight = false,
-          highlightObj = {value:false},
-          highlightClass;
+        doHighlight = false,
+        highlightObj = { value: false },
+        highlightClass;
 
       highlightElements.forEach(function(highlightEl) {
-        doHighlight = highlightEl.highlight(this._getInternalDataAt(row, column.name));
+        var rowState = this._getInternalRowStateAt(row, column.name);
+        var data = this._getInternalDataAt(row, column.name);
+        doHighlight = highlightEl.highlight(data, rowState, column.name);
         if (highlightObj.value && doHighlight) {
           if(highlightObj.highlightValue === 'low'){
-            highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+            highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
           } else if(highlightObj.highlightValue === 'medium'){
             if (highlightEl.highlightValue === 'high') {
-              highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+              highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
             }
           } else {
-            highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+            highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
           }
-        } else if(!highlightObj.value) {
+        } else if (!highlightObj.value) {
           highlightObj.value = doHighlight;
-          highlightObj.highlightClass = 'cell--value__highlight--color__' + highlightEl.highlightValue;
+          highlightObj.highlightClass = 'px-data-table-highlight--' + highlightEl.highlightValue;
         }
 
         if (highlightEl.highlightType === 'row') {
           this._setInternalDataAt(row, '_highlight', highlightObj);
-          highlightObj = {value: false};
+          highlightObj = { value: false };
         }
       }.bind(this));
       return highlightObj;
     },
+
+    _isSelectAllColumn: function (column) {
+      return column.selectAll;
+    },
+
     _isFilterableColumn: function(column) {
       return !column.selectAll && column.filterable && this.filterable && !column.hide;
     },
-    _readContent: function(row, column) {
+
+    _readContent: function (row, column) {
       var datum = this._getInternalDataAt(row, column.name);
-      if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+      if (datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
         return ""; // return empty string if no data
       }
 
-      if(this._shouldClipDatumString(row, column)) {
+      if (this._shouldClipDatumString(row, column)) {
         return this._clipDatumString(datum, column);
       }
       return datum;
     },
-    _shouldClipDatumString: function(row, column) {
+    _shouldClipDatumString: function (row, column) {
       var datum = this._getInternalDataAt(row, column.name),
-          maxColWidth = column.maxColumnCharacterWidth;
+        maxColWidth = column.maxColumnCharacterWidth;
 
-      if(maxColWidth === 0 || datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+      if (maxColWidth === 0 || datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
         return false;
       }
-      if(maxColWidth !== undefined && maxColWidth !== null) {
+      if (maxColWidth !== undefined && maxColWidth !== null) {
         return datum.length > maxColWidth;
       }
       return false;
     },
-    _clipDatumString: function(datum, column) {
+    _clipDatumString: function (datum, column) {
       var maxColWidth = column.maxColumnCharacterWidth,
-          ellipsisClipPosition = column.ellipsisClipPosition,
-          datumLeftIndex,
-          datumRightIndex;
+        ellipsisClipPosition = column.ellipsisClipPosition,
+        datumLeftIndex,
+        datumRightIndex;
 
-      if(ellipsisClipPosition === 'left') {
+      if (ellipsisClipPosition === 'left') {
         datum = '\u2026' + datum.substr(datum.length - maxColWidth, datum.length);
       }
-      else if(ellipsisClipPosition === 'center') {
+      else if (ellipsisClipPosition === 'center') {
         datumLeftIndex = Math.floor(maxColWidth / 2);
         datumRightIndex = maxColWidth - datumLeftIndex;
         datum = datum.substr(0, datumLeftIndex) + '\u2026' + datum.substr(datum.length - datumRightIndex, datum.length);
@@ -1550,11 +1727,13 @@
       }
       return datum;
     },
-    _isEqual: function(source, target) {
+
+    _isEqual: function (source, target) {
       return source === target;
     },
+
     _getHeaderClass: function(item) {
-      var classList = ['th', 'th--no-borders', 'aha-' + item.name + '-th', 'u-p0'];
+      var classList = ['th', 'aha-' + item.name + '-th', 'u-p0'];
       if(this.sortable && item.sortable) {
         classList.push('sortable');
       }
@@ -1563,32 +1742,35 @@
       }
       return classList.join(' ');
     },
-    _getSecondHeaderClass: function(filterable) {
+    _getSecondHeaderClass: function (filterable) {
       var classList = ['tr', 'tr--filter'];
-      if(!filterable) {
+      if (!filterable) {
         classList.push('hidden');
       }
       return classList.join(' ');
     },
-    _getFilterHeaderClass: function(column) {
+    _getFilterHeaderClass: function (column) {
       return column.name === 'insertion-indicator' ? 'td insertion-indicator' : 'td';
     },
-    _getSortingIcon: function(sortable, column, sortingColumn, descending) {
+
+    _getSortingIcon: function (sortable, column, sortingColumn, descending) {
       var sortingIcon = ' ';
       if(sortable && sortingColumn === column.name) {
-        sortingIcon = descending ? 'fa:fa-caret-down' : 'fa:fa-caret-up';
+        sortingIcon = descending ? 'px-nav:down' : 'px-nav:up';
       }
       return sortingIcon;
     },
+
     _getSortingClass: function(sortable, column, sortingColumn, descending) {
-      var classList = 'sorting fa';
+      var classList = 'sorting';
       if(sortable && sortingColumn !== column.name) {
         classList = classList + ' visuallyhidden';
       }
       return classList;
     },
+
     _getTextSortingClass: function(sortable, column, sortingColumn) {
-      var classList = ['column-head', 'u-m--'];
+      var classList = ['column-head', 'u-mv--', 'u-mh-'];
       if (column.name === '_selected'){
         classList.push('column-head--selected');
       };
@@ -1600,44 +1782,46 @@
       }
       return classList.join(' ');
     },
-    _getTableClass: function(tableRows, tableColumns) {
-      var classList = ['table', 'table--small'];
-      if(tableRows) {
-        classList.push('table--rows');
+    _getTableClass: function(tableCells, tableColumns) {
+      var classList = ['table'];
+      if(tableCells) {
+        classList.push('table--cells');
       }
-      if(tableColumns) {
+      if (tableColumns) {
         classList.push('table--columns');
       }
       return classList.join(' ');
     },
-    _getPaginationVisibility: function(hidePaginationControl){
+    _getPaginationVisibility: function (hidePaginationControl) {
       return (hidePaginationControl ? "visuallyhidden" : "");
     },
-    _getSelectedCellClass: function(selected, rowHighlighted){
+    _getSelectedCellClass: function (selected, rowHighlighted) {
       var classList = ['td'];
       classList.push(selected ? 'selected-cell__selected' : '');
-      classList.push(rowHighlighted.value? rowHighlighted.highlightClass : '');
+      classList.push(rowHighlighted.value ? rowHighlighted.highlightClass : '');
 
       return classList.join(' ');
     },
     /**
      * Searching for a .th parent element
      */
-    _findHeaderFromChild: function(childElem) {
+    _findHeaderFromChild: function (childElem) {
       var header = childElem;
 
       //we want to target the actual header to find the column name
-      while(!header.classList.contains('th') && header !== this ){
+      while (!header.classList.contains('th') && header !== this) {
 
         header = Polymer.dom(header).parentNode;
       }
 
       return header;
     },
+
     _computeIfColumnFilterEnabled: function(meta, filterable) {
       this._enableFilterRow = meta && (this.selectable && !this.singleSelect || filterable && this.meta.some(function(val){
         return this._isFilterableColumn(val);
       }.bind(this)));
     }
   });
+
 </script>

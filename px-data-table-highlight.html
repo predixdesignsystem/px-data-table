@@ -1,19 +1,15 @@
-<!--
-    Relative paths assume component is being run from inside an app or another component, where dependencies are flat
-    siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
-    'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs.
--->
 <link rel="import" href="../polymer/polymer.html" />
-
+<link rel="import" href="css/px-data-table-highlight-styles.html">
 
 <!--
-Element to define and configure highlighting behaviour for a given column (and hence cell or row).
 
-##### Usage
+Element to define and configure highlighting behavior for a given column (and hence cell or row).
 
-    <px-data-table-highlight 
-      highlight-type="row" 
-      highlight-method="isLongString" 
+### Usage
+
+    <px-data-table-highlight
+      highlight-type="row"
+      highlight-method="isLongString"
       import="px-example-highlight.html">
     </px-data-table-highlight>
 
@@ -23,16 +19,15 @@ The following custom properties are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
-`--cell--value__highlight--color__high` | A high highlight | `rgba($alert-red, 0.25)`
-`--cell--value__highlight--color__medium` | A medium highlight | `rgba($alert-yellow, 0.25)`
-`--cell--value__highlight--color__low` | A low highlight | `rgba($alert-blue, 0.25)`
+`--px-data-table-highlight--high` | A high highlight | `rgba($alert-red, 0.25)`
+`--px-data-table-highlight--medium` | A medium highlight | `rgba($alert-yellow, 0.25)`
+`--px-data-table-highlight--low` | A low highlight | `rgba($alert-blue, 0.25)`
 
 @element px-data-table-highlight
 @blurb Element to define and configure highlighting behaviour for a given column (and hence cell or row).
 @homepage index.html
-@demo demo.html
+@demo index.html
 -->
-<link rel="import" href="css/px-data-table-highlight-styles.html">
 <dom-module id="px-data-table-highlight">
   <template>
     <style include="px-data-table-highlight-styles"></style>
@@ -65,6 +60,7 @@ Custom property | Description | Default
       },
       /**
        * A JavaScript method name from the file located at the `import` url.
+       * Highlight method receives three parameters: cell value, row data, column name.
        */
       highlightMethod: {
         type: String,
@@ -90,7 +86,7 @@ Custom property | Description | Default
      * Loads the imported highlight function.
      *
      */
-    ready: function() {
+    attached: function() {
       this.importHref(this.import, function(e) {
         if (this.highlightMethod && window.PxHighlight[this.highlightMethod]){
           this.highlight = window.PxHighlight[this.highlightMethod];

@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../px-tooltip/px-tooltip.html">
-<link rel="import" href="../px-polymer-font-awesome/px-polymer-font-awesome.html">
+<link rel="import" href="../px-icon-set/px-icon-set.html">
+<link rel="import" href="../px-icon-set/px-icon.html">
 <link rel="import" href="px-edit-cell.html">
 <link rel="import" href="../px-dropdown/px-dropdown.html">
 
@@ -18,14 +19,11 @@
           <input id="celleditinput"
                  type="text"
                  placeholder="{{placeholder}}"
-                 class="u-p0 text-input text-input--bare"
+                 class="u-p0 text-input"
                  required$="{{column.required}}"
                  on-input="_cellValueChanged"
                  on-blur="saveCell"
                  value="{{cellValue}}" />
-        </template>
-        <template is="dom-if" if="{{_isEqual(cellType, 'text')}}">
-          <textarea required$="{{column.required}}" on-blur="saveCell">{{cellValue}}</textarea>
         </template>
       </px-edit-cell>
       <!--dropdown template  -->
@@ -33,19 +31,15 @@
         <div class="flex__item cell--container">
           <span role="gridcell">
             <px-dropdown
-              value="{{cellValue}}"
-              bound-target="{{dropdownBounds}}"
+              class="px-dropdown-content"
+              selected="{{cellValue}}"
+              select-by="val"
               display-value="{{cellDisplayValue}}"
-              content-anchor="{{_cellAnchor}}"
-              on-change="saveCell">
-              <px-dropdown-content
-                class="px-dropdown-content"
-                extend-dropdown="true"
-                extend-dropdown-by="25"
-                max-cont-character-width="{{dropdownMaxCharacterWidth}}"
-                allow-outside-scroll="true"
-                items="{{dropdownItems}}">
-              </px-dropdown-content>
+              on-px-dropdown-selection-changed="saveCell"
+              allow-outside-scroll="true"
+              button-style="bare"
+              items="{{dropdownItems}}"
+              disable-clear>
             </px-dropdown>
           </span>
         </div>
@@ -68,9 +62,9 @@
       <!-- icon template -->
       <template is="dom-if" if="{{cellEditable}}">
         <div class="fa fa-fw cell-status--container">
-          <iron-icon id="editicon" role="button" aria-label="Click to edit cell" class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
+          <px-icon id="editicon" role="button" aria-label="Click to edit cell" class$="{{_getCellIconClass(_showEditIcon, _editing, cellValidation.passedValidation)}}"
             icon="{{_getCellIcon(_showEditIcon, _editing, cellValidation.passedValidation)}}">
-          </iron-icon>
+          </px-icon>
           <template is="dom-if" if="{{!cellValidation.passedValidation}}">
             <px-tooltip
               class="tooltip-font"
@@ -136,10 +130,6 @@
           notify: true,
           observer: '_setDropdownItem'
         },
-        dropdownBounds:{
-          type: HTMLElement,
-          value: null
-        },
         cellSelected:{
           type: Boolean,
           value: false,
@@ -156,18 +146,6 @@
           value: function(){
             return {value: false};
           }
-        },
-        /**
-        * the maximum character width the dropdown will be using to determine
-        * when to show tooltips
-        *
-        * @param dropdownMaxCharacterWidth
-        * @type Number
-        * @default 0
-        */
-        dropdownMaxCharacterWidth: {
-          type: Number,
-          value:0
         },
         _showEditIcon:{
           type: Boolean,
@@ -303,7 +281,7 @@
       editCell: function(){
         var editCell = this.$$(".cell--edit"),
             valueCell = this.$$(".cell--value");
-        if (this.cellEditable && this.cellType !=='dropdown') {
+        if (this.cellEditable && this.cellType !=='dropdown' && this.cellType !== 'html') {
           this.set('_editing', true);
           this.toggleClass('cell__edit', this._editing);
           this.set('_undoValue', this.$$(".cell--value").innerText);
@@ -318,6 +296,10 @@
           this.set('_cancelSave', false);
           value = this._undoValue;
           Polymer.dom(this.$$('.cell--edit')).querySelector('input,select,textarea').value = value;
+        }
+        else if(this._dropdownItem && evt.detail.selected === true) {
+          /* Only get dropdown values for select events, not deselect events */
+          value = evt.detail.val;
         }
         else {
           value = evt.target.value;
@@ -347,11 +329,11 @@
       _getCellIcon: function(showEditIcon, editing, valid){
         if(valid) {
           if(showEditIcon) {
-            return 'fa:fa-pencil';
+            return 'px-utl:edit';
           }
         }
         else {
-          return 'fa:fa-exclamation-circle';
+          return 'px-utl:failure';
         }
       },
       _getCellIconClass: function(showEditIcon, editing, valid){
@@ -388,9 +370,9 @@
         }
       },
       _clearHighlight: function(){
-        this.toggleClass('cell--value__highlight--color__high', false);
-        this.toggleClass('cell--value__highlight--color__medium', false);
-        this.toggleClass('cell--value__highlight--color__low', false);
+        this.toggleClass('px-data-table-highlight--high', false);
+        this.toggleClass('px-data-table-highlight--medium', false);
+        this.toggleClass('px-data-table-highlight--low', false);
       }
     });
   </script>
