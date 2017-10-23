@@ -76,7 +76,7 @@
       <!-- Component ---------------------------------------------------------->
       <px-demo-component>
         <template is="dom-if" if="{{!props.dataRemote.value}}">
-        <div>
+        <div style="height: 400px;">
           <px-data-table
               table-data="{{props.tableData.value}}"
               striped="{{props.striped.value}}"
@@ -87,7 +87,9 @@
               show-column-chooser="{{props.showColumnChooser.value}}"
               hide-pagination-control="{{props.hidePaginationControl.value}}"
               include-all-columns="{{props.includeAllColumns.value}}"
-              language="{{props.language.value}}">
+              language="{{props.language.value}}"
+              scrolling-rows="{{props.scrollingRows.value}}"
+              >
               <px-data-table-column name="first" placeholder="First Name" filterable sortable editable></px-data-table-column>
           </px-data-table>
         </div>
@@ -110,7 +112,9 @@
                   data-remote="{{props.dataRemote.value}}"
                   total-entries="{{totalEntries}}"
                   page-size="{{pageSize}}"
-                  first-item-index="{{firstItemIndex}}">
+                  first-item-index="{{firstItemIndex}}"
+                  scrolling-rows="{{props.scrollingRows.value}}"
+                  >
               </px-data-table>
             </div>
         </template>
@@ -176,7 +180,8 @@
               showColumnChooser: true,
               hidePaginationControl: false,
               includeAllColumns: true,
-              dataRemote: false },
+              dataRemote: false,
+              scrollingRows: true },
 
             { configName: "Remote",
               striped: true,
@@ -189,7 +194,8 @@
               tableRows: false,
               hidePaginationControl: false,
               includeAllColumns: true,
-              dataRemote: true },
+              dataRemote: true,
+              scrollingRows: false },
           ]
         }
       },
@@ -249,6 +255,12 @@
 
       striped: {
         type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+
+      scrollingRows: {
+       	type: Boolean,
         defaultValue: false,
         inputType: 'toggle'
       },
