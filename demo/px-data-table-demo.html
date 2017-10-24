@@ -76,7 +76,7 @@
       <!-- Component ---------------------------------------------------------->
       <px-demo-component>
         <template is="dom-if" if="{{!props.dataRemote.value}}">
-        <div style="height: 400px;">
+        <div style="height: 250px;">
           <px-data-table
               table-data="{{props.tableData.value}}"
               striped="{{props.striped.value}}"
@@ -113,7 +113,6 @@
                   total-entries="{{totalEntries}}"
                   page-size="{{pageSize}}"
                   first-item-index="{{firstItemIndex}}"
-                  scrolling-rows="{{props.scrollingRows.value}}"
                   >
               </px-data-table>
             </div>
@@ -194,8 +193,7 @@
               tableRows: false,
               hidePaginationControl: false,
               includeAllColumns: true,
-              dataRemote: true,
-              scrollingRows: false },
+              dataRemote: true},
           ]
         }
       },
