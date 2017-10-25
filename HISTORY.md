@@ -1,3 +1,7 @@
+v5.0.3
+==================
+* Demo z-index fix.
+
 v5.0.2
 ==================
 * fixing selecting and filtering + documentation updates (https://github.com/PredixDev/px-data-table/pull/168)
