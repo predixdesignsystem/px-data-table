@@ -1,3 +1,8 @@
+v5.0.4
+==================
+* add standardized events for editing
+* fix display issue of edit field
+
 v5.0.3
 ==================
 * Demo z-index fix.

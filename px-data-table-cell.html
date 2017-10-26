@@ -118,7 +118,8 @@
         _editing: {
           type: Boolean,
           value: false,
-          notify: true
+          notify: true,
+          observer: '_editingChanged'
         },
         cellEditable:{
           type: Boolean,
@@ -192,6 +193,7 @@
         clearTimeout(this._editTimeout);
         this._editTimeout = setTimeout(function(){
           this.fire('validate', {newValue: this.$$('#celleditinput').value});
+          this.fire('px-cell-validate', {newValue: this.$$('#celleditinput').value});
         }.bind(this), 300);
       },
       onCellHovered: function(evt){
@@ -271,6 +273,11 @@
         //we check if there are any items in dropdownItems, and if there are, this is a dropdown cell.
         this.set('_dropdownItem', (this.dropdownItems.length > 0));
       },
+      _editingChanged: function(newValue, oldValue) {
+        if(newValue) {
+          this.fire('px-cell-editing');
+        }
+      },
       _exitEditMode: function(){
         document.activeElement.blur();
       },
@@ -305,6 +312,7 @@
           value = evt.target.value;
         }
         this.fire('save', {newValue: value});
+        this.fire('px-cell-save', {newValue: value});
       },
       _getEditCellClass: function(editing){
         var classList = ['cell--edit'];
