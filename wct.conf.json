@@ -3,9 +3,10 @@
   "plugins": {
     "local": {
       "browsers": [
-        "chrome"
+        "chrome",
+        "firefox"
       ]
-   },
+    },
     "sauce": {
       "disabled": true,
       "browsers": [
@@ -21,15 +22,20 @@
         },
         {
           "browserName": "safari",
-          "platform": "OS X 10.11",
+          "platform": "OS X 10.12",
           "version": "10"
+        },
+        {
+          "browserName": "safari",
+          "platform": "OS X 10.12",
+          "version": "11"
         }
       ]
     }
   },
   "suites": [
-      "test/px-data-table-fixture.html",
-      "test/px-data-table-cell-fixture.html",
-      "test/px-data-table-remote-paradigm-fixture.html"
+    "test/px-data-table-fixture.html",
+    "test/px-data-table-cell-fixture.html",
+    "test/px-data-table-remote-paradigm-fixture.html"
   ]
 }
