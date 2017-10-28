@@ -1,3 +1,7 @@
+v5.1.0
+==================
+* add content slot for actions/menus
+
 v5.0.4
 ==================
 * add standardized events for editing
