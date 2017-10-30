@@ -1,3 +1,7 @@
+v5.1.2
+==================
+* add device flags
+
 v5.1.1
 ==================
 * revert 5.1.0, unintended side effects
