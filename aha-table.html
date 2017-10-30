@@ -20,15 +20,14 @@
 <dom-module id="aha-table">
   <template>
     <style include="aha-table-styles"></style>
-    <content id="columndefs" select="px-data-table-column"></content>
+    <content id="columndefs"></content>
 
-    <div class="flex columnChooser u-mb-">
-      <template is="dom-if" if="{{showColumnChooser}}">
+    <template is="dom-if" if="{{showColumnChooser}}">
+      <div class="flex columnChooser u-mb-">
         <px-dropdown class="u-ml--" display-value="{{localize('Show/Hide Column')}}" items='{{_columnChooserItems}}' multi hide-selected clear-selections-on-change>
         </px-dropdown>
-      </template>
-      <content select=".actions"></content>
-    </div>
+      </div>
+    </template>
 
     <div class="scroll-body">
 

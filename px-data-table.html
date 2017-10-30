@@ -104,20 +104,6 @@ We suggest instead to use events and selectors, for example:
         $scope.allSelectedRows = document.getElementById("myDataTable").selectedRows;
     };
 
-### Additional Action Controls
-In addition to the default content slot that picks up your column definitions, there is also a
-content slot for additional menu buttons, dropdowns, checkboxes, and other controls that you may
-want to add into your table. They will appear in the area above the table, to the left of the
-"Show/Hide Columns" dropdown (if enabled). You are responsible for layout of the items inside of
-this area. To insert content, wrap all of your controls in a container with class "actions", e.g.:
-
-    <px-data-table ... >
-      <div class="actions">
-        <label class="label--inline">Some Action</label>
-        <input type="checkbox" onchange="takeAction()" />
-      </div>
-    </px-data-table>
-
 ### Styling
 The following custom properties are available for styling:
 

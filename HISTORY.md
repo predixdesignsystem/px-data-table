@@ -1,3 +1,7 @@
+v5.1.1
+==================
+* revert 5.1.0, unintended side effects
+
 v5.1.0
 ==================
 * add content slot for actions/menus
