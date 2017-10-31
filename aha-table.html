@@ -24,7 +24,7 @@
 
     <template is="dom-if" if="{{showColumnChooser}}">
       <div class$="flex columnChooser u-mb- {{_getColumnChooserClass(scrollingRows)}}">
-        <px-dropdown display-value="{{localize('Show/Hide Column')}}" items='{{_columnChooserItems}}' multi hide-selected clear-selections-on-change>
+        <px-dropdown class="u-ml--" display-value="{{localize('Show/Hide Column')}}" items='{{_columnChooserItems}}' multi hide-selected clear-selections-on-change>
         </px-dropdown>
       </div>
     </template>
@@ -632,8 +632,10 @@
       if(newValue === true) {
         this._generateMetaFromData();
       }
-      else if (newValue === false && this._isAttached && this.getEffectiveChildren(this.$.content).length > 0) {
-        this.meta = this.getEffectiveChildren(this.$.content);
+      else if (newValue === false && this._isAttached && this.getContentChildren('#columndefs').length > 0) {
+        this.meta = this.getContentChildren('#columndefs').filter(function(node) {
+          return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
+        });
         this._selectableChanged(this.selectable);
       }
     },
@@ -1665,7 +1667,7 @@
     },
 
     _isFilterableColumn: function(column) {
-      return !column.selectAll && column.filterable && this.filterable && !column.hide;
+      return !column.selectAll && column.filterable && this.filterable;
     },
 
     _readContent: function (row, column) {

@@ -32,7 +32,7 @@
         margin-right: 1em;
         margin-top: 7px;
         max-width: 45em;
-        z-index: 1;
+        z-index: 9;
       }
       .toaster--action-container {
         text-align: right;
@@ -60,7 +60,8 @@
     <!-- Header -->
     <px-demo-header
         module-name="px-data-table"
-        description="The Data Table component is useful for displaying tabular data, and provides more functionality than a simple table. Users can sort ascending or descending on each column, filter within columns using simple search, select one or more rows, and edit data in-line with input validation. Rows are automatically paginated, but the user can select the number of rows to display in a single page. Cell borders can be configured by the developer to show up horizontally, vertically, or both.">
+        description="The Data Table component is useful for displaying tabular data, and provides more functionality than a simple table. Users can sort ascending or descending on each column, filter within columns using simple search, select one or more rows, and edit data in-line with input validation. Rows are automatically paginated, but the user can select the number of rows to display in a single page. Cell borders can be configured by the developer to show up horizontally, vertically, or both."
+        tablet desktop>
     </px-demo-header>
 
     <!-- Interactive -->
@@ -91,6 +92,12 @@
               scrolling-rows="{{props.scrollingRows.value}}"
               >
               <px-data-table-column name="first" placeholder="First Name" filterable sortable editable></px-data-table-column>
+              <px-data-table-column name="last" placeholder="Last Name" filterable sortable editable hide></px-data-table-column>
+              <px-data-table-column name="email" placeholder="Email Address" filterable sortable editable hide></px-data-table-column>
+              <!-- <div class="actions">
+                <label>Action</label>
+                <input type="checkbox"/>
+              </div> -->
           </px-data-table>
         </div>
         </template>

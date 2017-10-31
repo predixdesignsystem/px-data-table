@@ -110,6 +110,7 @@ px-dropdown {
 $px-data-table-cell-inner-height : calculateRem(18px);
 
 .cell--edit {
+  width: 100%;
   & input {
     max-height: $px-data-table-cell-inner-height;
   }

@@ -1,3 +1,28 @@
+v5.1.3
+==================
+* fix #171
+
+v5.1.2
+==================
+* add device flags
+
+v5.1.1
+==================
+* revert 5.1.0, unintended side effects
+
+v5.1.0
+==================
+* add content slot for actions/menus
+
+v5.0.4
+==================
+* add standardized events for editing
+* fix display issue of edit field
+
+v5.0.3
+==================
+* Demo z-index fix.
+
 v5.0.2
 ==================
 * fixing selecting and filtering + documentation updates (https://github.com/PredixDev/px-data-table/pull/168)
