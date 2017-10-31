@@ -256,7 +256,7 @@ label {
 }
 
 .rowsPerPage {
-  color: $gray10;
+  color: var(--px-data-table-header-text-color, gray);
 }
 
 .paginationContainer px-dropdown {

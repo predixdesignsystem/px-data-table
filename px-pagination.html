@@ -439,25 +439,6 @@ Element that provides pagination.
       this._triggerPageSizeChangeRequest(e.target.value || e.target.selected);
     },
 
-    _getPagedownClass: function(currentPage, pageCount) {
-      return [pageCount <= 0 || currentPage === pageCount ? "btn--disabled" : "", 'btn btn--bare btn--pagination next'].join(' ');
-    },
-
-    _getPagerButtonClass: function(buttonValue, currentPage) {
-      var classList = ['btn'];
-      if(buttonValue === currentPage) {
-        classList.push('btn--icon', 'u-ml0', 'btn--pagination--number');
-      }
-      else {
-        classList.push('btn--bare', 'u-ml0', 'btn--bare__pagination');
-      }
-      return classList.join(' ');
-    },
-
-    _getPageupClass: function(currentPage) {
-      return [currentPage === 1 ? "btn--disabled" : "", 'btn btn--bare btn--pagination previous'].join(' ');
-    },
-
     _goToPage: function(evt) {
       if (!this.dataRemote) {
         this.goToPageNumber(parseInt(evt.target.textContent));
