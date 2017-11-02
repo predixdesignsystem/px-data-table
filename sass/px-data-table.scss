@@ -32,3 +32,14 @@ $inuit-enable-paddings--small     : true;
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
 @import "px-widths-responsive-design/_trumps.widths-responsive.scss";
 
+:host[scrolling-rows] {
+  display: var(--px-data-table-display-scrolling-rows, flex);
+  flex: var(--px-data-table-flex-scrolling-rows, 1);
+  flex-direction: var(--px-data-table-flex-direction-scrolling-rows, column);
+  height: var(--px-data-table-height-scrolling-rows, 100%);
+  width: var(--px-data-table-width-scrolling-rows, 100%);
+}
+
+.scrolling-rows.flex {
+  flex: var(--px-data-table-flex-div-flex-scrolling-rows, 1);
+}

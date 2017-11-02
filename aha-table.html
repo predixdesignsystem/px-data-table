@@ -23,13 +23,13 @@
     <content id="columndefs"></content>
 
     <template is="dom-if" if="{{showColumnChooser}}">
-      <div class="flex columnChooser u-mb-">
+      <div class$="flex columnChooser u-mb- {{_getColumnChooserClass(scrollingRows)}}">
         <px-dropdown class="u-ml--" display-value="{{localize('Show/Hide Column')}}" items='{{_columnChooserItems}}' multi hide-selected clear-selections-on-change>
         </px-dropdown>
       </div>
     </template>
 
-    <div class="scroll-body">
+    <div class$="scroll-body {{_getScrollBodyClass(scrollingRows)}}">
 
       <div id="scrollBodyTableContainer" class$="table {{_getTableClass(tableCells, tableColumns)}}" role="grid">
         <!-- Header -->
@@ -124,7 +124,7 @@
     </div>
 
     <!-- Pagination controls -->
-    <div class="pagination">
+    <div class$="pagination {{_getPaginationClass(scrollingRows)}}">
       <px-pagination class$="{{_getPaginationVisibility(hidePaginationControl)}}"
                     id="pagination"
                     data-remote="{{dataRemote}}"
@@ -187,6 +187,12 @@
       //striped: if table row is striped
       striped: {
         type: Boolean,
+        value: false
+      },
+      //scrollingRows: if table rows needs to be scrollable
+      scrollingRows: {
+        type: Boolean,
+        reflectToAttribute: true,
         value: false
       },
       //tableCells: if table row is striped
@@ -1611,6 +1617,16 @@
         this.striped ? 'striped' : '',
         row.isNew ? 'is-new' : ''
       ].join(' ');
+    },
+
+    _getPaginationClass: function(scrollingRows) {
+      return this.scrollingRows ? 'scrolling-rows' : '';
+    },
+    _getScrollBodyClass: function(scrollingRows) {
+      return this.scrollingRows ? 'scrolling-rows' : '';
+    },
+    _getColumnChooserClass: function(scrollingRows) {
+      return this.scrollingRows ? 'scrolling-rows' : '';
     },
 
     _getHighlightValue: function (row, column, high) {

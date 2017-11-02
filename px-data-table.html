@@ -145,8 +145,7 @@ Custom property | Description
   <template>
     <style include="px-data-table-styles"></style>
 
-
-    <div class="flex">
+    <div class$="flex {{_getFlexClass(scrollingRows)}}">
       <aha-table
         data-remote="{{dataRemote}}"
         data="{{tableData}}"
@@ -157,6 +156,7 @@ Custom property | Description
         hide-pagination-control="{{hidePaginationControl}}"
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
+        scrolling-rows="{{scrollingRows}}"
         language="{{language}}"
         meta="{{meta}}"
         page-size-options="{{pageSizeOptions}}"
@@ -421,7 +421,22 @@ Custom property | Description
                   {"key":"4","val":"100"}];
         }
       },
+
       /**
+       * Property to enable table with vertical scroll bar. By enabling
+       * this feature, px-data-table will take full space allocated, and space
+       * will be filled with rows of data. Any rows that can't fit in available
+       * space, there will be vertical scroll allow user to see remaining rows.
+       * For allowing this property work smoothly, container wrapper for
+       * px-data-table needs to have enough space for scrolling.
+       */
+      scrollingRows: {
+      	type: Boolean,
+        reflectToAttribute: true,
+        value: false
+      },
+
+       /**
        * A valid IETF language tag as a string that `app-localize-behavior` will
        * use to localize this component.
        *
@@ -455,6 +470,9 @@ Custom property | Description
       }
     },
 
+    _getFlexClass: function(scrollingRows) {
+      return this.scrollingRows ? 'scrolling-rows' : '';
+    }
     /**
      * Fired when a cell is clicked in the table. If the cell is not editable or of type 'dropdown',
      * `px-row-click` will also be fired. Cell information is stored in `evt.detail`.

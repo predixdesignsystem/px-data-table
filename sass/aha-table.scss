@@ -195,6 +195,27 @@ label {
   background-color: var(--px-data-table-background-color-striped--even, rgba(black,0.07));
 }
 
+:host[scrolling-rows] {
+  display: var(--px-data-table-aha-table-display-scrolling-rows, flex);
+  flex: var(--px-data-table-aha-table-flex-scrolling-rows, 1);
+  flex-direction: var(--px-data-table-aha-table-flex-direction-scrolling-rows, column);
+}
+
+.scrolling-rows.scroll-body {
+  flex: var(--px-data-table-scroll-body-flex-scrolling-rows, 1);
+  min-width: var(--px-data-table-scroll-body-min-width-scrolling-rows, 0px);
+  overflow-y: var(--px-data-table-scroll-body-overflow-y-scrolling-rows, auto);
+}
+
+.scrolling-rows.pagination {
+  flex-basis: var(--px-data-table-pagination-flex-basis-scrolling-rows, 34px);
+  text-align: var(--px-data-table-pagination-text-align-scrolling-rows, right);
+}
+
+.scrolling-rows.columnChooser {
+  flex-basis: var(--px-data-table-column-chooser-flex-basis-scrolling-rows, 30px);
+}
+
 .dragged {
   color: var(--px-data-table-text-color--dragged, blue);
 }
