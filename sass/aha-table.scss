@@ -91,6 +91,11 @@ px-icon.sorting {
   display: table-row;
 }
 
+.tr:not(.tr--filter):not(.tr--header):hover {
+  background: var(--px-data-table-row-background-color--hover);
+  cursor: var(--px-data-table-row-cursor--hover);
+}
+
 .td.td {
   @extend td;
   display: table-cell;

@@ -33,7 +33,7 @@
 
       <div id="scrollBodyTableContainer" class$="table {{_getTableClass(tableCells, tableColumns)}}" role="grid">
         <!-- Header -->
-        <div class="tr" role="row">
+        <div class="tr tr--header" role="row">
           <template is="dom-repeat" items="{{meta}}" as="column">
             <template is="dom-if" if="{{!column.hide}}">
               <span role="columnheader" class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">

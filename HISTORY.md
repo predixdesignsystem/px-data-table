@@ -1,3 +1,7 @@
+v5.1.6
+==================
+* add css vars for hovered rows
+
 v5.1.5
 ==================
 * fix demo
