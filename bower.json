@@ -21,7 +21,7 @@
     "npm-debug.log"
   ],
   "dependencies": {
-    "polymer": "^2.0.0",
+    "polymer": "#1.9 - 2",
     "px-tooltip": "^1.0.0",
     "iron-a11y-keys-behavior": "^2.0.0",
     "px-icon-set": "^2.0.0",
@@ -35,7 +35,7 @@
     "iron-ajax": "^2.0.0",
     "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.1",
     "px-toggle-design": "^2.0.0",
-    "px-demo": "^2.0.0",
+    "px-demo": "^3.0.0",
     "px-layout-design": "^1.0.0",
     "px-tables-design": "^2.0.0",
     "px-button-group-design": "^2.0.0",
@@ -44,7 +44,19 @@
   },
   "resolutions": {
     "promise-polyfill": "^1.0.0",
-    "polymer": "^2.0.0",
-    "webcomponentsjs": "^v1.0.2"
+    "webcomponentsjs": "^1.0.0"
+  },
+  "variants": {
+    "1.x": {
+      "dependencies": {
+        "polymer": "^1.9.0"
+      },
+      "devDependencies": {
+        "web-component-tester": "^5.0.0"
+      },
+      "resolutions": {
+        "webcomponentsjs": "^0.7.0"
+      }
+    }
   }
 }
