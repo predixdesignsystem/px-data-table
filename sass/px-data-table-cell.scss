@@ -99,13 +99,7 @@ $inuit-table-separator-color: var(--px-data-table-separator-color, gray);
   color: var(--px-data-table-cell-text-color-validation--failed, red);
 }
 
-.viewing {
-  white-space: nowrap;
-  line-height: 1rem;
-  height: 1rem;
-}
-
-.ddviewing {
+.viewing, .ddviewing {
   white-space: nowrap;
 }
 
@@ -116,6 +110,7 @@ px-dropdown {
 $px-data-table-cell-inner-height : calculateRem(18px);
 
 .cell--edit {
+  width: 100%;
   & input {
     max-height: $px-data-table-cell-inner-height;
   }

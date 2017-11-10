@@ -91,10 +91,19 @@ px-icon.sorting {
   display: table-row;
 }
 
+.tr:not(.tr--filter):not(.tr--header):hover {
+  background: var(--px-data-table-row-background-color--hover);
+  cursor: var(--px-data-table-row-cursor--hover);
+}
+
 .td.td {
   @extend td;
   display: table-cell;
   vertical-align: middle;
+}
+
+.td.td[hidden] {
+  display: none;
 }
 
 .table.aha-table .td.td {
@@ -143,6 +152,7 @@ label {
 
 .columnChooser {
   flex-direction: row-reverse;
+  align-items: center;
   margin-right: 2px;
 }
 
@@ -251,7 +261,7 @@ label {
 }
 
 .rowsPerPage {
-  color: $gray10;
+  color: var(--px-data-table-header-text-color, gray);
 }
 
 .paginationContainer px-dropdown {
@@ -263,6 +273,7 @@ label {
   padding-right: calculateRem(7px);
   line-height: calculateRem(22px);
   height: auto;
+  min-width: 0;
 }
 
 .paginationContainer .btn + .btn {

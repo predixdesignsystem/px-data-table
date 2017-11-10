@@ -58,6 +58,10 @@ Element that provides pagination.
       Polymer.AppLocalizeBehavior
     ],
 
+    listeners: {
+      'selected-changed': '_handleDropdownChange'
+    },
+
     properties: {
 
       /**
@@ -76,7 +80,20 @@ Element that provides pagination.
       pageSize: {
         type: Number,
         value: 10,
-        observer: '_goBackToFirstPage'
+        notify: true,
+        observer: '_conditionallyUpdatePageSize'
+        // observer: '_goBackToFirstPage', // incoming change
+        // notify: true // incoming change
+      },
+
+      /**
+       * Changes paradigms for pagination from local (all data local)
+       * VS remote (all data remote and only one page local)
+       *
+       */
+      dataRemote: {
+        type: Boolean,
+        value: false
       },
 
       /**
@@ -94,52 +111,73 @@ Element that provides pagination.
 
       /**
        * Passes the firstItemIndexToDisplay back to the user
+       *
+       * 1-based
        */
       firstItemIndexToDisplay: {
         type: Number,
         notify: true,
         value: 1,
-        readOnly: true
+        observer: '_conditionallyUpdateDisplay'
+      },
+      /**
+       * A valid IETF language tag as a string that `px-localize-behavior` will
+       * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+       *
+       * See https://github.com/PolymerElements/app-localize-behavior for API
+       * documentation and more information.
+       */
+      language: {
+        type: String,
+        value: 'en'
+      },
+      /**
+      * Use the key for localization if value for  language is missing. Should
+      * always be true for  our components
+      */
+      useKeyIfMissing: {
+        type: Boolean,
+        value: true
+      },
+      /**
+       * Localizable strings for this component
+       */
+      resources: {
+        type: Object,
+        value: function() {
+          return {
+            'en': {
+              'of': 'of',
+              'Rows per page': 'Rows per page'
+            }
+          }
+        }
       }
 
     },
 
+    ready: function() {
+      this.set('itemoftext', 'of');
+      this.set('pagesizetitle', 'Rows per page');
+    },
+
+    // --------------------
+    // PUBLIC METHODS
+    // --------------------
     _goBackToFirstPage: function() {
       this.goToPageNumber(1);
     },
 
-    _updateDisplay: function() {
-      this.set('pageCount', Math.ceil(this.numberOfItems / this.pageSize));
-
-      if(this.pageCount === 0) {
-        this._setFirstItemIndexToDisplay(0);
-        this.set('lastItemIndexToDisplay', 0);
-      }
-      else {
-        this._setFirstItemIndexToDisplay(((this.currentPage - 1) * this.pageSize) + 1);
-        if(this.currentPage === this.pageCount) {
-          this.set('lastItemIndexToDisplay', this.numberOfItems);
-        } else {
-          this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
-        }
-      }
-    },
-
     /**
-     * Go to the previous page
-     **/
-    goToPreviousPage: function() {
-      if(this.currentPage > 1) {
-        this.goToPageNumber(this.currentPage - 1);
-      }
-    },
-
-    /**
-     * Go to the next page
+     * Go to the next page or trigger request to chagne page
      */
     goToNextPage: function() {
-      if(this.currentPage < this.pageCount) {
-        this.goToPageNumber(this.currentPage + 1);
+      if (this.currentPage < this.pageCount) {
+        if (!this.dataRemote) {
+          this.goToPageNumber(this.currentPage + 1);
+        } else {
+          this._triggerPageChangeRequest(this.currentPage + 1);
+        }
       }
     },
 
@@ -150,12 +188,150 @@ Element that provides pagination.
     goToPageNumber: function(number) {
       if(number) {
         this.currentPage = number;
-        this._updateDisplay();
+        this.updateDisplay();
       }
     },
 
-    _goToPage: function(evt) {
-      this.goToPageNumber(parseInt(evt.target.textContent));
+    /**
+     * Go to the previous page or trigger request to change page
+     **/
+    goToPreviousPage: function() {
+      if (this.currentPage > 1) {
+        if (!this.dataRemote) {
+          this.goToPageNumber(this.currentPage - 1);
+        } else {
+          this._triggerPageChangeRequest(this.currentPage - 1);
+        }
+      }
+    },
+
+    /**
+     * Set page size public interface.
+     *
+     * Set Page size, trigger update of table, update combobox.
+     */
+    setPageSize: function(size) {
+      this._updatePageSize(size);
+    },
+
+    /**
+     * Update the display given current property values
+     */
+    updateDisplay: function () {
+      this.set('pageCount', Math.ceil(this.numberOfItems / this.pageSize));
+
+      // if local data
+      if (!this.dataRemote) {
+        if (this.pageCount === 0) {
+          this.set('firstItemIndexToDisplay',0);
+          this.set('lastItemIndexToDisplay', 0);
+        } else {
+          this.set('firstItemIndexToDisplay',((this.currentPage - 1) * this.pageSize) + 1);
+          if (this.currentPage === this.pageCount) {
+            this.set('lastItemIndexToDisplay', this.numberOfItems);
+          } else {
+            this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
+          }
+        }
+
+      // if remote data
+      } else {
+        // first item is passed in appropriately
+        // now update last item index and current page
+        this.set('currentPage', Math.ceil( this.firstItemIndexToDisplay / this.pageSize ) );
+        if (this.currentPage === this.pageCount) {
+          this.set('lastItemIndexToDisplay', this.numberOfItems);
+        } else {
+          this.set('lastItemIndexToDisplay', this.currentPage * this.pageSize);
+        }
+      }
+    },
+
+
+    // --------------------
+    // OBSERVERS
+    // --------------------
+
+    _goBackToFirstPage: function() {
+      if (!this.dataRemote) {
+        this.goToPageNumber(1);
+      } else {
+        // recalculate paging, just to make sure we're on the right page
+        this.updateDisplay();
+      }
+    },
+
+    /*
+     * If firstItemIndexToDisplay has changed, then update the display
+     * Condition: dataRemote is true
+     *
+     * If dataRemote is false, calling updateDisplay would
+     *   cause a circular update cycle
+     *
+     * Necessary if dataRemote is true to ensure that the currentPage
+     *   and lastItemIndexToDisplay are appropriately updated
+     */
+    _conditionallyUpdateDisplay: function () {
+      if (this.dataRemote) {
+        this.updateDisplay();
+      }
+    },
+
+    /*
+     * If pageSize has changed, then update the display
+     * Condition: dataRemote is true
+     *
+     * If dataRemote is false, calling _updatePageSize would
+     *   cause a circular update cycle
+     *
+     * Necessary if dataRemote is true to ensure that the currentPage
+     *   and lastItemIndexToDisplay are appropriately updated
+     */
+    _conditionallyUpdatePageSize: function (newPageSize) {
+      if (this.dataRemote) {
+        this._updatePageSize(parseInt(newPageSize,10));
+      }
+    },
+
+
+    // --------------------
+    // BROADCASTING METHODS
+    // --------------------
+
+    /*
+     * Fires a page change request event
+     *
+     * Only called if remoteData==true
+     *
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-page-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended page: ", data);
+     * });
+     * ```
+     * @event px-page-change-intent
+     */
+    _triggerPageChangeRequest: function (intendedPage) {
+      this.fire('px-page-change-intent', intendedPage);
+    },
+
+    /*
+     * Fires a page size change request event
+     *
+     * Only called if remoteData==true
+     *
+     * Information is stored in `evt.detail`:
+     * ```
+     * document.getElementById("mytable").addEventListener("px-page-size-change-intent", function(e) {
+     *   var data = e.detail;
+     *   console.log("Intended page size: ", data);
+     * });
+     * ```
+     * @event px-page-size-change-intent
+     */
+    _triggerPageSizeChangeRequest: function (intendedPageSize) {
+      this.fire('px-page-size-change-intent', intendedPageSize);
     },
 
     _getPageupClass: function(currentPage) {
@@ -176,6 +352,11 @@ Element that provides pagination.
       }
       return classList.join(' ');
     },
+
+
+    // --------------------
+    // HELPER METHODS
+    // --------------------
 
     _pagerButtons: function() {
       if(this.pageCount) {
@@ -222,7 +403,50 @@ Element that provides pagination.
         }
         return pagerNavButtonsConfig;
       }
+    },
+
+    _updatePageSize: function(size) {
+      var sizelist = [10, 20, 50, 100];
+      var index = sizelist.indexOf(size);
+
+      var parentElem = this.$.pageSizeSelect,
+        optionList = Polymer.dom(parentElem).querySelectorAll("option");
+
+      optionList.forEach(function(option) {
+        if(parseInt(option.value) === parseInt(size)) {
+          option.setAttribute('selected', '');
+          parentElem.selectedIndex = parseInt(index);
+        } else {
+          option.removeAttribute('selected');
+        }
+      });
+
+      this.set('pageSize',size);
+
+      if (!this.dataRemote) {
+        this._goBackToFirstPage();
+      } else {
+        this.updateDisplay();
+      }
+    },
+
+
+    // --------------------
+    // TEMPLATE HELPERS
+    // --------------------
+
+    _handleDropdownChange: function(e) {
+      this._triggerPageSizeChangeRequest(e.target.value || e.target.selected);
+    },
+
+    _goToPage: function(evt) {
+      if (!this.dataRemote) {
+        this.goToPageNumber(parseInt(evt.target.textContent));
+      } else {
+        this._triggerPageChangeRequest(parseInt(evt.target.textContent));
+      }
     }
+
 
   });
 </script>

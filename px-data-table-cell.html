@@ -38,7 +38,8 @@
               on-px-dropdown-selection-changed="saveCell"
               allow-outside-scroll="true"
               button-style="bare"
-              items="{{dropdownItems}}">
+              items="{{dropdownItems}}"
+              disable-clear>
             </px-dropdown>
           </span>
         </div>
@@ -117,7 +118,8 @@
         _editing: {
           type: Boolean,
           value: false,
-          notify: true
+          notify: true,
+          observer: '_editingChanged'
         },
         cellEditable:{
           type: Boolean,
@@ -191,6 +193,7 @@
         clearTimeout(this._editTimeout);
         this._editTimeout = setTimeout(function(){
           this.fire('validate', {newValue: this.$$('#celleditinput').value});
+          this.fire('px-cell-validate', {newValue: this.$$('#celleditinput').value});
         }.bind(this), 300);
       },
       onCellHovered: function(evt){
@@ -208,13 +211,13 @@
       * @param target String / Number
       */
       _isEqual: function(source, target) {
-        if (!Array.isArray(target) || typeof target !== 'object') {
+        if (!Array.isArray(target) || !this._typeofComparison(target, 'object')) {
           return source === target;
         }
         return;
       },
       isNotEqual: function(source, target) {
-        if (!Array.isArray(target) || typeof target !== 'object') {
+        if (!Array.isArray(target) || !this._typeofComparison(target, 'object')) {
           return source !== target;
         }
         return;
@@ -250,7 +253,7 @@
 
         classList = (this.cellType ==='dropdown') ? ['flex', 'ddviewing'] : ['flex', 'viewing'];
 
-        if(datum === null || datum === undefined || typeof datum === 'string' && datum.trim().length === 0) {
+        if(datum === null || datum === undefined || !this._typeofComparison(datum, 'string') && datum.trim().length === 0) {
           classList.push('empty');
         }
         return classList.join(' ');
@@ -269,6 +272,11 @@
       _setDropdownItem: function() {
         //we check if there are any items in dropdownItems, and if there are, this is a dropdown cell.
         this.set('_dropdownItem', (this.dropdownItems.length > 0));
+      },
+      _editingChanged: function(newValue, oldValue) {
+        if(newValue) {
+          this.fire('px-cell-editing');
+        }
       },
       _exitEditMode: function(){
         document.activeElement.blur();
@@ -296,13 +304,15 @@
           value = this._undoValue;
           Polymer.dom(this.$$('.cell--edit')).querySelector('input,select,textarea').value = value;
         }
-        else if(this._dropdownItem) {
+        else if(this._dropdownItem && evt.detail.selected === true) {
+          /* Only get dropdown values for select events, not deselect events */
           value = evt.detail.val;
         }
         else {
           value = evt.target.value;
         }
         this.fire('save', {newValue: value});
+        this.fire('px-cell-save', {newValue: value});
       },
       _getEditCellClass: function(editing){
         var classList = ['cell--edit'];
@@ -371,6 +381,12 @@
         this.toggleClass('px-data-table-highlight--high', false);
         this.toggleClass('px-data-table-highlight--medium', false);
         this.toggleClass('px-data-table-highlight--low', false);
+      },
+      /**
+       * required by IE11
+       */
+      _typeofComparison: function (val, comparator) {
+        return (typeof val === comparator || false);
       }
     });
   </script>

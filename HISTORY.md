@@ -1,3 +1,88 @@
+v5.1.6
+==================
+* add css vars for hovered rows
+
+v5.1.5
+==================
+* fix demo
+
+v5.1.4
+==================
+* fix #170, pagination styles
+
+v5.1.3
+==================
+* fix #171
+
+v5.1.2
+==================
+* add device flags
+
+v5.1.1
+==================
+* revert 5.1.0, unintended side effects
+
+v5.1.0
+==================
+* add content slot for actions/menus
+
+v5.0.4
+==================
+* add standardized events for editing
+* fix display issue of edit field
+
+v5.0.3
+==================
+* Demo z-index fix.
+
+v5.0.2
+==================
+* fixing selecting and filtering + documentation updates (https://github.com/PredixDev/px-data-table/pull/168)
+
+v5.0.1
+==================
+* test fixes and migrating to WCT 6.x
+
+v5.0.0
+==================
+* remote data source support. https://github.com/PredixDev/px-data-table/pull/126
+
+v4.0.15
+==================
+* fix #164 pagination bug
+
+v4.0.14
+==================
+* fix #160 and remove infinite loop issue
+
+v4.0.13
+==================
+* update to work with latest dropdown
+
+v4.0.12
+==================
+* fix history
+
+v4.0.11
+==================
+* merge #157
+
+v4.0.10
+==================
+* merge #155
+
+v4.0.9
+==================
+* fix pagination (#152)
+
+v4.0.8
+==================
+* fix padding of html columns (#151) and pagination buttons
+
+v4.0.7
+==================
+* fix docs
+
 v4.0.6
 ==================
 * fix highlight demo to calculate path (#149)

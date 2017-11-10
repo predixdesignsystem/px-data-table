@@ -4,5 +4,6 @@ temp
 bower_components
 .idea
 reports
-css/noprefix
-npm-debug.log
+.yo-rc.json
+bower_components-*/
+bower-*.json

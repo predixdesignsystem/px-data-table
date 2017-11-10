@@ -9,6 +9,7 @@
 <link rel="import" href="../../px-demo/px-demo-props.html" />
 <link rel="import" href="../../px-demo/px-demo-interactive.html" />
 <link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
+<link rel="import" href="../../px-demo/px-demo-code-editor.html" />
 
 <!-- Imports for this component -->
 <link rel="import" href="../../px-demo/css/px-demo-styles.html" />
@@ -18,11 +19,49 @@
 <dom-module id="px-data-table-demo">
   <template>
     <style include="px-demo-styles" is="custom-style"></style>
+    <style>
+      #toaster {
+        position: fixed;
+        top: 0;
+        right: 0;
+        margin-left: 7px;
+        width: 70%;
+        border: 1px solid #c5d1d8;
+        background: #fff;
+        padding: 2em;
+        margin-right: 1em;
+        margin-top: 7px;
+        max-width: 45em;
+        z-index: 9;
+      }
+      .toaster--action-container {
+        text-align: right;
+        margin-top: 1em;
+      }
+      .toaster--title {
+        font-weight: bold;
+      }
+      .toaster--detail {
+        white-space: pre-wrap;       /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+      }
+      .toaster--message {
+        max-width: 30em;
+        line-height: 1.5em;
+      }
+      .toaster--message--label {
+        font-style: italic;
+      }
+    </style>
 
     <!-- Header -->
     <px-demo-header
         module-name="px-data-table"
-        description="The Data Table component is useful for displaying tabular data, and provides more functionality than a simple table. Users can sort ascending or descending on each column, filter within columns using simple search, select one or more rows, and edit data in-line with input validation. Rows are automatically paginated, but the user can select the number of rows to display in a single page. Cell borders can be configured by the developer to show up horizontally, vertically, or both.">
+        description="The Data Table component is useful for displaying tabular data, and provides more functionality than a simple table. Users can sort ascending or descending on each column, filter within columns using simple search, select one or more rows, and edit data in-line with input validation. Rows are automatically paginated, but the user can select the number of rows to display in a single page. Cell borders can be configured by the developer to show up horizontally, vertically, or both."
+        tablet desktop>
     </px-demo-header>
 
     <!-- Interactive -->
@@ -33,9 +72,11 @@
       <!-- Props -->
       <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
+      <px-demo-code-editor props="{{props}}"></px-demo-code-editor>
+
       <!-- Component ---------------------------------------------------------->
       <px-demo-component>
-
+        <template is="dom-if" if="{{!props.dataRemote.value}}">
         <div>
           <px-data-table
               table-data="{{props.tableData.value}}"
@@ -50,6 +91,41 @@
               language="{{props.language.value}}">
               <px-data-table-column name="first" placeholder="First Name" filterable sortable editable></px-data-table-column>
           </px-data-table>
+        </div>
+        </template>
+        <template is="dom-if" if="{{props.dataRemote.value}}">
+            <div>
+              <px-data-table
+                  id="demoRemoteTable"
+                  table-data="{{dataForDisplay}}"
+                  striped="{{props.striped.value}}"
+                  filterable="{{props.filterable.value}}"
+                  sortable="{{props.sortable.value}}"
+                  selectable="{{props.selectable.value}}"
+                  single-select="{{props.singleSelect.value}}"
+                  show-column-chooser="{{props.showColumnChooser.value}}"
+                  table-columns="{{props.tableColumns.value}}"
+                  table-rows="{{props.tableRows.value}}"
+                  hide-pagination-control="{{props.hidePaginationControl.value}}"
+                  include-all-columns="{{props.includeAllColumns.value}}"
+                  data-remote="{{props.dataRemote.value}}"
+                  total-entries="{{totalEntries}}"
+                  page-size="{{pageSize}}"
+                  first-item-index="{{firstItemIndex}}">
+              </px-data-table>
+            </div>
+        </template>
+        <div id="toaster" hidden="{{_toast.isHidden}}">
+          <div class="toaster--title">{{_toast.title}}</div>
+          <pre class="toaster--detail">evt.type: {{_toast.event}}</pre>
+          <pre class="toaster--detail">evt.detail: {{_toast.detail}}</pre>
+          <div class="toaster--message">
+            <span class="toaster--message--label">To update table: </span>
+            <span>{{_toast.message}}</span>
+          </div>
+          <div class="toaster--action-container">
+              <button class="btn" on-tap="_hideToast">Close</button>
+          </div>
         </div>
       </px-demo-component>
       <!-- END Component ------------------------------------------------------>
@@ -73,6 +149,10 @@
   Polymer({
     is: 'px-data-table-demo',
 
+    observers: [
+      '_demoPropsUpdated(props.dataRemote.*, props.tableData.*)'
+    ],
+
     properties: {
 
       props: {
@@ -85,6 +165,7 @@
         value: function(){
           return [
             { configName: "Simple",
+              dataRemote: false,
               configReset: true },
 
             { configName: "Complex",
@@ -95,14 +176,60 @@
               singleSelect: true,
               showColumnChooser: true,
               hidePaginationControl: false,
-              includeAllColumns: true }
+              includeAllColumns: true,
+              dataRemote: false },
+
+            { configName: "Remote",
+              striped: true,
+              filterable: true,
+              sortable: true,
+              selectable: false,
+              singleSelect: false,
+              showColumnChooser: false,
+              tableColumns: false,
+              tableRows: false,
+              hidePaginationControl: false,
+              includeAllColumns: true,
+              dataRemote: true },
           ]
         }
       },
+
       hideLocalize: {
       type: Array,
       value: function() {
           return ['localize','useKeyIfMissing','formats','pathToResources','loadResources','app-localize-resources-error','app-localize-resources-loaded']
+        }
+      },
+
+      dataForDisplay : {
+        type: Array,
+        value: []
+      },
+
+      firstItemIndex: {
+        type: Number,
+        value: 1,
+        notify: true
+      },
+
+      pageSize: {
+        type: Number,
+        value:10
+      },
+
+      totalEntries : {
+        type: Number,
+        value: 100
+      },
+
+      _toast: {
+        type: Object,
+        value: {
+          detail: '',
+          isHidden: true,
+          message: '',
+          title: ''
         }
       }
     },
@@ -171,9 +298,88 @@
 
       lightDomContent: {
         type: String,
-        defaultValue: '<px-data-table-column name="first"></px-data-table-column>'
+        defaultValue: '<px-data-table-column name="first" sortable editable filterable></px-data-table-column>'
+      },
+
+      dataRemote: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+    	    }
+    },
+
+    listeners : {
+        'px-data-table-init' : 'pageInit',
+        'px-page-change-intent' : 'pageChangeHandler',
+        'px-page-size-change-intent' : 'pageSizeChangeHandler',
+        'px-filter-change-intent' : 'pageFilterChangeHandler',
+        'px-sort-change-intent': 'pageSortChangeHandler'
+    },
+
+    _demoPropsUpdated: function () {
+      this.pageInit();
+    },
+
+    pageInit: function(evt){
+
+      var dataFullSet = [{"first":"Isabel","last":"Conrad","email":"isabelconrad@scentric.com"},{"first":"Jocelyn","last":"Wooten","email":"jocelynwooten@scentric.com"},{"first":"Valentine","last":"Meyer","email":"valentinemeyer@scentric.com"},{"first":"Silva","last":"Alexander","email":"silvaalexander@scentric.com"},{"first":"Hopkins","last":"Wong","email":"hopkinswong@scentric.com"},{"first":"Harriet","last":"Sherman","email":"harrietsherman@scentric.com"},{"first":"Stacie","last":"Bartlett","email":"staciebartlett@scentric.com"},{"first":"Charlene","last":"Stevens","email":"charlenestevens@scentric.com"},{"first":"Reyes","last":"Hartman","email":"reyeshartman@scentric.com"},{"first":"Alissa","last":"Duncan","email":"alissaduncan@scentric.com"},{"first":"Christina","last":"Craft","email":"christinacraft@scentric.com"},{"first":"Burt","last":"Landry","email":"burtlandry@scentric.com"},{"first":"Baldwin","last":"Hammond","email":"baldwinhammond@scentric.com"},{"first":"Laverne","last":"Hampton","email":"lavernehampton@scentric.com"},{"first":"Kirsten","last":"Chang","email":"kirstenchang@scentric.com"},{"first":"Mercado","last":"Hancock","email":"mercadohancock@scentric.com"},{"first":"Obrien","last":"Bruce","email":"obrienbruce@scentric.com"},{"first":"Pearl","last":"Moran","email":"pearlmoran@scentric.com"},{"first":"Underwood","last":"Barton","email":"underwoodbarton@scentric.com"},{"first":"Solomon","last":"Lloyd","email":"solomonlloyd@scentric.com"},{"first":"Lyons","last":"Stevenson","email":"lyonsstevenson@scentric.com"},{"first":"Swanson","last":"Richardson","email":"swansonrichardson@scentric.com"},{"first":"Aida","last":"Hurley","email":"aidahurley@scentric.com"},{"first":"Mccormick","last":"Jensen","email":"mccormickjensen@scentric.com"},{"first":"Ramona","last":"Meyers","email":"ramonameyers@scentric.com"},{"first":"Sharp","last":"Lindsay","email":"sharplindsay@scentric.com"},{"first":"Dina","last":"Robbins","email":"dinarobbins@scentric.com"},{"first":"Franco","last":"Carrillo","email":"francocarrillo@scentric.com"},{"first":"Guadalupe","last":"Odom","email":"guadalupeodom@scentric.com"},{"first":"Mcguire","last":"Kerr","email":"mcguirekerr@scentric.com"},{"first":"Giles","last":"Miller","email":"gilesmiller@scentric.com"},{"first":"Norton","last":"Carr","email":"nortoncarr@scentric.com"},{"first":"Marcie","last":"Rose","email":"marcierose@scentric.com"},{"first":"Loraine","last":"Castro","email":"lorainecastro@scentric.com"},{"first":"Fry","last":"Harmon","email":"fryharmon@scentric.com"},{"first":"Cooper","last":"Sampson","email":"coopersampson@scentric.com"},{"first":"Rosa","last":"Velazquez","email":"rosavelazquez@scentric.com"},{"first":"Claire","last":"Jefferson","email":"clairejefferson@scentric.com"},{"first":"Frieda","last":"Butler","email":"friedabutler@scentric.com"},{"first":"Juliana","last":"Gutierrez","email":"julianagutierrez@scentric.com"},{"first":"Mallory","last":"Gross","email":"mallorygross@scentric.com"},{"first":"Elsie","last":"Hahn","email":"elsiehahn@scentric.com"},{"first":"Hayes","last":"Ball","email":"hayesball@scentric.com"},{"first":"Baker","last":"Slater","email":"bakerslater@scentric.com"},{"first":"Martha","last":"Knight","email":"marthaknight@scentric.com"},{"first":"Slater","last":"Erickson","email":"slatererickson@scentric.com"},{"first":"Beck","last":"Potts","email":"beckpotts@scentric.com"},{"first":"Pugh","last":"Douglas","email":"pughdouglas@scentric.com"},{"first":"Margo","last":"Hodges","email":"margohodges@scentric.com"},{"first":"Polly","last":"Mitchell","email":"pollymitchell@scentric.com"},{"first":"Brown","last":"Perkins","email":"brownperkins@scentric.com"},{"first":"Janette","last":"Cherry","email":"janettecherry@scentric.com"},{"first":"Florine","last":"Hobbs","email":"florinehobbs@scentric.com"},{"first":"Farley","last":"Santos","email":"farleysantos@scentric.com"},{"first":"Gray","last":"Paul","email":"graypaul@scentric.com"},{"first":"Roman","last":"Dunlap","email":"romandunlap@scentric.com"},{"first":"Meyer","last":"Blackburn","email":"meyerblackburn@scentric.com"},{"first":"Schwartz","last":"Garcia","email":"schwartzgarcia@scentric.com"},{"first":"Thornton","last":"Sykes","email":"thorntonsykes@scentric.com"},{"first":"Webb","last":"Maddox","email":"webbmaddox@scentric.com"},{"first":"Cathleen","last":"Nichols","email":"cathleennichols@scentric.com"},{"first":"Ila","last":"Bentley","email":"ilabentley@scentric.com"},{"first":"Warner","last":"Blair","email":"warnerblair@scentric.com"},{"first":"Garcia","last":"Carter","email":"garciacarter@scentric.com"},{"first":"Bowen","last":"Olson","email":"bowenolson@scentric.com"},{"first":"Kidd","last":"Sanders","email":"kiddsanders@scentric.com"},{"first":"Deanne","last":"Casey","email":"deannecasey@scentric.com"},{"first":"Hardin","last":"Thornton","email":"hardinthornton@scentric.com"},{"first":"Taylor","last":"Irwin","email":"taylorirwin@scentric.com"},{"first":"Stone","last":"Watson","email":"stonewatson@scentric.com"},{"first":"Avery","last":"Knox","email":"averyknox@scentric.com"},{"first":"Cathryn","last":"Rodgers","email":"cathrynrodgers@scentric.com"},{"first":"Head","last":"Cohen","email":"headcohen@scentric.com"},{"first":"Simone","last":"Whitfield","email":"simonewhitfield@scentric.com"},{"first":"Sue","last":"Cotton","email":"suecotton@scentric.com"},{"first":"Olson","last":"Burch","email":"olsonburch@scentric.com"},{"first":"Powell","last":"Nunez","email":"powellnunez@scentric.com"},{"first":"Orr","last":"Buchanan","email":"orrbuchanan@scentric.com"},{"first":"Helena","last":"Lynch","email":"helenalynch@scentric.com"},{"first":"Beatriz","last":"Case","email":"beatrizcase@scentric.com"},{"first":"Jenifer","last":"Contreras","email":"jenifercontreras@scentric.com"},{"first":"Pittman","last":"Powers","email":"pittmanpowers@scentric.com"},{"first":"Kelli","last":"Gallagher","email":"kelligallagher@scentric.com"},{"first":"Moss","last":"English","email":"mossenglish@scentric.com"},{"first":"Marcia","last":"Farmer","email":"marciafarmer@scentric.com"},{"first":"Dennis","last":"Hill","email":"dennishill@scentric.com"},{"first":"Miranda","last":"Garner","email":"mirandagarner@scentric.com"},{"first":"Isabella","last":"Fry","email":"isabellafry@scentric.com"},{"first":"Stephens","last":"Bender","email":"stephensbender@scentric.com"},{"first":"Tracie","last":"Pate","email":"traciepate@scentric.com"},{"first":"Georgina","last":"Cardenas","email":"georginacardenas@scentric.com"},{"first":"Carissa","last":"Castillo","email":"carissacastillo@scentric.com"},{"first":"Delacruz","last":"Hunt","email":"delacruzhunt@scentric.com"},{"first":"Claudette","last":"Walters","email":"claudettewalters@scentric.com"},{"first":"Trisha","last":"Chavez","email":"trishachavez@scentric.com"},{"first":"Desiree","last":"Sullivan","email":"desireesullivan@scentric.com"},{"first":"Guthrie","last":"May","email":"guthriemay@scentric.com"},{"first":"Althea","last":"Quinn","email":"altheaquinn@scentric.com"},{"first":"Hester","last":"Santana","email":"hestersantana@scentric.com"},{"first":"Garner","last":"Kirk","email":"garnerkirk@scentric.com"}];
+
+      this.dataForDisplay = dataFullSet.slice(0,10);
+
+      if (this.dataForDisplay.length > this.pageSize) {
+        this.set('_toast', {
+          isHidden: false,
+          message: 'The number of items passed to the grid exceeds the number of rows expected. The controller of the data (external to the px-data-table) must pass in rational properties. e.g. If row count is set to 10, then it should send 10 items unless there are less than 10 in the entire data set.',
+          title: 'Edge Case Detected'
+        });
       }
 
+    },
+
+    _hideToast: function () {
+      this.set('_toast', Object.assign({}, this._toast, {
+        isHidden: true
+      }));
+    },
+
+    pageChangeHandler : function(evt){
+      this.set('_toast', {
+        detail: evt.detail,
+        event: 'px-page-change-intent',
+        isHidden: false,
+        message: 'Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex.',
+        title: 'Page Change Event Detected'
+      });
+    },
+
+    pageSizeChangeHandler: function(evt){
+      this.set('_toast', {
+        detail: evt.detail,
+        event: 'px-page-size-change-intent',
+        isHidden: false,
+        message: 'Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex.',
+        title: 'Page Size Change Detected'
+      });
+    },
+
+    pageFilterChangeHandler: function(evt){
+      this.set('_toast', {
+        detail: evt.detail,
+        event: 'px-filter-change-intent',
+        isHidden: false,
+        message: 'Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex.',
+        title: 'Page Filter Change Detected'
+      });
+    },
+
+    pageSortChangeHandler: function(evt){
+      this.set('_toast', {
+        detail: evt.detail,
+        event: 'px-sort-change-intent',
+        isHidden: false,
+        message: 'Make a request to service for new data using the event detail captured here. On response from service, update the following properties passed into px-data-table: tableData, totalEntries, pageSize, firstItemIndex.',
+        title: 'Page Filter Change Detected'
+      });
     }
 
   });
