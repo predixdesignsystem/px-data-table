@@ -11,6 +11,12 @@ const gulpif = require('gulp-if');
 const combiner = require('stream-combiner2');
 const bump = require('gulp-bump');
 const argv = require('yargs').argv;
+/* Used to transpile JavaScript */
+const babel = require('gulp-babel');
+const rename = require('gulp-rename');
+const sourcemaps = require('gulp-sourcemaps');
+const cache = require('gulp-cached');
+const exec = require('child_process').exec;
 
 const sassOptions = {
   importer: importOnce,
@@ -45,6 +51,7 @@ function buildCSS(){
 
 gulp.task('sass', function() {
   return gulp.src(['./sass/*.scss'])
+    .pipe(cache('sassing'))
     .pipe(buildCSS())
     .pipe(stylemod({
       moduleId: function(file) {
@@ -55,7 +62,40 @@ gulp.task('sass', function() {
     .pipe(browserSync.stream({match: 'css/*.html'}));
 });
 
+// Globbing pattern to find ES6 source files that need to be transpiled
+const ES6_SRC = './*.es6.js';
+// Output directory for transpiled files
+const ES5_DEST = './dist';
+
+gulp.task('transpile', function() {
+  return gulp.src(ES6_SRC)
+    .pipe(cache('transpiling'))
+    .pipe(sourcemaps.init())
+    .pipe(babel())
+    .on('error', function(err) {
+      console.error(err);
+      this.emit('end');
+    })
+    .pipe(rename(path => {
+      path.basename = path.basename.replace('.es6', '');
+      console.log(`Transpiling ${path.basename}.es6.js -> dist/${path.basename}.js`);
+    }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(ES5_DEST));
+});
+
+gulp.task('generate-api', function (cb) {
+
+  exec(`node_modules/.bin/polymer analyze ${pkg.name}.html > ${pkg.name}-api.json`, function (err, stdout, stderr) {
+    console.log(stdout);
+    console.log(stderr);
+    cb(err);
+  });
+
+});
+
 gulp.task('watch', function() {
+  gulp.watch(ES6_SRC, ['transpile']);
   gulp.watch(['sass/*.scss'], ['sass']);
 });
 
@@ -69,9 +109,9 @@ gulp.task('serve', function() {
     server: ['./', 'bower_components'],
   });
 
-  gulp.watch(['css/*-styles.html', '*.html', '*.js', 'demo/*.html']).on('change', browserSync.reload);
+  gulp.watch(ES6_SRC, ['transpile']);
   gulp.watch(['sass/*.scss'], ['sass']);
-
+  gulp.watch(['css/*-styles.html', '*.html', `${ES5_DEST}/*.js`, 'demo/*.html']).on('change', browserSync.reload);
 });
 
 gulp.task('bump:patch', function(){
@@ -93,5 +133,5 @@ gulp.task('bump:major', function(){
 });
 
 gulp.task('default', function(callback) {
-  gulpSequence('clean', 'sass')(callback);
+  gulpSequence('clean', 'sass', 'transpile', 'generate-api')(callback);
 });

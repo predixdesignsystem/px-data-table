@@ -3,8 +3,8 @@
   "plugins": {
     "local": {
       "browsers": [
-        "chrome",
-        "firefox"
+        "chrome"
+
       ]
     },
     "sauce": {

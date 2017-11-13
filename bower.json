@@ -33,7 +33,6 @@
     "px-theme": "^3.0.0",
     "px-starter-kit-design": "^1.0.0",
     "iron-ajax": "^2.0.0",
-    "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.1",
     "px-toggle-design": "^2.0.0",
     "px-demo": "^3.0.0",
     "px-layout-design": "^1.0.0",

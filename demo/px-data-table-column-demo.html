@@ -17,7 +17,9 @@
 <!-- Demo DOM module -->
 <dom-module id="px-data-table-column-demo">
   <template>
-    <style include="px-demo-styles" is="custom-style"></style>
+    <custom-style>
+      <style include="px-demo-styles" is="custom-style"></style>
+    </custom-style>
 
     <!-- Header -->
     <px-demo-header
@@ -30,13 +32,13 @@
     <!-- Interactive -->
     <px-demo-interactive>
       <!-- Configs -->
-      <px-demo-configs configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
+      <px-demo-configs slot="px-demo-configs" configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
 
       <!-- Props -->
-      <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
+      <px-demo-props slot="px-demo-props" props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
       <!-- Component ---------------------------------------------------------->
-      <px-demo-component>
+      <px-demo-component slot="px-demo-component">
 
         <div>
           <p>Most of the properties of px-data-table-column can not currently be set dynamically, due to the nature of the component. They should be defined explicitly at the time of table creation, or you should delete and re-add the full px-data-table-column sub-component on change. For a few different preset configurations, see the tabs above.</p>
@@ -68,9 +70,10 @@
       <!-- END Component ------------------------------------------------------>
 
       <px-demo-component-snippet
-          element-properties="{{props}}"
-          element-name="px-data-table-column"
-          links-includes='["px-data-table/px-data-table.html"]'>
+        slot="px-demo-component-snippet"
+        element-properties="{{props}}"
+        element-name="px-data-table-column"
+        links-includes='["px-data-table/px-data-table.html"]'>
       </px-demo-component-snippet>
     </px-demo-interactive>
 

@@ -18,7 +18,9 @@
 <!-- Demo DOM module -->
 <dom-module id="px-data-table-highlight-demo">
   <template>
-    <style include="px-demo-styles" is="custom-style"></style>
+    <custom-style>
+      <style include="px-demo-styles" is="custom-style"></style>
+    </custom-style>
 
     <!-- Header -->
     <px-demo-header
@@ -31,13 +33,13 @@
     <!-- Interactive -->
     <px-demo-interactive>
       <!-- Configs -->
-      <px-demo-configs configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
+      <px-demo-configs slot="px-demo-configs" configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
 
       <!-- Props -->
-      <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
+      <px-demo-props slot="px-demo-props" props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
       <!-- Component ---------------------------------------------------------->
-      <px-demo-component>
+      <px-demo-component slot="px-demo-component">
 
         <div>
           <p>Properties for px-data-table-highlight can't be dynamically changed, they must be specified ahead of time. This example illustrates a highlight of type "row" and value of "high" (red, by default). It is associated with the first name column, and uses a method specified in px-example-highlight.html that catches strings starting with "S".</p>
@@ -58,9 +60,10 @@
       <!-- END Component ------------------------------------------------------>
 
       <px-demo-component-snippet
-          element-properties="{{props}}"
-          element-name="px-data-table-highlight"
-          links-includes='["px-data-table/px-data-table.html"]'>
+        slot="px-demo-component-snippet"
+        element-properties="{{props}}"
+        element-name="px-data-table-highlight"
+        links-includes='["px-data-table/px-data-table.html"]'>
       </px-demo-component-snippet>
     </px-demo-interactive>
 
