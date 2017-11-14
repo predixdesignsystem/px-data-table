@@ -93,8 +93,7 @@
         },
         cellDisplayValue: {
           type: String,
-          value: '',
-          observer: '_cellDisplayValueChanged'
+          value: ''
         },
         cellValue: {
           type: String,
@@ -180,15 +179,6 @@
           tooltip.remove();
         }
       },
-      _cellDisplayValueChanged: function(newValue){
-        if(this.$$('.cell--value') !== undefined && this.$$('.cell--value') !== null){
-          if (newValue !== undefined && newValue !== '') {
-            this.$$('.cell--value').classList.remove('empty');
-          } else {
-            this.$$('.cell--value').classList.add('empty');
-          }
-        }
-      },
       _cellValueChanged: function(evt){
         clearTimeout(this._editTimeout);
         this._editTimeout = setTimeout(function(){
@@ -248,14 +238,8 @@
 
       },
       _getReaderClass: function() {
-        var datum = this.cellValue,
-            classList = [];
-
+        var classList = [];
         classList = (this.cellType ==='dropdown') ? ['flex', 'ddviewing'] : ['flex', 'viewing'];
-
-        if(datum === null || datum === undefined || !this._typeofComparison(datum, 'string') && datum.trim().length === 0) {
-          classList.push('empty');
-        }
         return classList.join(' ');
       },
       ready: function(){
