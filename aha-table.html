@@ -1650,8 +1650,10 @@
       return column.selectAll;
     },
 
-    _isFilterableColumn: function(column) {
-      return !column.selectAll && column.filterable && this.filterable;
+    _isFilterableColumn: function(column, filterable) {
+      if (! (column === undefined || filterable === undefined)) {
+        return !column.selectAll && column.filterable && this.filterable;
+      }
     },
 
     _readContent: function (row, column) {
@@ -1776,13 +1778,10 @@
      */
     _findHeaderFromChild: function (childElem) {
       var header = childElem;
-
       //we want to target the actual header to find the column name
       while (!header.classList.contains('th') && header !== this) {
-
         header = Polymer.dom(header).parentNode;
       }
-
       return header;
     },
 

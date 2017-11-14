@@ -12,6 +12,7 @@
     <link rel="import" href="../iron-ajax/iron-ajax.html" />
 
     <link rel="import" href="../px-theme/px-theme-styles.html">
+    <link rel="import" href="../polymer/lib/elements/dom-bind.html">
     <custom-style>
       <style include="px-theme-styles" is="custom-style"></style>
     </custom-style>
@@ -20,9 +21,9 @@
 
   <body unresolved>
     <dom-bind>
-      <template>
-        <iron-ajax url="contacts.json" last-response="{{data}}" auto></iron-ajax>
-        <iron-ajax id="test" url="contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
+      <template is="dom-bind">
+        <iron-ajax url="[[importPath]]contacts.json" last-response="{{data}}" auto></iron-ajax>
+        <iron-ajax id="test" url="[[importPath]]contacts-mini.json" last-response="{{minidata}}" auto></iron-ajax>
 
         <h3>Data table demos</h3>
 
