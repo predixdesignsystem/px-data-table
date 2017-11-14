@@ -173,11 +173,12 @@
         '_updateHighlight(cellHighlighted.value, rowHighlighted.value)'
       ],
       detached: function() {
-        //make sure we remove the tooltip in case it's currently showing
-        var tooltip = this.$$('px-tooltip');
-        if(tooltip) {
-          tooltip.remove();
+        try {
+          this.$$('px-tooltip').remove();
+        } catch (e) {
+          // not fatal if we couldn't clear the tooltip, carry on.
         }
+
       },
       _cellValueChanged: function(evt){
         clearTimeout(this._editTimeout);

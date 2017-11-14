@@ -1,4 +1,4 @@
-suite('Data Table Cell', ()=>{
+suite('Data Table Cell', (done)=>{
   let cell;
   setup((done)=> {
     cell = fixture('px-data-table-cell-fixture');
