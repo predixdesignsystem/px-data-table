@@ -1,33 +1,23 @@
-suite('Data Table Cell', function() {
+suite('Data Table Cell', ()=>{
   let cell;
-  setup(function(done) {
+  setup((done)=> {
     cell = fixture('px-data-table-cell-fixture');
     flush(()=>{
        done();
     });
   });
 
-  test('Check cell element exists', function() {
+  test('Check cell element exists', ()=>{
     assert.isTrue(cell !== null);
   });
 
-  test('Check edit updates model data', function(done){
+  test('Check edit updates model data', (done)=>{
 
     let editCell = Polymer.dom(cell.root).querySelector('px-edit-cell');
     let inputEl = Polymer.dom(editCell).querySelector('input');
 
-    cell.addEventListener('save', assertFunction );
-
-    cell.click();
-    let e = {'target':{value:'xxxx'}};
-    inputEl.value = 'xxxx';
-
-    flush(function(){
-      cell.saveCell(e);
-    });
-
     // function hoisting means this is defined before the test is executed
-    function assertFunction(evt){
+    let assertFunction = (evt)=>{
 
       assert.equal(evt.detail.newValue, 'xxxx');
 
@@ -35,5 +25,15 @@ suite('Data Table Cell', function() {
       cell.removeEventListener('save', assertFunction);
       done();
     }
+
+    cell.addEventListener('save', assertFunction );
+
+    cell.click();
+    let e = {'target':{value:'xxxx'}};
+    inputEl.value = 'xxxx';
+
+    flush(()=>{
+      cell.saveCell(e);
+    });
   });
 });
