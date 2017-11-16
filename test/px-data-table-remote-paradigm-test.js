@@ -239,7 +239,7 @@ suite('Page 1 - remoteData1', function (done) {
     currentTableFixture.firstItemIndex = 11;
     currentTableFixture.totalEntries = 50;
 
-    var paginationSpan = Polymer.dom(paginationControl.root).querySelector('.summary');
+    let paginationSpan = Polymer.dom(paginationControl.root).querySelector('.summary');
     let paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
     assert.equal(paginationTextString, '11-20 of 50', 'Shows correct pagination counts.');
 
@@ -248,90 +248,85 @@ suite('Page 1 - remoteData1', function (done) {
   });
 });
 
-  //
-  // // ------------------------------------------
-  // // Page 2 Tests
-  // // ------------------------------------------
-  // suite('Page 2 - remoteData2', function () {-
-  //
-  //   setup(function (done) {
-  //     currentTableFixture = document.getElementById('remoteData2');
-  //     currentTableFixture.tableData = minidata;
-  //     this.timeout(20*1000); // adding table data may take a while
-  //     flush(function () { done(); });
-  //   });
-  //
-  //   teardown(function () { });
-  //
-  //   test('fixture is created', function(done) {
-  //     flush(function () {
-  //       assert.isTrue(currentTableFixture !== null);
-  //       done();
-  //     });
-  //   });
-  //
-  //   test('Default pagination size is 10', function(){
-  //     assert.equal(currentTableFixture.pageSize, 10, 'Default page size should be 10 rows.');
-  //   });
-  //
-  //   test('Default rows displayed size is 10', function(){
-  //     var tb = currentTableFixture.querySelector('aha-table'),
-  //         rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
-  //     assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
-  //   });
-  //
-  //   test('Pagination shows 11-20 of 100', function(){
-  //     var paginationSpan = currentTableFixture.querySelector('.summary.px-pagination');
-  //     var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
-  //     assert.equal(paginationTextString, '11-20 of 100', 'Shows correct pagination counts.');
-  //   });
-  //
-  //   test('Page 2 should be selected', function(){
-  //     var paginationPager = currentTableFixture.querySelector('.px-pagination');
-  //     // note: classList does not have prototype Array methods
-  //     var page1IconClassList = paginationPager.children[0].classList.toString().split(' ');
-  //     assert.equal(currentTableFixture.querySelector('.px-pagination .btn--icon.btn--pagination--number').textContent, '2',
-  //       '"1" is the selected page in the pagination component');
-  //   });
-  //
-  //   test('Page 1 should NOT be selected', function(){
-  //     var paginationPager = currentTableFixture.querySelector('.px-pagination');
-  //     // note: classList does not have prototype Array methods
-  //     var page2IconClassList = paginationPager.children[1].classList.toString().split(' ');
-  //     assert.equal(currentTableFixture.querySelectorAll('.px-pagination .btn--icon.btn--pagination--number').length, 1,
-  //       'No other page number is selected');
-  //   });
-  //
-  //   test('Clicking Previous Page button fires a `px-page-change-intent` event', function(done) {
-  //     var dataTable = currentTableFixture;
-  //     var pageChangeButton = dataTable.querySelector('.px-pagination .btn--pagination.previous');
-  //
-  //     dataTable.addEventListener('px-page-change-intent', (evt) => {
-  //       assert(true, 'Event is triggered');
-  //       assert.equal(parseInt(evt.detail,10), 1, 'Requesting page 1');
-  //       done();
-  //     });
-  //
-  //     pageChangeButton.click();
-  //   });
-  //
-  //   test('Updating properties triggers appearance of Page 1', function() {
-  //     var page = 1;
-  //     var dataTable = currentTableFixture;
-  //
-  //     dataTable.firstItemIndex = 1;
-  //     dataTable.totalEntries = 50;
-  //
-  //     var paginationSpan = dataTable.querySelector('.summary.px-pagination');
-  //     var paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
-  //     assert.equal(paginationTextString, '1-10 of 50', 'Shows correct pagination counts.');
-  //
-  //     var paginationPager = dataTable.querySelector('.px-pagination');
-  //     // note: classList does not have prototype Array methods
-  //     var pageNIconClass = paginationPager.children[page - 1].classList.toString().split(' ');
-  //     assert.equal(currentTableFixture.querySelector('.px-pagination .btn--icon.btn--pagination--number').textContent, '1',
-  //       'Page 1 is selected');
-  //   });
+
+// ------------------------------------------
+// Page 2 Tests
+// ------------------------------------------
+suite('Page 2 - remoteData2', (done)=> {
+  let currentTableFixture;
+  let paginationControl;
+  let tableInner;
+  setup(done => {
+    currentTableFixture = fixture('remoteData2');
+    currentTableFixture.tableData = minidata;
+    flush(function () {
+      tableInner = Polymer.dom(currentTableFixture.root).querySelector('aha-table');
+      paginationControl = Polymer.dom(tableInner.root).querySelector('px-pagination');
+      done();
+    });
+  });
+
+
+  test('fixture is created', ()=> {
+      assert.isTrue(currentTableFixture !== null);
+  });
+
+  test('Default pagination size is 10', ()=>{
+    assert.equal(currentTableFixture.pageSize, 10, 'Default page size should be 10 rows.');
+  });
+
+  test('Default rows displayed size is 10', ()=>{
+    let tb = Polymer.dom(currentTableFixture.root).querySelector('aha-table'),
+        rowCount = Polymer.dom(tb.root).querySelectorAll('.rows').length;
+    assert.equal(rowCount, 10, 'Default rows displayed should be 10 rows.');
+  });
+
+  test('Pagination shows 11-20 of 100', ()=>{
+    let paginationSpan = Polymer.dom(paginationControl.root).querySelector('.summary');
+    let paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
+
+    assert.equal(paginationTextString, '11-20 of 100', 'Shows correct pagination counts.');
+  });
+
+  test('Page 2 should be selected', ()=>{
+    assert.equal(Polymer.dom(paginationControl.root).querySelector('.btn--tertiary').textContent, '2',
+    '"2" is the selected page in the pagination component');
+  });
+
+  test('Page 1 should NOT be selected', ()=>{
+    assert.equal(Polymer.dom(paginationControl.root).querySelectorAll('span.btn--bare')[0].textContent, 1,
+      'Page 1 isn\'t selected');
+  });
+
+  test('Clicking Previous Page button fires a `px-page-change-intent` event', done => {
+    let pageChangeButton = Polymer.dom(paginationControl.root).querySelector('#previous');
+
+    currentTableFixture.addEventListener('px-page-change-intent', evt => {
+      assert(true, 'Event is triggered');
+      assert.equal(parseInt(evt.detail,10), 1, 'Requesting page 1');
+      done();
+    });
+
+    pageChangeButton.click();
+  });
+
+  test('Updating properties triggers appearance of Page 1', done => {
+    let page = 1;
+    let dataTable = currentTableFixture;
+
+    dataTable.firstItemIndex = 1;
+    dataTable.totalEntries = 50;
+    flush(()=>{
+      let paginationSpan = Polymer.dom(paginationControl.root).querySelector('.summary');
+      let paginationTextString = paginationSpan.textContent.replace(/\s\s*/g,' ').trim();
+
+      assert.equal(paginationTextString, '1-10 of 50', 'Shows correct pagination counts.');
+      assert.equal(Polymer.dom(paginationControl.root).querySelector('span.btn--tertiary').textContent, 1, 'Page 1 is selected');
+      done();
+    });
+  });
+});
+
   //
   // });
   //
