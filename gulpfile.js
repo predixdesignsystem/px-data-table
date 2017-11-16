@@ -85,13 +85,11 @@ gulp.task('transpile', function() {
 });
 
 gulp.task('generate-api', function (cb) {
-
   exec(`node_modules/.bin/polymer analyze ${pkg.name}.html > ${pkg.name}-api.json`, function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
   });
-
 });
 
 gulp.task('watch', function() {
