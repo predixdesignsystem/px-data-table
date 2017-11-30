@@ -452,7 +452,7 @@
     },
 
     _columnChanged: function(info){
-      if(this.selectable && this.meta.length === 0) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
+      if(this.selectable && this.meta.length === 0) this.push('meta', this._generateMetaForColumn("_selected", "selected", true, this.localize("Selected") + " (0)"));
 
       var addedColumns = info.addedNodes.filter(function(node) {
         return (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'PX-DATA-TABLE-COLUMN');
@@ -637,7 +637,7 @@
     _selectableChanged: function(newSelectable) {
       // if meta is already defined and then selectable is set, we need to backfill the meta with the _selected column
       if (newSelectable === true && this.meta !== null && this.meta !== undefined && this.meta.length > 0) {
-        this.splice('meta', 0, 0, this._generateMetaForColumn("_selected", "selected", true, "Selected (0)"));
+        this.splice('meta', 0, 0, this._generateMetaForColumn("_selected", "selected", true, this.localize("Selected") + " (0)"));
       } else if (newSelectable === false && this.meta !== null && this.meta !== undefined && this.meta.length > 0 && this.meta[0].name === "_selected") {
         this.shift('meta');
       }
@@ -1242,7 +1242,7 @@
         }
       }
 
-      this.set('meta.0.label', "Selected (" + this.selectedRows.length + ")");
+      this.set('meta.0.label', this.localize("Selected") + " (" + this.selectedRows.length + ")");
       this.fire('px-select-all-click', this.selectedRows);
 
     },
@@ -1260,7 +1260,7 @@
         this.notifyPath('displayedRows.' + indexInDisplayedRows + '._selected', row._selected);
         this.push('selectedRows', row);
       }
-      this.set('meta.0.label', "Selected (" + this.selectedRows.length + ")");
+      this.set('meta.0.label', this.localize("Selected") + " (" + this.selectedRows.length + ")");
       this.fire('after-select', row);
     },
 

@@ -1,3 +1,7 @@
+v5.1.7
+==================
+* add missing localization for "Selected"
+
 v5.1.6
 ==================
 * add css vars for hovered rows
