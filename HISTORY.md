@@ -1,3 +1,7 @@
+v5.1.8
+==================
+* fix #182
+
 v5.1.7
 ==================
 * add missing localization for "Selected"

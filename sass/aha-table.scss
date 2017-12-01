@@ -264,8 +264,9 @@ label {
   color: var(--px-data-table-header-text-color, gray);
 }
 
-.paginationContainer px-dropdown {
+.paginationContainer #dropdown {
   line-height: calculateRem(30px);
+  --px-btn-min-width: 0;
 }
 
 .paginationContainer .btn {

@@ -25,7 +25,7 @@ Element that provides pagination.
 
 			<span class="pagesize  u-mr+">
 				<span class="rowsPerPage u-mr--">{{localize('Rows per page')}}</span>
-        <px-dropdown selected="{{pageSize}}" display-value="{{pageSize}}" select-by="val" button-style="bare--primary" items='{{pageSizeOptions}}' disable-clear></px-dropdown>
+        <px-dropdown id="dropdown" selected="{{pageSize}}" display-value="{{pageSize}}" select-by="val" button-style="bare--primary" items='{{pageSizeOptions}}' disable-clear></px-dropdown>
 			</span>
 
       <div>
@@ -208,7 +208,7 @@ Element that provides pagination.
     /**
      * Set page size public interface.
      *
-     * Set Page size, trigger update of table, update combobox.
+     * Set Page size, trigger update of table, update dropdown.
      */
     setPageSize: function(size) {
       this._updatePageSize(size);
@@ -406,21 +406,6 @@ Element that provides pagination.
     },
 
     _updatePageSize: function(size) {
-      var sizelist = [10, 20, 50, 100];
-      var index = sizelist.indexOf(size);
-
-      var parentElem = this.$.pageSizeSelect,
-        optionList = Polymer.dom(parentElem).querySelectorAll("option");
-
-      optionList.forEach(function(option) {
-        if(parseInt(option.value) === parseInt(size)) {
-          option.setAttribute('selected', '');
-          parentElem.selectedIndex = parseInt(index);
-        } else {
-          option.removeAttribute('selected');
-        }
-      });
-
       this.set('pageSize',size);
 
       if (!this.dataRemote) {
