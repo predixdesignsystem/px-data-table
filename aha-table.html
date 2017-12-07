@@ -37,7 +37,7 @@
           <template is="dom-repeat" items="{{meta}}" as="column">
             <template is="dom-if" if="{{!column.hide}}">
               <span role="columnheader" class$="{{_getHeaderClass(column)}}" draggable="{{enableColumnReorder}}" on-touchstart="_dragStartColumnHeader" on-touchmove="_touchMoveHeader" on-touchleave="_dragLeave" on-touchend="_touchDropColumnHeader" on-dragleave="_dragLeave" on-dragstart="_dragStartColumnHeader" on-dragover="_dragOverHeader" on-drop="_dragDropColumnHeader" on-dragend="_dragEndColumnHeader">
-                <div class="flex header--container">
+                <div class$="{{_getHeaderAlignClass(column)}}">
                   <span
                     class$="{{_getTextSortingClass(sortable, column, sortedColumn)}}"
                     on-tap="_sort">{{column.label}}<px-icon icon$="{{_getSortingIcon(sortable, column, sortedColumn, descending)}}" class$="{{_getSortingClass(sortable, column, sortedColumn, descending)}}"></px-icon>
@@ -674,6 +674,7 @@
         label: label,
         type: type,
         sortable: this.sortable,
+        align: this.align,
         filterable: this.filterable,
         editable: false,
         required: false,
@@ -1711,6 +1712,21 @@
       }
       return classList.join(' ');
     },
+
+    _getHeaderAlignClass: function(item) {
+      var classList = ['flex', 'header--container'];
+      if(item.align) {
+        classList.push('flex--col');
+        if (item.align == 'right') {
+          classList.push('flex--bottom');
+        }
+        if (item.align == 'left') {
+          classList.push('flex--top');
+        }
+      }
+      return classList.join(' ');
+    },
+
     _getSecondHeaderClass: function (filterable) {
       var classList = ['tr', 'tr--filter'];
       if (!filterable) {
