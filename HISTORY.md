@@ -1,3 +1,7 @@
+v5.1.9
+==================
+* add missing localization for "No Results" (#186)
+
 v5.1.8
 ==================
 * fix #182
