@@ -1,3 +1,7 @@
+v5.1.10
+==================
+* update demo so it doesn't look broken on site
+
 v5.1.9
 ==================
 * add missing localization for "No Results" (#186)

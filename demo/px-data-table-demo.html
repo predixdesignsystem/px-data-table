@@ -67,66 +67,78 @@
     <!-- Interactive -->
     <px-demo-interactive>
       <!-- Configs -->
-      <px-demo-configs configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
+      <px-demo-configs slot="px-demo-configs" configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
 
       <!-- Props -->
-      <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
+      <px-demo-props slot="px-demo-props" props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
-      <px-demo-code-editor props="{{props}}"></px-demo-code-editor>
+      <px-demo-code-editor slot="px-demo-code-editor" props="{{props}}"></px-demo-code-editor>
 
       <!-- Component ---------------------------------------------------------->
-      <px-demo-component>
-        <template is="dom-if" if="{{!props.dataRemote.value}}">
-        <div>
-          <px-data-table
-              table-data="{{props.tableData.value}}"
-              striped="{{props.striped.value}}"
-              filterable="{{props.filterable.value}}"
-              sortable="{{props.sortable.value}}"
-              selectable="{{props.selectable.value}}"
-              single-select="{{props.singleSelect.value}}"
-              show-column-chooser="{{props.showColumnChooser.value}}"
-              hide-pagination-control="{{props.hidePaginationControl.value}}"
-              include-all-columns="{{props.includeAllColumns.value}}"
-              language="{{props.language.value}}">
-              <px-data-table-column name="first" placeholder="First Name" filterable sortable editable></px-data-table-column>
-          </px-data-table>
-        </div>
+      <px-demo-component slot="px-demo-component">
+        <template is="dom-if" if="{{!displayDemo}}">
+          <p>
+            You are attempting to view this Polymer 1.x component in a Polymer 2.x environment.
+            Please access
+            <a href="https://predix-ui.com/px-data-table/px-data-table">https://predix-ui.com/px-data-table/px-data-table</a>
+            directly for a demo of this component in a Polymer 1.x environment. A Polymer 2.x compatible
+            version of the data grid will be coming in the next few weeks. We appreciate your patience
+            during this transition.
+          </p>
         </template>
-        <template is="dom-if" if="{{props.dataRemote.value}}">
-            <div>
-              <px-data-table
-                  id="demoRemoteTable"
-                  table-data="{{dataForDisplay}}"
-                  striped="{{props.striped.value}}"
-                  filterable="{{props.filterable.value}}"
-                  sortable="{{props.sortable.value}}"
-                  selectable="{{props.selectable.value}}"
-                  single-select="{{props.singleSelect.value}}"
-                  show-column-chooser="{{props.showColumnChooser.value}}"
-                  table-columns="{{props.tableColumns.value}}"
-                  table-rows="{{props.tableRows.value}}"
-                  hide-pagination-control="{{props.hidePaginationControl.value}}"
-                  include-all-columns="{{props.includeAllColumns.value}}"
-                  data-remote="{{props.dataRemote.value}}"
-                  total-entries="{{totalEntries}}"
-                  page-size="{{pageSize}}"
-                  first-item-index="{{firstItemIndex}}">
-              </px-data-table>
+        <template is="dom-if" if="{{displayDemo}}">
+          <template is="dom-if" if="{{!props.dataRemote.value}}">
+          <div>
+            <px-data-table
+                table-data="{{props.tableData.value}}"
+                striped="{{props.striped.value}}"
+                filterable="{{props.filterable.value}}"
+                sortable="{{props.sortable.value}}"
+                selectable="{{props.selectable.value}}"
+                single-select="{{props.singleSelect.value}}"
+                show-column-chooser="{{props.showColumnChooser.value}}"
+                hide-pagination-control="{{props.hidePaginationControl.value}}"
+                include-all-columns="{{props.includeAllColumns.value}}"
+                language="{{props.language.value}}">
+                <px-data-table-column name="first" placeholder="First Name" filterable sortable editable></px-data-table-column>
+            </px-data-table>
+          </div>
+          </template>
+          <template is="dom-if" if="{{props.dataRemote.value}}">
+              <div>
+                <px-data-table
+                    id="demoRemoteTable"
+                    table-data="{{dataForDisplay}}"
+                    striped="{{props.striped.value}}"
+                    filterable="{{props.filterable.value}}"
+                    sortable="{{props.sortable.value}}"
+                    selectable="{{props.selectable.value}}"
+                    single-select="{{props.singleSelect.value}}"
+                    show-column-chooser="{{props.showColumnChooser.value}}"
+                    table-columns="{{props.tableColumns.value}}"
+                    table-rows="{{props.tableRows.value}}"
+                    hide-pagination-control="{{props.hidePaginationControl.value}}"
+                    include-all-columns="{{props.includeAllColumns.value}}"
+                    data-remote="{{props.dataRemote.value}}"
+                    total-entries="{{totalEntries}}"
+                    page-size="{{pageSize}}"
+                    first-item-index="{{firstItemIndex}}">
+                </px-data-table>
+              </div>
+          </template>
+          <div id="toaster" hidden="{{_toast.isHidden}}">
+            <div class="toaster--title">{{_toast.title}}</div>
+            <pre class="toaster--detail">evt.type: {{_toast.event}}</pre>
+            <pre class="toaster--detail">evt.detail: {{_toast.detail}}</pre>
+            <div class="toaster--message">
+              <span class="toaster--message--label">To update table: </span>
+              <span>{{_toast.message}}</span>
             </div>
+            <div class="toaster--action-container">
+                <button class="btn" on-tap="_hideToast">Close</button>
+            </div>
+          </div>
         </template>
-        <div id="toaster" hidden="{{_toast.isHidden}}">
-          <div class="toaster--title">{{_toast.title}}</div>
-          <pre class="toaster--detail">evt.type: {{_toast.event}}</pre>
-          <pre class="toaster--detail">evt.detail: {{_toast.detail}}</pre>
-          <div class="toaster--message">
-            <span class="toaster--message--label">To update table: </span>
-            <span>{{_toast.message}}</span>
-          </div>
-          <div class="toaster--action-container">
-              <button class="btn" on-tap="_hideToast">Close</button>
-          </div>
-        </div>
       </px-demo-component>
       <!-- END Component ------------------------------------------------------>
 
@@ -231,6 +243,18 @@
           message: '',
           title: ''
         }
+      },
+
+      version: {
+        type: String,
+        value: function() {
+          return Polymer.version;
+        }
+      },
+
+      displayDemo: {
+        type: Boolean,
+        computed: '_getDisplayDemo(version)'
       }
     },
 
@@ -318,6 +342,10 @@
 
     _demoPropsUpdated: function () {
       this.pageInit();
+    },
+
+    _getDisplayDemo: function(version) {
+      return (version && version.length && version.substring(0,1) === '1');
     },
 
     pageInit: function(evt){

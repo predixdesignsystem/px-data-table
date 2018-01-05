@@ -30,40 +30,51 @@
     <!-- Interactive -->
     <px-demo-interactive>
       <!-- Configs -->
-      <px-demo-configs configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
+      <px-demo-configs slot="px-demo-configs" configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
 
       <!-- Props -->
-      <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
+      <px-demo-props slot="px-demo-props" props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
       <!-- Component ---------------------------------------------------------->
-      <px-demo-component>
-
-        <div>
-          <p>Most of the properties of px-data-table-column can not currently be set dynamically, due to the nature of the component. They should be defined explicitly at the time of table creation, or you should delete and re-add the full px-data-table-column sub-component on change. For a few different preset configurations, see the tabs above.</p>
-          <template is="dom-if" if="{{props.editable.value}}">
-            <px-data-table table-data={{tableData}} hide-pagination-control="true" include-all-columns>
-              <px-data-table-column
-                name="first"
-                type="string"
-                label=""
-                placeholder="First Name"
-                sortable="true"
-                editable="true"
-                filterable="true">
-              </px-data-table-column>
-            </px-data-table>
-          </template>
-          <template is="dom-if" if="{{!props.editable.value}}">
-            <px-data-table table-data={{tableData}} hide-pagination-control="true" include-all-columns>
-              <px-data-table-column
-                name="first"
-                type="dropdown"
-                dropdown-items='[{"key":"one","val":"Mike"},{"key":"two","val":"Maria"},{"key":"three","val":"Wei"}]'
-                label="First Name">
-              </px-data-table-column>
-            </px-data-table>
-          </template>
-        </div>
+      <px-demo-component slot="px-demo-component">
+        <template is="dom-if" if="{{!displayDemo}}">
+          <p>
+            You are attempting to view this Polymer 1.x component in a Polymer 2.x environment.
+            Please access
+            <a href="https://predix-ui.com/px-data-table/px-data-table">https://predix-ui.com/px-data-table/px-data-table</a>
+            directly for a demo of this component in a Polymer 1.x environment. A Polymer 2.x compatible
+            version of the data grid will be coming in the next few weeks. We appreciate your patience
+            during this transition.
+          </p>
+        </template>
+        <template is="dom-if" if="{{displayDemo}}">
+          <div>
+            <p>Most of the properties of px-data-table-column can not currently be set dynamically, due to the nature of the component. They should be defined explicitly at the time of table creation, or you should delete and re-add the full px-data-table-column sub-component on change. For a few different preset configurations, see the tabs above.</p>
+            <template is="dom-if" if="{{props.editable.value}}">
+              <px-data-table table-data={{tableData}} hide-pagination-control="true" include-all-columns>
+                <px-data-table-column
+                  name="first"
+                  type="string"
+                  label=""
+                  placeholder="First Name"
+                  sortable="true"
+                  editable="true"
+                  filterable="true">
+                </px-data-table-column>
+              </px-data-table>
+            </template>
+            <template is="dom-if" if="{{!props.editable.value}}">
+              <px-data-table table-data={{tableData}} hide-pagination-control="true" include-all-columns>
+                <px-data-table-column
+                  name="first"
+                  type="dropdown"
+                  dropdown-items='[{"key":"one","val":"Mike"},{"key":"two","val":"Maria"},{"key":"three","val":"Wei"}]'
+                  label="First Name">
+                </px-data-table-column>
+              </px-data-table>
+            </template>
+          </div>
+        </template>
       </px-demo-component>
       <!-- END Component ------------------------------------------------------>
 
@@ -139,6 +150,18 @@
               parentComponent: ["<px-data-table table-data='" + JSON.stringify(tableData) + "' hide-pagination-control>", "</px-data-table>"] }
           ]
         }
+      },
+
+      version: {
+        type: String,
+        value: function() {
+          return Polymer.version;
+        }
+      },
+
+      displayDemo: {
+        type: Boolean,
+        computed: '_getDisplayDemo(version)'
       }
     },
 
@@ -195,7 +218,11 @@
         defaultValue: ["<px-data-table hide-pagination-control>", "</px-data-table>"]
       }
 
-    }
+    },
+
+    _getDisplayDemo: function(version) {
+      return (version && version.length && version.substring(0,1) === '1');
+    },
 
   });
 </script>
