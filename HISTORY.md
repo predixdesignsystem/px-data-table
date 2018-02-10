@@ -1,3 +1,7 @@
+v5.1.12
+==================
+* fixing demo pages for IE11
+
 v5.1.11
 ==================
 * update demo so it doesn't look broken on site
