@@ -411,6 +411,7 @@ Element that provides pagination.
       if (!this.dataRemote) {
         this._goBackToFirstPage();
       } else {
+        this._triggerPageSizeChangeRequest(size);
         this.updateDisplay();
       }
     },
