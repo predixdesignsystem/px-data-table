@@ -1732,7 +1732,7 @@
 
     _getSortingClass: function(sortable, column, sortingColumn, descending) {
       var classList = 'sorting';
-      if(sortable && sortingColumn !== column.name) {
+      if(!sortable || (sortable && sortingColumn !== column.name)) {
         classList = classList + ' visuallyhidden';
       }
       return classList;

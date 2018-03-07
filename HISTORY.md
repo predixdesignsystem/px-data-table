@@ -1,3 +1,7 @@
+v6.0.0
+==================
+* sortable should be false by default
+
 v5.1.13
 ==================
 * merge #196, fix #179
