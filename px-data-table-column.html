@@ -101,6 +101,16 @@ Click [here](https://www.predix-ui.com/#/components/px-validation/) for more inf
       },
 
       /**
+       * If unset, will default to selectable
+       * If set to 'false', clicking a cell under this column will not trigger selecting that row
+       * This is a string instead of a boolean so that it defaults to true and changes to false, instead of the reverse (which is standard behavior for boolean attributes)
+      */
+      selectable: {
+        type: String,
+        value: ""
+      },
+      
+      /**
        * Full path to the custom function (attached to `window`) to sort this row with.
        * We highly suggest namespacing this function name so you don't pollute the global namespace and so you can have multiple datatables with different sorting functions.
        *
