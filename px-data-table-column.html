@@ -101,13 +101,11 @@ Click [here](https://www.predix-ui.com/#/components/px-validation/) for more inf
       },
 
       /**
-       * If unset, will default to selectable
-       * If set to 'false', clicking a cell under this column will not trigger selecting that row
-       * This is a string instead of a boolean so that it defaults to true and changes to false, instead of the reverse (which is standard behavior for boolean attributes)
+       * If true, clicking a cell in this column will not select the row
       */
-      selectable: {
-        type: String,
-        value: ""
+      disableSelect: {
+        type: Boolean,
+        value: false
       },
       
       /**
