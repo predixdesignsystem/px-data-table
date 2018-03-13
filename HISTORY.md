@@ -1,3 +1,7 @@
+v6.1.0
+==================
+* merge #198
+
 v6.0.0
 ==================
 * sortable should be false by default
