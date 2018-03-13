@@ -101,6 +101,15 @@ Click [here](https://www.predix-ui.com/#/components/px-validation/) for more inf
       },
 
       /**
+       * If true, clicking a cell in this column will not select the row.
+       * Useful for cells with rich content that should be interactive without triggering a toggle of the row's selection state.
+      */
+      disableSelect: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
        * Full path to the custom function (attached to `window`) to sort this row with.
        * We highly suggest namespacing this function name so you don't pollute the global namespace and so you can have multiple datatables with different sorting functions.
        *

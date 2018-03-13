@@ -675,6 +675,7 @@
         type: type,
         sortable: this.sortable,
         filterable: this.filterable,
+        disableSelect: !this.selectable,
         editable: false,
         required: false,
         hide: false,
@@ -1174,7 +1175,7 @@
           row = evt.model.internalRow,
           detail = {"row": row, "column": column},
           selectAllCheckbox;
-      if(column.editable || column.type === 'dropdown') return;
+      if(column.editable || column.type === 'dropdown' || column.disableSelect === true) return;
 
       if (this.selectable) {
         this._selectRow(row, this.$.recordList.indexForElement(evt.currentTarget));
