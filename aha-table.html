@@ -758,7 +758,7 @@
             cellDataObj[key].value = thisObj[key];
             if (resetDataFlag) {
               cellDataObj[key]._validation = { passedValidation: true };
-            } else if(this._internalData[i].row[key]._validation) {
+            } else if(this._internalData[i].row[key] && this._internalData[i].row[key]._validation) {
               cellDataObj[key]._validation = this._internalData[i].row[key]._validation;
             }
           }

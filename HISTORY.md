@@ -1,3 +1,7 @@
+v6.1.1
+==================
+* Fixed a bug when dynamically adding data and columns
+
 v6.1.0
 ==================
 * merge #198
