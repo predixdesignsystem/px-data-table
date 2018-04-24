@@ -842,7 +842,7 @@
         fromPage = this.firstItemIndex - 1; // pagination is 1-based
         to = fromPage + parseInt(this.pageSize, 10);
 
-        this.filteredSortedData = this.filteredSortedData.map( row => {
+        this.filteredSortedData = this.filteredSortedData.map( function(row) {
           row.isNew = true;
           return row;
         });
@@ -855,7 +855,7 @@
 
       } else if (this.filteredSortedData !== undefined && this.filteredSortedData !== null && this.hidePaginationControl) {
 
-        this.filteredSortedData = this.filteredSortedData.map( row => {
+        this.filteredSortedData = this.filteredSortedData.map( function(row) {
           row.isNew = true;
           return row;
         });
