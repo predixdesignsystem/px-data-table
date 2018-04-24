@@ -1,3 +1,7 @@
+v6.1.2
+==================
+* Remove ES6 arrow function
+
 v6.1.1
 ==================
 * Fixed a bug when dynamically adding data and columns
