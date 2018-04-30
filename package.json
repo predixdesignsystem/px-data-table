@@ -29,5 +29,5 @@
     "sw-precache": "^4.2.3",
     "yargs": "^5.0.0"
   },
-  "license": "BSD-3-Clause"
+  "license": "Apache-2.0"
 }
