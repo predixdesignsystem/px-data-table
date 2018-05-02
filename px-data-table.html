@@ -159,6 +159,8 @@ Custom property | Description
         hide-pagination-control="{{hidePaginationControl}}"
         id="dataTable"
         include-all-columns="{{includeAllColumns}}"
+        dynamic-columns="{{dynamicColumns}}"
+        column-type="{{columnType}}"
         language="{{language}}"
         meta="{{meta}}"
         page-size-options="{{pageSizeOptions}}"
@@ -409,6 +411,24 @@ Custom property | Description
       includeAllColumns: {
         type: Boolean,
         value: false
+      },
+      /**
+       * Property to enable the support for dynamic table. If set to true, the table will
+	   * compare the old table columns with the new data. If they are different, the columns
+	   * will be recreated based on the new data's object schema. Here, assume that all the
+	   * values in data will be rendered in the table.
+       */
+      dynamicColumns: {
+        type: Boolean,
+        value: false
+      },
+      /**
+       * The default column type. It is the same as the  `type` property in 
+	   * `<px-data-table-column>`.
+       */
+      columnType: {
+        type: String,
+        value: "string"
       },
 
       /**

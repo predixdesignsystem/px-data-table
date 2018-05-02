@@ -214,6 +214,14 @@
         value: false,
         observer: '_includeAllColumnsChanged'
       },
+      dynamicColumns: {
+        type: Boolean,
+        value: false
+      },
+      columnType: {
+        type: String,
+        value: "string"
+      },
       //_enableFilterRow: if table row is _enableFilterRow
       _enableFilterRow: {
         type: Boolean,
@@ -580,7 +588,27 @@
         }, 10);
         return;
       }
+      //check for dynamic table
+      var refresh = false;
+      if (this.dynamicColumns){
+        var new_col = Object.keys(this.data[0]);
+        var old_col = this.meta.reduce((init, one)=>{init.push(one.name); return init;} , []);
 
+        if (new_col.length != old_col.length){
+            this.meta = [];
+            refresh = true;
+        }else {
+          for (var i = 0; i < new_col.length; i ++){
+            if( new_col[i] != old_col[i]){
+              this.meta = [];
+              refresh = true;
+              break;
+            }
+          }
+
+        }
+
+      }
       // if includeAllColumns is true, or if no px-data-table-columns have been defined,
       // need to calculate meta from the actual data passed in to the table
       if(this.includeAllColumns || this.meta.length === 0 || (this.meta.length === 1 && this.meta[0].name === "_selected")) {
@@ -590,7 +618,7 @@
       if ( !this._typeofComparison(this._internalData, "undefined") && this._internalData.length === 0) {
         this._internalData = this._initializeInternalData();
       } else {
-        this._internalData = this._refreshInternalData();
+        this._internalData = this._refreshInternalData(refresh);
       }
       this.selectedRows = this._internalData.filter(function (it) {
         return it._selected === true;
@@ -662,7 +690,7 @@
 
         // if column not found
         if(notFound) {
-          var colInfo = this._generateMetaForColumn(prop, "string", false, prop.charAt(0).toUpperCase() + prop.slice(1));
+          var colInfo = this._generateMetaForColumn(prop, this.columnType, false, prop.charAt(0).toUpperCase() + prop.slice(1));
           this.push('meta', colInfo);
         }
       }
