@@ -1161,7 +1161,7 @@
       if (searchString === undefined || searchString === null || searchString === "") {
         return true;
       }
-      if (cellValue) {
+      if (cellValue || (typeof(cellValue)=="boolean")) {
         return (cellValue.toString().toLowerCase().indexOf(searchString.toString().toLowerCase()) > -1);
       }
     },
