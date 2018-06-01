@@ -590,7 +590,7 @@
       }
       //check for dynamic table
       var refresh = false;
-      if (this.dynamicColumns){
+      if (this.dynamicColumns  && this.data){
         var new_col = Object.keys(this.data[0]);
         var old_col = this.meta.reduce((init, one)=>{init.push(one.name); return init;} , []);
 
