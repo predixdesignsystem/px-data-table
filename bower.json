@@ -44,7 +44,8 @@
   },
   "resolutions": {
     "webcomponentsjs": "^0.7.24",
-    "promise-polyfill": "^1.0.0"
+    "promise-polyfill": "^1.0.0",
+    "px-overlay": "^1.1.1"
   },
   "license": "Apache-2.0"
 }
