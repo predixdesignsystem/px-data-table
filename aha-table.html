@@ -430,6 +430,10 @@ limitations under the License.
         type: String,
         value: '#scrollBodyTableContainer'
       },
+      dataChangeTrigger: {
+        type: Boolean,
+        value: false
+      },
       /**
        * Options displayed in the page size dropdown.
        */
@@ -582,6 +586,7 @@ limitations under the License.
     },
 
     _dataChanged: function (changeRec) {
+      this.dataChangeTrigger = false; //reset the dataChangeTrigger Boolean
       if (this.data === undefined || this.data === null || (!this._isAttached && changeRec.base.length === 0)) {
         this._internalData = [];
         return;
@@ -606,6 +611,8 @@ limitations under the License.
       if ( !this._typeofComparison(this._internalData, "undefined") && this._internalData.length === 0) {
         this._internalData = this._initializeInternalData();
       } else {
+        //Reach here when a cell data is edited
+        this.dataChangeTrigger = true;
         this._internalData = this._refreshInternalData();
       }
       this.selectedRows = this._internalData.filter(function (it) {
@@ -740,10 +747,12 @@ limitations under the License.
           }
         });
 
-        this.set('numberOfItems', count);
-
-        // with filtering/sorting, it's best just to go back to the first page
-        this.$.pagination.goToPageNumber(1);
+        if(this.dataChangeTrigger == false){
+          this.set('numberOfItems', count);
+          this.$.pagination.goToPageNumber(1);
+        }
+      // with filtering/sorting, it's best just to go back to the first page
+      // filtering/sorting -> datachangetrigger will be false
       } else {
         this.$.pagination.updateDisplay();
         this.set('numberOfItems', this.totalEntries);
@@ -1061,6 +1070,10 @@ limitations under the License.
 
     // filter on typed content in header handler
     _filter: function (e) {
+      if(e.isTrusted == false)
+        this.dataChangeTrigger = true;
+      else if(e.isTrusted == true)
+        this.dataChangeTrigger = false;
       // have to do modelForElement because dom-if cancels out dom-repeat model (https://github.com/Polymer/polymer/issues/1865)
       var column = this.$.filterRepeat.modelForElement(e.target).column,
         userEntry,
