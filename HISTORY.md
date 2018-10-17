@@ -1,3 +1,8 @@
+v6.1.3
+==================
+* Fixed a bug when column that is initially hidden ("hide" attribute present in DOM when created) has no filter box when picked via the column chooser.
+* Fixed a bug causing an edit made on any page other than page 1 to navigate back to page 1.
+
 v6.1.2
 ==================
 * Remove ES6 arrow function
