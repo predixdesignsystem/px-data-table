@@ -33,7 +33,22 @@ limitations under the License.
 <!-- Demo DOM module -->
 <dom-module id="px-data-table-column-demo">
   <template>
-
+    <style>
+        .message-banner {
+            background-color: #09819c; 
+            padding: 1rem 0; 
+            color: white;
+        }
+        .message-banner .message {
+            width: 80%;
+            margin: 0 auto;
+            max-width: 80rem;
+        }
+        .message-banner .message a {
+            color: white!important;
+            text-decoration: underline!important;
+        }
+    </style>
     <!-- Header -->
     <px-demo-header
         module-name="px-data-table-column"
@@ -42,15 +57,16 @@ limitations under the License.
         tablet desktop>
     </px-demo-header>
 
-    <template is="dom-if" if="{{!displayDemo}}">
-      <p class="demo-layout--center">
-        <strong>Note:</strong> You are attempting to view this Polymer 1.x component in a Polymer 2.x environment.
-        Please access
-        <a href="https://predix-ui.com/px-data-table/px-data-table">https://predix-ui.com/px-data-table/px-data-table</a>
-        directly for a demo of this component in a Polymer 1.x environment. A Polymer 2.x compatible
-        version of the data grid will be coming in the next few weeks. We appreciate your patience
-        during this transition.
-      </p>
+    <template is="dom-if" if="{{!displayDemo}}"> --> 
+        <div class="message-banner">
+                <div class="message">
+                    <strong>Note:</strong> You are attempting to view this Polymer 1.x component in a Polymer 2.x environment.
+                    Please access
+                    <a href="https://predix-ui.com/px-data-table/px-data-table">https://predix-ui.com/px-data-table/px-data-table</a>
+                    directly for a demo of this component in a Polymer 1.x environment. For Polymer 2.x projects please use 
+                    <a href="https://www.predix-ui.com/#/elements/data-grid/px-data-grid">px-data-grid</a> 
+                </div>
+            </div>
     </template>
     <template is="dom-if" if="{{displayDemo}}">
 
