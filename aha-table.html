@@ -555,7 +555,7 @@ limitations under the License.
       column._highLightElLoadedCount += 1;
       if (column._highLightElLoadedCount === Polymer.dom(column).querySelectorAll('px-data-table-highlight').length) {
         var columnIndex = this._findMetaIndexFromColumnElement(column);
-        if (columnIndex > 0) {
+        if (columnIndex > 0  || !this.selectable) {
           this.set('meta.' + columnIndex + '.highlightdefined', true);
         }
       }
